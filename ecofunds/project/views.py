@@ -21,7 +21,9 @@ from BeautifulSoup import BeautifulSoup
 
 import colorsys
 import math
-import pylab
+from ecofunds.utils import ignore_pylab
+if not ignore_pylab:
+    import pylab
 import xlwt
 
 
@@ -38,7 +40,7 @@ class ProjectFilteredListExcel(BaseDetailView):
 
         response = http.HttpResponse(mimetype="application/ms-excel") #application/vnd.ms-excel
         response['Content-Disposition'] = 'attachment; filename=projects.xls'
-    
+
         w = xlwt.Workbook(encoding="UTF-8")
         ws = w.add_sheet('Projects')
 
@@ -165,7 +167,7 @@ class ProjectListView(ListView):
         context = self.get_context_data(object_list=self.object_list)
         context.update({'form': self.form})
         context.update(csrf(request))
-        
+
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -182,7 +184,7 @@ class ProjectChartSourceView(BaseDetailView):
         result = [['Country', 'Projects']]
 
         list = ProjectData.list(order_by='projects_locations__location__country__name', projects_locations__location__country_id__gt=0).values('projects_locations__location__country__name').annotate(total=Count('entity_id'))
-        
+
         for item in list:
             result.append([item['projects_locations__location__country__name'], item['total']])
 
@@ -222,7 +224,7 @@ class ProjectMapSourceView(GoogleMapView, BaseDetailView):
         gmap = self.get_map(request, center, zoom, mapTypeId)
 
 
-        sql_columns = """a.location_id, 
+        sql_columns = """a.location_id,
 			a.entity_id,
 			count(b.entity_id),
 			d.polygon
@@ -232,7 +234,7 @@ class ProjectMapSourceView(GoogleMapView, BaseDetailView):
 
         sql = "SELECT 	" + sql_columns + """
 FROM ecofunds_entity_locations a
-INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id) 
+INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id)
 INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
 INNER JOIN ecofunds_locations d ON d.id = a.location_id
 inner join ecofunds_countries cou on cou.id = d.country_id
@@ -251,7 +253,7 @@ WHERE b.validated = 1
             sql+=' and exists (select 1 from ecofunds_organization f where f.id in (c.recipient_organization_id, c.funding_organization_id) and {fn concat(f.name, f.acronym)} like %s) '
             query_params.append('%' + data['s_organization'] + '%')
 
-        
+
         if data.has_key('s_country') and data['s_country'] != '':
             sql+=" and cou.name like %s "
             query_params.append('%'+data['s_country'] + '%')
@@ -260,10 +262,10 @@ WHERE b.validated = 1
             sql+=" and (d.iso_sub = %s or d.name like %s) "
             query_params.append(data['s_state'])
             query_params.append('%'+data['s_state']+'%')
-        
 
 
-        
+
+
         s_grant_from = trans_date(data.get('s_date_from'))
         s_grant_to = trans_date(data.get('s_date_to'))
 
@@ -273,7 +275,7 @@ WHERE b.validated = 1
         if s_grant_to:
             sql+=" and b.grant_to <= %s "
             query_params.append(s_grant_to)
-        
+
         min_invest = 0
         max_invest = 99999999
         if data.has_key('s_investments_from') and data['s_investments_from'] != '':
@@ -294,39 +296,40 @@ WHERE b.validated = 1
 
         cursor = db.connection.cursor()
         cursor.execute(sql, query_params)
-       
+
         #list = ProjectData.locationFilteredList(request)
         points = {}
-            
+
         if view == 'concentration':
             start, end = 0, 0
             for item in cursor.fetchall():
                 if not (item[0] is None):
                     start = float(item[0])
                     end = float(item[1])
-            json = {'start': format_currency(start), 'end': format_currency(end)}            
+            json = {'start': format_currency(start), 'end': format_currency(end)}
 
             return http.HttpResponse(dumps(json, cls=DjangoJSONEncoder), content_type='application/json')
-        
+
 
         for item in cursor.fetchall():
             location_id = item[0]
             entity_id = item[1]
             amount = item[2]
+            import pdb; pdb.set_trace()
             xml = BeautifulSoup(item[3])
 
-            key = 'pos'+str(location_id)            
+            key = 'pos'+str(location_id)
 
             if not points.has_key(key):
                 paths = []
-                
+
                 for polygon in xml.findAll('polygon'):
                     corners = []
                     latlngs = []
                     coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
-                    
+
                     for c in coordinates:
-                        
+
                         o = c.split(',')
                         cx = float(o[1])
                         cy = float(o[0])
@@ -336,7 +339,7 @@ WHERE b.validated = 1
                     x, y = self.polygon_centroid(corners)
                     paths.append(latlngs)
 
-                    
+
                 points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
             else:
                 b = False
@@ -370,14 +373,14 @@ WHERE b.validated = 1
                             'fillColor': '#FFFFFF',
                             'strokeOpacity': 1.0,
                             'strokeColor': '#00539f',
-                            'strokeWeight': 1, 
+                            'strokeWeight': 1,
                             'scale': scale
                         }
                     })
 
                     #t = loader.get_template('maps/info-bubble.html')
                     #c = Context({ 'org': org })
-                
+
                     info = InfoBubble({
                         'content': 'teste',#t.render(c),
                         'disableAutoPan': True,
@@ -395,7 +398,7 @@ WHERE b.validated = 1
                     info.open(gmap, marker)
 
             elif view == 'density':
-            
+
                 for key in points:
                     amount = points[key]['investment']
                     #text = numbers.format_currency(
@@ -415,7 +418,7 @@ WHERE b.validated = 1
                             'path': SymbolPath.CIRCLE,
                             'fillOpacity': 0.8,
                             'fillColor': '#8eb737',
-                            'strokeWeight': 0, 
+                            'strokeWeight': 0,
                             'scale': scale
                         }
                     })
@@ -437,12 +440,15 @@ WHERE b.validated = 1
                     else:
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
-                    tp = pylab.cm.RdYlGn(1 - scale)
-                    rgb = []
-                    for c in tp[:3]:
-                        rgb.append(c * 255)
+                    if not ignore_pylab:
+                        tp = pylab.cm.RdYlGn(1 - scale)
+                        rgb = []
+                        for c in tp[:3]:
+                            rgb.append(c * 255)
 
-                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
+                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
+                    else:
+                        g = "#000000"
 
                     polygon = maps.Polygon(opts = {
                         'map': gmap,
@@ -456,7 +462,7 @@ WHERE b.validated = 1
                     maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
 
 
-        
+
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 
@@ -510,7 +516,7 @@ class RegionsSuggestListView(ListView):
         if qty == None:
             qty = 10
 
-      
+
         self.object_list = Location.objects.filter(name__icontains=search).order_by('name')[:qty]
 
         if self.data_type == "html":
@@ -532,11 +538,11 @@ class GeoIpView(ListView):
             ip = request.META['REMOTE_ADDR']
 
 
-        
+
         if ip[:3] == "127" or ip[:8] == "168.192." or ip[:10] == "192.168.0.":
             ip = "201.76.161.146"
 
-        
+
         geo = GeoIP("geoip/GeoLiteCity.dat")
         region = geo.record_by_addr(ip)
 

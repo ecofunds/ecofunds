@@ -22,8 +22,6 @@ from BeautifulSoup import BeautifulSoup
 import colorsys
 import math
 
-import pylab
-
 from django import db
 
 class OrganizationChartSourceView(BaseDetailView):
@@ -37,7 +35,7 @@ class OrganizationChartSourceView(BaseDetailView):
         result = [['Country', 'Organizations']]
 
         list = OrganizationData.list(order_by='country__name', country_id__gt=0).values('country__name').annotate(total=Count('id'))
-        
+
         for item in list:
             result.append([item['country__name'], item['total']])
 
@@ -72,18 +70,18 @@ class OrganizationMapSourceView(GoogleMapView, BaseDetailView):
         gmap = self.get_map(request, center, zoom, mapTypeId)
 
 #        list = OrganizationData.filteredList(request, 0, desired_location_lat__isnull=False, desired_location_lng__isnull=False)
-        
+
 #       for item in list:
 #           print 1
 
-        
+
         markers = []
 
         t = loader.get_template('maps/info-bubble.html')
-        
+
         sql = """
-select 		    o.name, 
-		        o.desired_location_lat, 
+select 		    o.name,
+		        o.desired_location_lat,
 		        o.desired_location_lng
 from	        ecofunds_organization o
 where			desired_location_lat is not null and desired_location_lng is not null
@@ -97,7 +95,7 @@ where			desired_location_lat is not null and desired_location_lng is not null
         if data.has_key('s_organization_type') and data['s_organization_type'] != '':
             sql += " and o.type_id = %s "
             query_params.append('%' + data['s_organization_type'] + '%')
-        
+
 
         if data.has_key('s_country') and data['s_country'] != '':
             sql+=" and cou.name like %s "
@@ -110,7 +108,7 @@ where			desired_location_lat is not null and desired_location_lng is not null
 
         dt_from = trans_date(data['s_investment_date_from'])
         dt_to = trans_date(data['s_investment_date_to'])
-        
+
         if dt_from or dt_to:
             sql+= " and exists (select 1 from ecofunds_investments where o.id in (recipient_organization_id, funding_organization_id) "
             if dt_from:
@@ -119,7 +117,7 @@ where			desired_location_lat is not null and desired_location_lng is not null
             if dt_to:
                 sql+= " and created_at <= %s "
                 query_params.append(dt_to)
-      
+
             sql+= ") "
         if data.has_key('s_investments_focus') and data['s_investments_focus'] != '':
             sql+=""" and exists (select 1 from ecofunds_entity_organizations eo
@@ -127,11 +125,11 @@ inner join ecofunds_entity_activities ea on ea.entity_id = eo.entity_id
 where eo.organization_id = o.id and ea.activity_id = %s) """
             query_params.append(data['s_investments_focus'])
 
-        
+
 
         sql += """
-        group by 	    o.name, 
-				o.desired_location_lat, 
+        group by 	    o.name,
+				o.desired_location_lat,
 				o.desired_location_lat
 
         """
@@ -150,10 +148,10 @@ where eo.organization_id = o.id and ea.activity_id = %s) """
             query_params.append(min_invest)
             query_params.append(max_invest)
 
-        
+
 
         cursor = db.connection.cursor()
-        cursor.execute(sql, query_params) 
+        cursor.execute(sql, query_params)
 
         for org in cursor.fetchall():
 
@@ -187,7 +185,7 @@ where eo.organization_id = o.id and ea.activity_id = %s) """
                 'hideCloseButton': True,
             })
 
-            
+
             info.open(gmap, marker)
             markers.append(marker)
 

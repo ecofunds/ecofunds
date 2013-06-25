@@ -9,6 +9,11 @@ gettext = lambda s: s
 import matplotlib
 matplotlib.use('Agg')
 
+LANGUAGES_NUMBERFORMAT = {
+    'pt-br':'decimal',
+    'en':'decimal-us',
+    'es':'decimal',
+}
 
 STATIC_PREFIX_URL = '/'
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -29,10 +34,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'ecofunds',                   # Or path to database file if using sqlite3.
-        'USER': 'ecofunds',                   # Not used with sqlite3.
-        'PASSWORD': 'ecofunds',               # Not used with sqlite3.
-        'HOST': '192.168.0.9',                # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                           # Set to empty string for default. Not used with sqlite3.
+        'USER': 'root',                   # Not used with sqlite3.
+        'PASSWORD': '',               # Not used with sqlite3.
+        'HOST': '',                # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                           # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -79,7 +84,7 @@ LANGUAGES_DATEFORMAT = {
 LANGUAGES_NUMBERFORMAT = {
     'pt-br':'decimal',
     'en':'decimal-us',
-    'es':'decimal',    
+    'es':'decimal',
 }
 DEFAULT_LANGUAGE = 0
 SITE_ID = 1
@@ -104,7 +109,8 @@ GEOIP_DATABASE = PROJECT_PATH + '/geoip/GeoLiteCity.dat'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(PROJECT_PATH), "static")
+    os.path.join(os.path.join(PROJECT_PATH, ".."), "static"),
+    #os.path.join(os.path.dirname(PROJECT_PATH), "static")
 )
 
 # List of finder classes that know how to find static files in
@@ -136,23 +142,23 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    
-    
+
+
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 
     #'cms.middleware.multilingual.MultilingualURLMiddleware',
-    
+
     'ecofunds.middleware.multilingual.CustomMultilingualURLMiddleware',
     'ecofunds.middleware.forcedresponse.ForceResponseMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-    
+
     #'cms.middleware.media.PlaceholderMediaMiddleware',
 )
 
@@ -172,7 +178,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     # 'django.contrib.admindocs',
-    
+
     'cms',
     'cms.plugins.picture',
     'cms.plugins.text',
@@ -212,10 +218,10 @@ CMS_TEMPLATES = (
     ('default-template.html', gettext('Default Template'))
 )
 
-CMS_LANGUAGE_CONF = { 
-    'pt-br':['en'], 
+CMS_LANGUAGE_CONF = {
+    'pt-br':['en'],
     'en':['pt-br'],
-    'es':['en'], 
+    'es':['en'],
 }
 
 CMS_LANGUAGES = (
@@ -283,8 +289,8 @@ AJAX_LOOKUP_CHANNELS = {
         'activity':('ecofunds.lookups','ActivityLookUp'),
         'userprofile':('ecofunds.lookups','UserProfileLookUp'),
         'project':('ecofunds.lookups','ProjectLookUp'),
-		'country':('ecofunds.lookups','CountryLookUp'),
-		'investment':('ecofunds.lookups','InvestmentLookUp'),
+	'country':('ecofunds.lookups','CountryLookUp'),
+	'investment':('ecofunds.lookups','InvestmentLookUp'),
         }
 AJAX_SELECT_BOOTSTRAP = False
 AJAX_SELECT_INLINES = 'inline'
