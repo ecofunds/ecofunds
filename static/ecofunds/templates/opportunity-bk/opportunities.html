@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<!-- oportunidades -->
+<section class="relacao completa ultimas-oportunidades">
+	<h3>{% trans "Funding opportunities" %}</h3>
+	<ul>
+		{% for opportunity in latest %}
+			<li>
+				<h4>{{ opportunity.title }}</h4>
+				<p>{{ opportunity.excerpt }}</p>				
+				<a class="veja-mais" href="{{ opportunity.get_absolute_url }}" title="{% trans "Show complete record" %}">{% trans "Show complete record" %}</a>
+			</li>
+		{% empty %}
+		    <li>{% trans "No news yet" %}</li>
+		{% endfor %}
+	</ul>
+</section>
+<!-- fim de oportunidades -->

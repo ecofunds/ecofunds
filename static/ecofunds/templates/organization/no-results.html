@@ -1,0 +1,41 @@
+{% load cms_tags sekizai_tags tags i18n static %}
+
+<!-- Nada encontrado -->
+<div class="nada-econtrado">
+    <h3>{% trans "No results match your seach." %}</h3>
+    <p>{% trans "Try one of the organizations below or make a new search." %}</p>
+</div>
+<!-- fim de Nada encontrado -->
+
+<!-- Novos projetos -->
+<div class="relacao resumida novos-projetos alinhado esquerda">
+    <h3>{% trans "New organizations" %}</h3>
+    <ul>
+        {% for organization in new_organizations %}
+        <li>
+            <h4><a href="{% page_url "organization-detail" %}?id={{organization.id}}" title="{{ organization.name }}">{{ organization.name }}</a></h4>
+            <p>
+                {% autoescape off %}{{ organization.mission }}{% endautoescape %}
+            </p>
+        </li>
+        {% endfor %}                                                                           
+    </ul>   
+</div>
+<!-- fim de novos projetos -->
+
+
+<!-- Novos investimentos -->
+<div class="relacao resumida novos-investimentos alinhado direita">
+    <h3>{% trans "Latest organizations to register investments" %}</h3>
+    <ul>
+        {% for organization in latest_investment_organizations %}
+         <li>
+            <h4><a href="{% page_url "organization-detail" %}?id={{organization.id}}" title="{{ organization.name }}">{{ organization.name }}</a></h4>
+            <p>
+                {% autoescape off %}{{ organization.mission }}{% endautoescape %}
+            </p>
+        </li>
+        {% endfor %}                                                                              
+    </ul>   
+</div>
+<!-- fim de novos investimentos -->

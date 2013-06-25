@@ -1,0 +1,38 @@
+{% load tags i18n %}   
+<div class="paginacao-resultados">
+    <div class="total-resultados">
+        {% if show_page_size %}
+        <p>{% trans "Showing" %} <strong> {{ paginator.end_index }} </strong> {% trans "of" %} <strong> {{ paginator.paginator.count }} </strong> {% trans "documents" %}</p>
+        {% else %}
+        <p>{% trans "Approximately" %} <strong> {{ paginator.paginator.count }} </strong> {% trans "results" %}</p>
+        {% endif %}
+    </div>
+
+    <div class="paginacao">
+        <ul class="lista">
+            {% if paginator.has_previous %}
+                <li class="item anterior">
+                    <a href="?page={{ paginator.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            
+            {% if not begin and paginator.paginator.num_pages > 3 %}
+                <li class="item"><a href="?page=1">1</a></li>
+                <li class="item">...</li>
+            {% endif %}
+            {% for i in pages %}
+                <li class="item {% if i == paginator.number %} atual{% endif %}"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endfor %}
+            {% if not end and paginator.paginator.num_pages > 3 %}
+                <li class="item">...</li>
+                <li class="item "><a href="?page={{ paginator.paginator.num_pages }}">{{ paginator.paginator.num_pages }}</a></li>
+            {% endif %}
+
+            {% if paginator.has_next %}
+                <li class="item proximo">
+                    <a href="?page={{ paginator.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

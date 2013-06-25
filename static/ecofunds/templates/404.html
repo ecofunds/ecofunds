@@ -1,0 +1,36 @@
+{% extends "base-cms.html" %}
+{% load i18n cms_tags %}
+
+{% block base_content %}
+<!-- area-site -->
+<div class="area-site erro"></div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- aviso-erro -->
+    <div class="aviso-erro">
+        <h2>{% trans "We’re sorry..." %}</h2>
+        <h3>{% trans "We could not process your request." %}</h3>
+
+        <p>
+            {% trans "There has been an error during the attempt to attend your request. Please try again or visit the " %}
+            <a href="{% page_url "map" %}" title="{% trans "Ecofunds map" %}">{% trans "Ecofunds map" %}</a>.
+        </p>
+
+        <!-- banner-interno -->
+        <div class="banner-interno maior">
+            <div class="texto">
+                <h4>{% trans "Discover funding flows and trends using Ecofunds map" %}</h4>
+                <p>
+                   {% trans "Ecofunds is the official RedLAC web platform to map and coordinate conservation investments in the Andes-Amazon region." %}
+                </p>
+                <a class="botao primario" href="{% page_url "map" %}" title="{% trans "Navigate Map" %}">{% trans "Navigate Map" %}</a>
+            </div>
+        </div>
+        <!-- fim de banner-interno -->
+
+    </div>
+    <!-- fim de aviso-erro -->
+</div>
+
+{% endblock %}

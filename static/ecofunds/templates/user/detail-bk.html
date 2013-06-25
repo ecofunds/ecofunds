@@ -1,0 +1,40 @@
+First Name : {{userprofile.user.first_name}}
+<p/>
+Last Name : {{userprofile.user.last_name}}
+<p/>
+email : {{userprofile.user.username}}
+<p/>
+status : {{userprofile.user_type}}
+<p/>
+organization information
+<p/>
+organizations the user belongs to:
+{% for org in organizations %}
+        {{org}}
+{% endfor %}
+<p/>
+Job Title : {{userprofile.title}}
+<p/>
+Contact Information : +{{userprofile.phone_country_prefix_01}} ({{userprofile.phone_local_prefix_01}}) {{userprofile.phone1}}
+{% if userprofile.phone2 %}
+/ +{{userprofile.phone_country_prefix_02}} ({{userprofile.phone_local_prefix_02}}) {{userprofile.phone2}}
+{% endif %}
+<p/>
+{% if userprofile.fax %}
+FAX:  +{{userprofile.fax_country_prefix}} ({{userprofile.fax_local_prefix}}) {{userprofile.fax}}
+{% endif %}
+<p/>
+{% if userprofile.email_alt %}
+Second email:{{userprofile.email_alt}}
+{%endif%}
+
+Users from the same organization:
+<p />
+{% for user in same_organizations %}
+        {{user}}
+{%endfor%}
+<p />
+Users in the same projects:
+{% for user in same_projects %}
+        {{user}}
+{%endfor%}

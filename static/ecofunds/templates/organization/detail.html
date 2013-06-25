@@ -1,0 +1,395 @@
+{% load sekizai_tags tags i18n static %}
+
+{%block head%}
+	{% addtoblock "meta" %}
+		<!-- Facebook Meta Tags -->		
+<!-- 	    <meta property="og:title" content="{{ organization.name }}" /> 
+<meta property="og:type" content="company" /> 
+<meta property="og:url" content="" /> 
+<meta property="og:image" content="{% if organization.image %}{% get_static_prefix %}{% get_static_prefix %}{{ organization.image.url }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" /> 
+<meta property="og:site_name" content="http://ecofundsdatabase.org"/> 
+<meta property="og:description" content="{{ organization.mission }}" /> -->
+		<!-- End of Facebook Meta Tags -->
+	{% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/detail.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/organization/detail.js"></script>
+
+		<!-- Utilizado pelo Facebook -->
+		<script>
+		    (function(d, s, id) {
+		        var js, fjs = d.getElementsByTagName(s)[0];
+		        if (d.getElementById(id)) return;
+		        js = d.createElement(s); js.id = id;
+		        js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=277399048946696";
+		        fjs.parentNode.insertBefore(js, fjs);
+		    }
+		    (document, 'script', 'facebook-jssdk'));
+		</script>
+		<!-- fim Utilizado pelo Facebook -->
+
+		<!-- Utilizado pelo Twitter -->
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<!-- fim Utilizado pelo Twitter -->        
+    {% endaddtoblock %}
+{% endblock %}
+
+<!-- Utilizado pelo Facebook -->
+<div id="fb-root"></div>
+<!-- fim Utilizado pelo Facebook -->
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto organizacao-maior-branco">{% trans "Organizations" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+    	<a class="voltar link-destaque" href="{% page_url "organizations" %}" title="{% trans "Previous search" %}">{% trans "Previous search" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo">
+    	<div class="ficha organizacao {%if perm%}pode-editar{%endif%}" data-index="{{ organization.pk }}">
+            <input type="hidden" name="id" value="{{ organization.id }}" />
+    		<h2 class="titulo-ficha">{{ organization.name }}</h2>
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+                		
+    		<div class="opcoes">
+	    		<!-- menu com abas da ficha -->
+	    		<div class="menu-abas">
+			        <ul class="menu-abas-container">
+		        		<li class="item aba"><a class="link-aba" href="#informacoes">{% trans "Organization Record" %}</a></li>
+			        </ul>
+			    </div>
+			    <!-- fim de menu com abas da ficha -->
+			        
+			    <!-- opcoes-adicionais da ficha -->
+			    <div class="opcoes-adicionais">
+                    
+			        <ul class="opcoes-adicionais-container">
+		        		<li class="item ico ico-texto projeto-menor-verde"><a href="{% page_url "projects" %}?s_organization_name={{ organization.name }}" id="bt-projects">{% trans "Projects" %}</a></li>
+		        		<li class="item ico ico-texto investimento-menor-verde"><a href="{% page_url "investments" %}?s_organization_name={{organization.name}}" id="bt-investments">{% trans "Investments" %}</a></li>
+		        		<li class="item ico ico-texto localizacao-menor-verde"><a href="{% page_url "map"%}?s_organization={{organization.name}}" id="bt-location">{% trans "Project location map" %}</a></li>
+		        		<li class="item ico ico-texto impressao"><a href="#" id="bt-print">{% trans "Print" %}</a></li>     
+			        </ul>
+		    	</div>
+		  		<!-- fim de opcoes-adicionais da ficha -->
+		  		
+		  		<!-- Controle de Edição -->
+                {%if perm%}
+                    <div class="controles-edicao edicao-ficha organizacao">
+                        <a class="ico pequeno editar" href="{% page_url "organization-form" %}?id={{ organization.id }}" title="{% trans "Edit organization" %}: {{ organization.name }}">Edit</a>
+                        <a class="ico pequeno excluir" href="#delete-modal" title="{% trans "Delete organization" %}: {{ organization.name }}">Delete</a>
+                    </div>
+                    
+                	<div id="delete-modal" class="camada-exclusao organizacao">
+	                    <div class="confirmacao">
+	                        <p>{% trans "The organization" %} <em>{{ organization.name }}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable person or an organization administrator." %}</p>
+	                        
+	                        <p>{% trans "Do you really want to delete this organization from Ecofunds?" %}</p>
+	                        
+	                        <a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep organization in Ecofunds" %}">{% trans "No, keep organization in Ecofunds" %}</a>
+	                        
+	                        <a class="confirmar" href="javascript:;" title="{% trans "Yes, delete organization" %}">{% trans "Yes, delete organization" %}</a>
+	                    </div>
+	                </div>                    
+                {%endif%}
+                <!-- fim de controle de edicao -->		  		
+	  		</div>
+
+	  		<div class="conteudo-abas-container">
+		        <!-- Informacoes da ficha -->
+		        <section id="informacoes">
+					<!-- Informações Básicas -->
+					<div class="info basica">
+						<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
+						
+						<!-- Compartilhar nas redes sociais -->
+						<div class="compartilhar">
+							<ul>
+								<li class="facebook">
+									<div class="fb-like" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false" data-font="arial"></div>
+								</li>
+								<li class="twitter">
+									<a href="https://twitter.com/share" class="twitter-share-button" data-via="funbio" data-lang="en" data-hashtags="Ecofunds" data-text="{% trans "I like organization" %} {{ organization.name }}">Tweet</a>
+								</li>
+								<li class="email"><a class="botao secundario" title="Enviar por email"><span class="ico pequeno email"></span>Email</a></li>
+							</ul>
+						</div>
+						<!-- fim de compartilhar nas redes sociais -->
+
+						<div class="img-profile-container">
+							<img id="picture" src="{% if organization.image %}{{ organization.image.url }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" data-default="{% 	get_static_prefix %}images/organizacao-sem-foto.jpg" width="185" height="130" alt="Image: {{ organization.name }}"> 
+						</div>
+						
+						
+						<h3>{% trans "Organization Description" %}</h3>
+						<div class="descricao">
+							<p>
+								{% autoescape off %}{{ organization.mission }}{% endautoescape %}
+							</p>						
+						</div>
+						
+						<!-- tabela de informacoes basicas -->
+						<table class="tabela horizontal" caption="Basic information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Acronym" %}</th>
+									<td class="conteudo-registro">{%if organization.acronym%}{{ organization.acronym }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Organization type" %}</th>
+									<td class="conteudo-registro">{%if organization.type.name %}{{ organization.type.name }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "CEO/President/Director" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.contact_first_name%}
+											{{ organization.contact_first_name }} {{ organization.contact_last_name }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>								
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Toolkit profile web address" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.toolkit%}
+											<a href="{{ organization.toolkit }}" title="{{ organization.toolkit }}">{{ organization.toolkit }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>								
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Executed projects" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.projects_organizations.all.count%}
+											<ul class="lista-etiquetas">
+												
+		                                        {% for po in organization.projects_organizations.all %}
+												    <li><a class="etiqueta" href="{% page_url "project-detail" po.entity.entity_id %}" title="Search: {{ po.entity.title }}">{{ po.entity.title }}</a></li>
+		                                        {% endfor %}
+		                                    </ul>
+	                                    {%else%}
+	                                    	-
+	                                    {%endif%}
+									</td>
+								</tr>	
+	                            <tr>
+									<th class="titulo-registro" scope="row">{% trans "Supported projects" %}</th>
+									<td class="conteudo-registro">
+										{%if funding_investments.all.count%}
+		                                    <ul class="lista-etiquetas">
+		                                    {% for po in organization.funding_investments.all %}
+											    <li><a class="etiqueta" href="{% page_url "project-detail" po.recipient_entity.entity_id %}" title="Search: {{ po.recipient_entity.title }}">{{ po.recipient_entity.title }}</a></li>
+		                                    {% endfor %}
+		                                    </ul>
+										{%else%}
+											-
+										{%endif%}
+								    </td>
+								</tr>																							
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes basicas -->
+					</div>
+					<!-- fim de Informações Básicas -->
+
+					<!-- Informações de endereco -->
+					<div class="info endereco">
+						<h2 class="titulo-tabela">{% trans "Address" %}</h2>
+
+						<!-- tabela de informacoes de endereco -->
+						<table class="tabela horizontal" caption="Address" summary="">					
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Address" %}</th>
+									<td class="conteudo-registro">{%if organization.street1%}{{ organization.street1 }}, {{ organization.street2 }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "ZIP" %}</th>
+									<td class="conteudo-registro">{%if organization.zip%}{{ organization.zip }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Country" %}</th>
+									<td class="conteudo-registro">{%if organization.country%}{{ organization.country.name }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "State/Province/Region" %}</th>
+									<td class="conteudo-registro">{%if organization.state%}{{ organization.state.name }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "City" %}</th>
+									<td class="conteudo-registro">{%if organization.city%}{{ organization.city }}{%else%}-{%endif%}</td>
+								</tr>																	
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de endereco -->
+					</div>
+					<!-- Fim de Informações de endereco -->
+
+					<!-- Informações de Contato -->
+					<div class="info contato">
+						<h2 class="titulo-tabela">{% trans "Contact information" %}</h2>
+
+						<!-- tabela de informacoes de contato -->
+						<table class="tabela horizontal" caption="Contact information" summary="">					
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Email" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.email%}
+											<a href="mailto: {{ organization.email }}" title="{{ organization.email }}">{{ organization.email }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Phone numbers" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.phone_number%}
+											+{{ organization.phone_country_prefix }} ({{ organization.phone_local_prefix }}) {{ organization.phone_number }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "FAX" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.fax_number%}
+											+{{ organization.fax_country_prefix }} ({{ organization.fax_local_prefix }}) {{ organization.fax_number }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Website" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.website%}
+											<a href="{{ organization.website }}" title="{{ organization.website }}">{{ organization.website }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>										
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de contato -->
+					</div>
+					<!-- Fim de Informações de Contato -->
+
+	                {% if attachments.count > 0 %}
+					<!-- Anexos -->
+					<div class="info anexos">
+						<h2 class="titulo-tabela">{% trans "Attachments" %}</h2>
+							
+						<!-- tabela de anexos -->
+						<table class="tabela vertical" caption="Attachments" summary="">
+							<thead>
+								<tr>
+									<th class="titulo-registro" scope="col">{% trans "File name" %}</th>
+									<th class="titulo-registro" scope="col">{% trans "Date of publishing" %}</th>
+									<th class="titulo-registro" colspan="2" scope="col"></th>
+								</tr>
+							</thead>
+
+							<tfoot>
+								<tr>
+									<td class="rodape-tabela" colspan="4">
+										<div class="paginacao-resultados">
+										    {% pagination attachments True %}
+										</div>
+									</td>
+								</tr>
+							</tfoot>
+
+							<tbody>
+	                            {% for attachment in attachments %}
+								<tr>
+									<td class="conteudo-registro texto"><a href="{{ attachment.path.url }}" title="{{ attachment.name }}">{{ attachment.name }}</a></td>
+									<td class="conteudo-registro">{{ attachment.created_at|date:"d/M/Y" }}</td>
+									<td class="conteudo-registro preview"><a href="{{ attachment.path.url }}" title="">{% trans "View" %}</a></td>
+									<td class="conteudo-registro download"><a class="ico ico-texto pdf" href="#" title="">{% trans "Download" %}</a></td>
+								</tr>
+	                            {% endfor %}											
+
+							</tbody>
+						</table>				
+						<!-- fim de tabela de anexos -->
+					</div>	
+					<!-- fim de Anexos -->
+	                {% endif %}
+
+		        </section>
+		        <!-- fim de Informacoes da ficha -->
+		    </div>
+    	</div>
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+
+        {% if similar_location_organizations.count > 0 %}
+		<!-- Escopo Geográfico -->
+		<section class="relacao resumida escopo-geo">
+			<h3>{% trans "Similar geographical scope" %}</h3>
+			<ul>
+                {% for organization in similar_location_organizations %}
+				<li>
+					<h4><a href="{%page_url "organization-detail"%}?id={{organization.id}}" title="{{ organization.name }}">{{ organization.name }}</a></h4>
+					<p>
+						{{ organization.mission }}
+					</p>
+				</li>
+                {% endfor %}																			
+			</ul>	
+		</section>
+		<!-- fim de Escopo Geográfico -->
+        {% endif %}
+
+        {% if similar_activity_organizations.count > 0 %}
+		<!-- Tipo de atividades -->
+		<section class="relacao resumida tipo-atividades">
+			<h3>{% trans "Similar activities types" %}</h3>
+			<ul>
+				{% for organization in similar_activity_organizations %}
+				<li>
+					<h4><a href="#" title="{{ organization.name }}">{{ organization.name }}</a></h4>
+					<p>
+						{{ organization.mission }}
+					</p>
+				</li>
+                {% endfor %}																			
+			</ul>	
+		</section>
+		<!-- fim de Tipo de atividades --> 
+		{% endif %}
+
+		{% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

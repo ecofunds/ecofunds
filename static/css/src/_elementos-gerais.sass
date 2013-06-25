@@ -1,0 +1,1260 @@
+/* ELEMENTOS-GERAIS: Fluxo, graficos, cartoes, tabelas, fichas */
+/* ================================================================*/
+
+/* ABAS */
+/* ================================================================*/
+.menu-abas
+	@extend .clearfix
+	border-bottom: 1px solid lighten($cor-padrao, 48%)
+	width: 100%
+
+	.menu-abas-container
+		display: block
+		margin: 0 0 -1px 0
+		float: left
+
+		.aba
+			@include background(linear-gradient(top, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))
+			outline: none
+			border: 1px solid lighten($cor-padrao, 52%)	 
+			border-bottom: none
+			display: block
+			float: left
+			margin: -1px 4px 0 0
+
+			a
+				display: block
+				padding: 0 16px
+				font: 14px $fonte-secundaria
+				font-weight: normal				
+				line-height: 28px				
+			
+			&:active
+				@include background(linear-gradient(bottom, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))	
+
+			&.ativa
+				background: $cor-fundo-padrao
+				border: 1px solid lighten($cor-padrao, 48%)
+				border-bottom: 1px solid $cor-fundo-padrao					
+				
+				a
+					pointer-events: none
+					cursor: default			
+					color: $cor-padrao						
+
+				&:first-child
+					border-left: none
+
+
+/* CARTAO - Cartao de Info do projeto branco*/
+/* ================================================================*/
+.cartao
+	@include photoshop-drop-shadow(90, 1px, 0, 5px, rgba(0, 0, 0, 0.4))
+	@include box-sizing(border-box)
+	padding: 15px
+	overflow: hidden		
+	position: relative
+	float: left
+	margin: 0 0 24px 25px
+	font: 11px $fonte-primaria
+	line-height: 12px
+
+	background: $cor-fundo-padrao
+
+	.titulo
+		font-family: $fonte-primaria
+		font-weight: bold
+		color: $cor-destaque		
+		height: 35px
+		font-size: 16px
+		line-height: 17px
+
+	.destaque
+		font-weight: bold
+
+	.subtitulo
+		font-weight: bold
+		color: $cor-secundaria
+		padding: 4px 0 0 0	
+
+		font-size: 12px
+		line-height: 13px
+
+	.thumb
+		display: block
+		width: 185px
+		height: 130px
+		@include opacity(1)
+		margin: 12px auto 8px auto
+
+
+	.invest-recebido
+		font-weight: bold
+		color: $cor-destaque
+
+		font-size: 11px
+		line-height: 20px
+		padding: 0 0 7px 0			
+
+		.valor
+			display: block
+
+			font-size: 18px
+
+	.resumo
+		height: 50px
+		margin: 10px 0 12px 0 
+
+	.veja-mais
+		position: absolute
+		bottom: 15px
+		left: 15px
+		font-size: 12px
+
+	&.projeto
+		width: 216px
+		height: 389px
+
+	&.organizacao
+		width: 216px
+		height: 329px
+
+	&.oportunidade
+		width: 216px
+		height: 279px	
+
+	&.investimento
+		width: 216px
+		height: 280px
+
+		.direcao-investimento
+			@include box-sizing(border-box)
+			@include background(linear-gradient(top, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))
+			border: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+			position: relative
+
+			a
+				display: block
+				padding: 10px
+
+				&:hover
+					@include background(linear-gradient(top, $cor-fundo-padrao, lighten($cor-padrao, 48%)))
+
+			.doador, .direcao, .receptor
+				display: block
+
+			.doador, .receptor
+				font-weight: bold
+				color: $cor-secundaria
+
+			.doador
+				height: 30px
+				font-size: 12px
+				line-height: 14px
+
+			.direcao
+				font-weight: normal
+				color: $cor-padrao
+				margin: 4px 0 10px
+
+			.seta-fluxo
+				top: 56px
+				left: -4px
+
+			.receptor
+				height: 50px
+				margin: 0 0 0 15px
+				font-size: 14px
+				line-height: 16px
+
+		.subtitulo
+			border-bottom: 1px solid lighten($cor-padrao, 48%)
+			padding-bottom: 8px
+			margin: 6px 0
+
+	&.primeiro
+		margin-left: 0
+
+	&.pode-editar
+		position: relative
+		overflow: visible
+
+		.titulo
+			width: 140px
+
+		.controles-edicao
+			position: absolute
+			top: 11px
+			right: 8px
+
+			.ico
+				&.pequeno
+					margin-right: 0
+
+		.faixa-conclusao
+			background: $cor-destaque
+			position: absolute
+			top: 86px
+			left: -9px
+			padding: 5px 7px 5px 12px
+			font: 13px $fonte-secundaria
+			color: $cor-contraste
+
+			&:before
+				content: " "
+				display: block
+				position: absolute
+				width: 0
+				height: 0
+				top: 21px
+				left: 3px
+				margin: 0 auto
+				border: 6px solid transparent
+				border-bottom-color: darken($cor-padrao, 21%)
+				@include rotate(45deg)
+
+		.camada-exclusao
+			.confirmacao, .excluido
+				display: none
+				@include box-sizing(border-box)
+				position: absolute
+				padding: 15px			
+				top: 0
+				right: 0
+				bottom: 0
+				left: 0
+
+				p
+					font: 13px $fonte-primaria
+					color: $cor-contraste
+					margin: 0 0 20px 0
+
+				em
+					font-weight: bold
+					color: $cor-secundaria
+			
+			.confirmacao
+				background-color: rgba(0,0,0,0.9)
+
+				.botao
+					font-size: 12px
+					padding-left: 0px
+					padding-right: 0px
+
+				.confirmar
+					@extend .veja-mais
+					position: relative
+					display: block
+					margin: 20px 0 0 0
+					left: 0
+					bottom: 0
+					font-size: 12px
+
+			.excluido
+				background-color: rgba($cor-contraste, 0.9)
+
+				.botao
+					position: absolute
+					top: 50%
+					left: 15px
+					right: 15px
+					margin-top: -14px
+
+		/* Especifico de Investimento */
+		&.investimento
+			.doador
+				width: 130px
+
+			.controles-edicao
+				top: 23px
+				right: 15px
+
+
+/* ================================================================*/
+
+
+
+/* FILTROS APLICADOS */
+/* ================================================================*/
+.filtros-aplicados
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	width: 100%
+	margin: 0 0 5px 0
+	line-height: 13px
+
+	p
+		margin: 0 8px 0 0
+		display: inline-block
+		float: left
+		line-height: 22px
+
+	.lista
+		width: 90%
+		float: left
+		list-style: none
+
+		.item
+			&.etiqueta
+				margin-bottom: 5px
+				line-height: 13px
+
+			.fechar-filtro
+				background: imageUrl("ico/auxiliares/ico-fechar.png") no-repeat center center
+				width: 9px
+				height: 8px
+				display: inline-block
+				margin: 0 0 0 4px
+				vertical-align: middle
+				cursor: pointer
+/* ================================================================*/
+
+
+
+/* VISUALIZACAO - Modos de visualização e tipos visualizados e opcoes-adicionais */
+/* ================================================================*/
+.visualizacao, .tipo, .opcoes-adicionais
+	display: block
+	height: 24px
+	line-height: 24px
+
+	.texto-lista
+		display: inline-block
+		vertical-align: middle
+
+	.visualizacao-container, .tipo-container, .opcoes-adicionais-container
+		list-style: none
+		display: inline-block
+
+		.item
+			display: inline-block
+			margin: 0 5px
+			vertical-align: middle
+			outline: none
+
+			&.ico
+				float: none
+
+.visualizacao
+	.visualizacao-container
+		.item
+			&.ativo
+				.link
+					color: lighten($cor-padrao, 29.7%)
+					pointer-events: none
+					cursor: default			
+
+.tipo
+	.tipo-container
+		.item
+			label
+				font-weight: bold
+
+.opcoes-adicionais
+	.opcoes-adicionais-container
+		.item
+			margin: 0 0 0 35px
+
+/* ================================================================*/
+
+
+
+/* VISUALIZACAO - Modos de visualização e tipos visualizados e opcoes-adicionais - LISTAGEM */
+/* ================================================================*/
+.filtros-listas-tabelas
+	.visualizacao, .tipo
+		margin: 0 0 10px 0
+
+	.visualizacao
+		float: right
+
+	.tipo
+		float: left
+
+/* ================================================================*/
+
+
+
+/* VISUALIZACAO - Listagem e tabelas - Projetos, Organizaçoes, Investimentos */
+/* ================================================================*/
+.modos-visualizacao
+	position: relative
+
+	.listagem, .tabelas
+		&.ativo
+			display: block
+
+		&.inativo
+			display: none
+/* ================================================================*/
+
+
+
+/* ORDENACAO
+/* ================================================================*/
+.ordenacao
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	@include box-sizing(border-box)
+	width: 100%
+	background: lighten($cor-padrao, 56.5%)
+	padding: 10px
+	line-height: 13px
+
+	p
+		margin-right: 4px
+		padding: 2px 0
+		float: left
+
+	.lista
+		list-style: none
+
+		.item
+			border-left: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+			float: left
+			margin-right: 11px
+			padding: 2px 0 2px 11px
+
+			&:first-child
+				padding-left: 0
+				border: none
+			
+			a
+				font-weight: bold
+		
+			&.atual
+				a
+					pointer-events: none
+					cursor: default			
+					color: $cor-padrao
+	//Ordem alfabetica, maior investimento...
+	.ordenacao-padroes
+		width: 30%
+		float: left
+
+	//Projetos, organizaçoes...
+	.ordenacao-tipos
+		width: 58.5%
+		float: right
+
+		p, .lista
+			text-align: right
+/* ================================================================*/
+
+
+
+/* PAGINACAO E RESULTADOS */
+/* ================================================================*/
+.paginacao-resultados
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix	
+	width: 100%
+	margin: 10px 0
+
+	.total-resultados
+		width: 40%
+		float: left
+
+	.paginacao
+		width: 57%
+		margin: 0 0 0 20px
+		float: right
+		font-size: 14px
+		font-weight: bold
+		text-align: right
+		
+		.lista
+			display: inline-block
+			list-style: none
+
+			.item
+				float: left
+				border-left: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+				border-right: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2			
+				margin-left: -1px
+				padding: 0 7px
+				
+				&.atual
+					a
+						pointer-events: none
+						cursor: default			
+						color: $cor-padrao					
+
+				&.anterior
+					border: none
+					background: imageUrl("ico/setas-padrao/ico-seta-padrao-esquerda.png") no-repeat left center
+					font-size: 12px
+					margin-right: 14px
+					padding-left: 17px
+
+				&.proximo
+					border: none
+					background: imageUrl("ico/setas-padrao/ico-seta-padrao-direita.png") no-repeat right center
+					font-size: 12px
+					margin-left: 14px
+					padding-right: 17px
+
+/* ================================================================*/
+
+
+
+
+/* Relacao de ultimos itens */
+/* ================================================================*/
+.listagem, 
+.tabelas
+	&.organizacoes, 
+	&.investimentos
+		.relacao
+			&.resumida
+				h3
+					height: 44px
+					overflow: hidden
+
+.relacao
+	@extend .clearfix
+	@include box-sizing(border-box)
+
+	width: 100%
+
+	h3	
+		font: 18px $fonte-secundaria
+		font-weight: 600
+		line-height: 20px
+		margin: 0 0 14px 0 
+		padding: 0 0 10px 0
+		border-bottom: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2	
+
+	&.investimentos
+		&:first-child
+			margin: 0 0 27px 0
+		ul
+			li
+				position: relative
+				border-top: 1px solid lighten($cor-padrao, 48%)
+				padding: 10px 0
+
+				&:first-child
+					border: none
+					padding-top: 0
+
+					.seta-fluxo
+						top: 9px
+						left: 0
+
+				.doador, .receptor
+					white-space: nowrap
+					width: 90%
+					overflow: hidden
+					text-overflow: ellipsis
+
+				.doador
+					margin-left: 15px
+
+				.receptor
+					margin-left: 28px
+
+				.seta-fluxo
+					top: 19px
+					left: 0
+
+				.invest-recebido	
+					margin: 7px 0 0 0
+
+					.valor
+						font-size: 16px
+						font-weight: bold
+						color: $cor-destaque
+
+	&.completa
+		ul	
+			margin: 0 0 15px 0
+			border-bottom: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2	
+				
+			li
+				margin: 0 0 12px 0
+
+				h4			
+					font: 14px $fonte-primaria
+					font-weight: bold
+					line-height: 22px
+					text-overflow: ellipsis
+					overflow: hidden
+					white-space: nowrap				
+				p
+					font-size: 12px
+					line-height: 18px
+					margin: 0 0 2px 0
+					max-height: 70px
+		.botao
+			float: left
+	
+	&.resumida
+		ul	
+			margin: 0 0 27px 0
+		
+			li
+				padding: 8px 0 
+				border-top: 1px solid lighten($cor-padrao, 48%)
+
+				&:first-child
+					border: none
+					padding-top: 0
+
+				h4		
+					font: 14px $fonte-primaria
+					font-weight: bold
+					line-height: 18px
+					margin: 0 0 5px 0
+					max-height: 37px		
+				p
+					font-size: 12px
+					line-height: 16px
+					max-height: 37px
+					margin: 0 0 3px 0	
+
+
+	&.alinhado
+		width: 47%
+
+		&.esquerda
+			float: left
+
+		&.direita
+			float: right
+/* ================================================================*/
+
+
+
+/* Filtros */
+/* ================================================================*/
+
+/* Esconde o botao para ocultar e expandir o filtro */
+#projects, #organizations, #investments, #opportunities
+	.filtros
+		height: auto!important
+		overflow: visible!important
+		.cabecalho
+			.botao
+				display: none
+
+.filtros, 
+.formulario-simples
+	@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.2))
+	@include box-sizing(border-box)
+	background: lighten($cor-padrao, 55%) //Gera a cor #f2f2f2
+	margin: 0
+	padding: 12px
+
+	&.projetos, 
+	&.organizacoes, 
+	&.investimentos
+		width: 260px
+
+	&.aberto
+		height: 615px
+
+		.cabecalho
+			.seta
+				background-image: imageUrl("ico/seta-simples-menor/ico-seta-simples-cima-menor.png")
+
+	&.fechado
+		height: 36px
+		overflow: hidden
+
+		.cabecalho
+			.seta
+				background-image: imageUrl("ico/seta-simples-menor/ico-seta-simples-baixo-menor.png")	
+	.borda
+		border-top: 1px solid $cor-fundo-padrao
+		border-bottom: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+		padding: 8px 0
+
+		&.primeiro
+			border-top: none
+			padding-top: 0
+
+		&.ultimo
+			border-bottom: none
+			padding-bottom: 0
+
+	input[type="hidden"] + .borda
+		border-top: none
+		padding-top: 0
+
+	.cabecalho
+		border-bottom: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+		padding-bottom: 10px
+		margin-bottom: 10px
+		position: relative
+
+		h4
+			font: 15px $fonte-secundaria
+			line-height: 15px
+		p
+			background: lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+			margin: 15px 0 0 0
+			padding: 5px 8px			
+			position: relative
+			line-height: 13px
+
+		.seta
+			position: absolute
+			width: 10px
+			height: 6px
+			display: block
+
+			&.cima
+				top: -6px
+
+			&.cinza
+				background: imageUrl("ico/seta-simples-menor/ico-seta-simples-cima-menor-cinza.png") no-repeat center center
+
+		.botao
+			position: absolute
+			top: -3px
+			right: 0
+			padding: 0 4px
+			width: 17px
+			height: 17px
+
+			.pequeno
+				width: 7px
+				height: 15px
+				line-height: 15px
+				margin: 0
+
+	fieldset
+		border: none
+
+		legend
+			margin: 0 0 5px 0
+			font-size: 12px
+			color: $cor-destaque
+	
+	label
+		display: block
+		font-size: 12px
+		line-height: 12px
+		margin: 0 0 5px 0
+
+	input, select, .qx-stylingForms-select
+		display: inline-block
+		margin: 0 0 8px 0
+
+	input[type="submit"]
+		margin: 0
+
+	.total
+		color: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+
+	.check
+		color: $cor-secundaria
+		font-weight: bold
+
+	.emlinha
+		display: inline-block
+		vertical-align: middle
+		margin: -10px 6px 0 6px
+
+	.numero, .data
+		width: 43%		
+
+	&.home
+		margin: 0 0 24px 0
+		input[type="text"], select, .qx-stylingForms-select
+			margin-bottom: 15px
+	
+	
+	/* Tratamento de erros e alinhamentos dos elementos do formulario */
+	.alinhamento-direita
+		float: right
+
+	input
+		+ .alinhamento-direita
+			margin-top: 6px	 		
+
+/* ================================================================*/
+
+
+
+/* Carregando */
+/* ================================================================*/	
+.carregando
+	z-index: 20
+
+	&.tela-mapa
+		@include background(imageUrl("ico/auxiliares/ico-loading-cinza-claro.gif"), rgba(0,0,0,0.7))
+		background-repeat: no-repeat, repeat 
+		background-position: center center, 0 0
+		top: 0
+		bottom: 0
+		
+	&.tela-listagem
+		background: rgba(255,255,255,0.7)
+		position: absolute
+		width: 100%
+		height: 100%
+		top: 0
+		left: 0
+
+.loader
+	background: imageUrl("ico/auxiliares/ico-loading-cinza-escuro.gif") no-repeat center center
+	width: 80px
+	height: 55px
+	position: fixed
+	z-index: 1000
+	top: 0
+	left: 0
+/* ================================================================*/
+
+
+
+
+/* Mapa e Gráficos*/
+/* ================================================================*/	
+#home
+	#bt-layers, #bt-fullscreen, .slider-control-container, .legenda, .graficos
+		display: none
+
+.mapa, .graficos
+	@include photoshop-drop-shadow(90, 2px, 0, 5px, rgba(0, 0, 0, 0.6))
+	margin: 0 0 17px 0
+	position: relative
+
+	.botoes-container, .slider-control-container, .legenda
+		font-family: $fonte-secundaria
+		position: absolute
+		right: 0
+		z-index: 20
+
+	/* Botoes */
+	.botoes-container
+		top: 14px
+
+		.botao
+			min-width: 65px
+			float: left
+
+			&.destacado
+				margin: 0 6px 0 0
+
+	/* Slider */
+	.slider-control-container
+		top: 59px
+		clear: both
+
+		.zoom-in, .zoom-out
+			width: 26px
+			cursor: pointer
+			outline none
+
+		.zoom-in
+			background: imageUrl("bg/bg-zoom-in.png") no-repeat center center
+			height: 26px
+
+		.zoom-out
+			background: imageUrl("bg/bg-zoom-out.png") no-repeat center center
+			height: 30px
+
+		.ui-widget-content
+			border: none!important
+
+		.ui-widget-header
+			background: none!important
+
+		.ui-slider
+			background: imageUrl("bg/bg-slider.png") no-repeat center center
+			width: 14px
+			height: 155px
+			margin: 0 0 0 6px
+			position: relative
+
+		.ui-slider-handle 
+			background: imageUrl("bg/bg-handle-slider.png") no-repeat center center
+			position: absolute
+			left: -3px
+			z-index: 2
+			width: 18px
+			height: 10px
+			margin-bottom: -5px
+			cursor: pointer
+			outline: none
+
+		.ui-slider-range
+			position: absolute
+			border: 0
+			bottom: 0
+			width: 100%
+
+	/* Legenda */
+	.legenda
+		font: 12px $fonte-primaria
+		color: lighten($cor-padrao, 48%) //Gera a cor #e0e0e0
+		top: 521px
+		padding-bottom: 10px!important
+
+		.densidade
+			display: block
+			height: 13px
+			line-height: 13px
+			margin-top: 5px
+		
+			.valor, .cores
+				display: inline-block
+				line-height: normal
+				vertical-align: middle
+
+			.valor
+				font-size: 10px
+				color: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+
+.mapa
+	.botoes-container, .slider-control-container, .legenda
+		background-color: rgba(0, 0, 0, 0.5)
+		padding: 6px
+
+	/*Utilizado no mapa de densidade */
+	.label
+		white-space: nowrap
+		span
+			color: $cor-contraste
+			font-weight: bold
+
+.graficos
+	background: lighten($cor-padrao, 57%)
+	height: 583px
+	.botoes-container
+		@include photoshop-drop-shadow(90, 2px, 0, 5px, rgba(0, 0, 0, 0.25))
+
+	.visualizacao
+		position: absolute
+		top: 17px
+		left: 280px
+		z-index: 20
+
+	.grafico-container
+		width: 725px
+		height: 523px
+		position: absolute
+		top: 60px
+		right: 0
+
+/* Especifico para a pagina de mapas. Nao aplicado a home */
+#map
+	.mapa, .graficos
+		margin: 40px 0 0 0
+/* ================================================================*/
+
+
+/* area-filtros-mapa */
+/* ================================================================*/
+.area-filtros-mapa
+	@extend .clearfix
+	width: 100%
+	position: relative
+
+	.opcoes
+		position: absolute
+		right: 0
+		top: 40px
+		height: 18px
+
+		.visualizacao,
+		.tipo,
+		.opcoes-adicionais
+			float: left
+			margin: 0 0 0 40px 
+			
+		.tipo
+			.item
+				margin-top: 1px
+
+				label
+					color: $cor-secundaria
+		
+		.opcoes-adicionais
+			.item
+				&:first-child
+					margin: 0
+
+	.filtros
+		padding-right: 0
+		
+		.cabecalho
+			width: 235px
+
+		.form-filtros
+			&.projetos, &.organizacoes, &.investimentos
+				outline: none
+				height: 515px
+				overflow: hidden
+
+		/* Tive q setar o tamanho dos selects direto */
+		select
+			width: 236px
+
+
+	/* Estiliza o scroll dos filtros */
+	.jspContainer
+		background: none
+		border: none
+
+		.jspPane
+			background: none
+			border: none			
+
+		.jspVerticalBar		
+			/* Estilo */
+			background: none
+			border: none
+			width: 8px
+			height: 100%		
+
+			/* Fundo da barra */
+			.jspTrack
+				/* Estilo */
+				background: imageUrl("bg/bg-fundo-scroll.png") repeat
+
+				/* Marcador de progresso */
+				.jspDrag
+					/* Estilo */
+					background: #bbbbbb
+					border: none				
+/* ================================================================*/
+
+
+/* filtros-mapa */
+/* ================================================================*/
+
+/* Especifico para a pagina de mapas. Nao aplicado a pagina de listas */
+#map
+	.filtros
+		position: absolute
+		top: 42px
+		z-index: 21
+/* ================================================================*/
+
+
+/* Ficha */
+/* ================================================================*/	
+.ficha
+	margin: 0 0 10px 0
+	position: relative
+
+	.titulo-ficha
+		font: 22px $fonte-primaria
+		font-weight: bold
+		line-height: 26px
+		margin: 0 0 21px 0
+
+	.autoria-data
+		margin: 5px 0 15px 0
+		font-size: 12px
+
+	.info
+		position: relative
+			
+		h3
+			font: 14px $fonte-primaria
+			line-height: 10px
+			color: $cor-destaque
+			margin: 0 0 27px 0
+
+		.img-profile-container
+			img
+				display: block
+				float: left
+				margin: 0 15px 15px 0
+				width: 185px
+				height: 130px
+
+		.descricao
+			p
+				margin: 0 0 15px 0
+
+			.ler-menos
+				width: 62px
+				display: block
+				margin: 0 auto 15px auto
+	.etiqueta
+		float: left
+		clear: both
+		margin: 5px 0 0 0
+
+	.opcoes
+		position: relative
+
+		.opcoes-adicionais
+			position: absolute
+			right: 0
+			bottom: 10px
+
+	&.pode-editar
+		position: relative
+		overflow: visible
+
+		.opcoes-adicionais
+			right: 70px
+
+		.controles-edicao
+			position: absolute
+			top: 0px
+			right: -6px
+
+			.ico
+				&.pequeno
+					margin-right: 0
+
+		.camada-exclusao
+			display: none
+
+.fancybox-inner
+	.camada-exclusao
+		.confirmacao
+			@extend .clearfix
+			@include box-sizing(border-box)
+			background-color: $cor-contraste
+			display: block
+			padding: 15px
+
+			p
+				font: 13px $fonte-primaria
+				margin: 0 0 20px 0
+
+			em
+				font-weight: bold
+
+			.botao
+				float: left
+				font-size: 12px
+				padding-left: 7px
+				padding-right: 7px
+
+			.confirmar
+				@extend .veja-mais
+				float: right
+				margin: 8px 0 0 0
+				font-size: 12px
+
+		/* Especifico de Investimento */
+		&.investimento
+			.doador
+				width: 130px
+
+			.controles-edicao
+				top: 23px
+				right: 15px
+
+#investment-detail
+	.ficha
+		.doador
+			display: block
+
+		.titulo-ficha	
+			font-size: 20px
+			margin-left: 30px
+			margin-top: 8px
+
+		.seta-fluxo
+			position: relative
+			float: left
+
+#user-detail
+	.img-profile-container
+		position: absolute
+		top: 60px
+		right: 0
+
+		img
+			display: block
+			float: left
+			margin: 0 15px 15px 0
+			width: 70px
+			height: 70px	
+
+.compartilhar
+	position: absolute
+	top: 45px
+	right: 0
+
+	ul
+		list-style: none
+
+		li
+			float: left
+			margin: 0 0 0 9px
+
+			&.facebook
+				padding-top: 3px
+			
+			&.twitter
+				padding-top: 3px
+				width: 79px
+				height: 20px
+
+			&.email
+				margin-top: 1px
+
+				.botao
+					padding: 0 3px
+					height: 23px
+					line-height: 19px
+
+					.ico
+						height: 20px
+
+
+/* ================================================================*/
+
+
+
+/* Sentido do Investimento */
+/* ================================================================*/
+.fluxo-sentido
+	background: imageUrl("bg/bg-sentido-investimento.png") no-repeat right center
+	width: 28px 
+	height: 500px
+	margin: 10px 0 0 0
+	float: left	
+
+	p
+		/*Não sei o q isso faz */
+		writing-mode: tb-rl
+		filter: flipv fliph
+		@include rotate(270deg)
+		white-space: nowrap
+		width: 20px
+		height: 20px
+		margin: 280px 0 0 0
+	
+/* Fluxo */
+.fluxo-container
+	background: imageUrl("ico/auxiliares/ico-mover.png") no-repeat 633px 475px
+	border: 1px solid lighten($cor-padrao, 30%)
+	width: 660px
+	height: 500px
+	margin: 10px 0 0 0
+	float: right
+
+	.fluxo-envelope
+		width: 100%
+		height: 100%
+		overflow: hidden
+
+		.fluxo-investimento
+			width: 1000px
+			height: 100%
+			margin: 0 -168px
+			overflow: hidden
+			cursor: move
+
+			&:active, &:focus
+				cursor: move
+
+			.count
+				float: right
+				font-size: 9px
+				margin: -16px -2px 0 0
+
+/* ================================================================*/

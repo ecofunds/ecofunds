@@ -1,0 +1,54 @@
+{% extends "base-cms.html" %}
+{% load i18n sekizai_tags cms_tags static %}
+
+
+{% block base_content %}
+    <!-- area-site -->
+    <div class="area-site">
+        <div class="container">
+            <h2 class="ico ico-texto usuario-maior-branco">{% trans "Sign in to your Ecofunds account" %}</h2>    
+        </div>
+    </div>
+    <!-- fim area-site -->        
+
+    <div class="container">
+        <section id="login" class="formulario-simples login">
+            <form class="form-login" action="#" method="post">
+                {% csrf_token %}
+                <div class="borda primeiro {% if form.errors %}erro{% endif %}">
+                    {{form.username.label_tag}}{{ form.username }}
+                </div>
+                
+                <div class="borda {% if form.errors %}erro{% endif %}">
+                    {{form.password.label_tag}}{{form.password}}
+                </div>
+                
+                <div class="borda ultimo">
+                    <input type="submit" value="{% trans "Log in" %}" />
+                    <input type="hidden" name="next" value="{{next}}" />
+                    <a href="#" class="alinhamento-direita">{% trans "Forgot your password?" %}</a>
+                </div>
+                
+                {% if form.errors %}
+                    <p class="feedback-erro">{% trans "Your username and password didn't match. Please try again." %}</p>
+                {% endif %}
+            </form>
+        </section>
+        
+        <section id="signup">
+            <div class="cartao">
+                <h3 class="titulo">{% trans "Not an Ecofunds member yet?" %}</h3>
+                <p>{% trans "Ecofunds is a collaborative tool created to join efforts and disseminate knowledge on conservation investments. What you can do in Ecofunds:" %}</p>
+                <ul class="lista-customizada">
+                    <li>{% trans "Are you a member of an investor or recepient organization? Create yor profile today!" %}</li>
+                    <li>{% trans "Register your organization and tell the world about your projects and investments;" %}</li>
+                    <li>{% trans "Register your projects to tell othr organizations how to invest in your iniciative;" %}</li>
+                    <li>{% trans "Tell the world where and how you invest in the environment." %}</li>
+                </ul>
+                <p class="destaque">{% trans "Join us in this big effort to save the world!" %}</p>
+                <a class="botao primario" href="#" title="{% trans "Sign up" %}">{% trans "Sign up" %}</a>
+            </div>            
+        </section>
+    </div>
+        
+{% endblock %}

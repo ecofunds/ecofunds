@@ -1,0 +1,8 @@
+{% load tags i18n static %}
+{% if list %}
+    <ul class="suggest-container">
+    {% for country in list %}
+        <li class="suggest-item"><a href="javascript:;" title="{{ country.name }}"><span class="search">{{ country.name }}</span></a></li>
+    {% endfor %}
+    </ul>
+{% endif %}

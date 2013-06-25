@@ -1,0 +1,5 @@
+Sincronizando modelos com o banco
+python D:/QX3/SVN/funbio.org.br/ecofunds/desenvolvimento/trunk/ecofunds/manage.py inspectdb > D:/QX3/SVN/funbio.org.br/ecofunds/desenvolvimento/trunk/ecofunds/models.py
+
+Sincronizando banco com os modelos
+python D:/QX3/SVN/funbio.org.br/ecofunds/desenvolvimento/trunk/ecofunds/manage.py syncdb

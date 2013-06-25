@@ -1,0 +1,65 @@
+@function imageUrl($url)
+	$imagem-pasta: "images" !default
+	@return url(#{$imagem-pasta}/#{$url})
+
+@function pxToEm($pixel)
+	$fonte-tamanho: 11px !default
+	@return ($pixel / $fonte-tamanho) + 0em
+
+@mixin columnsCreator($spacer, $columns)
+	@for $i from 1 through $columns
+		.coluna-#{$i}-de-#{$columns}
+			width: floor(((100 / $columns) * $i) - (2% * ($i - 1)))
+			float: left
+			padding: 0
+			margin: 0 2% 0 0
+
+	.coluna-ultima
+		margin-right: 0
+		clear: right
+
+	.coluna-total
+		width: 100%
+		clear: both
+
+//--------------------------------
+// Photoshop Drop Shadow
+//--------------------------------
+@mixin photoshop-drop-shadow ($angle: 0, $distance: 0, $spread: 0, $size: 0, $color: #000, $inner: false)
+	$angle: (180 - $angle) * pi() / 180 // convert to radians
+	$h-shadow: round(cos($angle) * $distance)
+	$v-shadow: round(sin($angle) * $distance)
+	$css-spread: $size * $spread/100
+	$blur: ($size - $css-spread)
+	$inset: if($inner != false, 'inset', '')
+
+	@include box-shadow($h-shadow $v-shadow $blur $css-spread $color unquote($inset))
+
+
+// @mixin linear-image($start-color, $end-color, $position, $image, $repeat, $pos-x, $pos-y)
+// 	@include background($image $repeat $pos-x $pos-y, linear-gradient($position, $start-color, $end-color))
+// 	background-image: $image
+// 	background-repeat: $repeat
+// 	background-position: $pos-x $pos-y
+// 	@include filter-gradient($start-color, $end-color, $position)
+  
+//   background-image: -moz-linear-gradient(top, $color1, $color2)
+//   background-image: -ms-linear-gradient(top, $color1, $color2)
+//   background-image: -webkit-gradient(linear, 0 0, 0 100%, from($color1), to($color2))
+//   background-image: -webkit-linear-gradient(top, $color1, $color2)
+//   background-image: -o-linear-gradient(top, $color1, $color2)
+//   background-image: linear-gradient(top, $color1, $color2)
+//   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$color1', endColorstr='$color2', GradientType=0)
+
+// @mixin ie-gradient-image($start-color, $end-color, $position, $image, $repeat, $pos-x, $pos-y)
+// 	background-image: $image
+// 	background-repeat: $repeat
+// 	background-position: $pos-x $pos-y
+// 	@include filter-gradient($start-color, $end-color, $position)
+
+	
+// @mixin ie-box-shadow ($color, $direction, $strength)
+// 	filter: progid:DXImageTransform.Microsoft.shadow(color='#{$color}', Direction=#{$direction}, Strength=#{$strength})
+// 	-ms-filter: "progid:DXImageTransform.Microsoft.shadow(color='#{$color}', Direction=#{$direction}, Strength=#{$strength})"
+
+

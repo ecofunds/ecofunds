@@ -1,0 +1,1082 @@
+/* CONTEUDO: Blocos de conteudo das páginas, cabecalho, rodape */
+/* ================================================================*/
+
+/* CABECALHO */
+/* ================================================================*/	
+#cabecalho-pagina
+	font: 13px $fonte-secundaria
+
+/* Logotipo */
+.logo
+	background: imageUrl("logos/logo-ecofunds.png") no-repeat center center
+	width: 148px
+	height: 60px
+	margin: 8px 43px 0 0
+	display: block
+	float: left
+	text-indent: -9999px
+
+#menu-topo
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	float: left
+	margin: 9px 0 0 0
+
+	.menu-topo-container
+		list-style: none
+
+		li
+			margin: 0 37px 0 0 
+			float: left
+
+			a
+				font-weight: normal
+
+				&.ativo
+					color: $cor-padrao
+
+#seletor-idioma
+	color: $cor-destaque
+	float: right
+	margin: 5px 0
+
+	select
+		width: 160px
+
+	.qx-stylingForms-select
+		vertical-align: middle
+
+.ferramentas-usuario
+	background: imageUrl("bg/bg-linha-degrade-verde.png") no-repeat left top
+	width: 809px
+	padding: 14px 0
+	float: left
+
+	#busca-principal
+		@extend .clearfix
+		float: left
+		width: 510px 
+
+		.label-busca-topo, 
+		.texto-busca-topo, 
+		.botao-busca-topo
+			display: block
+			float: left
+
+		.label-busca-topo
+			margin: 4px 12px 0 0
+
+		.texto-busca-topo
+			width: 345px
+			margin: 0 5px 0 0
+
+		.botao-busca-topo
+			width: 28px
+			text-indent: -9999px
+			cursor: pointer
+			position: relative
+
+		.auxiliar-imagem-background 
+			&.busca
+				position: relative
+	
+				&:after
+					content: " "
+					position: absolute
+					background: imageUrl("ico/indicadores-menores-branco/ico-busca-menor-branco.png") no-repeat right center
+					display: block
+					width: 16px
+					height: 17px
+					right: 5px
+					top: 5px
+
+	#area-usuario
+		float: right
+
+		.controles-usuario-deslogado
+			.botao
+				min-width: 92px
+				padding: 0 5px
+				margin: 0 0 0 10px
+				float: left
+
+				&:first-child
+					margin: 0
+
+
+		.controles-usuario-logado
+			@extend .clearfix
+
+			/* Menu Logado - Geral */
+			.menu-logado
+				@extend .clearfix
+				position: relative
+				z-index: 30
+				float: left
+				margin-left: 10px				
+
+				&:first-child
+					margin-left: 0
+
+				a, .auxiliar
+					display: block
+					padding: 0 10px
+					font-weight: normal
+
+				.ico
+					margin-right: 0
+					margin-top: 2px
+
+				.principal
+					position: relative
+					height: 26px
+					line-height: 26px
+					cursor: pointer
+
+					&:hover > .submenu
+						display: block
+						position: absolute
+
+					&:after
+						content: " "
+						position: absolute
+						display: block
+						width: 14px
+						height: 5px
+						right: 0
+						top: 11px						
+
+
+				.submenu
+					display: none
+					margin-left: -1px
+
+					.link
+						height: 30px
+						line-height: 30px
+
+				/* Menu Logado de Tarefas */
+				&.tarefas
+					width: 130px
+
+					.principal
+						@extend .botao.primario
+
+						&:after
+							background: imageUrl("ico/setas-simples/ico-seta-simples-baixo-branca.png") no-repeat right center
+
+					.submenu
+						border: 1px solid $verde-degrade-primario-hover
+						border-top: none
+						width: 100%
+
+						.link
+							background-color: $verde-degrade-primario
+
+							&:first-child
+								a
+									border-top: none
+
+							&:hover
+								background-color: $verde-degrade-primario-hover					
+
+							a
+								border-top: 1px solid #a7c763
+								color: $cor-contraste
+
+								.investimento-menor-branco
+									margin-left: -2px
+									margin-right: 4px
+
+				/* Menu Logado de Usuário */
+				&.usuario
+					width: 150px
+
+					.principal
+						@extend .botao.secundario
+						color: $cor-secundaria
+						
+						&:after
+							background: imageUrl("ico/setas-simples/ico-seta-simples-baixo.png") no-repeat right center
+
+						.nome-usuario
+							padding-right: 26px
+							text-overflow: ellipsis
+							overflow: hidden
+							white-space: nowrap							
+
+					.submenu
+						border: 1px solid lighten($cor-padrao, 52%)
+						border-top: none
+						width: 100%
+
+						.link
+							background-color: lighten($cor-padrao, 57%)
+
+							a
+								border-top: 1px solid lighten($cor-padrao, 48%)
+								color: $cor-secundaria
+
+								.notificacao-menor-branco
+									margin-left: -2px
+									margin-right: 4px
+
+							&:hover
+								background-color: $verde-degrade-primario-hover				
+
+								a
+									color: $cor-contraste
+
+								.usuario-menor-verde
+									@extend .usuario-menor-branco
+
+								.notificacao-menor-verde
+									@extend .notificacao-menor-branco
+								
+								.logout-padrao
+									@extend .logout-over
+
+							/* Logout */
+							&.link-sair
+								a
+									color: #f55567
+								
+								&:hover
+									background-color: #f55567
+									
+									a
+										color: $cor-contraste
+
+/* ================================================================*/
+
+
+/* Area do Site */
+/* ================================================================*/
+.area-site
+	background: $cor-destaque
+	height: 40px
+	margin: 0 0 20px 0
+
+	&.erro
+		background: lighten($cor-padrao, 55%) //Gera a cor #f2f2f2
+
+	&.padrao
+		margin: 20px 0 0 0
+
+	h2
+		font-size: 18px
+		line-height: 40px!important
+		color: $cor-contraste
+
+		&.ico
+			padding-left: 30px!important
+/* ================================================================*/
+
+
+/* Imagem de destaque da página - Utilizada basicamente nas páginas */
+/* estáticas*/ 
+/* ================================================================*/
+.img-destaque
+	width: 1000px
+	max-height: 250px
+	display: block
+	overflow: hidden
+
+	img
+		margin: 20px 0 0 0 
+/* ================================================================*/
+
+
+/* Conteudo */
+/* ================================================================*/
+.conteudo
+	@extend .clearfix 
+	width: 700px
+	float: left
+
+	/* Estilo padrao dos elementos utilizado no CMS */
+	&.padrao
+		margin-top: 20px
+
+		h1, h2, h3, h4, h5, h6
+
+		h1
+
+		h2
+
+		h3
+			font-size: 18px
+			font-weight: 600
+			line-height: 20px
+			margin: 20px 0
+
+			&:first-child
+				margin-top: 0
+
+		h4
+
+		h5
+			font: 14px $fonte-primaria
+			font-weight: bold
+			line-height: 15px
+			margin: 15px 0 0 0
+
+			&:first-child
+				margin-top: 0
+		h6
+
+		p
+			font: 14px $fonte-primaria		
+			line-height: 20px
+			margin: 0 0 15px 0
+
+		ul
+			font: 14px $fonte-primaria		
+			line-height: 20px
+
+		img
+
+		a
+
+		.botao
+			font: 12px $fonte-secundaria
+			height: 33px
+			line-height: 30px
+			float: left
+/* ================================================================*/
+
+
+/* Barra Lateral */
+/* ================================================================*/
+.barra-lateral
+	width: 260px
+	float: right
+
+	&.padrao
+		margin-top: 20px
+/* ================================================================*/
+
+
+/* Coluna */
+/* ================================================================*/
+.coluna
+	width: 334px
+	float: left
+
+	&.coluna1
+		margin: 0 16px 0 0
+	&.coluna2
+		margin: 0 0 0 16px
+
+/* ================================================================*/
+
+
+
+/* Slider do Mapa */
+/* ================================================================*/
+.slider-destaques
+	background-color: rgba(0,0,0,0.7)
+	width: 440px
+	height: 214px
+	padding: 20px
+	position: absolute
+	top: -350px
+	left: 0
+	z-index: 20
+
+	.slider-container
+		height: 100%
+		overflow: hidden
+
+		.slider-conteudo
+			@include box-sizing(border-box)
+			width: 100%
+			height: 100%
+			float: left	
+			position: relative
+			z-index: 3
+
+			h2
+				font-size: 24px
+				line-height: 24px
+				color: $cor-auxiliar-1
+				margin: 0 0 15px 0
+
+			p
+				color: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+				margin: 0 0 15px 0
+
+	.botao
+		position: absolute
+		bottom: 20px
+		left: 20px
+		z-index: 4
+		clear: both
+		text-align: right				
+
+	.slider-lista-opcoes 
+		position: absolute
+		bottom: 20px
+		right: 20px
+		z-index: 4
+		clear: both
+		text-align: right
+
+		.slider-item 
+			/* Para o IE*/
+			@include background(linear-gradient(top, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))
+			border: 1px solid lighten($cor-padrao, 52%)	
+			font: 11px
+			line-height: 11px
+			font-weight: bold
+			color: $cor-secundaria
+			margin: 0 4px 0 0
+			padding: 2px 4px
+			display: inline-block
+			cursor: pointer
+
+			&:last-child
+				margin: 0
+
+			&:hover, &.slider-item-selecionado 
+				@include background(linear-gradient(top, $cor-auxiliar-3, $cor-auxiliar-3))
+				border: 1px solid $cor-auxiliar-2
+				color: $cor-contraste
+
+.envelope
+	width: 100%
+	height: 100%
+	overflow: hidden
+	margin: 0 auto
+/* ================================================================*/
+
+
+/* Destaques */
+/* ================================================================*/
+#destaques
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	margin: 0 0 26px 0
+
+/* Boxes */
+.box
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.4))
+
+	&.pequeno	
+		width: 130px
+		height: 65px
+		margin: 0 21px 0 0
+		padding: 15px 0
+		float: left		
+		text-align: center
+		vertical-align: middle
+
+		h4
+			margin: 6px 0
+			font: 30px $fonte-primaria
+			line-height: 30px
+			font-weight: bold
+			color: $cor-contraste
+		p
+			margin: 0 auto
+			word-spacing: 30px
+			font: 14px $fonte-secundaria
+			line-height: 14px
+
+	&.secundario
+		background: $cor-destaque
+		color: $cor-contraste
+
+	&.primario
+		background: $cor-padrao
+		color: $cor-contraste
+
+/* Links de destaque */
+.links-sobre
+	width: 247px
+	float: right
+
+	li
+		@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.4))
+		.botao
+			margin: 0 0 5px 0
+			text-align: left
+/* ================================================================*/
+
+
+/* Ultimos Projetos */
+/* ================================================================*/
+#ultimos-projetos
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	width: 100%
+	height: 465px
+	position: relative
+
+	h2
+		background: imageUrl("bg/bg-linha-degrade-verde.png") no-repeat left bottom
+		padding: 0 0 10px 0
+		font-size: 24px
+		line-height: 24px
+		color: $cor-destaque
+
+	.controle
+		position: absolute
+		top: 190px
+		display: block
+		width: 30px
+		height: 49px
+		cursor: pointer
+		text-decoration: none
+		outline: 0
+
+		&.anterior
+			background: imageUrl("ico/setas-maiores/ico-seta-maior-esquerda.png") no-repeat left center
+			left: -74px
+
+			&:hover
+				background: imageUrl("ico/setas-maiores/ico-seta-maior-esquerda-over.png") no-repeat left center
+
+		&.proximo
+			background: imageUrl("ico/setas-maiores/ico-seta-maior-direita.png") no-repeat left center
+			right: -74px
+
+			&:hover
+				background: imageUrl("ico/setas-maiores/ico-seta-maior-direita-over.png") no-repeat left center
+
+	/* Cartao de Info do projeto branco*/
+	.cartao
+		line-height: normal
+		font: pxToEm(10px) $fonte-primaria	
+		margin: 0
+		display: inline
+			
+		.titulo
+			line-height: pxToEm(10px)
+			height: pxToEm(25px)
+			font-size: pxToEm(16px)
+
+		.subtitulo
+			line-height: pxToEm(11px)
+			font-size: pxToEm(12px)
+
+		.thumb
+			width: pxToEm(185px)
+			height: pxToEm(130px)
+			margin: 12px auto 8px auto
+
+		.invest-recebido
+			line-height: normal
+			font-size: pxToEm(11px)
+
+			.valor
+				line-height: normal
+				font-size: pxToEm(18px)
+
+		.resumo
+			font-size: pxToEm(10px)
+			height: pxToEm(50px)
+			line-height: normal
+			overflow: hidden
+
+		.veja-mais
+			line-height: normal
+			font-size: pxToEm(12px)
+
+	.roundabout-holder 
+		list-style: none
+		padding: 0
+		margin: 0 auto
+		height: 100%
+		width: 550px
+
+	.roundabout-moveable-item
+		background: lighten($cor-padrao, 49%)
+
+		@include single-transition(background, 300ms, linear)
+
+		width: 248px
+		height: 420px
+		cursor: pointer
+		overflow: hidden
+
+		&:hover, 
+		&.branco-destaque
+			background: $cor-fundo-padrao
+			@include photoshop-drop-shadow(90, 1px, 0, 5px, rgba($cor-secundaria, 1))
+
+		&.cinza-destaque
+			background: lighten($cor-padrao, 49%)
+			@include photoshop-drop-shadow(90, 1px, 0, 5px, rgba(0, 0, 0, 0.4))
+
+	.roundabout-in-focus
+		background: $cor-fundo-padrao
+		cursor: auto
+
+		&:hover
+			@include photoshop-drop-shadow(90, 1px, 0, 5px, rgba(0, 0, 0, 0.4))
+
+/* ================================================================*/
+
+
+/* Parceiros */
+/* ================================================================*/
+.parceiros
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	width: 100%
+	margin: 48px 0 0 0
+	clear: both
+
+	h3
+		background: imageUrl("bg/bg-linha-colorida.png") no-repeat left bottom
+		padding: 0 0 19px 0
+		font-size: 18px
+		line-height: 18px
+		font-weight: 500
+		color: $cor-padrao
+
+	.lista-parceiros
+		/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+		@extend .clearfix	
+		list-style: none
+		margin: 20px 0 0 0
+
+		li
+			display: inline-block
+			vertical-align: middle
+			margin: 0 40px 0 0 
+/* ================================================================*/
+
+
+
+/* Lista Paises e Informações de contato resumido - Sobre */
+/* ================================================================*/
+.lista-paises
+	display: block
+	float: left
+	border-right: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+	padding-right: 30px
+
+.lista-paises-container
+	float: left
+	&.fila-2
+		margin-left: 28px
+
+	.item
+		background-position: left top
+		background-repeat: no-repeat
+		display: block
+		margin: 0 0 10px 0
+		padding: 0 0 0 23px
+		line-height: 15px
+
+		&.bolivia
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-bolivia.png")
+
+		&.brasil
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-brasil.png")
+
+		&.colombia
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-colombia.png")
+
+		&.equador
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-equador.png")
+
+		&.peru
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-peru.png")
+
+		&.suriname
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-suriname.png")
+
+		&.venezuela
+			background-image: imageUrl("ico/bandeiras/ico-bandeira-venezuela.png")
+
+/* ================================================================*/
+
+
+
+/* Info Contato - Contato, Sobre RedLac, Sobre Ecofunds */
+/* ================================================================*/
+.info-contato-resumido
+	display: block
+	float: left
+	border-left: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+	padding-left: 30px
+	margin-left: -1px
+
+	&.ecofunds, &.redlac
+		border: none
+		padding: 0
+		margin: 0 0 15px 0
+
+		h3	
+			font: 18px $fonte-secundaria
+			font-weight: 600
+			line-height: 20px
+			margin: 0 0 10px 0 
+			padding: 0 0 10px 0
+			border-bottom: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2	
+
+		h5
+			font: 14px $fonte-primaria
+			font-weight: bold
+			line-height: 15px
+			margin: 15px 0 0 0
+
+			&:first-child
+				margin-top: 0
+		p
+			font: 14px $fonte-primaria		
+			line-height: 20px
+			margin: 0 0 15px 0
+
+/* ================================================================*/
+
+
+
+/* Formulario Contato - Contato */
+/* ================================================================*/
+
+.form-contato
+	label
+		display: block
+		font: 14px $fonte-secundaria
+		color: $cor-destaque
+		margin: 0 0 4px 0
+
+	input[type="text"], textarea
+		display: block
+		clear: both
+		width: 462px
+		margin: 0 0 15px 0
+
+	textarea
+		height: 173px
+
+/* ================================================================*/
+
+
+
+/* Lista Paises e Informações de contato resumido - Sobre */
+/* ================================================================*/
+.texto-destaque
+	margin: 0 0 18px 0
+	border-bottom: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+
+	img
+		@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.3))
+		float: left
+		margin: 3px 15px 10px 0
+
+	ul
+		list-style: disc inside
+		margin: 0 0 18px 0
+
+/* ================================================================*/
+
+
+
+
+/* Lista Paises e Informações de contato resumido - Sobre */
+/* ================================================================*/
+.cartao-contato
+	margin: 0 0 30px 0
+	h4
+		border-bottom: 1px solid lighten($cor-padrao, 36%)
+		font: 14px $fonte-primaria
+		line-height: 15px
+		padding: 0 0 6px 0
+		margin: 0 0 5px 0
+
+	p
+		font-size: 12px!important
+		margin: 0
+/* ================================================================*/
+
+
+
+/* Como comecar - How To Start*/
+/* ================================================================*/
+.como-comecar
+	.passos
+		@extend .clearfix
+		@include box-sizing(border-box)
+		border-bottom: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+		padding: 10px 0
+
+		&:first-child
+			padding-top: 0
+		
+		h3
+			font: 18px $fonte-primaria
+			font-weight: bold
+			line-height: normal
+			margin: 0
+		
+		p, a
+			font: 12px $fonte-primaria
+			line-height: normal
+		
+		p
+			margin: 5px 0
+
+		.titulo-passo
+			width: 266px
+			height: 110px
+			display: block
+			float: left
+			line-height: 110px
+
+			.numero-item, .icone-item, .categoria
+				display: inline-block
+				line-height: normal
+				vertical-align: middle
+
+			.numero-item
+				width: 50px
+				font: 36px $fonte-primaria
+				font-weight: bold
+				color: $cor-destaque
+
+			.icone-item
+				float: none
+
+			.categoria
+				width: 165px
+				text-align: center
+
+		.descricao-passo
+			width: 434px
+			float: right
+
+			p
+				height: 64px
+				overflow: hidden
+
+/* ================================================================*/
+
+
+
+
+/* FAQ */
+/* ================================================================*/
+.faq
+	.pergunta, .resposta
+		p, a
+			margin: 0
+			font: 12px $fonte-primaria
+			line-height: 20px
+		
+	.pergunta
+		border-top: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+		margin-top: -1px 
+		padding-top: 11px
+		font-weight: bold
+		line-height: 20px
+		color: $cor-destaque
+
+	.resposta
+		@extend .clearfix
+		width: 700px
+		border-bottom: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+		padding-bottom: 11px
+
+		.fechado
+			width: 100%
+			height: 20px
+			overflow: hidden
+
+			p:first-child
+				width: 100%
+				height: 20px
+				overflow: hidden
+				white-space: nowrap
+				text-overflow: ellipsis
+
+
+		.ler-mais, .ler-menos
+			display: block
+			float: left
+			margin-top: 5px
+
+/* ================================================================*/
+
+
+
+/* RESULTADO DE BUSCA */
+/* ================================================================*/
+.resultado-busca-container
+	.resultado-item
+		@extend .clearfix
+		width: 700px
+		border-top: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+		border-bottom: 1px solid lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+		margin: -1px 0 0 0
+		padding: 10px 0		
+
+		&.first-child
+			margin-top: -10px
+
+		.cabecalho
+			padding: 0 0 13px 0
+			border-bottom: 1px solid lighten($cor-padrao, 51%) //Gera a cor #e8e8e8
+			.ico
+				float: none
+
+			.titulo
+				color: $cor-padrao
+				font-size: 16px
+				font-weight: bold
+				padding-left: 32px
+				margin: 0px
+				background-repeat: no-repeat
+
+				a
+					display: block
+					overflow: hidden
+					text-overflow: ellipsis
+					white-space: nowrap
+
+		.info, .lista-links, .valor, .resumo
+			font-size: 12px
+			line-height: normal
+
+		.info
+			font-weight: bold
+			border-bottom: 1px solid lighten($cor-padrao, 51%) //Gera a cor #e8e8e8
+			padding: 10px 0 10px 32px 
+
+		.categoria, .data, .regiao
+			display: block
+
+		.lista-links
+			line-height: 18px
+			margin: 0 0 10px 0!important
+
+		.valor
+			color: $cor-destaque
+
+			.valor-numero
+				display: block
+				font-size: 18px
+				font-weight: bold
+
+		.resumo
+			margin: 0
+
+		.alinhado
+			padding: 10px 0 0 32px 
+			display: block
+
+			&.esquerda
+				width: 20%
+				float: left
+
+			&.direita
+				width: 70%
+				float: right
+	&.ativo
+		display: block
+
+	&.inativo
+		display: none
+
+/* ================================================================*/
+
+
+/* AVISO DE ERRO */
+/* ================================================================*/	
+.aviso-erro
+	margin: 47px 0 108px 190px
+
+	h2
+		font: 30px $fonte-primaria
+		font-weight: bold
+
+	h3
+		font: 18px $fonte-primaria
+		margin: 0 0 15px 0
+
+/* ================================================================*/
+
+
+
+/* SEM RESULTADOS ENCONTRADOS */
+/* ================================================================*/	
+.nada-econtrado
+	background: lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+	display: block
+	margin: 20px 0 30px 0
+	padding: 8px 10px
+
+	h3
+		color: $cor-padrao
+		font: 14px $fonte-primaria
+		font-weight: bold
+		line-height: 18px
+		margin: 0 0 2px 0
+	p
+		line-height: normal
+/* ================================================================*/	
+
+
+
+/* RODAPÉ */
+/* ================================================================*/	
+#rodape-pagina
+	background: lighten($cor-padrao, 55%) //Gera a cor #f2f2f2
+	font: 13px $fonte-secundaria
+	margin: 32px 0 0 0
+
+/* Menu do rodape */
+#menu-rodape
+	/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+	@extend .clearfix
+	margin: 20px 0 12px 0
+ 
+	dl
+		border-left: 1px solid lighten($cor-padrao, 42.5%) //Gera a cor #d2d2d2
+		border-right: 1px solid lighten($cor-padrao, 42.5%) //Gera a cor #d2d2d2
+		margin-left: -1px
+		padding: 0 40px
+		float: left
+
+		&.primeiro
+			border-left: none
+			padding-left: 0
+			margin-left: 0
+
+		&.ultimo
+			width: 290px
+			border-right: none
+			padding-right: 0
+
+		dt, li
+			margin: 0 0 9px 0
+
+		dt
+			font-size: 15px
+
+		a
+			font-weight: normal
+
+		dd
+			clear: right
+			p
+				margin: 0 0 20px 0
+
+			img
+				display: inline-block
+				vertical-align: middle
+				margin: 0 25px 0 0
+
+/* Copyright */
+.copyright
+	background: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+	height: 20px
+	color: $cor-contraste
+	padding: 7px 0
+/* ================================================================*/

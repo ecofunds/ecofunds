@@ -1,0 +1,31 @@
+{% load tags static i18n %}
+<!-- busca-projetos -->
+<section class="filtros home">
+    <header class="cabecalho">
+        <h4>{% trans "Search projects by" %}</h4>
+    </header>
+
+    <form class="form-filtros home" action="{% page_url page_result %}" method="POST">
+        {% csrf_token %}
+        <label for="id_s_project_name">{% trans "Name" %}</label>                  
+        {{ search_project_form.s_project_name }}
+        
+        <label for="id_s_organization">{% trans "Organization" %}</label>                   
+        {{ search_project_form.s_organization }}
+
+        <label for="id_s_country">{% trans "Country" %}</label>                  
+        {{ search_project_form.s_country }}
+        
+        <input type="submit" value="{% trans "Search projects" %}" />
+    </form>
+    
+    {% block extra_script %}
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            //Cria o estilo dos elementos combo.
+            createCombo();
+        });
+    </script>
+    {% endblock %}    
+</section>
+<!-- fim de busca-projetos -->

@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{54408ce0-4cb6-46b6-8726-162f37f9d918}</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <OutputPath>.</OutputPath>
+    <Name>Funbio.Ecofunds</Name>
+    <RootNamespace>ecofunds</RootNamespace>
+    <UseIISExpress>false</UseIISExpress>
+    <PublishUrl>D:\QX3\Compilados\ecofunds.org.br</PublishUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="admin.py" />
+    <Compile Include="auth_backends.py" />
+    <Compile Include="business.py" />
+    <Compile Include="cms_plugins.py" />
+    <Compile Include="filetransfers\api.py" />
+    <Compile Include="filetransfers\templatetags\filetransfers.py" />
+    <Compile Include="filetransfers\templatetags\__init__.py" />
+    <Compile Include="filetransfers\__init__.py" />
+    <Compile Include="forms.py" />
+    <Compile Include="investment\cms_plugins.py" />
+    <Compile Include="investment\forms.py" />
+    <Compile Include="investment\models.py" />
+    <Compile Include="investment\urls.py" />
+    <Compile Include="investment\views.py" />
+    <Compile Include="investment\__init__.py" />
+    <Compile Include="maps\cms_plugins.py" />
+    <Compile Include="maps\forms\widgets.py" />
+    <Compile Include="maps\forms\__init__.py" />
+    <Compile Include="maps\models.py" />
+    <Compile Include="maps\urls.py" />
+    <Compile Include="maps\views.py" />
+    <Compile Include="maps\__init__.py" />
+    <Compile Include="middleware\multilingual.py" />
+    <Compile Include="middleware\__init__.py" />
+    <Compile Include="models.py" />
+    <Compile Include="opportunity\cms_plugins.py" />
+    <Compile Include="opportunity\models.py" />
+    <Compile Include="opportunity\navigation.py" />
+    <Compile Include="opportunity\urls.py" />
+    <Compile Include="opportunity\views.py" />
+    <Compile Include="opportunity\__init__.py" />
+    <Compile Include="organization\cms_plugins.py" />
+    <Compile Include="organization\forms.py" />
+    <Compile Include="organization\models.py" />
+    <Compile Include="organization\urls.py" />
+    <Compile Include="organization\views.py" />
+    <Compile Include="organization\__init__.py" />
+    <Compile Include="project\cms_plugins.py" />
+    <Compile Include="project\forms.py" />
+    <Compile Include="project\models.py" />
+    <Compile Include="project\urls.py" />
+    <Compile Include="project\views.py" />
+    <Compile Include="project\__init__.py" />
+    <Compile Include="templatetags\tags.py" />
+    <Compile Include="templatetags\__init__.py" />
+    <Compile Include="user\models.py" />
+    <Compile Include="user\tests.py" />
+    <Compile Include="user\views.py" />
+    <Compile Include="user\__init__.py" />
+    <Compile Include="views.py" />
+    <Compile Include="__init__.py" />
+    <Compile Include="manage.py" />
+    <Compile Include="settings.py" />
+    <Compile Include="urls.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebPiReference Include="https://www.microsoft.com/web/webpi/3.0/toolsproductlist.xml%3fDjango">
+      <Feed>https://www.microsoft.com/web/webpi/3.0/toolsproductlist.xml</Feed>
+      <ProductId>Django</ProductId>
+      <FriendlyName>Django 1.4</FriendlyName>
+    </WebPiReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="backends" />
+    <Folder Include="filetransfers" />
+    <Folder Include="filetransfers\templatetags\" />
+    <Folder Include="investment\" />
+    <Folder Include="locale\" />
+    <Folder Include="locale\en\" />
+    <Folder Include="locale\en\LC_MESSAGES\" />
+    <Folder Include="locale\es\" />
+    <Folder Include="locale\es\LC_MESSAGES\" />
+    <Folder Include="locale\pt_BR\" />
+    <Folder Include="locale\pt_BR\LC_MESSAGES" />
+    <Folder Include="maps\" />
+    <Folder Include="maps\forms\" />
+    <Folder Include="middleware\" />
+    <Folder Include="opportunity\" />
+    <Folder Include="organization\" />
+    <Folder Include="project\" />
+    <Folder Include="templates\" />
+    <Folder Include="templates\admin\" />
+    <Folder Include="templates\admin\auth\user\" />
+    <Folder Include="templates\admin\edit_inline\" />
+    <Folder Include="templates\admin\includes\" />
+    <Folder Include="templates\admin\auth\" />
+    <Folder Include="templates\admin\cms\" />
+    <Folder Include="templates\admin\cms\page\" />
+    <Folder Include="templates\admin\cms\page\dialog\" />
+    <Folder Include="templates\admin\cms\mail\" />
+    <Folder Include="templates\cms\" />
+    <Folder Include="templates\cms\plugins\" />
+    <Folder Include="templates\cms\toolbar\" />
+    <Folder Include="templates\cms\toolbar\items\" />
+    <Folder Include="templates\maps\" />
+    <Folder Include="templates\investment\" />
+    <Folder Include="templates\user\" />
+    <Folder Include="templates\organization\" />
+    <Folder Include="templates\tags" />
+    <Folder Include="templates\opportunity\" />
+    <Folder Include="templates\tinymce\" />
+    <Folder Include="templates\project\" />
+    <Folder Include="templatetags\" />
+    <Folder Include="user\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="locale\pt_BR\LC_MESSAGES\django.po" />
+    <Content Include="locale\en\LC_MESSAGES\django.po" />
+    <Content Include="locale\en\LC_MESSAGES\djangojs.po" />
+    <Content Include="locale\es\LC_MESSAGES\django.po" />
+    <Content Include="locale\es\LC_MESSAGES\djangojs.po" />
+    <Content Include="templates\404.html" />
+    <Content Include="templates\institutional-template.html" />
+    <Content Include="templates\investment\no-results.html" />
+    <Content Include="templates\main-template.html" />
+    <Content Include="templates\investment\advanced-search.html" />
+    <Content Include="templates\investment\detail.html" />
+    <Content Include="templates\investment\list.html" />
+    <Content Include="templates\language_chooser.html" />
+    <Content Include="templates\no-results.html" />
+    <Content Include="templates\opportunity\fundingopportunity_archive.html" />
+    <Content Include="templates\opportunity\opportunities.html" />
+    <Content Include="templates\organization\advanced-search.html" />
+    <Content Include="templates\organization\detail.html" />
+    <Content Include="templates\organization\latest.html" />
+    <Content Include="templates\organization\no-results.html" />
+    <Content Include="templates\organization\suggest.html" />
+    <Content Include="templates\project\advanced-search.html" />
+    <Content Include="templates\project\detail.html" />
+    <Content Include="templates\project\form.html" />
+    <Content Include="templates\project\latest.html" />
+    <Content Include="templates\project\resumes.html" />
+    <Content Include="templates\global-search-result.html" />
+    <Content Include="templates\project\countries.html" />
+    <Content Include="templates\sponsors.html" />
+    <Content Include="templates\map-link.html" />
+    <Content Include="templates\default-template.html" />
+    <Content Include="templates\maps\info-bubble.html" />
+    <Content Include="templates\maps\map.html" />
+    <Content Include="templates\menu.html" />
+    <Content Include="templates\opportunity\fundingopportunity_detail.html" />
+    <Content Include="templates\opportunity\latest-opportunities.html" />
+    <Content Include="templates\organization\list.html" />
+    <Content Include="templates\project\carousel.html" />
+    <Content Include="templates\project\list.html" />
+    <Content Include="templates\project\projects-map.html" />
+    <Content Include="templates\project\search.html" />
+    <Content Include="templates\project\suggest.html" />
+    <Content Include="templates\sampling.html" />
+    <Content Include="templates\cms\content.html" />
+    <Content Include="templates\cms\dummy.html" />
+    <Content Include="templates\cms\new.html" />
+    <Content Include="commands.txt" />
+    <Content Include="templates\admin\cms\page\dialog\base.html" />
+    <Content Include="templates\admin\cms\page\dialog\copy.html" />
+    <Content Include="templates\cms\plugins\googlemap.html" />
+    <Content Include="templates\cms\plugins\text.html" />
+    <Content Include="templates\cms\plugins\text_plugin_change_form.html" />
+    <Content Include="templates\cms\plugins\text_plugin_fieldset.html" />
+    <Content Include="templates\cms\toolbar\items\anchor.html" />
+    <Content Include="templates\cms\toolbar\items\button.html" />
+    <Content Include="templates\cms\toolbar\items\list.html" />
+    <Content Include="templates\cms\toolbar\items\login.html" />
+    <Content Include="templates\cms\toolbar\items\status.html" />
+    <Content Include="templates\cms\toolbar\items\switcher.html" />
+    <Content Include="templates\cms\toolbar\items\_post_button_hidden.html" />
+    <Content Include="templates\admin\cms\mail\approvement_required.html" />
+    <Content Include="templates\admin\cms\mail\approvement_required.txt" />
+    <Content Include="templates\admin\cms\mail\base.html" />
+    <Content Include="templates\admin\cms\mail\base.txt" />
+    <Content Include="templates\admin\cms\mail\page_user_change.html" />
+    <Content Include="templates\admin\cms\mail\page_user_change.txt" />
+    <Content Include="templates\admin\cms\page\change_form.html" />
+    <Content Include="templates\admin\cms\page\change_list.html" />
+    <Content Include="templates\admin\cms\page\change_list_tree.html" />
+    <Content Include="templates\admin\cms\page\lazy_child_menu.html" />
+    <Content Include="templates\admin\cms\page\lazy_menu.html" />
+    <Content Include="templates\admin\cms\page\loading.html" />
+    <Content Include="templates\admin\cms\page\menu.html" />
+    <Content Include="templates\admin\cms\page\menu_item.html" />
+    <Content Include="templates\admin\cms\page\moderation_messages.html" />
+    <Content Include="templates\admin\cms\page\permissions.html" />
+    <Content Include="templates\admin\cms\page\plugin_change_form.html" />
+    <Content Include="templates\admin\cms\page\plugin_forms_history.html" />
+    <Content Include="templates\admin\cms\page\plugin_forms_ok.html" />
+    <Content Include="templates\admin\cms\page\recover_form.html" />
+    <Content Include="templates\admin\cms\page\revision_form.html" />
+    <Content Include="templates\admin\404.html" />
+    <Content Include="templates\admin\500.html" />
+    <Content Include="templates\admin\actions.html" />
+    <Content Include="templates\admin\app_index.html" />
+    <Content Include="templates\admin\auth\user\add_form.html" />
+    <Content Include="templates\admin\auth\user\change_password.html" />
+    <Content Include="templates\admin\base.html" />
+    <Content Include="templates\admin\base_site.html" />
+    <Content Include="templates\admin\change_form.html" />
+    <Content Include="templates\admin\change_list.html" />
+    <Content Include="templates\admin\change_list_results.html" />
+    <Content Include="templates\admin\date_hierarchy.html" />
+    <Content Include="templates\admin\delete_confirmation.html" />
+    <Content Include="templates\admin\delete_selected_confirmation.html" />
+    <Content Include="templates\admin\edit_inline\stacked.html" />
+    <Content Include="templates\admin\edit_inline\tabular.html" />
+    <Content Include="templates\admin\filter.html" />
+    <Content Include="templates\admin\includes\fieldset.html" />
+    <Content Include="templates\admin\index.html" />
+    <Content Include="templates\admin\invalid_setup.html" />
+    <Content Include="templates\admin\login.html" />
+    <Content Include="templates\admin\object_history.html" />
+    <Content Include="templates\admin\page_submit_line.html" />
+    <Content Include="templates\admin\pagination.html" />
+    <Content Include="templates\admin\prepopulated_fields_js.html" />
+    <Content Include="templates\admin\search_form.html" />
+    <Content Include="templates\admin\submit_line.html" />
+    <Content Include="templates\base-cms.html">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="templates\home-template.html">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="templates\cms\toolbar\placeholder.html" />
+    <Content Include="templates\cms\toolbar\placeholder_wrapper.html" />
+    <Content Include="templates\cms\toolbar\toolbar.html" />
+    <Content Include="templates\search_suggest.html" />
+    <Content Include="templates\tags\page_link.html" />
+    <Content Include="templates\tags\pagination.html" />
+    <Content Include="templates\user\login.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Python Tools\Microsoft.PythonTools.Django.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>4330</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

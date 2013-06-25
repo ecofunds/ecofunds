@@ -1,0 +1,199 @@
+/* Formulários */
+/* ================================================================*/
+
+/* GERAL **********************************************************/
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration
+	display: none
+
+input[type="search"]
+	/* the webkit overrides need to stay at the top */
+	-webkit-appearance:	textfield
+	-webkit-box-sizing:	content-box
+	/* your styles here */
+
+input[type="text"], input[type="password"], input[type="search"], textarea, input[type="submit"], select, .botao, .qx-stylingForms-focus-text
+	@include box-sizing(border-box)
+	height: 28px	
+	vertical-align: middle
+
+input[type="text"], input[type="password"], input[type="search"], textarea, select, .qx-stylingForms-focus-text
+	border: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+	@include background(linear-gradient(top, lighten($cor-padrao, 57%), $cor-fundo-padrao))
+	padding: 5px 6px
+	width: 100%
+	color: $cor-padrao
+
+	&:focus
+		outline: none
+
+
+input[type="text"]
+	&.combo
+		padding-right: 18px
+		position: relative
+
+/* Vai envolver o input e acrescentar a seta */
+.seta-input-combo
+	position: relative
+	display: block
+
+	&:after
+		content: " "
+		position: absolute
+		background: imageUrl("ico/setas-simples/ico-seta-simples-baixo.png") no-repeat right center
+		display: block
+		width: 14px
+		height: 5px
+		right: 1px
+		top: 12px
+
+
+input[type="submit"], .botao
+	font: 13px $fonte-secundaria	
+	padding: 0 9px
+	text-align: center
+	cursor: pointer
+
+input[type="submit"]
+	@include background(linear-gradient(top, $verde-degrade-primario, $verde-degrade-secundario))
+	border: 1px solid $verde-borda-normal
+	color: $cor-contraste
+	line-height: 10px
+
+	&:hover
+		@include background(linear-gradient(top, $verde-degrade-primario-hover, $verde-degrade-secundario-hover))
+		border: 1px solid $verde-borda-hover
+
+	&:active
+		@include background(linear-gradient(bottom, $verde-degrade-primario-hover, $verde-degrade-secundario-hover))
+
+textarea
+	font: 12px $fonte-primaria
+	padding: 7px
+	resize: none
+
+
+
+/* BOTAO **********************************************************/
+.botao
+	font-weight: normal
+	display: block
+	line-height: 24px
+
+	&.primario
+		@include background(linear-gradient(top, $verde-degrade-primario, $verde-degrade-secundario))
+		border: 1px solid $verde-borda-normal
+		color: $cor-contraste
+		
+		&:hover, &.hover
+			@include background(linear-gradient(top, $verde-degrade-primario-hover, $verde-degrade-secundario-hover))
+			border: 1px solid $verde-borda-hover	
+
+		&:active, &.active
+			@include background(linear-gradient(bottom, $verde-degrade-primario-hover, $verde-degrade-secundario-hover))
+	
+	&.secundario
+		@include background(linear-gradient(top, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))
+		border: 1px solid lighten($cor-padrao, 52%)	
+
+		&.selecionado
+			@include background(linear-gradient(top,lighten($cor-padrao, 49%), $cor-fundo-padrao))
+			@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.3),true)
+			color: lighten($cor-padrao, 34%) //Gera a cor #bdbdbd
+		
+		&:active
+			@include background(linear-gradient(bottom, $cor-fundo-padrao, lighten($cor-padrao, 54.7%)))
+
+
+
+/* PLACEHOLDER **********************************************************/
+.qx-stylingForms-placeholder
+	font-style: italic
+	color: lighten($cor-padrao, 29.7%)!important //Gera a cor #b2b2b2
+
+
+/* SELECT **********************************************************/
+/* Estilos Obrigatórios */
+.qx-stylingForms-focus-text
+	display: block
+	overflow: hidden
+	text-overflow: ellipsis
+	white-space: nowrap
+
+.qx-stylingForms-select, 
+.qx-stylingForms-options 
+	padding: 0
+	margin: 0
+	list-style-type: none
+
+.qx-stylingForms-options li 
+	cursor: pointer
+
+/* Customização */
+.qx-stylingForms-focus-text 
+	/* Para o IE - ANALISAR */
+
+	font-weight: normal
+	color: $cor-padrao
+	padding: 5px 18px 5px 6px
+	position: relative
+
+	&:after
+		content: " "
+		position: absolute
+		background: imageUrl("ico/setas-simples/ico-seta-simples-baixo.png") no-repeat right center
+		display: block
+		width: 14px
+		height: 5px
+		right: 0
+		top: 12px	
+
+	&:hover
+		color: $cor-padrao
+
+#qx-stylingForms-options-bound
+	background: $cor-fundo-padrao
+	border: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+
+.qx-stylingForms-options 
+	z-index: 100!important
+	li
+		a
+			font-weight: normal
+			padding: 3px 6px
+			display: block
+			color: $cor-padrao
+			@include single-transition(none)
+
+			&:hover
+				background: $cor-hover
+				color: $cor-contraste
+
+
+
+/* CHECKBOX & RADIO  *********************************************************/
+.qx-stylingForms-checkbox, 
+.qx-stylingForms-radio
+	background: imageUrl("bg/bg-itens-form.png") no-repeat
+	width: 13px
+	height: 13px
+	margin: -2px 5px 0 0
+	vertical-align: middle	
+
+
+/* CHECKBOX */
+.qx-stylingForms-checkbox
+	background-position: 0 0
+
+	&.qx-stylingForms-checkbox-selected 
+		background-position: 0 -13px
+
+/* RADIO */
+.qx-stylingForms-radio
+	background-position: 0 -26px
+
+	&.qx-stylingForms-radio-selected
+		background-position: 0 -39px

@@ -1,0 +1,9 @@
+{% load tags i18n static %}
+{% if len_list > 0 %}
+    <ul class="suggest-container">
+    {% for project in list %}
+        <li class="suggest-item"><a  {%if project.url%}href="{%page_url project.url project.id%}"{%else%}"#"{%endif%} title="{{ project.title }}"><span class="search">{{ project.title }}</span></a></li>
+    {% endfor %}
+    {% if list.paginator.num_pages > 1 %}<a class="mais-resultados" href="#" onclick="$('#busca-principal-form').submit();">{% trans "Ver mais resultados" %}</a>{% endif %}
+    </ul>
+{% endif %}

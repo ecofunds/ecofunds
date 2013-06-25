@@ -1,0 +1,95 @@
+{% extends "base-cms.html" %}
+{% load i18n sekizai_tags cms_tags static %}
+
+{% block webdoor_content %}
+    {% placeholder top_content %}
+
+    {% addtoblock "js" %}
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/home/home-template.js"></script>
+        
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/project/list.js"></script>
+
+        <script type="text/javascript">
+            $(function(){
+                ecofundsMap.loadDensityInvestments();
+            });
+        </script>
+    {% endaddtoblock %}
+        
+    <div class="container">
+        <!-- slider-principal -->
+        <div class="slider slider-destaques">
+            <div class="slider-container">
+                <div class="slider-conteudo slider1">
+                    <h2>{% trans "Explore investments for conservation" %}</h2>
+                    <p>
+                        {% trans "Navigate the map and get to know the organizations, projects and investments towards environmental conservation around the world. Filter them by theme, type, time frame and more!" %} 
+                    </p>
+                    <a class="veja-mais" href="{% page_url "about-ecofunds" %}" title="{% trans 'More about Ecofunds' %}">{% trans "More about Ecofunds" %}</a>
+                </div>
+
+                <div class="slider-conteudo slider2">
+                    <h2>{% trans "Improve knowledge on conservation finance" %}</h2>
+                    <p>
+                        {% trans "Enter your data and help us offer a better framework about conservation finance in the world. Make it easier to find gaps and investment need." %}
+                    </p>
+                    <a class="veja-mais" href="{% page_url "about-ecofunds" %}" title="{% trans 'More about Ecofunds' %}">{% trans "More about Ecofunds" %}</a>
+                </div>
+
+                <div class="slider-conteudo slider3">
+                    <h2>{% trans "Feature your initiative" %}</h2>
+                    <p>
+                       {% trans "Register your organization, projects and investments and let everybody know about your conservation initiatives. Find potential donors and partners!" %} 
+                    </p>
+                    <a class="veja-mais" href="{% page_url "about-ecofunds" %}" title="{% trans 'More about Ecofunds' %}">{% trans "More about Ecofunds" %}</a>
+                </div>
+
+                <div class="slider-conteudo slider4">
+                    <h2>{% trans "Browse and publish calls for proposals" %}</h2>
+                    <p>
+                        {% trans "Browse calls for proposals to fund your project or publish calls of your institution in the Ecofunds community." %} 
+                    </p>
+                    <a class="veja-mais" href="{% page_url "about-ecofunds" %}" title="{% trans 'More about Ecofunds' %}">{% trans "More about Ecofunds" %}</a>
+                </div>                                                
+            </div>
+
+            <!-- Botao de link para o mapa -->
+            <a class="botao primario" href="{% page_url "map" %}" title="{% trans 'Navigate Map' %}">Navigate Map</a>
+
+            <!-- Opções, não obrigatório -->
+            <div class="slider-lista-opcoes">
+                <ul>
+                    <li class="slider-item"><span>1</span></li>
+                    <li class="slider-item"><span>2</span></li>
+                    <li class="slider-item"><span>3</span></li>
+                    <li class="slider-item"><span>4</span></li>
+                </ul>
+            </div>
+        </div>
+        <!-- fim de slider-principal -->
+    </div>
+{% endblock %}
+
+{% block base_content %}
+    <div class="container">
+        <!-- coluna1 -->
+    	<div class="conteudo">
+            {% placeholder main_content %}
+        </div>
+        <!-- fim de coluna1 -->
+
+        <!-- coluna2 -->
+        <div class="barra-lateral">
+            {% placeholder right_content %}
+        </div>
+        <!-- fim de coluna2 -->
+
+        <!-- parceiros -->
+        <section class="parceiros">
+            {% placeholder parceiros %}
+        </section>
+        <!-- fim de parceiros -->
+    </div>
+{% endblock %}

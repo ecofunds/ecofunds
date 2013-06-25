@@ -1,0 +1,16 @@
+{% load static i18n cms_tags %}
+<!-- ultimos projetos -->
+<section class="relacao resumida ultimos-projetos">
+	<h3>{% trans "New projects in Ecofunds" %}</h3>
+	<ul>
+        {% for project in list %}
+		<li>
+			<h4><a href="{% page_url "project-detail"%}?id={{project.entity_id}}" title="{{ project.title }}">{{ project.title }}</a></h4>
+			<p>
+				{{ project.resume }}
+			</p>
+		</li>
+        {% endfor %}																										
+	</ul>	
+</section>
+<!-- fim ultimos projetos -->

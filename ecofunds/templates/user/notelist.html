@@ -1,0 +1,15 @@
+{% for notification in notifications %}
+<p>
+{{notification.inserted_date}}}
+{%if notification.organization%}
+        {{notification.organization}}
+{%elif notification.project%}
+        {{notification.project}}
+{%elif notification.user_updated%}
+        {{notification.user.updated}}
+{%endif%}
+{{notification.type}}
+{{notification.message}} by
+{{notification.user.first_name}} {{notification.user_last_name}} 
+</p>
+{%endfor%}

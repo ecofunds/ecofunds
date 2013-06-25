@@ -1,0 +1,112 @@
+{% load tags i18n %}
+
+<!-- Filtros de Busca por Projetos -->
+<section class="filtros projetos aberto">
+    <header class="cabecalho">
+        <h4>{% trans "Search projects by" %}</h4>
+        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
+        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
+    </header>
+    
+    <form class="form-filtros projetos" action="#" method="post">
+        {{ search_project_form.page }}
+        {{ search_project_form.limit }}
+        {{ search_project_form.list_type }}
+        {{ search_project_form.order_by }}
+
+        <div class="borda primeiro">
+            <fieldset>
+                <legend>{% trans "Name" %} <span class="total">({{ count_projects }})</span></legend>
+
+                {{ search_project_form.s_project_name }}
+
+                <label for="id_s_all_project_name" class="check"> 
+                    {{ search_project_form.s_all_project_name }}
+                    {{ search_project_form.s_all_project_name.label }}
+                </label>                    
+
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Activity Type" %} <span class="total">({{ count_project_activity_types }})</span></legend>
+
+                {{ search_project_form.s_project_activity_type }}
+
+                <label for="id_s_all_project_activity_type" class="check"> 
+                    {{ search_project_form.s_all_project_activity_type }}
+                    {{ search_project_form.s_all_project_activity_type.label }}
+                </label>                    
+
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Region" %} <span class="total">({{ count_project_regions }})</span></legend>
+                
+                <label for="id_s_country">{{ search_project_form.s_country.label }}</label>
+                {{ search_project_form.s_country }}
+
+                <label for="id_s_state">{{ search_project_form.s_state.label }}</label>
+                {{ search_project_form.s_state }}
+
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
+                
+                {{ search_project_form.s_organization }}
+
+                <label for="id_s_all_organizations" class="check"> 
+                    {{ search_project_form.s_all_organizations }}
+                    {{ search_project_form.s_all_organizations.label }}
+                </label>
+
+            </fieldset>
+        </div>
+        
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Annual budget" %} <!--<span class="total">({{ count_investments }})</span>--></legend>
+                
+                <label for="id_s_investments_from">{{ search_project_form.s_investments_from.label }}</label>
+                {{ search_project_form.s_investments_from }}
+
+                <label class="emlinha" for="id_s_investments_to">{{ search_project_form.s_investments_to.label }}</label>
+                {{ search_project_form.s_investments_to }}
+            </fieldset>
+        </div>
+
+        <div class="borda ultimo">
+            <fieldset>
+                <legend>{% trans "Execution" %}</legend>
+                
+                <label for="id_s_date_from">{{ search_project_form.s_date_from.label }}</label>
+                {{ search_project_form.s_date_from }}
+
+                <label class="emlinha" for="id_s_date_to">{{ search_project_form.s_date_to.label }}</label>
+                {{ search_project_form.s_date_to }}
+            </fieldset>
+        </div>
+    </form>
+    
+    {% block extra_script %}
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            //Cria o estilo dos elementos combo.
+            createCombo();
+
+            //Chama o plugin de datepicker do jqueryUI.
+            jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+
+            //Formatação do campo de valor. Classe específica = numero
+            jQuery('.numero').setMask('{{number_format}}');
+        });
+    </script>
+    {% endblock %}    
+</section>
+<!-- Fim de Filtros de Busca por Projetos -->

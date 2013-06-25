@@ -1,0 +1,46 @@
+/* Sentido do Investimento */
+.fluxo-sentido
+	background: imageUrl("bg/bg-sentido-investimento.png") no-repeat right center
+	width: 28px 
+	height: 500px
+	margin: 10px 0 0 0
+	float: left	
+
+	p
+		/*Não sei o q isso faz */
+		writing-mode: tb-rl
+		filter: flipv fliph
+		@include rotate(270deg)
+		white-space: nowrap
+		width: 20px
+		height: 20px
+		margin: 280px 0 0 0
+	
+/* Fluxo */
+.fluxo-container
+	background: imageUrl("ico/ico-mover.png") no-repeat 633px 475px
+	border: 1px solid lighten($cor-padrao, 30%)
+	width: 660px
+	height: 500px
+	margin: 10px 0 0 0
+	float: right
+
+	.fluxo-envelope
+		width: 100%
+		height: 100%
+		overflow: hidden
+
+		.fluxo-investimento
+			width: 1000px
+			height: 100%
+			margin: 0 -168px
+			overflow: hidden
+			cursor: move
+
+			&:active, &:focus
+				cursor: move
+
+			.count
+				float: right
+				font-size: 9px
+				margin: -16px -2px 0 0

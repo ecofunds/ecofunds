@@ -1,0 +1,108 @@
+{% load tags i18n %}
+   <!-- Filtros de Busca por Oportunidades -->
+   <section class="filtros oportunidades aberto">
+        <header class="cabecalho">
+            <h4>{% trans "Find opportunities by" %}</h4>
+            <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
+            <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
+        </header>
+
+        <form class="form-filtros oportunidades" action="#" method="post">
+            {{ search_opportunity_form.page }}
+            {{ search_opportunity_form.limit }}
+            {{ search_opportunity_form.list_type }}
+            {{ search_opportunity_form.order_by }}
+
+            <div class="borda primeiro">
+                <fieldset>
+                    <legend>{% trans "Opportunity" %} <span class="total">({{ count_opportunities }})</span></legend>
+                    
+                    {{ search_opportunity_form.s_opportunity }}
+
+                    <label for="id_s_all_opportunities" class="check"> 
+                        {{ search_opportunity_form.s_all_opportunities }}
+                        {{ search_opportunity_form.s_all_opportunities.label }}
+                    </label>
+
+                </fieldset>
+            </div>
+
+            <div class="borda">
+                <fieldset>
+                    <legend>{% trans "Opportunity type" %} <span class="total">({{ count_opportunity_types }})</span></legend>
+                    
+                    {{ search_opportunity_form.s_opportunity_type }}
+
+                    <label for="id_s_all_type_opportunities" class="check"> 
+                        {{ search_opportunity_form.s_all_type_opportunities }}
+                        {{ search_opportunity_form.s_all_type_opportunities.label }}
+                    </label>
+
+                </fieldset>
+            </div>
+
+            <div class="borda">
+                <fieldset>
+                    <legend>{% trans "Supported location" %} <span class="total">({{ count_opportunity_regions }})</span></legend>
+                    
+                    <label for="id_s_country">{{ search_opportunity_form.s_country.label }}</label>
+                    {{ search_opportunity_form.s_country }}
+
+                    <label for="id_s_state">{{ search_opportunity_form.s_state.label }}</label>
+                    {{ search_opportunity_form.s_state }}
+
+                </fieldset>
+            </div>
+
+            <div class="borda">
+                <fieldset>
+                    <legend>{% trans "Investments focus" %} <span class="total">({{ count_project_activity_types }})</span></legend>
+                    
+                    {{ search_opportunity_form.s_investments_focus }}
+
+                    <label for="id_s_all_investments_focus" class="check"> 
+                        {{ search_opportunity_form.s_all_investments_focus }}
+                        {{ search_opportunity_form.s_all_investments_focus.label }}
+                    </label>
+
+                </fieldset>
+            </div>
+
+            <div class="borda">
+                <fieldset>
+                    <legend>{% trans "Last investment date" %} <span class="total">({{ count_opportunity_investments }})</span></legend>
+                    
+                    {{ search_opportunity_form.s_investment_date_from }}
+
+                    <label class="emlinha" for="id_investment_date_to">{{ search_opportunity_form.s_investment_date_to.label }}</label>
+                    {{ search_opportunity_form.s_investment_date_to }}
+
+                    <label for="id_s_all_investment_date" class="check"> 
+                        {{ search_opportunity_form.s_all_investment_date }}
+                        {{ search_opportunity_form.s_all_investment_date.label }}
+                    </label>
+
+                </fieldset>
+            </div>                       
+
+            <div class="borda ultimo">
+                <fieldset>
+                    <legend>{% trans "Estimated investments value" %} <span class="total">({{ count_recipient_opportunity }})</span></legend>
+                    
+                    <label for="id_s_estimated_investments_value_from">{{ search_opportunity_form.s_estimated_investments_value_from.label }}</label>
+                    {{ search_opportunity_form.s_estimated_investments_value_from }}
+
+                    <label class="emlinha" for="id_s_estimated_investments_value_to">{{ search_opportunity_form.s_estimated_investments_value_to.label }}</label>
+                    {{ search_opportunity_form.s_estimated_investments_value_to }}
+
+                    <label for="id_s_all_investments_received" class="check"> 
+                        {{ search_opportunity_form.s_all_investments_received }}
+                        {{ search_opportunity_form.s_all_investments_received.label }}
+                    </label>
+
+                </fieldset>
+            </div>    
+
+        </form>
+    </section>
+    <!-- Fim de Filtros de Busca por oportunidades -->

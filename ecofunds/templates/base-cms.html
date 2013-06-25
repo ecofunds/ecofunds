@@ -1,0 +1,282 @@
+{% load sekizai_tags cms_tags menu_tags tags static i18n %}
+<!DOCTYPE HTML>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8" />
+
+    <!--Resolve os problemas de compatibilidade do IE / edge = renderiza como a última versão do IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <meta name="description" content="Ecofunds Database é um portal na internet sobre investimentos em conservação da biodiversidade na região Andino-Amazônica. Seu objetivo é mapear investimentos em projetos de conservação, bem como sua temática, localização geográfica, organizações envolvidas e natureza financeira." />
+    <meta name="keywords" content="ecofunds, investimentos, conservação, biodiversidade, projetos, andino-amazônica, funbio, 
+    redlac" /> 
+    <meta name="author" content="QX3" />
+
+    {% render_block "meta" %}
+
+   
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/estilos.css" media="all" />
+    
+    <!-- CSS com correções de BUGS do IE -->
+    <!--[if lt IE 10]>
+        <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/estilos-ie.css" media="all" />
+    <![endif]-->    
+    
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/ajax_select.css" media="all" /> 
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/fancybox/jquery.fancybox.css" media="all" /> 
+    
+    {% render_block "css" %}
+
+    <!-- Carrega jQuery -->
+     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-1.8.2.min.js"></script> 
+    
+    <!-- Carrega jQuery UI-->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-ui-1.9.2.custom.min.js"></script>
+
+    <!-- Para o token -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.csrf.js"></script>
+
+    <!-- Estiliza os Formulários -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jQuery.qxStylingForms.js"></script>
+    
+    <!-- Suggest -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.qxSuggest.js"></script>    
+
+    <!-- Slider Simples -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.fitSlide.js"></script>
+
+    <!-- Slider de Cartões Home -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.roundabout.js"></script>
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.roundabout-shapes.js"></script>    
+
+    <!-- Carrega plugin que coloca os três pontos nos titulos, resumos e etc. -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.dotdotdot-1.5.1.js"></script>
+
+    <!-- Mascaras -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.meio.mask.js"></script>
+    
+    <!-- Estiliza a scrollbar dos elementos -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.jscrollpane.min.js"></script>
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.mousewheel.js"></script>
+
+    <!-- Plugin utilizado para manter os arquivos fixos na tela -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-scrollspy.js"></script>
+
+    <!-- Cria o ver mais da descrição da ficha do projeto -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.expander.js"></script>
+
+    <!-- Chama o plugin de modal  -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.fancybox.js"></script>
+
+    <!-- Arquivo de Funções Genéricas de Interface/Desenv -->
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/jquery.fx.js"></script>
+       
+    <!-- Script que ensina o IE a interpretar as tags HTML5 -->
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/extras/html5.js"></script>
+    <![endif]-->
+
+    <!-- Script que ensina o IE a tratar o canvas -->
+    <!--[if IE]>
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/extras/excanvas.js"></script>
+    <![endif]-->
+
+    {% render_block "js" %}
+    <title>{% block title %}Ecofunds Database{% endblock %}</title>
+
+    {% block head %}{% endblock %} 
+
+</head>
+<body id="{{ request.current_page.reverse_id }}">
+    <!-- cabecalho-pagina -->
+    <header id="cabecalho-pagina">
+        <!-- container -->
+        <div class="container">
+            <!-- logotipo -->
+            <h1>{% page_link "home" css="logo" title="Ecofunds Database: back to home" text="Ecofunds Database" %}</h1>
+            <!-- logotipo -->
+
+            <!-- menu-topo -->
+            <div id="menu-topo">
+                <ul class="menu-topo-container">
+                    <li>{% page_link "projects" %}</li>
+                    <li>{% page_link "organizations" %}</li>
+                    <li>{% page_link "investments" %}</li>
+                    <li>{% page_link "map" %}</li>
+                    {% if user.is_authenticated %}
+                        <li>{% page_link "users" %}</li>
+                     {% endif %}
+                </ul>
+            </div>
+            <!-- fim de menu-topo -->
+
+            <!-- seletor-idiomas -->
+            <div id="seletor-idioma">
+                {% trans "Language" %}
+                {% language_chooser "language_chooser.html" %}                
+            </div>
+            <!-- fim de seletor-idiomas -->
+
+            <!-- ferramentas-usuario -->
+            <div class="ferramentas-usuario">
+                <!-- busca-principal -->
+                <div id="busca-principal">
+                    <form id="busca-principal-form" action="{% page_url "global-search-result" %}" method="post">
+                        {% csrf_token %}
+                        <label class="label-busca-topo" for="query">{% trans "Search database" %}</label>
+                        <input class="texto-busca-topo" type="search" id="query" name="query" autocomplete="off" placeholder="{% trans 'Search by project, organization or region' %}" value="{{ request.POST.get.query }}" />
+                        <span class="auxiliar-imagem-background busca"><input class="botao-busca-topo" type="submit" value="Search" /></span>
+                    </form>
+                </div>
+                <!-- fim busca-principal -->    
+         
+                <!-- area-usuario -->
+                <div id="area-usuario">
+                    {% if not user.is_authenticated %}
+                        <div class="controles-usuario-deslogado">
+                            <a class="botao primario" href="{% page_url 'user-form' %}">{% trans "Sign up" %}</a>
+                            <a class="botao secundario" href="/user/login">{% trans "Log in" %}</a>
+                        </div>
+                    {% else %}
+                        <div class="controles-usuario-logado">                            
+                            <ul class="menu-logado tarefas">
+                                <li class="link principal"><span class="auxiliar">{% trans "New register" %}</span>
+                                    
+                                    <ul class="submenu">
+                                        <li class="link link-projeto">
+                                            <a href="{% page_url 'project-form' %}"><span class="ico pequeno projeto-menor-branco"></span>{% trans "Project" %}</a>
+                                        </li>
+                                        
+                                        <li class="link link-organizacao">
+                                            <a href="{% page_url 'organization-form' %}"><span class="ico pequeno organizacao-menor-branco"></span>{% trans "Organization" %}</a>
+                                        </li>
+                                        
+                                        <li class="link link-investimento">
+                                            <a href="{% page_url 'investment-form' %}"><span class="ico pequeno investimento-menor-branco"></span>{% trans "Investment" %}</a>
+                                        </li>
+                                        
+                                        <li class="link link-usuario">
+                                            <a href="{% page_url 'user-form' %}"><span class="ico pequeno usuario-menor-branco"></span>{% trans "User" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            
+                            <ul class="menu-logado usuario">
+                                    <li class="link principal"><span class="auxiliar nome-usuario" title="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</span>
+                                    
+                                    <ul class="submenu">
+                                        <li class="link link-perfil">
+                                            <a href="{% page_url 'user-detail' %}?id={{user.id}}"><span class="ico pequeno usuario-menor-verde"></span>{% trans "Profile" %}</a>
+                                        </li>
+                                        
+                                        <li class="link link-notificacoes">
+                                            <a href="{% page_url 'notifications' %}"><span class="ico pequeno notificacao-menor-verde"></span>{% trans "Notifications" %}</a>
+                                        </li>
+                                        
+                                        <li class="link link-sair">
+                                            <a href="/user/logout"><span class="ico pequeno logout-padrao"></span>{% trans "Log out" %}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>                            
+                        </div>    
+                    {%endif%}
+                </div>
+                <!-- fim de area-usuario -->
+                
+            </div>
+            <!-- fim de ferramentas-usuario -->
+
+        </div>
+        <!-- fim de container -->
+    </header>
+    <!-- fim de cabecalho-pagina -->
+
+    {% block webdoor_content %}{% endblock %}
+
+    <section id="principal">
+        {% block base_content %}{% endblock %}
+    </section>
+    
+    <!-- rodape-pagina -->
+
+    <footer id="rodape-pagina">
+        <div class="container">
+            <!-- menu-rodape -->
+            <nav id="menu-rodape">
+                <dl class="menu-rodape-explore primeiro">
+                    <dt>{% trans "Explore" %}</dt>
+                    <dd>
+                        <ul>
+                            <li>{% page_link "projects" %}</li>
+                            <li>{% page_link "organizations" %}</li>
+                            <li>{% page_link "investments" %}</li>
+                            <li>{% page_link "map" %}</li>
+                            <li>{% page_link "opportunities" %}</li>
+                            {% if user.is_authenticated %}
+                                <li>{% page_link "users" %}</li>
+                            {% endif %}                            
+                        </ul>
+                    </dd>
+                </dl>
+
+                <dl class="menu-rodape-ecofunds">
+                    <dt>{% trans "Ecofunds" %}</dt>
+                    <dd>
+                        <ul>
+                            <li>{% page_link "why-register" %}</li>
+                            <li>{% page_link "how-to-start" %}</li>
+                            <li>{% page_link "about-ecofunds" %}</li>
+                            <li>{% page_link "about-redlac" %}</li>
+                            <li>{% page_link "faq" %}</li>
+                            <li>{% page_link "terms" %}</li>
+                            <li>{% page_link "contact" %}</li>
+                        </ul>
+                    </dd>
+                </dl>
+
+                <dl class="menu-rodape-redes">
+                    <dt>{% trans "Follow us" %}</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="http://www.facebook.com/funbio.org.br" target="_blank" title="funbio.org.br">Facebook</a></li>
+                            <li><a href="http://www.youtube.com/user/FunbioTube" target="_blank" title="FunbioTube">Youtube</a></li>
+                            <li><a href="https://twitter.com/funbio" target="_blank" title="@funbio">Twitter</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+
+                <dl class="menu-rodape-redes ultimo">
+                    <dt>{% trans "Ecofunds Database" %}</dt>
+                    <dd>
+                        <p>
+                            {% trans "A project of the Network of Environmental Funds of Latin America and the Caribbean – RedLAC" %}
+                        </p>
+                        <p><a href="http://ecofunds.redlac.org">http://ecofunds.redlac.org</a> | <a href="mailto:ecofunds@redlac.org">ecofunds@redlac.org</a></p>
+
+                        <p>
+                            <a href="{% page_url 'home' %}" title="{% trans "Go to: home"%}"><img src="{% get_static_prefix %}images/logos/logo-ecofunds-menor.png" alt="" /></a>
+                            <a href="http://redlac.org/" title="{% trans "Go to: Redlac.org"%}"><img src="{% get_static_prefix %}images/logos/logo-redlac-menor.png" alt="" /></a>
+                        </p>
+                    </dd>
+                </dl>
+
+            </nav>
+            <!-- fim de menu-rodape -->
+        </div>
+        <!-- fim de container -->
+
+        <!-- copyright -->
+        <div class="copyright">
+            <div class="container">
+                <p>&copy; {% trans "Copyright 2012 - Ecofunds" %}</p>
+            </div>
+        </div>
+        <!-- copyright -->        
+    </footer>
+    <!-- fim de rodape-pagina -->
+
+    {% render_block "footerjs" %}
+</body>
+</html>

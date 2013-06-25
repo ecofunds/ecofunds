@@ -1,0 +1,257 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+    {% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/form.js"></script>
+                
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/investment/form.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+{% block base_content %}
+    <section class="cadastro investimento">
+        <header class="info-cadastro-preliminar">
+            <h4 class="investidor">{% if formset.instance.pk %}{{formset.instance.funding_organization}}{% else %}{%trans "[Investor organization name]" %}{% endif %}</h4>
+            <span class="ico seta-fluxo"></span>
+            <h3 class="titulo-cadastro receptor">{% if formset.instance.pk %}{{formset.instance.recipient_organization}}{% else %}{%trans "[Recepient organization name]" %}{% endif %}</h3>
+            
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+        </header>
+
+        <form method="post" action="" enctype="multipart/form-data" class="form-cadastro investimento">
+            {% csrf_token %}
+            
+            <div class="controles superiores">
+                <input type="submit" class="botao primario" value="{%trans "Save investment record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>          
+            
+            <div class="mensagem-informativa">* {% trans "Required fields" %}</div>
+            
+            <div class="nonfielderrors">
+                {{formset.non_field_errors}}
+            </div>
+            
+            <div class="campos-formulario">
+                <!-- Basic Information -->
+                <fieldset class="info-cadastro basico">
+                    <legend class="titulo-info">{% trans "Basic information"%}</legend>
+                    {% if formset.instance.pk %}
+                        <div class="grupo grupo-code">
+                            <div class="envolve-campo">
+                                <div class="titulo-campo">
+                                    <label for="id_code">{% trans "Investment ID" %}</label>
+                                </div>
+                                
+                                <div class="campos-editaveis">
+                                    {{ formset.instance.code }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}                                            
+                    
+                    <div class="grupo grupo-investidor">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_funding_organization"><span class="obrigatorio">{{ formset.funding_organization.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new organization" %}</a></span>
+                                {{ formset.funding_organization }}
+                                {{ formset.funding_organization.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo ">
+                            <div class="titulo-campo">
+                                <label for="id_investor_project"><span class="obrigatorio">{{ formset.investor_project.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.investor_project }}
+                                {{ formset.investor_project.errors }}
+                            </div>
+                        </div>
+                        
+                        <div id="investor-project-name" class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_funding_entity">{{ formset.funding_entity.label }}</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'project-form' %}">{% trans "Create new project" %}</a></span>
+                                {{ formset.funding_entity }}
+                                {{ formset.funding_entity.errors }}
+                            </div>
+                        </div>
+                    </div>                    
+                                                  
+                    <div class="grupo grupo-receptor">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_recipient_organization"><span class="obrigatorio">{{ formset.recipient_organization.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new organization" %}</a></span>
+                                {{ formset.recipient_organization }}
+                                {{ formset.recipient_organization.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_r_project"><span class="obrigatorio">{{ formset.r_project.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.r_project }}
+                                {{ formset.r_project.errors }}
+                            </div>
+                        </div>
+                        
+                        <div id="recepient-project-name" class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_recipient_entity">{{ formset.recipient_entity.label }}</label>
+                            </div>
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'project-form' %}">{% trans "Create new project" %}</a></span>
+                                {{ formset.recipient_entity }}
+                                {{ formset.recipient_entity.errors }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grupo grupo-tipo">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_type"><span class="obrigatorio">{{ formset.type.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.type }}
+                                {{ formset.type.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_date"><span class="obrigatorio">{{ formset.date.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.date }}
+                                {{ formset.date.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_estimated_completion"><span class="obrigatorio">{{ formset.estimated_completion.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.estimated_completion }}
+                                {{ formset.estimated_completion.errors }}
+                            </div>
+                        </div>                                                                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_estimated_completion">{{ formset.third_party.label }}</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.third_party }}
+                                {{ formset.third_party.errors }}
+                            </div>
+                        </div>                                                                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_investment_flow">{{ formset.investment_flow.label }}</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.investment_flow}}
+                                {{ formset.investment_flow.errors }}
+                            </div>
+                        </div>                                                                        
+                    </div>
+
+                </fieldset>
+                <!-- Fim Basic-->
+                
+                <!-- Amount information-->
+                <fieldset class="info-cadastro valor">
+                    <legend class="titulo-info">{% trans "Amount"%}</legend>
+                
+                    <div class="grupo grupo-valor">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_currency"><span class="obrigatorio">{{ formset.currency.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "Amount in the date of the contract." %}</a></span>
+                                {{ formset.currency }}
+                                {{ formset.amount }}
+                                
+                                {{ formset.currency.errors }}
+                                {{ formset.amount.errors }}
+                            </div>            
+                        </div>
+                    </div>
+                </fieldset> 
+                <!-- Fim Amount information-->
+                                                                               
+                <!-- Attachments-->
+                <fieldset class="info-cadastro anexos">
+                    <legend class="titulo-info">{% trans "Attachments"%}</legend>
+                    <p>
+                        Teste
+                    </p>       
+                </fieldset>             
+                <!--Fim  Attachments --> 
+            </div>
+            
+            <div class="controles inferiores">
+                <input type="submit" class="botao primario" value="{%trans "Save investment record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>            
+        </form>
+        
+        {% block extra_script %}
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery('.ui-autocomplete-input').each(function(i,v){
+                    jQuery(this).addClass('combo');
+                });
+
+                //Cria o estilo dos elementos combo.
+                createCombo();
+
+                //Chama o plugin de datepicker do jqueryUI.
+                jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+
+                //Formatação do campo de valor. Classe específica = numero
+                jQuery('.numero').setMask('{{number_format}}');
+            });
+        </script>
+        {% endblock %}
+                        
+    </section>
+{%endblock%}

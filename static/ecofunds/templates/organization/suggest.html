@@ -1,0 +1,8 @@
+{% load tags i18n static %}
+{% if list %}
+    <ul class="suggest-container">
+    {% for organization in list %}
+        <li class="suggest-item"><a href="{% page_url "organization-detail" organization.id %}" title="{{ organization.name}}"><span class="search">{{ organization.name}}</span></a></li>
+    {% endfor %}
+    </ul>
+{% endif %}

@@ -1,0 +1,203 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+{% addtoblock "js" %}
+<script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}scripts/opportunity/list.js"></script>
+{% endaddtoblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto oportunidade-maior-branco">{% trans "Opportunities" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+        <a class="link-destaque" href="#" title="{% trans "Show all opportunities" %}">{% trans "Show all opportunities" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo filtros-listas-tabelas">
+        <!-- Filtros Aplicados -->
+        <div class="filtros-aplicados">
+            <p>{% trans "Filters: " %}</p>
+            <ul class="lista">
+                <li class="item etiqueta" title="" data-field=""><span class="fechar-filtro"></span>Lorem</li>
+            </ul>
+        </div>
+        <!-- fim de Filtros Aplicados -->
+
+        <!-- visualizacao -->
+        <div class="visualizacao">
+            <p class="texto-lista">{% trans "View: " %}</p>
+            <ul class="visualizacao-container">
+                <li class="item ativo">
+                    <a href="#listagem" class="link ico ico-texto grid-icone ativo">{% trans "List" %}
+                    </a>
+                </li>
+                
+                <li class="item inativo">
+                    <a href="#tabela" class="link ico ico-texto lista-icone inativo">{% trans "Table" %}
+                    </a>
+                </li> <!-- Para cada um desses, existe um icone inativo -->
+            </ul>
+        </div>
+        <!-- fim de visualizacao --> 
+ 
+
+        <!-- Ordenacao -->
+        <div class="ordenacao">
+            <p>{% trans "Order by: " %}</p>
+            <ul class="lista">
+                <li class="item atual"><a href="#">{% trans "Last entries" %}</a></li>
+                <li class="item"><a href="#name">{% trans "A-Z" %}</a></li>
+                <li class="item"><a href="#">{% trans "Date of last investment" %}</a></li>
+                <li class="item"><a href="#">{% trans "Highest investment" %}</a></li>
+            </ul>            
+        </div>
+        <!-- fim de Ordenacao -->
+
+        <!-- modos de visualizacao -->
+        <div class="modos-visualizacao">
+            <!-- listagem de oportunidades -->
+            <section id="listagem" class="listagem oportunidades">             
+                <!-- cartao-oportunidade -->
+                <div class="cartao oportunidade primeiro"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                    
+                    <h3 class="titulo" title="Name lorem">Name lorem</h3>
+                    <p class="subtitulo">Type Lorem</p>           
+
+                    <p><strong>Country, State, City</strong></p>
+                                  
+                    <p class="resumo" title="Resume">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae rem nihil quibusdam dolorum enim velit architecto natus hic nemo recusandae nobis distinctio aspernatur ut veritatis facilis saepe quam deserunt fugit?
+                    </p>
+
+                    <p class="invest-recebido">
+                        {% trans "Funding amount:" %}
+                        <span class="valor">$999,999.00</span>
+                    </p>
+                    
+                    <p><strong>{% trans "Publication date: " %}</strong>10-Out-2016</p>
+                                                        
+                    <a class="veja-mais" href="#" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                </div>
+                <!-- fim de cartao-oportunidade -->
+
+                <!-- cartao-oportunidade -->
+                <div class="cartao oportunidade"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                    
+                    <h3 class="titulo" title="Name lorem">Name lorem</h3>
+                    <p class="subtitulo">Type Lorem</p>           
+
+                    <p><strong>Country, State, City</strong></p>
+                                  
+                    <p class="resumo" title="Resume">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae rem nihil quibusdam dolorum enim velit architecto natus hic nemo recusandae nobis distinctio aspernatur ut veritatis facilis saepe quam deserunt fugit?
+                    </p>
+
+                    <p class="invest-recebido">
+                        {% trans "Funding amount:" %}
+                        <span class="valor">$999,999.00</span>
+                    </p>
+                    
+                    <p><strong>{% trans "Publication date: " %}</strong>10-Out-2016</p>
+                                                        
+                    <a class="veja-mais" href="#" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                </div>
+                <!-- fim de cartao-oportunidade -->
+                
+                <!-- cartao-oportunidade -->
+                <div class="cartao oportunidade"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                    
+                    <h3 class="titulo" title="Name lorem">Name lorem</h3>
+                    <p class="subtitulo">Type Lorem</p>           
+
+                    <p><strong>Country, State, City</strong></p>
+                                  
+                    <p class="resumo" title="Resume">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae rem nihil quibusdam dolorum enim velit architecto natus hic nemo recusandae nobis distinctio aspernatur ut veritatis facilis saepe quam deserunt fugit?
+                    </p>
+
+                    <p class="invest-recebido">
+                        {% trans "Funding amount:" %}
+                        <span class="valor">$999,999.00</span>
+                    </p>
+                    
+                    <p><strong>{% trans "Publication date: " %}</strong>10-Out-2016</p>
+                                                        
+                    <a class="veja-mais" href="#" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                </div>
+                <!-- fim de cartao-oportunidade -->                                                                                
+            </section>
+            <!-- fim de listagem de oportunidades -->
+            
+            <!-- tabela oportunidades -->
+            <section id="tabelas" class="tabelas oportunidades">
+                <div class="cabecalho-tabela">
+                    <h2 class="titulo-tabela">{% trans "Opportunities" %}</h2>
+                    <span class="gerar-relatorio ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></span>
+                </div>
+
+                <!-- tabela -->
+                <table class="tabela vertical" caption="Opportunities" summary="">
+                    <thead>
+                        <tr>
+                            <th class="titulo-registro" scope="col">{% trans "Name" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Region" %}</th>
+                            <th class="titulo-registro" colspan="2" scope="col">{% trans "Resume" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Funding amount" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Publication date" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Opportunity record" %}</th>
+                        </tr>
+                    </thead>
+
+                    <tfoot>
+                        <!-- Paginação -->
+                        <tr>
+                            <td class="rodape-tabela" colspan="7">
+                                
+                            </td>
+                        </tr>
+                        <!-- Fim de Paginação -->
+
+                        <!-- TOTAIS -->
+                        <tr>
+                            <td class="totais" colspan="7" scope="col"><strong>Total:</strong> 1.298.900.300</td>
+                        </tr>
+                        <!-- fim de TOTAIS -->                          
+                    </tfoot>
+
+                    <tbody>
+                        <tr>
+                            <td class="conteudo-registro texto-linha curto"><a href="#" title="Name lorem">Name lorem</a></td>
+                            <td class="conteudo-registro regiao">Country, State, City</td>
+                            <td class="conteudo-registro texto-linha longo" colspan="2"><a href="#" title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati assumenda sit amet dolorem excepturi blanditiis ab a corporis sed. Ea id magni at unde magnam ut laudantium cumque aperiam nesciunt.">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati assumenda sit amet dolorem excepturi blanditiis ab a corporis sed. Ea id magni at unde magnam ut laudantium cumque aperiam nesciunt.</a></td>
+                            <td class="conteudo-registro valor">$999,999.99</td>
+                            <td class="conteudo-registro data">10-Out-2016</td>
+                            <td class="conteudo-registro link"><a href="#" title="">{% trans "Opportunity record" %}</a></td>
+                        </tr>
+                    </tbody>
+                </table>                
+                <!-- fim de tabela  -->
+
+            </section>
+            <!-- fim de tabela oportunidades -->
+
+        </div>
+        <!-- fim de modos de visualizacao -->
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% include "opportunity/advanced-search.html" %}
+
+        {% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

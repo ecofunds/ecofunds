@@ -1,0 +1,687 @@
+/* AUXILIARES: Icones, classes genericas, classes auxiliares */
+/* ================================================================*/
+
+/* Classes auxiliares */
+/* ================================================================*/
+*
+	zoom: 1
+
+.dbg
+	border: 1px solid red
+
+.fleft
+	float: left
+
+.fright
+	float: right
+
+.break
+	width: 100%
+	height: 1px
+	display: block
+	clear: both	
+
+.container
+	width: $largura-padrao-site
+	margin: 0px auto
+	display: table
+	position: relative
+
+.clearfix
+	display: inline-block
+
+	&:after
+		visibility: hidden
+		height: 0
+		display: block
+		clear: both
+		font-size: 0
+		content: " "
+/* ================================================================*/
+
+
+
+/* Definição de estilo de elementos genéricos */
+/* ================================================================*/
+html
+	background: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+
+body
+	background: $cor-fundo-padrao	
+	font: 12px $fonte-primaria
+	line-height: 18px
+	color: $cor-padrao
+
+a
+	font-weight: bold
+	color: $cor-secundaria
+	text-decoration: none
+	outline: none
+	// @include single-transition(color, 200ms, ease-in-out) /* Esta dando muitos conflitos */
+
+a:hover
+	color: $cor-hover
+
+strong
+	font-weight: bold
+
+h1, h2, h3, h4, h5, h6
+	font-family: $fonte-secundaria
+	color: $cor-destaque
+
+table
+	width: 100%
+	border-collapse: collapse
+
+	tfoot
+		font-size: 11px
+
+	caption
+		background: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+		margin: 15px 0
+		padding: 7px 10px
+		line-height: 15px
+		font: 15px $fonte-secundaria
+		color: $cor-contraste
+
+	td, th
+		background: lighten($cor-padrao, 56%) //Gera a cor #f6f6f6
+		padding: 10px
+		border-bottom: 5px solid $cor-fundo-padrao
+		border-left: 5px solid $cor-fundo-padrao
+		vertical-align: middle
+
+		&:first-child
+			border-left: none
+
+	th
+		color: $cor-destaque			
+
+/* ================================================================*/
+
+
+
+/* ICONES */
+/* ================================================================*/
+/* Ico */
+/* ================================================================*/
+.ico
+	display: block
+	float: left
+	background-position: left center
+	background-repeat: no-repeat
+	text-indent: -9999px
+
+	&.ico-texto
+		line-height: 21px
+		padding-left: 22px
+		text-indent: 0
+
+	&.pequeno 
+		width: 22px
+		height: 24px
+		line-height: 22px
+		margin: 0 7px 0 0
+
+	&.grande
+		width: 41px
+		height: 39px
+		line-height: 39px
+
+	/* Indicadores maiores Brancos */
+	&.projeto-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-projeto-maior-branco.png")
+
+	&.organizacao-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-organizacao-maior-branco.png")
+
+	&.investimento-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-investimento-maior-branco.png")
+
+	&.mapa-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-mapa-maior-branco.png")				
+
+	&.oportunidade-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-oportunidade-maior-branco.png")
+
+	&.usuario-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-usuario-maior-branco.png")			
+
+	&.busca-maior-branco
+		background-image: imageUrl("ico/indicadores-maiores-branco/ico-busca-maior-branco.png")	
+
+
+	/* Indicadores menores branco */
+	&.projeto-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-projeto-menor-branco.png")
+
+	&.organizacao-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-organizacao-menor-branco.png")		
+
+	&.investimento-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-investimento-menor-branco.png")
+
+	&.investimento-topo-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-investimento-topo-menor-branco.png")		
+
+	&.localizacao-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-localizacao-menor-branco.png")		
+
+	&.usuario-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-usuario-menor-branco.png")
+
+	&.notificacao-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-notificacao-menor-branco.png")
+
+	&.sobre-menor-branco
+		background-image: imageUrl("ico/indicadores-menores-branco/ico-sobre-menor-branco.png")
+
+
+
+	/* Indicadores maiores cinza */
+	&.projeto-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-projeto-maior-cinza.png")
+
+	&.organizacao-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-organizacao-maior-cinza.png")
+
+	&.investimento-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-investimento-maior-cinza.png")
+
+	&.rede-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-rede-maior-cinza.png")				
+
+	&.oportunidade-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-oportunidade-maior-cinza.png")
+
+	&.usuario-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-usuario-maior-cinza.png")			
+
+	&.completo-maior-cinza
+		background-image: imageUrl("ico/indicadores-maiores-cinza/ico-completo-maior-cinza.png")
+
+
+	/* Indicadores maiores verde */
+	&.projeto-maior-verde
+		background-image: imageUrl("ico/indicadores-maiores-verde/ico-projeto-maior-verde.png")
+
+	&.organizacao-maior-verde
+		background-image: imageUrl("ico/indicadores-maiores-verde/ico-organizacao-maior-verde.png")
+
+	&.investimento-maior-verde
+		background-image: imageUrl("ico/indicadores-maiores-verde/ico-investimento-maior-verde.png")
+
+	&.localizacao-maior-verde
+		background-image: imageUrl("ico/indicadores-maiores-verde/ico-localizacao-maior-verde.png")				
+
+
+	/* Indicadores menores verde */
+	&.projeto-menor-verde
+		background-image: imageUrl("ico/indicadores-menores-verde/ico-projeto-menor-verde.png")
+
+	&.notificacao-menor-verde
+		background-image: imageUrl("ico/indicadores-menores-verde/ico-notificacao-menor-verde.png")
+
+	&.investimento-menor-verde
+		background-image: imageUrl("ico/indicadores-menores-verde/ico-investimento-menor-verde.png")
+
+	&.localizacao-menor-verde
+		background-image: imageUrl("ico/indicadores-menores-verde/ico-localizacao-menor-verde.png")		
+
+	&.usuario-menor-verde
+		background-image: imageUrl("ico/indicadores-menores-verde/ico-usuario-menor-verde.png")
+
+
+	/* Auxiliares */
+	&.logout-padrao
+		background-image: imageUrl("ico/auxiliares/ico-logout.png")	
+
+	&.logout-over
+		background-image: imageUrl("ico/auxiliares/ico-logout-over.png")	
+
+	&.relatorio
+		background-image: imageUrl("ico/auxiliares/ico-relatorio.png")		
+
+	&.impressao
+		background-image: imageUrl("ico/auxiliares/ico-impressao.png")		
+
+	&.email
+		background-image: imageUrl("ico/auxiliares/ico-email-contato.png")
+
+
+	&.grid-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-grid-ativo.png")
+
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-grid-inativo.png")
+
+	&.lista-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-lista-ativo.png")
+		
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-lista-inativo.png")
+
+
+	&.mapa-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-marca-mapa-ativo.png")	
+
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-marca-mapa-inativo.png")										
+
+	&.grafico-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-ativo.png")	
+
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-inativo.png")
+
+	&.grafico-barra-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-barra-ativo.png")
+
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-barra-inativo.png")
+
+	&.grafico-pizza-icone
+		&.ativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-pizza-ativo.png")
+
+		&.inativo
+			background-image: imageUrl("ico/auxiliares/ico-grafico-pizza-inativo.png")				
+
+
+	&.pdf
+		background-image: imageUrl("ico/auxiliares/ico-pdf.png")
+	
+	&.xls
+		background-image: imageUrl("ico/auxiliares/ico-xls.png")
+	
+	&.doc
+		background-image: imageUrl("ico/auxiliares/ico-doc.png")
+
+
+	&.fechar
+		background-image: imageUrl("ico/auxiliares/ico-fechar.png")
+		width: 9px
+		height: 8px
+
+	&.seta-fluxo
+		position: absolute
+		background-image: imageUrl("ico/auxiliares/ico-seta-fluxo.png")
+		width: 24px
+		height: 28px
+
+
+	/* Edicão e Exclusão */
+	&.editar
+		background-image: imageUrl("ico/auxiliares/ico-editar.png")
+
+		&:hover
+			background-image: imageUrl("ico/auxiliares/ico-editar-hover.png")
+
+	&.excluir
+		background-image: imageUrl("ico/auxiliares/ico-excluir.png")
+		
+		&:hover
+			background-image: imageUrl("ico/auxiliares/ico-excluir-hover.png")		
+
+/* ================================================================*/
+
+
+/* Links Auxiliares */
+/* ================================================================*/
+.link-auxiliar
+	width: 100%
+	margin: 0 0 17px 0
+
+.veja-mais
+	background: imageUrl("ico/setas-padrao/ico-seta-padrao-direita.png") no-repeat left center
+	padding-left: 17px
+
+.ler-mais
+	background: imageUrl("ico/setas-padrao/ico-seta-padrao-baixo.png") no-repeat right center
+	padding-right: 17px
+
+.ler-menos
+	background: imageUrl("ico/setas-padrao/ico-seta-padrao-cima.png") no-repeat right center
+	padding-right: 17px
+
+.voltar
+	background: imageUrl("ico/setas-padrao/ico-seta-padrao-esquerda.png") no-repeat left center
+	padding-left: 17px
+
+.link-destaque
+	font-weight: bold
+/* ================================================================*/
+
+
+/* Classes Gerais */
+/* ================================================================*/
+
+/* Etiquetas ***********************************/
+.etiqueta
+	background: $cor-secundaria
+	display: block
+	float: left
+	margin: 0 8px 8px 0
+	padding: 5px
+	font-weight: normal
+	color: $cor-contraste	
+	vertical-align: middle
+
+	&:hover
+		color: $cor-contraste
+
+/* Remove o rodape cartografico do mapa */
+.gmnoprint
+	display: none
+
+
+.lista-customizada
+	li
+		list-style: circle imageUrl("ico/auxiliares/ico-marcacao.png") inside
+		margin-bottom: 3px
+
+.erro
+	input[type="text"], input[type="password"], input[type="search"], textarea, select, .qx-stylingForms-focus-text
+		border: 1px solid red
+
+.feedback-erro
+	color: red
+	font-size: 12px
+	font-weight: bold
+
+.obrigatorio
+	font-weight: bold
+
+/* ================================================================*/
+
+
+/* Customização de tabelas */
+/* ================================================================*/
+.titulo-tabela
+	background: lighten($cor-padrao, 29.7%) //Gera a cor #b2b2b2
+	margin: 17px 0 15px 0
+	padding: 7px 10px
+	line-height: 15px
+	font: 15px $fonte-secundaria
+	color: $cor-contraste
+
+.cabecalho-tabela
+	@extend .clearfix
+	display: block
+	height: 34px
+	line-height: 34px
+	margin: 10px 0 15px 0
+
+	.titulo-tabela, .gerar-relatorio
+		margin: 0
+		display: inline-block
+		vertical-align: middle
+	
+	.titulo-tabela
+		width: 78%
+
+	.gerar-relatorio
+		margin: 0 0 0 12px
+		float: none
+
+.tabela
+	line-height: 13px
+
+	.conteudo-registro
+		vertical-align: middle
+
+	.destaque
+		font-size: 16px
+		font-weight: bold
+
+	&.horizontal
+		.titulo-registro
+			width: 26.5%
+			text-align: right
+	
+	&.vertical
+		.titulo-registro
+			text-align: center
+
+		.texto-linha
+			text-align: left
+			&.curto
+				width: 100px
+			&.medio
+				width: 200px
+			&.longo
+				width: 300px
+			a
+				display: block
+				height: 27px
+				overflow: hidden
+
+		.valor, .regiao, .data, .link
+			text-align: center
+
+		.valor
+			width: 100px
+
+		.regiao
+			width: 100px
+
+		.data
+			width: 75px
+
+		.link
+			width: 75px
+
+	.paginacao-resultados
+		margin: 3px 0 0 0
+
+		.total-resultados
+			margin: 2px 0 0 0
+
+	.totais
+		background: lighten($cor-padrao, 53%) /* gera a cor #ededed */
+		font: 12px $fonte-primaria
+		text-align: center
+
+/* ================================================================*/	
+
+
+
+/* Scroll Padrao do Site */
+/* ================================================================*/
+.jspContainer
+	position: relative
+	overflow: hidden
+	
+.jspPane
+	@include box-sizing(border-box)
+	position: absolute
+
+.jspVerticalBar	
+	position: absolute
+	top: 0
+	right: 0
+	
+	/* Estilo */
+	width: 15px
+	height: 100%	
+	background: $cor-fundo-padrao
+	border-left: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+	border-right: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */	
+	
+	.jspCap 
+		display: none
+
+	.jspArrow
+		/* Estilo */
+		width: 15px
+		height: 17px
+
+.jspHorizontalBar
+	position: absolute
+	bottom: 0
+	left: 0
+
+	/* Estilo */
+	width: 100%
+	height: 15px	
+	background: $cor-fundo-padrao
+	border-left: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+	border-right: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */	
+
+	.jspCap 
+		float: left
+
+	.jspTrack, 
+	.jspDrag 
+		height: 100%
+		float: left
+
+	.jspArrow
+		float: left
+		width: 17px
+		height: 100%
+
+		&:focus
+			outline: none
+
+.jspVerticalBar *, 
+.jspHorizontalBar *
+	margin: 0
+	padding: 0
+
+/* Fundo da barra */
+.jspTrack 
+	position: relative
+
+	/* Estilo */
+	background: $cor-fundo-padrao
+
+	/* Marcador de progresso */
+	.jspDrag 
+		position: relative
+		top: 0
+		left: 0
+
+		/* Estilo */
+		background: lighten($cor-padrao, 49%) imageUrl("bg/bg-scroll.png") no-repeat center center /* gera a cor #e0e0e0 */
+		border: 1px solid $cor-fundo-padrao
+		cursor: pointer
+
+/* Setas habilitadas */
+.jspArrow 
+	display: block
+	text-indent: -20000px
+	
+	/* Estilo */
+	background: $cor-fundo-padrao
+	cursor: pointer
+
+	/* Setas desabilitadas */
+	&.jspDisabled
+		/* Estilo */
+		cursor: default
+
+	&.jspArrowDown
+		background: imageUrl("ico/seta-simples-menor/ico-seta-simples-baixo-menor.png") no-repeat center center
+		border-bottom: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */	
+
+	&.jspArrowUp
+		background: imageUrl("ico/seta-simples-menor/ico-seta-simples-cima-menor.png") no-repeat center center
+		border-top: 1px solid lighten($cor-padrao, 48%) /* gera a cor #e0e0e0 */
+
+/* ================================================================*/
+
+
+
+/* Suggest */
+/* ================================================================*/	
+.suggest
+	background: $cor-fundo-padrao
+	border: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+	font: 13px $fonte-primaria
+	position: absolute
+	z-index: 30
+
+	.suggest-item
+		a
+			font-weight: normal
+			padding: 5px 6px
+			display: block
+			color: $cor-padrao
+			@include single-transition(none)
+
+			.encontrado
+				font-weight: bold
+
+			&:hover
+				background: $cor-hover
+				color: $cor-contraste			
+
+	.mais-resultados
+		border-top: 1px solid lighten($cor-padrao, 49%) /*Gera a cor #e3e3e3 */
+		margin: 5px 7px 0 7px
+		padding: 10px 6px
+		display: block
+		text-align: center
+		font-weight: bold
+/* ================================================================*/
+
+
+
+
+/* Banner Interno */
+/* ================================================================*/
+.banner-interno
+	@include photoshop-drop-shadow(90, 1px, 0, 3px, rgba(0, 0, 0, 0.2))
+	margin: 20px 0 0 0
+
+	.texto
+		/* Utilizo para que o pai assuma a altura do filhos, em casos de filhos com float. */
+		@extend .clearfix
+		@include box-sizing(border-box)
+		position: relative
+		background-color: rgba(0,0,0,0.7)
+		margin: 15px
+		padding: 13px
+
+		h4
+			font: 16px $fonte-secundaria
+			line-height: 17px
+			color: $cor-auxiliar-1
+			margin: 0 0 10px 0
+
+		p
+			font-size: 13px
+			line-height: 18px
+			color: $cor-contraste
+			margin: 0 0 16px 0
+
+		.botao
+			position: absolute
+			bottom: 13px
+			left: 13px
+
+	&.maior
+		background: imageUrl("bg/bg-interno-mapa-maior.png") no-repeat center center 
+		width: 410px
+		height: 193px
+
+		.texto
+			height: 163px
+
+	&.menor
+		background: imageUrl("bg/bg-interno-mapa-menor.png") no-repeat center center 
+		width: 261px
+		height: 253px
+
+		.texto
+			height: 223px
+			
+
+
+/* ================================================================*/

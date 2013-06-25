@@ -1,0 +1,400 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+    <!-- Bootstrap CSS Toolkit styles -->
+    <link rel="stylesheet" href="{% get_static_prefix %}css/bootstrap.min.css">
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="{% get_static_prefix %}css/style.css">
+    <!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
+    <link rel="stylesheet" href="{% get_static_prefix %}css/bootstrap-responsive.min.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{% get_static_prefix %}css/bootstrap-image-gallery.min.css">
+    <link rel="stylesheet" href="{% get_static_prefix %}css/jquery.fileupload-ui.css">
+    <!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
+    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->    
+   {% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/form.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/project/form.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+{% block base_content %}
+    <section class="cadastro projeto">
+        <header class="info-cadastro-preliminar">
+            <h3 class="titulo-cadastro">{% if formset.instance.pk %}{{formset.instance.title}}{% else %}{%trans "[Project name]" %}{% endif %}</h3>
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                    {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                    {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+        </header>
+
+        <form method="post" action="" enctype="multipart/form-data" class="form-cadastro projeto">
+            {% csrf_token %}
+            
+            <div class="controles superiores">
+                <input type="submit" class="botao primario" value="{%trans "Save project record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>
+            
+            <div class="mensagem-informativa">* {% trans "Required fields" %}</div>          
+            
+            <div class="campos-formulario">
+                <!-- Basic Information -->
+                <fieldset class="info-cadastro basico">
+                    <legend class="titulo-info">{% trans "Basic information"%}</legend>
+                    
+                    <div class="grupo grupo-descricao">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_title"><span class="obrigatorio">{{ formset.title.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.title }}
+                                {{ formset.title.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo ">
+                            <div class="titulo-campo">
+                                <label for="id_acronym">{{ formset.acronym.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.acronym }}
+                                {{ formset.acronym.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo menor-para-imagem">
+                            <div class="titulo-campo">
+                                <label for="id_description"><span class="obrigatorio">{{ formset.description.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.description }}
+                                {{ formset.description.errors }}
+                            </div>
+                            
+                            <div class="campo-imagem">
+                                <div class="espaco-imagem">
+                                    <img id="picture" src="{% if formset.instance.image %}{{ formset.instance.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/projeto-sem-foto.jpg" width="185" height="130" alt="Image: {{ formset.instance.title }}">
+                                </div>
+                                
+                                <div class="caminho-imagem">
+                                        {{ formset.image }}
+                                        {{ formset.image.errors }}
+                                </div>
+                                
+                                <div class="controle-imagem">
+                                    <a id="change-picture" href="javascript:;" class="botao primario">{% trans "Change Picture" %}</a>
+                                    <a id="remove-picture" href="javascript:;" class="botao primario">{% trans "Remove Picture" %}</a>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>                    
+                                                  
+                    <div class="grupo grupo-categoria">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_category"><span class="obrigatorio">{{ formset.category.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.category }}
+                                {{ formset.category.errors }}
+                            </div>
+                        </div>
+
+                        <div id="projects-in-program" class="envolve-campo">
+                            <div class="titulo-campo">
+                                    <label for="id_category"><span class="obrigatorio">*</span>{{formset.child_projects.label}}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new project" %}</a></span>
+                                {{ formset.child_projects}}
+                                {{ formset.child_projects.errors}}
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-programa">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_include">{{ formset.include.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.include }}
+                                {{ formset.include.errors }}
+                            </div>
+                        </div>
+                        
+                        <div id="include-in-program" class="envolve-campo">
+                            <div class="titulo-campo">
+                                    <label for="id_include">{{formset.father_projects.label}}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new program" %}</a></span>
+                                {{ formset.father_projects }}
+                                {{ formset.father_projects.errors }}
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-organizacao">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_main_organization"><span class="obrigatorio">{{ formset.main_organization.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new organization" %}</a></span>
+                                {{ formset.main_organization }}
+                                {{ formset.main_organization.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_organization">{{ formset.organization.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                <span class="links-adicionais">{% trans "or" %} <a href="{% page_url 'organization-form' %}">{% trans "Create new organization" %}</a></span>
+                                {{ formset.organization }}
+                                {{ formset.organization.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-data">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_grant_from"><span class="obrigatorio">{{ formset.grant_from.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.grant_from }}
+                                {{ formset.grant_from.errors }}
+                            </div>
+                        </div>
+                                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_grant_to"><span class="obrigatorio">{{ formset.grant_to.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.grant_to }}
+                                {{ formset.grant_to.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grupo grupo-valor">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_estimated_budget"><span class="obrigatorio">{{ formset.currency.label }}*</span></label>
+                            </div>
+                                
+                            <div class="campos-editaveis">
+                                {{ formset.currency }}
+                                {{ formset.budget }}
+                                
+                                {{ formset.currency.errors }}
+                                {{ formset.budget.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <!-- Fim Basic-->
+                
+                <!-- Contact information-->
+                <fieldset class="info-cadastro contato">
+                    <legend class="titulo-info">{% trans "Contact information"%}</legend>
+                
+                    <div class="grupo grupo-email">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_email"><span class="obrigatorio">{{ formset.email.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.email }}
+                                {{ formset.email.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-telefone">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_phone_country_prefix_01"><span class="obrigatorio">{{ formset.phone_country_prefix_01.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.phone_country_prefix_01 }}
+                                {{ formset.phone_local_prefix_01 }}
+                                {{ formset.phone_number_01 }}
+
+                                {{ formset.phone_country_prefix_01.errors }}
+                                {{ formset.phone_local_prefix_01.errors }}
+                                {{ formset.phone_number_01.errors }}                                                                                                
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_phone_country_prefix_02">{{ formset.phone_country_prefix_02.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.phone_country_prefix_02 }}
+                                {{ formset.phone_local_prefix_02 }}
+                                {{ formset.phone_number_02 }}
+
+                                {{ formset.phone_country_prefix_02.errors }}
+                                {{ formset.phone_local_prefix_02.errors }}
+                                {{ formset.phone_number_02.errors }}                                                                                                
+                            </div>
+                        </div>                        
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_fax_country_prefix">{{ formset.fax_country_prefix.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.fax_country_prefix }}
+                                {{ formset.fax_local_prefix }}
+                                {{ formset.fax }}
+                                
+                                {{ formset.fax_country_prefix.errors }}
+                                {{ formset.fax_local_prefix.errors }}
+                                {{ formset.fax.errors }}                                                                                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-website">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_website">{{ formset.website.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.website }}
+                                {{ formset.website.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </fieldset> 
+                <!-- Fim Contact information-->
+                
+                <!-- Geographical scope-->
+                <fieldset class="info-cadastro escopo-geografico">
+                    <legend class="titulo-info">{% trans "Geographical scope"%}</legend>
+                    
+                    <div class="grupo grupo-escopo">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_location"><span class="obrigatorio">{{ formset.locations.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.locations }}
+                                {{ formset.locations.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset> 
+                <!-- Fim Geographical scope-->
+                
+                <!-- Activities types-->
+                <fieldset class="info-cadastro tipo-atividades">
+                    <legend class="titulo-info">{% trans "Activities types"%}</legend>
+                    
+                    <div class="grupo grupo-atividades">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_activities"><span class="obrigatorio">{{ formset.activities.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.activities }}
+                                {{ formset.activities.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_activity_description">{{ formset.activity_description.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.activity_description }}
+                                {{ formset.activity_description.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset> 
+                <!--Fim  Activities types-->
+                
+                <!-- Attachments-->
+                <fieldset class="info-cadastro anexos">
+                    <legend class="titulo-info">{% trans "Attachments"%}</legend>
+                    <p>
+                        Teste
+                    </p>       
+                </fieldset>             
+                <!--Fim  Attachments --> 
+            </div>
+            
+            
+            <div class="controles inferiores">
+                <input type="submit" class="botao primario" value="{%trans "Save project record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>            
+        </form>
+        
+        {% block extra_script %}
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery('.ui-autocomplete-input').each(function(i,v){
+                    jQuery(this).addClass('combo');
+                });
+
+                //Cria o estilo dos elementos combo.
+                createCombo();
+
+                //Chama o plugin de datepicker do jqueryUI.
+                jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+
+                //Formatação do campo de valor. Classe específica = numero
+                jQuery('.numero').setMask('{{number_format}}');
+            });
+        </script>
+        {% endblock %}
+    </section>
+{%endblock%}

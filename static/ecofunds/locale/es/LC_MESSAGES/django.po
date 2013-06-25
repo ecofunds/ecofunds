@@ -1,0 +1,2536 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-25 21:30-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\business.py:213 .\business.py:218
+#: .\templates\investment\detail.html.py:87
+#: .\templates\investment\list.html.py:75
+msgid "Investment date"
+msgstr ""
+
+#: .\business.py:223 .\business.py:227
+msgid "Investment value"
+msgstr ""
+
+#: .\business.py:381 .\business.py:388
+msgid "Last investment"
+msgstr ""
+
+#: .\business.py:626 .\business.py:630
+msgid "budget"
+msgstr ""
+
+#: .\cms_plugins.py:16
+msgid "Sampling"
+msgstr ""
+
+#: .\cms_plugins.py:18 .\cms_plugins.py:53 .\cms_plugins.py:68
+#: .\templates\base-cms.html.py:172
+msgid "Ecofunds"
+msgstr ""
+
+#: .\cms_plugins.py:35
+msgid "List Images"
+msgstr ""
+
+#: .\cms_plugins.py:51 .\templates\sponsors.html.py:3
+msgid "Sponsors"
+msgstr ""
+
+#: .\cms_plugins.py:66
+msgid "Global Search List"
+msgstr ""
+
+#: .\models.py:27
+msgid "File"
+msgstr ""
+
+#: .\models.py:102 .\project\views.py:88
+#: .\templates\opportunity\list.html.py:149
+#: .\templates\opportunity-bk\list.html.py:127
+#: .\templates\organization\list.html.py:148
+#: .\templates\project\advanced-search.html.py:18
+#: .\templates\project\list.html.py:151 .\templates\project\search.html.py:10
+msgid "Name"
+msgstr ""
+
+#: .\models.py:103 .\models.py:202 .\project\forms.py:112
+#: .\templates\organization\detail.html.py:115
+#: .\templates\project\detail.html.py:116
+msgid "Acronym"
+msgstr ""
+
+#: .\models.py:104 .\templates\opportunity\detail.html.py:111
+msgid "Description"
+msgstr ""
+
+#: .\models.py:136 .\models.py:312
+msgid "Created at"
+msgstr ""
+
+#: .\models.py:215 .\models.py:382
+msgid "image"
+msgstr ""
+
+#: .\models.py:218
+msgid "Budget"
+msgstr ""
+
+#: .\models.py:310 .\templates\investment\detail.html.py:102
+#: .\templates\investment\detail.html.py:108
+#: .\templates\opportunity\detail.html.py:122
+msgid "Amount"
+msgstr ""
+
+#: .\models.py:311
+msgid "Amount (USD)"
+msgstr ""
+
+#: .\models.py:313
+msgid "Updated at"
+msgstr ""
+
+#: .\models.py:321 .\investment\cms_plugins.py:25
+#: .\investment\cms_plugins.py:80 .\investment\cms_plugins.py:102
+msgid "Investment"
+msgstr ""
+
+#: .\models.py:322 .\templates\global-search-result.html.py:27
+#: .\templates\global-search-result.html.py:66
+#: .\templates\global-search-result.html.py:121
+#: .\templates\investment\detail.html.py:16
+#: .\templates\investment\list.html.py:12
+#: .\templates\investment\list.html.py:147 .\templates\maps\map-bkp.html.py:25
+#: .\templates\maps\map.html.py:26 .\templates\maps\map.html.py:136
+#: .\templates\organization\detail.html.py:73
+msgid "Investments"
+msgstr ""
+
+#: .\models.py:353 .\investment\models.py:17 .\opportunity\models.py:58
+#: .\opportunity-nw\models.py:16 .\opportunity-nw\models.py:32
+#: .\organization\models.py:16 .\organization\models.py:35
+#: .\project\models.py:27 .\project\models.py:32
+msgid "Number of news items to show"
+msgstr ""
+
+#: .\models.py:354 .\investment\models.py:18 .\opportunity\models.py:59
+#: .\opportunity-nw\models.py:17 .\opportunity-nw\models.py:33
+#: .\organization\models.py:17 .\organization\models.py:36
+#: .\project\models.py:28 .\project\models.py:33
+msgid "Limits the number of items that will be displayed"
+msgstr ""
+
+#: .\models.py:360 .\templates\admin\cms\page\permissions.html.py:5
+msgid "Page"
+msgstr ""
+
+#: .\models.py:365
+msgid "Placeholder"
+msgstr ""
+
+#: .\models.py:376
+msgid "center"
+msgstr ""
+
+#: .\models.py:377
+msgid "left"
+msgstr ""
+
+#: .\models.py:378
+msgid "right"
+msgstr ""
+
+#: .\models.py:383
+msgid "link"
+msgstr ""
+
+#: .\models.py:383 .\models.py:384
+msgid "if present image will be clickable"
+msgstr ""
+
+#: .\models.py:384
+msgid "page"
+msgstr ""
+
+#: .\models.py:385
+msgid "alternate text"
+msgstr ""
+
+#: .\models.py:385
+msgid "textual description of the image"
+msgstr ""
+
+#: .\models.py:386
+msgid "long description"
+msgstr ""
+
+#: .\models.py:386
+msgid "additional description of the image"
+msgstr ""
+
+#: .\models.py:387
+msgid "side"
+msgstr ""
+
+#: .\models.py:389
+msgid "position"
+msgstr ""
+
+#: .\settings.py:182
+msgid "Home Template"
+msgstr ""
+
+#: .\settings.py:183
+msgid "Main Template"
+msgstr ""
+
+#: .\settings.py:184
+msgid "Institutional Template"
+msgstr ""
+
+#: .\settings.py:185
+msgid "Default Template"
+msgstr ""
+
+#: .\settings.py:195
+msgid "Brazilian Portuguese"
+msgstr ""
+
+#: .\settings.py:196
+msgid "English"
+msgstr ""
+
+#: .\settings.py:197
+msgid "Spanish"
+msgstr ""
+
+#: .\investment\cms_plugins.py:23
+msgid "Investment List"
+msgstr ""
+
+#: .\investment\cms_plugins.py:78
+msgid "Investment Detail"
+msgstr ""
+
+#: .\investment\cms_plugins.py:100
+msgid "Investment Form"
+msgstr ""
+
+#: .\investment\forms.py:37 .\templates\investment\detail.html.py:83
+msgid "Investment type"
+msgstr ""
+
+#: .\investment\forms.py:39 .\investment\forms.py:51
+#: .\organization\forms.py:58 .\project\forms.py:50
+msgid "All organization types"
+msgstr ""
+
+#: .\investment\forms.py:41 .\investment\forms.py:45 .\opportunity\forms.py:33
+#: .\opportunity-nw\forms.py:33 .\organization\forms.py:78
+#: .\project\forms.py:58
+msgid "Show investments from:"
+msgstr ""
+
+#: .\investment\forms.py:42 .\investment\forms.py:46 .\opportunity\forms.py:30
+#: .\opportunity\forms.py:34 .\opportunity-nw\forms.py:30
+#: .\opportunity-nw\forms.py:34 .\organization\forms.py:73
+#: .\organization\forms.py:79
+msgid "To"
+msgstr ""
+
+#: .\investment\forms.py:43 .\opportunity\forms.py:35
+#: .\opportunity-nw\forms.py:35 .\organization\forms.py:80
+msgid "All investments received"
+msgstr ""
+
+#: .\investment\forms.py:47
+msgid "All investments value"
+msgstr ""
+
+#: .\investment\forms.py:49 .\organization\forms.py:56 .\project\forms.py:49
+#: .\templates\investment\advanced-search.html.py:65
+msgid "Organization type"
+msgstr ""
+
+#: .\investment\forms.py:54 .\organization\cms_plugins.py:28
+#: .\organization\cms_plugins.py:85 .\organization\cms_plugins.py:103
+#: .\organization\cms_plugins.py:127 .\organization\forms.py:62
+#: .\project\forms.py:52 .\templates\investment\advanced-search.html.py:79
+#: .\templates\organization\advanced-search.html.py:18
+#: .\templates\project\advanced-search.html.py:59
+#: .\templates\project\search.html.py:13
+msgid "Organization"
+msgstr ""
+
+#: .\investment\forms.py:54 .\organization\forms.py:62 .\project\forms.py:52
+msgid "Enter the name of an organization"
+msgstr ""
+
+#: .\investment\forms.py:55 .\organization\forms.py:63 .\project\forms.py:53
+msgid "All organizations"
+msgstr ""
+
+#: .\investment\forms.py:58 .\project\forms.py:42
+msgid "Project name"
+msgstr ""
+
+#: .\investment\forms.py:58 .\project\forms.py:42
+msgid "Enter the name of a project"
+msgstr ""
+
+#: .\investment\forms.py:59 .\project\forms.py:43
+msgid "All projects"
+msgstr ""
+
+#: .\investment\forms.py:61 .\opportunity\forms.py:22
+#: .\opportunity-nw\forms.py:22 .\organization\forms.py:65
+#: .\project\forms.py:55 .\templates\organization\detail.html.py:186
+#: .\templates\project\search.html.py:16
+msgid "Country"
+msgstr ""
+
+#: .\investment\forms.py:61 .\opportunity\forms.py:22
+#: .\opportunity-nw\forms.py:22 .\organization\forms.py:65
+#: .\project\forms.py:55
+msgid "Enter the name of a country"
+msgstr ""
+
+#: .\investment\forms.py:62 .\opportunity\forms.py:23
+#: .\opportunity-nw\forms.py:23 .\organization\forms.py:66
+#: .\project\forms.py:56
+msgid "State"
+msgstr ""
+
+#: .\investment\forms.py:62 .\opportunity\forms.py:23
+#: .\opportunity-nw\forms.py:23 .\organization\forms.py:66
+#: .\project\forms.py:56
+msgid "Enter the name of a state"
+msgstr ""
+
+#: .\investment\forms.py:85 .\organization\forms.py:120 .\project\forms.py:116
+msgid "Yes"
+msgstr ""
+
+#: .\investment\forms.py:85 .\organization\forms.py:120 .\project\forms.py:116
+msgid "No"
+msgstr ""
+
+#: .\investment\forms.py:87
+msgid "Is the investment an action of an investor project?"
+msgstr ""
+
+#: .\investment\forms.py:89
+msgid "Is the investment direct to a recepeint project?"
+msgstr ""
+
+#: .\investment\forms.py:96 .\project\forms.py:134 .\project\forms.py:135
+#: .\project\forms.py:136 .\project\forms.py:137
+msgid "Enter text to search"
+msgstr ""
+
+#: .\investment\models.py:11 .\opportunity-nw\models.py:10
+#: .\opportunity-nw\models.py:26 .\organization\models.py:10
+#: .\organization\models.py:29 .\project\models.py:21
+msgid "Page detail"
+msgstr ""
+
+#: .\investment\models.py:14 .\opportunity-nw\models.py:13
+#: .\opportunity-nw\models.py:29 .\organization\models.py:13
+#: .\organization\models.py:32 .\project\models.py:24
+msgid "Link to detail page."
+msgstr ""
+
+#: .\maps\cms_plugins.py:17
+msgid "Google Map"
+msgstr ""
+
+#: .\maps\models.py:136
+msgid "Width"
+msgstr ""
+
+#: .\maps\models.py:136
+msgid "Width of map"
+msgstr ""
+
+#: .\maps\models.py:137
+msgid "Width unit"
+msgstr ""
+
+#: .\maps\models.py:139
+msgid "Height"
+msgstr ""
+
+#: .\maps\models.py:139
+msgid "Height of map"
+msgstr ""
+
+#: .\maps\models.py:140
+msgid "Height unit"
+msgstr ""
+
+#: .\maps\models.py:142
+msgid "Show Search Projects"
+msgstr ""
+
+#: .\maps\models.py:143
+msgid "Show Search Organizations"
+msgstr ""
+
+#: .\maps\models.py:144
+msgid "Show Search Investments"
+msgstr ""
+
+#: .\opportunity\cms_plugins.py:11
+msgid "Funding Opportunity List"
+msgstr ""
+
+#: .\opportunity\cms_plugins.py:13 .\opportunity\cms_plugins.py:34
+msgid "Funding Opportunity"
+msgstr ""
+
+#: .\opportunity\cms_plugins.py:32
+msgid "Latest Funding Opportunity"
+msgstr ""
+
+#: .\opportunity\forms.py:13 .\opportunity-nw\forms.py:13
+#: .\templates\opportunity\advanced-search.html.py:32
+#: .\templates\opportunity-bk\advanced-search.html.py:32
+msgid "Opportunity type"
+msgstr ""
+
+#: .\opportunity\forms.py:15 .\opportunity-nw\forms.py:15
+msgid "All opportunity types"
+msgstr ""
+
+#: .\opportunity\forms.py:19 .\opportunity-nw\cms_plugins.py:24
+#: .\opportunity-nw\cms_plugins.py:46 .\opportunity-nw\cms_plugins.py:64
+#: .\opportunity-nw\forms.py:19
+#: .\templates\opportunity\advanced-search.html.py:18
+#: .\templates\opportunity-bk\advanced-search.html.py:18
+msgid "Opportunity"
+msgstr ""
+
+#: .\opportunity\forms.py:19 .\opportunity-nw\forms.py:19
+msgid "Enter the name of an opportunity"
+msgstr ""
+
+#: .\opportunity\forms.py:20 .\opportunity-nw\forms.py:20
+msgid "All opportunities"
+msgstr ""
+
+#: .\opportunity\forms.py:25 .\opportunity-nw\forms.py:25
+#: .\organization\forms.py:68
+#: .\templates\opportunity\advanced-search.html.py:59
+#: .\templates\opportunity-bk\advanced-search.html.py:59
+#: .\templates\organization\advanced-search.html.py:59
+msgid "Investments focus"
+msgstr ""
+
+#: .\opportunity\forms.py:27 .\opportunity-nw\forms.py:27
+#: .\organization\forms.py:70
+msgid "All project activities focus"
+msgstr ""
+
+#: .\opportunity\forms.py:29 .\opportunity-nw\forms.py:29
+#: .\organization\forms.py:72
+msgid "From"
+msgstr ""
+
+#: .\opportunity\forms.py:31 .\opportunity-nw\forms.py:31
+#: .\organization\forms.py:74
+msgid "All investments"
+msgstr ""
+
+#: .\opportunity\models.py:23
+msgid "Title"
+msgstr ""
+
+#: .\opportunity\models.py:24
+msgid "Slug"
+msgstr ""
+
+#: .\opportunity\models.py:25
+msgid ""
+"A slug is a short name which uniquely identifies the news item for this day"
+msgstr ""
+
+#: .\opportunity\models.py:26
+msgid "Excerpt"
+msgstr ""
+
+#: .\opportunity\models.py:27
+msgid "Content"
+msgstr ""
+
+#: .\opportunity\models.py:29
+msgid "Published"
+msgstr ""
+
+#: .\opportunity\models.py:30 .\templates\opportunity\list.html.py:153
+msgid "Publication date"
+msgstr ""
+
+#: .\opportunity\models.py:39
+msgid "Funding opportunity"
+msgstr ""
+
+#: .\opportunity\models.py:40 .\templates\opportunity\latest.html.py:5
+#: .\templates\opportunity-bk\latest-opportunities.html.py:5
+#: .\templates\opportunity-bk\opportunities.html.py:5
+msgid "Funding opportunities"
+msgstr ""
+
+#: .\opportunity-nw\cms_plugins.py:22
+msgid "Opportunity List"
+msgstr ""
+
+#: .\opportunity-nw\cms_plugins.py:44
+msgid "Latest Opportunities"
+msgstr ""
+
+#: .\opportunity-nw\cms_plugins.py:62
+msgid "Opportunity Detail"
+msgstr ""
+
+#: .\organization\cms_plugins.py:26
+msgid "Organization List"
+msgstr ""
+
+#: .\organization\cms_plugins.py:83
+msgid "Latest Organizations"
+msgstr ""
+
+#: .\organization\cms_plugins.py:101
+msgid "Organization Detail"
+msgstr ""
+
+#: .\organization\cms_plugins.py:125
+msgid "Organization Form"
+msgstr ""
+
+#: .\organization\forms.py:119 .\templates\organization\detail.html.py:132
+msgid "CEO/President/Director"
+msgstr ""
+
+#: .\organization\forms.py:122
+msgid "Will you be an administrator of this organization in Ecofunds?"
+msgstr ""
+
+#: .\organization\forms.py:130
+msgid "Search for a registered user"
+msgstr ""
+
+#: .\organization\forms.py:130
+msgid "Connections"
+msgstr ""
+
+#: .\organization\forms.py:132
+msgid "Add projects executed by this organization"
+msgstr ""
+
+#: .\project\cms_plugins.py:26
+msgid "Project List"
+msgstr ""
+
+#: .\project\cms_plugins.py:28 .\project\cms_plugins.py:60
+#: .\project\cms_plugins.py:81 .\project\cms_plugins.py:103
+#: .\project\cms_plugins.py:121 .\project\cms_plugins.py:147
+#: .\project\forms.py:114
+msgid "Project"
+msgstr ""
+
+#: .\project\cms_plugins.py:58
+msgid "Search Projects"
+msgstr ""
+
+#: .\project\cms_plugins.py:79
+msgid "Carousel Project"
+msgstr ""
+
+#: .\project\cms_plugins.py:101
+msgid "Latest Projects"
+msgstr ""
+
+#: .\project\cms_plugins.py:119
+msgid "Project Detail"
+msgstr ""
+
+#: .\project\cms_plugins.py:145
+msgid "Project Form"
+msgstr ""
+
+#: .\project\forms.py:45
+msgid "Project activity type"
+msgstr ""
+
+#: .\project\forms.py:47
+msgid "All activities types"
+msgstr ""
+
+#: .\project\forms.py:49
+msgid "Enter an organization type"
+msgstr ""
+
+#: .\project\forms.py:59 .\project\forms.py:63
+#: .\templates\global-search-result.html.py:157
+msgid "to"
+msgstr ""
+
+#: .\project\forms.py:62
+msgid "Execution period:"
+msgstr ""
+
+#: .\project\forms.py:111 .\templates\investment\advanced-search.html.py:95
+msgid "Project Name"
+msgstr ""
+
+#: .\project\forms.py:113 .\templates\project\detail.html.py:105
+msgid "Project Description"
+msgstr ""
+
+#: .\project\forms.py:114 .\templates\project\detail.html.py:123
+msgid "Program"
+msgstr ""
+
+#: .\project\forms.py:118
+msgid "Is the project or program included in a program?"
+msgstr ""
+
+#: .\project\forms.py:119
+msgid "Start Date"
+msgstr ""
+
+#: .\project\forms.py:120 .\templates\project\detail.html.py:144
+msgid "Expected completion"
+msgstr ""
+
+#: .\project\forms.py:121
+msgid "Estimated Budget"
+msgstr ""
+
+#: .\project\models.py:9
+msgid "Page result"
+msgstr ""
+
+#: .\project\models.py:12
+msgid "Link to result page."
+msgstr ""
+
+#: .\project\views.py:89 .\templates\project\list.html.py:80
+#: .\templates\project\list.html.py:152
+msgid "Completion date"
+msgstr ""
+
+#: .\project\views.py:90 .\templates\project\list.html.py:153
+msgid "Received total (U$)"
+msgstr ""
+
+#: .\project\views.py:91 .\templates\opportunity\list.html.py:150
+#: .\templates\opportunity-bk\list.html.py:128
+#: .\templates\organization\list.html.py:149
+#: .\templates\project\advanced-search.html.py:46
+#: .\templates\project\list.html.py:154
+msgid "Region"
+msgstr ""
+
+#: .\project\views.py:163
+#, python-format
+msgid "Empty list and '%(class_name)s.allow_empty' is False."
+msgstr ""
+
+#: .\templates\404.html.py:12
+msgid "We’re sorry..."
+msgstr ""
+
+#: .\templates\404.html.py:13
+msgid "We could not process your request."
+msgstr ""
+
+#: .\templates\404.html.py:16
+msgid ""
+"There has been an error during the attempt to attend your request. Please "
+"try again or visit the "
+msgstr ""
+
+#: .\templates\404.html.py:17
+msgid "Ecofunds map"
+msgstr ""
+
+#: .\templates\404.html.py:23 .\templates\map-link.html.py:4
+msgid "Discover funding flows and trends using Ecofunds map"
+msgstr ""
+
+#: .\templates\404.html.py:25 .\templates\map-link.html.py:6
+msgid ""
+"Ecofunds is the official RedLAC web platform to map and coordinate "
+"conservation investments in the Andes-Amazon region."
+msgstr ""
+
+#: .\templates\404.html.py:27 .\templates\home-template.html.py:58
+#: .\templates\map-link.html.py:8 .\templates\maps\map-bkp.html.py:14
+#: .\templates\maps\map.html.py:15
+msgid "Navigate Map"
+msgstr ""
+
+#: .\templates\base-cms.html.py:106
+msgid "Language"
+msgstr ""
+
+#: .\templates\base-cms.html.py:117
+msgid "Search database"
+msgstr ""
+
+#: .\templates\base-cms.html.py:118
+msgid "Search by project, organization or region"
+msgstr ""
+
+#: .\templates\base-cms.html.py:127 .\templates\user\login.html.py:51
+msgid "Sign up"
+msgstr ""
+
+#: .\templates\base-cms.html.py:128 .\templates\admin\login.html.py:49
+msgid "Log in"
+msgstr ""
+
+#: .\templates\base-cms.html.py:130 .\templates\admin\base.html.py:36
+msgid "Log out"
+msgstr ""
+
+#: .\templates\base-cms.html.py:156
+msgid "Explore"
+msgstr ""
+
+#: .\templates\base-cms.html.py:187
+msgid "Follow us"
+msgstr ""
+
+#: .\templates\base-cms.html.py:198
+msgid "Ecofunds Database"
+msgstr ""
+
+#: .\templates\base-cms.html.py:201
+msgid "A project of the Network of Environmental Funds "
+msgstr ""
+
+#: .\templates\base-cms.html.py:202
+msgid "of Latin America and the Caribbean – RedLAC"
+msgstr ""
+
+#: .\templates\base-cms.html.py:207
+msgid "Go to: home"
+msgstr ""
+
+#: .\templates\base-cms.html.py:208
+msgid "Go to: Redlac.org"
+msgstr ""
+
+#: .\templates\base-cms.html.py:221
+msgid "Copyright 2012 - Ecofunds"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:14
+#: .\templates\investment\list.html.py:72
+#: .\templates\opportunity\list.html.py:53
+#: .\templates\opportunity-bk\list.html.py:69
+#: .\templates\organization\list.html.py:77
+#: .\templates\project\list.html.py:74
+msgid "Order by: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:16
+#: .\templates\investment\list.html.py:74
+#: .\templates\opportunity\list.html.py:55
+#: .\templates\opportunity-bk\list.html.py:71
+#: .\templates\organization\list.html.py:79
+msgid "Last entries"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:17
+#: .\templates\opportunity\list.html.py:56
+#: .\templates\opportunity-bk\list.html.py:72
+#: .\templates\organization\list.html.py:80
+#: .\templates\project\list.html.py:77
+msgid "A-Z"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:22
+msgid "Show only: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:24
+#: .\templates\global-search-result.html.py:120 .\templates\sampling.html.py:7
+#: .\templates\maps\map-bkp.html.py:23 .\templates\maps\map.html.py:24
+#: .\templates\organization\detail.html.py:72
+#: .\templates\organization\list.html.py:83
+#: .\templates\project\detail.html.py:45 .\templates\project\list.html.py:10
+#: .\templates\project\list.html.py:143
+msgid "Projects"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:25 .\templates\sampling.html.py:21
+#: .\templates\maps\map-bkp.html.py:24 .\templates\maps\map.html.py:25
+#: .\templates\organization\detail.html.py:42
+#: .\templates\organization\list.html.py:10
+#: .\templates\organization\list.html.py:139
+msgid "Organizations"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:26
+msgid "Regions"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:53
+#: .\templates\project\carousel.html.py:29
+#: .\templates\project\list.html.py:114
+msgid "Completion date: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:64
+#: .\templates\project\list.html.py:180
+msgid "Project record"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:65
+#: .\templates\organization\detail.html.py:74
+#: .\templates\project\detail.html.py:75
+msgid "Project location map"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:70
+msgid "Investmented amount: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:118
+#: .\templates\organization\list.html.py:173
+msgid "Organization record"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:119
+msgid "Investments focus map"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:164
+#: .\templates\investment\list.html.py:119
+msgid "Investment date: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:169
+#: .\templates\investment\list.html.py:188
+msgid "Investment record"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:170
+msgid "Investment flow map"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:176
+msgid "Investment amount: "
+msgstr ""
+
+#: .\templates\global-search-result.html.py:211
+msgid "Projects list"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:212
+msgid "Investments list"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:213
+msgid "Projects map"
+msgstr ""
+
+#: .\templates\global-search-result.html.py:214
+msgid "Investments map"
+msgstr ""
+
+#: .\templates\home-template.html.py:25
+msgid "Explore investments for conservation"
+msgstr ""
+
+#: .\templates\home-template.html.py:27
+msgid ""
+"Navigate the map and get to know the organizations, projects and investments "
+"towards environmental conservation around the world. Filter them by theme, "
+"type, time frame and more!"
+msgstr ""
+
+#: .\templates\home-template.html.py:29 .\templates\home-template.html.py:37
+#: .\templates\home-template.html.py:45 .\templates\home-template.html.py:53
+msgid "More about Ecofunds"
+msgstr ""
+
+#: .\templates\home-template.html.py:33
+msgid "Improve knowledge on conservation finance"
+msgstr ""
+
+#: .\templates\home-template.html.py:35
+msgid ""
+"Enter your data and help us offer a better framework about conservation "
+"finance in the world. Make it easier to find gaps and investment need."
+msgstr ""
+
+#: .\templates\home-template.html.py:41
+msgid "Feature your initiative"
+msgstr ""
+
+#: .\templates\home-template.html.py:43
+msgid ""
+"Register your organization, projects and investments and let everybody know "
+"about your conservation initiatives. Find potential donors and partners!"
+msgstr ""
+
+#: .\templates\home-template.html.py:49
+msgid "Browse and publish calls for proposals"
+msgstr ""
+
+#: .\templates\home-template.html.py:51
+msgid ""
+"Browse calls for proposals to fund your project or publish calls of your "
+"institution in the Ecofunds community."
+msgstr ""
+
+#: .\templates\no-results.html.py:5
+#: .\templates\investment\no-results.html.py:5
+#: .\templates\organization\no-results.html.py:5
+msgid "No results match your seach."
+msgstr ""
+
+#: .\templates\no-results.html.py:6
+msgid "Try one of the projects below or make a new search."
+msgstr ""
+
+#: .\templates\no-results.html.py:12
+msgid "New projects"
+msgstr ""
+
+#: .\templates\no-results.html.py:29
+#: .\templates\investment\no-results.html.py:13
+msgid "New investments"
+msgstr ""
+
+#: .\templates\sampling.html.py:14
+msgid "Countries"
+msgstr ""
+
+#: .\templates\sampling.html.py:29 .\templates\sampling.html.py:30
+msgid "Why register in Ecofunds?"
+msgstr ""
+
+#: .\templates\sampling.html.py:34 .\templates\sampling.html.py:35
+msgid "How to start?"
+msgstr ""
+
+#: .\templates\sampling.html.py:39 .\templates\sampling.html.py:40
+msgid "About Ecofunds"
+msgstr ""
+
+#: .\templates\admin\404.html.py:4 .\templates\admin\404.html.py:8
+msgid "Page not found"
+msgstr ""
+
+#: .\templates\admin\404.html.py:10
+msgid "We're sorry, but the requested page could not be found."
+msgstr ""
+
+#: .\templates\admin\500.html.py:7 .\templates\admin\app_index.html.py:8
+#: .\templates\admin\base.html.py:45 .\templates\admin\change_form.html.py:21
+#: .\templates\admin\change_list.html.py:43
+#: .\templates\admin\delete_confirmation.html.py:8
+#: .\templates\admin\delete_selected_confirmation.html.py:8
+#: .\templates\admin\invalid_setup.html.py:7
+#: .\templates\admin\object_history.html.py:8
+#: .\templates\admin\auth\user\change_password.html.py:15
+#: .\templates\admin\cms\page\change_form.html.py:64
+#: .\templates\admin\cms\page\change_list.html.py:8
+#: .\templates\admin\cms\page\plugin_change_form.html.py:68
+#: .\templates\admin\cms\page\recover_form.html.py:14
+#: .\templates\admin\cms\page\revision_form.html.py:6
+msgid "Home"
+msgstr ""
+
+#: .\templates\admin\500.html.py:8
+msgid "Server error"
+msgstr ""
+
+#: .\templates\admin\500.html.py:12
+msgid "Server error (500)"
+msgstr ""
+
+#: .\templates\admin\500.html.py:15
+msgid "Server Error <em>(500)</em>"
+msgstr ""
+
+#: .\templates\admin\500.html.py:16
+msgid ""
+"There's been an error. It's been reported to the site administrators via e-"
+"mail and should be fixed shortly. Thanks for your patience."
+msgstr ""
+
+#: .\templates\admin\actions.html.py:4
+msgid "Run the selected action"
+msgstr ""
+
+#: .\templates\admin\actions.html.py:4
+msgid "Go"
+msgstr ""
+
+#: .\templates\admin\actions.html.py:11
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: .\templates\admin\actions.html.py:11
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: .\templates\admin\actions.html.py:13
+msgid "Clear selection"
+msgstr ""
+
+#: .\templates\admin\app_index.html.py:11 .\templates\admin\index.html.py:19
+#, python-format
+msgid "%(name)s"
+msgstr ""
+
+#: .\templates\admin\base.html.py:28
+msgid "Welcome,"
+msgstr ""
+
+#: .\templates\admin\base.html.py:33
+msgid "Documentation"
+msgstr ""
+
+#: .\templates\admin\base.html.py:35
+#: .\templates\admin\auth\user\change_password.html.py:19
+#: .\templates\admin\auth\user\change_password.html.py:53
+msgid "Change password"
+msgstr ""
+
+#: .\templates\admin\base_site.html.py:4
+msgid "Django site admin"
+msgstr ""
+
+#: .\templates\admin\base_site.html.py:7
+msgid "Ecofunds administration"
+msgstr ""
+
+#: .\templates\admin\change_form.html.py:24 .\templates\admin\index.html.py:29
+#: .\templates\admin\cms\page\change_form.html.py:67
+#: .\templates\admin\cms\page\plugin_change_form.html.py:71
+#: .\templates\cms\toolbar\placeholder.html.py:23
+msgid "Add"
+msgstr ""
+
+#: .\templates\admin\change_form.html.py:34
+#: .\templates\admin\object_history.html.py:12
+#: .\templates\admin\cms\page\change_form.html.py:99
+#: .\templates\admin\cms\page\revision_form.html.py:10
+msgid "History"
+msgstr ""
+
+#: .\templates\admin\change_form.html.py:35
+#: .\templates\admin\cms\page\change_form.html.py:100
+#: .\templates\admin\edit_inline\stacked.html.py:9
+#: .\templates\admin\edit_inline\tabular.html.py:30
+msgid "View on site"
+msgstr ""
+
+#: .\templates\admin\change_form.html.py:46
+#: .\templates\admin\change_list.html.py:69 .\templates\admin\login.html.py:18
+#: .\templates\admin\auth\user\change_password.html.py:29
+#: .\templates\admin\cms\page\change_form.html.py:130
+#: .\templates\admin\cms\page\plugin_change_form.html.py:85
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\admin\change_list.html.py:60
+#: .\templates\admin\cms\page\change_list.html.py:88
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: .\templates\admin\change_list.html.py:80
+#: .\templates\admin\cms\page\change_list.html.py:119
+msgid "Filter"
+msgstr ""
+
+#: .\templates\admin\change_list_results.html.py:17
+msgid "Remove from sorting"
+msgstr ""
+
+#: .\templates\admin\change_list_results.html.py:18
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: .\templates\admin\change_list_results.html.py:19
+msgid "Toggle sorting"
+msgstr ""
+
+#: .\templates\admin\delete_confirmation.html.py:12
+#: .\templates\admin\page_submit_line.html.py:5
+#: .\templates\admin\submit_line.html.py:4
+#: .\templates\admin\cms\page\menu_item.html.py:44
+msgid "Delete"
+msgstr ""
+
+#: .\templates\admin\delete_confirmation.html.py:19
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: .\templates\admin\delete_confirmation.html.py:27
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: .\templates\admin\delete_confirmation.html.py:35
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: .\templates\admin\delete_confirmation.html.py:40
+#: .\templates\admin\delete_selected_confirmation.html.py:45
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: .\templates\admin\delete_selected_confirmation.html.py:11
+msgid "Delete multiple objects"
+msgstr ""
+
+#: .\templates\admin\delete_selected_confirmation.html.py:18
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: .\templates\admin\delete_selected_confirmation.html.py:26
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: .\templates\admin\delete_selected_confirmation.html.py:34
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: .\templates\admin\filter.html.py:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: .\templates\admin\index.html.py:18
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr ""
+
+#: .\templates\admin\index.html.py:35
+msgid "Change"
+msgstr ""
+
+#: .\templates\admin\index.html.py:45
+msgid "You don't have permission to edit anything."
+msgstr ""
+
+#: .\templates\admin\index.html.py:53
+msgid "Recent Actions"
+msgstr ""
+
+#: .\templates\admin\index.html.py:54
+msgid "My Actions"
+msgstr ""
+
+#: .\templates\admin\index.html.py:58
+msgid "None available"
+msgstr ""
+
+#: .\templates\admin\index.html.py:72
+msgid "Unknown content"
+msgstr ""
+
+#: .\templates\admin\invalid_setup.html.py:13
+msgid ""
+"Something's wrong with your database installation. Make sure the appropriate "
+"database tables have been created, and make sure the database is readable by "
+"the appropriate user."
+msgstr ""
+
+#: .\templates\admin\login.html.py:34
+#: .\templates\admin\cms\mail\page_user_change.html.py:7
+#: .\templates\admin\cms\mail\page_user_change.txt.py:5
+msgid "Username:"
+msgstr ""
+
+#: .\templates\admin\login.html.py:38
+#: .\templates\admin\cms\mail\page_user_change.html.py:11
+#: .\templates\admin\cms\mail\page_user_change.txt.py:6
+msgid "Password:"
+msgstr ""
+
+#: .\templates\admin\login.html.py:45
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: .\templates\admin\object_history.html.py:24
+msgid "Date/time"
+msgstr ""
+
+#: .\templates\admin\object_history.html.py:25
+#: .\templates\admin\cms\page\moderation_messages.html.py:6
+#: .\templates\admin\cms\page\permissions.html.py:6 .\user\cms_plugin.py:16
+msgid "User"
+msgstr ""
+
+#: .\templates\admin\object_history.html.py:26
+#: .\templates\admin\cms\page\moderation_messages.html.py:4
+msgid "Action"
+msgstr ""
+
+#: .\templates\admin\object_history.html.py:40
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+
+#: .\templates\admin\page_submit_line.html.py:3
+#: .\templates\admin\pagination.html.py:11
+#: .\templates\admin\submit_line.html.py:3
+#: .\templates\admin\cms\page\change_form.html.py:274
+#: .\templates\admin\cms\page\plugin_change_form.html.py:114
+msgid "Save"
+msgstr ""
+
+#: .\templates\admin\page_submit_line.html.py:7
+#, python-format
+msgid "Delete %(language)s translation"
+msgstr ""
+
+#: .\templates\admin\page_submit_line.html.py:11
+#: .\templates\admin\submit_line.html.py:5
+msgid "Save as new"
+msgstr ""
+
+#: .\templates\admin\page_submit_line.html.py:12
+#: .\templates\admin\submit_line.html.py:6
+msgid "Save and add another"
+msgstr ""
+
+#: .\templates\admin\page_submit_line.html.py:13
+#: .\templates\admin\submit_line.html.py:7
+#: .\templates\admin\cms\page\change_form.html.py:275
+msgid "Save and continue editing"
+msgstr ""
+
+#: .\templates\admin\pagination.html.py:10
+msgid "Show all"
+msgstr ""
+
+#: .\templates\admin\search_form.html.py:7
+#: .\templates\investment\detail.html.py:67
+#: .\templates\investment\detail.html.py:71
+#: .\templates\investment\detail.html.py:76
+#: .\templates\investment\detail.html.py:80
+msgid "Search"
+msgstr ""
+
+#: .\templates\admin\search_form.html.py:9
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\admin\search_form.html.py:9
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: .\templates\admin\auth\user\add_form.html.py:6
+msgid ""
+"First, enter a username and password. Then, you'll be able to edit more user "
+"options."
+msgstr ""
+
+#: .\templates\admin\auth\user\add_form.html.py:8
+msgid "Enter a username and password."
+msgstr ""
+
+#: .\templates\admin\auth\user\change_password.html.py:33
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: .\templates\admin\auth\user\change_password.html.py:40
+#: .\templates\cms\toolbar\items\login.html.py:7
+msgid "Password"
+msgstr ""
+
+#: .\templates\admin\auth\user\change_password.html.py:46
+msgid "Password (again)"
+msgstr ""
+
+#: .\templates\admin\auth\user\change_password.html.py:47
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: .\templates\admin\cms\mail\approvement_required.html.py:5
+#: .\templates\admin\cms\mail\approvement_required.txt.py:5
+#, python-format
+msgid ""
+"Page <a href=\"%(admin_url)s\">%(page)s</a> may require approvement by you."
+msgstr ""
+
+#: .\templates\admin\cms\mail\approvement_required.html.py:8
+#: .\templates\admin\cms\mail\approvement_required.txt.py:7
+msgid "Last changes"
+msgstr ""
+
+#: .\templates\admin\cms\mail\base.html.py:55
+#, python-format
+msgid "Log in to administration <a href=\"%(login_url)s\">here</a>."
+msgstr ""
+
+#: .\templates\admin\cms\mail\base.txt.py:8
+#, python-format
+msgid "Login url: %(login_url)s"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:3
+#: .\templates\admin\cms\page\plugin_forms_history.html.py:3
+#: .\templates\admin\cms\page\plugin_forms_ok.html.py:4
+msgid "Change a page"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:73
+msgid "Approve page deletion"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:79
+#, python-format
+msgid "(requires approvement at %(moderation_level)s level)"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:80
+msgid "(you can perform actions on this page directly)"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:93
+msgid "Remove delete request"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:95
+msgid "Approve delete"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:95
+msgid "Approve"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:95
+#: .\templates\admin\cms\page\change_form.html.py:96
+#: .\templates\admin\cms\page\change_list_tree.html.py:12
+msgid "draft"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:96
+msgid "Preview"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:150
+msgid "All permissions"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:151
+#: .\templates\admin\cms\page\change_form.html.py:163
+#: .\templates\admin\cms\page\loading.html.py:2
+msgid "Loading..."
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:162
+msgid "Page states"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:185
+#, python-format
+msgid ""
+"This page must be moderated at level %(moderation_level)s, post a message "
+"for moderator."
+msgstr ""
+
+#: .\templates\admin\cms\page\change_form.html.py:187
+msgid "Request approvemet"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:3
+msgid "List of pages"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:59
+msgid "Successfully moved"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:64
+msgid "An error occured. Please reload the page"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:85
+#, python-format
+msgid "Recover deleted %(name)s"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:100
+msgid "Pages on:"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:117
+msgid "Filter:"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:117
+msgid "on"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list.html.py:117
+msgid "off"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:6
+msgid "title"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:8
+msgid "actions"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:9
+msgid "in navigation"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:10
+msgid "moderate"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:13
+msgid "published"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:15
+msgid "start"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:16
+msgid "end"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:17
+msgid "restricted"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:19
+msgid "last changes"
+msgstr ""
+
+#: .\templates\admin\cms\page\change_list_tree.html.py:20
+msgid "changed by"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:5
+msgid "select this page"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:5
+#: .\templates\admin\cms\page\menu_item.html.py:6
+msgid "edit this page"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:6
+#: .\templates\cms\toolbar\toolbar.html.py:63
+msgid "edit"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:16
+msgid "insert above"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:17
+msgid "insert below"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:19
+msgid "insert inside"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:23
+msgid "softroot"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:23
+msgid "home"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:26
+#, python-format
+msgid "Edit this page in %(language)s "
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:33
+msgid "Cut"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:33
+msgid "cut"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:34
+msgid "Copy"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:34
+msgid "copy"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:37
+#: .\templates\admin\cms\page\menu_item.html.py:41
+msgid "Add Child"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:37
+#: .\templates\admin\cms\page\menu_item.html.py:41
+msgid "add"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:44
+#: .\templates\cms\toolbar\toolbar.html.py:66
+msgid "delete"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:61
+msgid "Approve directly"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:63
+#: .\templates\admin\cms\page\menu_item.html.py:75
+#: .\templates\admin\cms\page\menu_item.html.py:77
+msgid "view"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:68
+msgid "Unpublish"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:69
+msgid "Publish"
+msgstr ""
+
+#: .\templates\admin\cms\page\menu_item.html.py:75
+msgid "View on page"
+msgstr ""
+
+#: .\templates\admin\cms\page\moderation_messages.html.py:5
+msgid "Created"
+msgstr ""
+
+#: .\templates\admin\cms\page\moderation_messages.html.py:7
+msgid "Message"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:7
+msgid "Group"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:8
+msgid "Can edit"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:9
+msgid "Can add"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:10
+msgid "Can delete"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:11
+msgid "Can publish"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:12
+msgid "Can change permissions"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:13
+msgid "Can move"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:14
+msgid "Can view"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:15
+msgid "Grant on"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:21
+#: .\templates\admin\cms\page\permissions.html.py:22
+msgid "(global)"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:26
+msgid "(current)"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:43
+msgid "All"
+msgstr ""
+
+#: .\templates\admin\cms\page\permissions.html.py:51
+msgid "Page doesn't inherit any permissions."
+msgstr ""
+
+#: .\templates\admin\cms\page\plugin_change_form.html.py:115
+#: .\templates\cms\toolbar\toolbar.html.py:29
+msgid "Cancel"
+msgstr ""
+
+#: .\templates\admin\cms\page\plugin_forms_history.html.py:9
+msgid "An old revision of a plugin can not be saved!"
+msgstr ""
+
+#: .\templates\admin\cms\page\plugin_forms_ok.html.py:26
+msgid "Your changes to this plugin have not been saved."
+msgstr ""
+
+#: .\templates\admin\cms\page\plugin_forms_ok.html.py:26
+msgid "Plugin saved successfully."
+msgstr ""
+
+#: .\templates\admin\cms\page\recover_form.html.py:17
+#, python-format
+msgid "Recover deleted %(verbose_name)s"
+msgstr ""
+
+#: .\templates\admin\cms\page\recover_form.html.py:24
+msgid "Press the save button below to recover this version of the object."
+msgstr ""
+
+#: .\templates\admin\cms\page\revision_form.html.py:11
+#, python-format
+msgid "Revert %(verbose_name)s"
+msgstr ""
+
+#: .\templates\admin\cms\page\revision_form.html.py:24
+msgid "Press the save button below to revert to this version of the object."
+msgstr ""
+
+#: .\templates\admin\cms\page\dialog\copy.html.py:4
+msgid "Copy options"
+msgstr ""
+
+#: .\templates\admin\cms\page\dialog\copy.html.py:6
+msgid "Choose copy options"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\installed_plugins_inc.html.py:4
+msgid "Available Plugins"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\installed_plugins_inc.html.py:7
+msgid "Generic"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\installed_plugins_inc.html.py:15
+msgid "Add Plugin"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\installed_plugins_inc.html.py:18
+msgid "From Language"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\installed_plugins_inc.html.py:25
+msgid "Copy Plugins"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\plugin_editor.html.py:12
+msgid "You must save the page first to add plugins."
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\plugin_editor.html.py:15
+msgid "No Plugin selected. Selected one on the left side"
+msgstr ""
+
+#: .\templates\admin\cms\page\widgets\plugin_editor.html.py:17
+msgid "No Plugins present. Add a plugin to this placeholder-slot."
+msgstr ""
+
+#: .\templates\admin\edit_inline\stacked.html.py:67
+#: .\templates\admin\edit_inline\tabular.html.py:115
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: .\templates\admin\edit_inline\stacked.html.py:70
+#: .\templates\admin\edit_inline\tabular.html.py:118
+msgid "Remove"
+msgstr ""
+
+#: .\templates\admin\edit_inline\tabular.html.py:17
+msgid "Delete?"
+msgstr ""
+
+#: .\templates\cms\plugins\googlemap.html.py:76
+msgid "Your address: "
+msgstr ""
+
+#: .\templates\cms\plugins\googlemap.html.py:78
+msgid "Calculate route"
+msgstr ""
+
+#: .\templates\cms\toolbar\placeholder.html.py:30
+msgid "Available plugins"
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:27
+msgid "The selected element can not be moved to the desired location."
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:28
+msgid "Are you sure you want to delete this plugin?"
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:64
+msgid "up"
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:65
+msgid "down"
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:68
+msgid "more"
+msgstr ""
+
+#: .\templates\cms\toolbar\toolbar.html.py:70
+msgid "Move to placeholder"
+msgstr ""
+
+#: .\templates\cms\toolbar\items\login.html.py:5
+msgid "Username"
+msgstr ""
+
+#: .\templates\cms\toolbar\items\login.html.py:10
+#: .\templates\cms\toolbar\items\login.html.py:12
+msgid "Login"
+msgstr ""
+
+#: .\templates\cms\toolbar\items\status.html.py:2
+msgid "Status"
+msgstr ""
+
+#: .\templates\cms\toolbar\items\switcher.html.py:4
+msgid "Switch on/off"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:5
+msgid "Search investiments by"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:6
+#: .\templates\opportunity\advanced-search.html.py:6
+#: .\templates\opportunity-bk\advanced-search.html.py:6
+#: .\templates\organization\advanced-search.html.py:6
+#: .\templates\project\advanced-search.html.py:6
+msgid "Combine filters to improve your search"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:18
+#: .\templates\investment\list.html.py:156
+#: .\templates\organization\advanced-search.html.py:32
+msgid "Type"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:31
+#: .\templates\investment\list.html.py:155
+msgid "Date"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:48
+msgid "Value"
+msgstr ""
+
+#: .\templates\investment\advanced-search.html.py:109
+msgid "Supported Region"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:24
+#: .\templates\opportunity\detail.html.py:50
+#: .\templates\organization\detail.html.py:50
+#: .\templates\project\detail.html.py:53
+msgid "Previous search"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:31
+msgid "trough the project"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:39
+msgid "Investment Record"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:40
+msgid "Investment Flow"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:48
+msgid "Recepient location"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:49
+#: .\templates\maps\map-bkp.html.py:54 .\templates\maps\map.html.py:62
+#: .\templates\opportunity\detail.html.py:72
+#: .\templates\organization\detail.html.py:75
+#: .\templates\project\detail.html.py:76
+msgid "Print"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:60
+#: .\templates\opportunity\detail.html.py:83
+#: .\templates\organization\detail.html.py:86
+#: .\templates\project\detail.html.py:87
+msgid "Basic information"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:66
+msgid "Investor  organization"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:70
+msgid "Investor project"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:75
+msgid "Recipient  organization"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:79
+msgid "Recipient project"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:91
+msgid "Estimated completion date"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:109
+msgid "U.S. Dollars"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:109
+msgid "Brasilian Reais"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:119
+#: .\templates\opportunity\detail.html.py:192
+#: .\templates\organization\detail.html.py:241
+#: .\templates\project\detail.html.py:284
+msgid "Attachments"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:127
+#: .\templates\opportunity\detail.html.py:198
+#: .\templates\organization\detail.html.py:247
+#: .\templates\project\detail.html.py:292
+msgid "File name"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:128
+#: .\templates\opportunity\detail.html.py:199
+#: .\templates\organization\detail.html.py:248
+#: .\templates\project\detail.html.py:293
+msgid "Date of publishing"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:148
+#: .\templates\opportunity\detail.html.py:219
+#: .\templates\organization\detail.html.py:268
+#: .\templates\project\detail.html.py:313
+msgid "View"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:149
+#: .\templates\opportunity\detail.html.py:220
+#: .\templates\organization\detail.html.py:269
+#: .\templates\project\detail.html.py:314
+msgid "Download"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:159
+#: .\templates\project\detail.html.py:324
+msgid "No attachments"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:172
+msgid "Investment Direction"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:191
+msgid "Highest investments this year"
+msgstr ""
+
+#: .\templates\investment\detail.html.py:195
+#: .\templates\investment\detail.html.py:214
+msgid "Investor: "
+msgstr ""
+
+#: .\templates\investment\detail.html.py:199
+#: .\templates\investment\detail.html.py:218
+msgid "Recepient: "
+msgstr ""
+
+#: .\templates\investment\detail.html.py:201
+#: .\templates\investment\detail.html.py:220
+msgid "Amount: "
+msgstr ""
+
+#: .\templates\investment\detail.html.py:210
+msgid "Same investment type"
+msgstr ""
+
+#: .\templates\investment\list.html.py:20
+msgid "Show all investments"
+msgstr ""
+
+#: .\templates\investment\list.html.py:30
+#: .\templates\opportunity\list.html.py:26
+#: .\templates\opportunity-bk\list.html.py:28
+#: .\templates\organization\list.html.py:31
+#: .\templates\project\list.html.py:28
+msgid "Filters: "
+msgstr ""
+
+#: .\templates\investment\list.html.py:43
+#: .\templates\opportunity-bk\list.html.py:41
+#: .\templates\organization\list.html.py:45
+#: .\templates\project\list.html.py:43
+msgid "Show investments: "
+msgstr ""
+
+#: .\templates\investment\list.html.py:45
+#: .\templates\opportunity-bk\list.html.py:43
+#: .\templates\organization\list.html.py:47
+#: .\templates\project\list.html.py:45
+msgid "Received"
+msgstr ""
+
+#: .\templates\investment\list.html.py:46
+#: .\templates\opportunity-bk\list.html.py:44
+#: .\templates\organization\list.html.py:48
+#: .\templates\project\list.html.py:46
+msgid "Made"
+msgstr ""
+
+#: .\templates\investment\list.html.py:55 .\templates\maps\map-bkp.html.py:43
+#: .\templates\maps\map.html.py:43 .\templates\opportunity\list.html.py:35
+#: .\templates\opportunity-bk\list.html.py:51
+#: .\templates\organization\list.html.py:60
+#: .\templates\project\list.html.py:55
+msgid "View: "
+msgstr ""
+
+#: .\templates\investment\list.html.py:58
+#: .\templates\organization\list.html.py:63
+#: .\templates\project\list.html.py:58
+msgid "Grid"
+msgstr ""
+
+#: .\templates\investment\list.html.py:63
+#: .\templates\opportunity\list.html.py:38
+#: .\templates\opportunity-bk\list.html.py:54
+#: .\templates\organization\list.html.py:68
+#: .\templates\project\list.html.py:63
+msgid "List"
+msgstr ""
+
+#: .\templates\investment\list.html.py:76
+msgid "Investor name"
+msgstr ""
+
+#: .\templates\investment\list.html.py:77
+msgid "Highest"
+msgstr ""
+
+#: .\templates\investment\list.html.py:78
+msgid "Lowest"
+msgstr ""
+
+#: .\templates\investment\list.html.py:98
+msgid "Investment: "
+msgstr ""
+
+#: .\templates\investment\list.html.py:114
+msgid "Amount:"
+msgstr ""
+
+#: .\templates\investment\list.html.py:121
+#: .\templates\opportunity\list.html.py:86
+#: .\templates\opportunity\list.html.py:109
+#: .\templates\opportunity\list.html.py:132
+#: .\templates\opportunity-bk\list.html.py:101
+#: .\templates\organization\list.html.py:112
+#: .\templates\project\carousel.html.py:34
+#: .\templates\project\list.html.py:119
+msgid "More information"
+msgstr ""
+
+#: .\templates\investment\list.html.py:148 .\templates\maps\map-bkp.html.py:53
+#: .\templates\maps\map.html.py:61 .\templates\opportunity\list.html.py:142
+#: .\templates\opportunity-bk\list.html.py:120
+#: .\templates\organization\list.html.py:140
+#: .\templates\project\list.html.py:144
+msgid "Generate Report"
+msgstr ""
+
+#: .\templates\investment\list.html.py:157
+msgid "Investor"
+msgstr ""
+
+#: .\templates\investment\list.html.py:158
+msgid "Amount (US$)"
+msgstr ""
+
+#: .\templates\investment\list.html.py:159
+msgid "Completation date"
+msgstr ""
+
+#: .\templates\investment\list.html.py:175
+msgid "Total investments: "
+msgstr ""
+
+#: .\templates\investment\list.html.py:189
+msgid "Flow map"
+msgstr ""
+
+#: .\templates\investment\no-results.html.py:6
+msgid "Try one of the investments below or make a new search."
+msgstr ""
+
+#: .\templates\investment\no-results.html.py:30
+msgid "Latest projects to receive investments"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:33 .\templates\maps\map.html.py:34
+msgid "Heat Map"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:34 .\templates\maps\map.html.py:35
+msgid "Density"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:35 .\templates\maps\map.html.py:36
+msgid "Bubble"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:44 .\templates\maps\map-bkp.html.py:96
+#: .\templates\maps\map.html.py:46 .\templates\maps\map.html.py:108
+msgid "Map"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:45 .\templates\maps\map.html.py:51
+msgid "Chart"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:94 .\templates\maps\map.html.py:106
+msgid "Add Layer"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:95 .\templates\maps\map.html.py:107
+msgid "Full Screen"
+msgstr ""
+
+#: .\templates\maps\map-bkp.html.py:97 .\templates\maps\map.html.py:109
+msgid "Satellite"
+msgstr ""
+
+#: .\templates\maps\map.html.py:119
+msgid "Investments concentration:"
+msgstr ""
+
+#: .\templates\maps\map.html.py:134
+msgid "Location"
+msgstr ""
+
+#: .\templates\maps\map.html.py:135
+msgid "Activity type"
+msgstr ""
+
+#: .\templates\maps\map.html.py:141
+msgid "Chart type: "
+msgstr ""
+
+#: .\templates\maps\map.html.py:144
+msgid "Bars"
+msgstr ""
+
+#: .\templates\maps\map.html.py:149
+msgid "Pie"
+msgstr ""
+
+#: .\templates\opportunity\advanced-search.html.py:5
+#: .\templates\opportunity-bk\advanced-search.html.py:5
+msgid "Find opportunities by"
+msgstr ""
+
+#: .\templates\opportunity\advanced-search.html.py:46
+#: .\templates\opportunity-bk\advanced-search.html.py:46
+#: .\templates\organization\advanced-search.html.py:46
+msgid "Supported location"
+msgstr ""
+
+#: .\templates\opportunity\advanced-search.html.py:73
+#: .\templates\opportunity-bk\advanced-search.html.py:73
+#: .\templates\organization\advanced-search.html.py:73
+msgid "Last investment date"
+msgstr ""
+
+#: .\templates\opportunity\advanced-search.html.py:90
+#: .\templates\opportunity-bk\advanced-search.html.py:90
+#: .\templates\organization\advanced-search.html.py:93
+msgid "Estimated investments value"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:42
+#: .\templates\opportunity\list.html.py:10
+#: .\templates\opportunity\list.html.py:141
+#: .\templates\opportunity-bk\list.html.py:10
+#: .\templates\opportunity-bk\list.html.py:119
+msgid "Opportunities"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:58
+msgid "Opportunity Name"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:63
+msgid "Opportunity Record"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:103
+msgid "Scope"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:107
+msgid "Objetivo"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:128
+msgid "Funding value"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:132
+msgid "Original currency"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:143
+#: .\templates\project\detail.html.py:219
+msgid "Geographical scope"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:167
+msgid "Supported activities"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:243
+#: .\templates\organization\detail.html.py:294
+#: .\templates\project\detail.html.py:350
+msgid "Similar geographical scope"
+msgstr ""
+
+#: .\templates\opportunity\detail.html.py:260
+#: .\templates\organization\detail.html.py:312
+#: .\templates\project\detail.html.py:365
+msgid "Similar activities types"
+msgstr ""
+
+#: .\templates\opportunity\latest.html.py:11
+#: .\templates\opportunity-bk\latest-opportunities.html.py:11
+#: .\templates\opportunity-bk\opportunities.html.py:11
+msgid "Show complete record"
+msgstr ""
+
+#: .\templates\opportunity\latest.html.py:14
+#: .\templates\opportunity-bk\latest-opportunities.html.py:14
+#: .\templates\opportunity-bk\opportunities.html.py:14
+msgid "No news yet"
+msgstr ""
+
+#: .\templates\opportunity\latest.html.py:18
+#: .\templates\opportunity-bk\latest-opportunities.html.py:18
+msgid "Find more opportunities"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:18
+#: .\templates\opportunity-bk\list.html.py:18
+msgid "Show all opportunities"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:43
+#: .\templates\opportunity-bk\list.html.py:59
+msgid "Table"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:57
+#: .\templates\opportunity-bk\list.html.py:73
+#: .\templates\organization\list.html.py:81
+msgid "Date of last investment"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:58
+#: .\templates\opportunity-bk\list.html.py:74
+#: .\templates\organization\list.html.py:82
+msgid "Highest investment"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:80
+#: .\templates\opportunity\list.html.py:103
+#: .\templates\opportunity\list.html.py:126
+msgid "Funding amount:"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:84
+#: .\templates\opportunity\list.html.py:107
+#: .\templates\opportunity\list.html.py:130
+msgid "Publication date: "
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:151
+msgid "Resume"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:152
+msgid "Funding amount"
+msgstr ""
+
+#: .\templates\opportunity\list.html.py:154
+#: .\templates\opportunity\list.html.py:181
+#: .\templates\opportunity-bk\list.html.py:156
+msgid "Opportunity record"
+msgstr ""
+
+#: .\templates\opportunity-bk\list.html.py:129
+#: .\templates\organization\list.html.py:150
+msgid "Mission"
+msgstr ""
+
+#: .\templates\organization\advanced-search.html.py:5
+msgid "Search organizations by"
+msgstr ""
+
+#: .\templates\organization\advanced-search.html.py:75
+msgid "format"
+msgstr ""
+
+#: .\templates\organization\advanced-search.html.py:75
+msgid "DD/MM/YYYY"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:63
+msgid "Organization Record"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:119
+#: .\templates\project\detail.html.py:122
+msgid "Category"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:123
+msgid "Toolkit profile web address"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:128
+msgid "Network type"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:136
+msgid "Contact person"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:141
+msgid "Executed projects"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:153
+msgid "Supported projects"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:172
+#: .\templates\organization\detail.html.py:178
+msgid "Address"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:182
+msgid "ZIP"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:190
+msgid "State/Province/Region"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:194
+msgid "City"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:205
+#: .\templates\project\detail.html.py:159
+msgid "Contact information"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:211
+#: .\templates\project\detail.html.py:165
+msgid "Email"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:218
+#: .\templates\project\detail.html.py:175
+msgid "Phone numbers"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:224
+#: .\templates\project\detail.html.py:188
+msgid "FAX"
+msgstr ""
+
+#: .\templates\organization\detail.html.py:229
+#: .\templates\project\detail.html.py:200
+msgid "Website"
+msgstr ""
+
+#: .\templates\organization\latest.html.py:4
+msgid "New organizations in Ecofunds"
+msgstr ""
+
+#: .\templates\organization\list.html.py:18
+msgid "Show all organizations"
+msgstr ""
+
+#: .\templates\organization\no-results.html.py:6
+msgid "Try one of the organizations below or make a new search."
+msgstr ""
+
+#: .\templates\organization\no-results.html.py:12
+msgid "New organizations"
+msgstr ""
+
+#: .\templates\organization\no-results.html.py:29
+msgid "Latest organizations to register investments"
+msgstr ""
+
+#: .\templates\project\advanced-search.html.py:5
+#: .\templates\project\search.html.py:5
+msgid "Search projects by"
+msgstr ""
+
+#: .\templates\project\advanced-search.html.py:32
+msgid "Activity Type"
+msgstr ""
+
+#: .\templates\project\advanced-search.html.py:73
+msgid "Annual budget"
+msgstr ""
+
+#: .\templates\project\advanced-search.html.py:85
+msgid "Execution"
+msgstr ""
+
+#: .\templates\project\carousel.html.py:6
+msgid "Latest Project Entries in Ecofunds"
+msgstr ""
+
+#: .\templates\project\carousel.html.py:24
+#: .\templates\project\list.html.py:109
+msgid "Current Investments:"
+msgstr ""
+
+#: .\templates\project\carousel.html.py:28
+#: .\templates\project\list.html.py:113
+msgid "Annual budget: "
+msgstr ""
+
+#: .\templates\project\detail.html.py:66
+msgid "Project Record"
+msgstr ""
+
+#: .\templates\project\detail.html.py:74
+msgid "Investiments"
+msgstr ""
+
+#: .\templates\project\detail.html.py:126
+msgid "Executor organizations"
+msgstr ""
+
+#: .\templates\project\detail.html.py:136
+msgid "Manager/responsible"
+msgstr ""
+
+#: .\templates\project\detail.html.py:140
+msgid "Start date"
+msgstr ""
+
+#: .\templates\project\detail.html.py:148
+msgid "Estimated Annual Budget"
+msgstr ""
+
+#: .\templates\project\detail.html.py:233
+msgid "No locations"
+msgstr ""
+
+#: .\templates\project\detail.html.py:245
+#: .\templates\project\detail.html.py:248
+msgid "Activities type"
+msgstr ""
+
+#: .\templates\project\detail.html.py:267
+msgid "No activity types"
+msgstr ""
+
+#: .\templates\project\detail.html.py:272
+msgid "Activity description"
+msgstr ""
+
+#: .\templates\project\latest.html.py:4
+msgid "New projects in Ecofunds"
+msgstr ""
+
+#: .\templates\project\list.html.py:18
+msgid "Show all projects"
+msgstr ""
+
+#: .\templates\project\list.html.py:76
+msgid "Latest projects"
+msgstr ""
+
+#: .\templates\project\list.html.py:78
+msgid "Highest budget"
+msgstr ""
+
+#: .\templates\project\list.html.py:79
+msgid "Lowest budget"
+msgstr ""
+
+#: .\templates\project\list.html.py:181
+msgid "Location map"
+msgstr ""
+
+#: .\templates\project\search.html.py:19
+msgid "Search projects"
+msgstr ""
+
+#: .\templates\project\suggest.html.py:8
+msgid "Ver mais resultados"
+msgstr ""
+
+#: .\templates\tags\pagination-b.html.py:4
+#: .\templates\tags\pagination-charles.html.py:4
+#: .\templates\tags\pagination.html.py:7
+msgid "Approximately"
+msgstr ""
+
+#: .\templates\tags\pagination-b.html.py:4
+#: .\templates\tags\pagination-charles.html.py:4
+#: .\templates\tags\pagination.html.py:7
+msgid "results"
+msgstr ""
+
+#: .\templates\tags\pagination.html.py:5
+msgid "Showing"
+msgstr ""
+
+#: .\templates\tags\pagination.html.py:5
+msgid "of"
+msgstr ""
+
+#: .\templates\tags\pagination.html.py:5
+msgid "documents"
+msgstr ""
+
+#: .\templates\user\login.html.py:9
+msgid "Sign in to your Ecofunds account"
+msgstr ""
+
+#: .\templates\user\login.html.py:28
+msgid "Forgot your password?"
+msgstr ""
+
+#: .\templates\user\login.html.py:33
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: .\templates\user\login.html.py:41
+msgid "Not an Ecofunds member yet?"
+msgstr ""
+
+#: .\templates\user\login.html.py:42
+msgid ""
+"Ecofunds is a collaborative tool created to join efforts and disseminate "
+msgstr ""
+
+#: .\templates\user\login.html.py:43
+msgid "knowledge on conservation investments. What you can do in Ecofunds:"
+msgstr ""
+
+#: .\templates\user\login.html.py:45
+msgid ""
+"Are you a member of an investor or recepient organization? Create yor "
+"profile today!"
+msgstr ""
+
+#: .\templates\user\login.html.py:46
+msgid ""
+"Register your organization and tell the world about your projects and "
+"investments;"
+msgstr ""
+
+#: .\templates\user\login.html.py:47
+msgid ""
+"Register your projects to tell othr organizations how to invest in your "
+"iniciative;"
+msgstr ""
+
+#: .\templates\user\login.html.py:48
+msgid "Tell the world where and how you invest in the environment."
+msgstr ""
+
+#: .\templates\user\login.html.py:50
+msgid "Join us in this big effort to save the world!"
+msgstr ""
+
+#: .\user\cms_plugin.py:14
+msgid "User Form"
+msgstr ""

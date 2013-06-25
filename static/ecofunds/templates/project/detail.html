@@ -1,0 +1,400 @@
+{% load sekizai_tags tags i18n static %}
+
+{%block head%}
+	{% addtoblock "meta" %}
+		<!-- Facebook Meta Tags -->
+	    <meta property="og:title" content="{{ project.title }}" /> 
+	    <meta property="og:type" content="detail project" /> 
+	    <meta property="og:url" content="" /> 
+	    <meta property="og:image" content="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" /> 
+	    <meta property="og:site_name" content="http://ecofundsdatabase.org"/> 
+	    <!--<meta property="og:description" content="{% autoescape off %}{{ project.description }}{% endautoescape %}" />  -->
+		<!-- End of Facebook Meta Tags -->
+	{% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/detail.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/project/detail.js"></script>
+
+		<!-- Utilizado pelo Facebook -->
+		<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=277399048946696";
+		fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<!-- fim Utilizado pelo Facebook -->
+
+		<!-- Utilizado pelo Twitter -->
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<!-- fim Utilizado pelo Twitter -->        
+    {% endaddtoblock %}
+{% endblock %}
+
+<!-- Utilizado pelo Facebook -->
+<div id="fb-root"></div>
+<!-- fim Utilizado pelo Facebook -->
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto projeto-maior-branco">{% trans "Projects" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+    	<a class="voltar link-destaque" href="{% page_url "projects" %}" title="{% trans "Previous search" %}">{% trans "Previous search" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo">
+    	<div class="ficha projeto {%if perm%}pode-editar{%endif%}" data-index="{{ project.pk }}">
+    		<h2 class="titulo-ficha">{{ project.title }}</h2>
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+            
+    		<div class="opcoes">
+	    		<!-- menu com abas da ficha -->
+	    		<div class="menu-abas">
+			        <ul class="menu-abas-container">
+			        	<li class="item aba"><a class="link-aba" href="#informacoes">{% trans "Project Record" %}</a></li>
+			        </ul>
+			    </div>
+			    <!-- fim de menu com abas da ficha -->
+
+			    <!-- opcoes-adicionais da ficha -->
+			    <div class="opcoes-adicionais">
+			        <ul class="opcoes-adicionais-container">
+			        	<li class="item ico ico-texto investimento-menor-verde"><a href="{% page_url "investments" %}?s_project_name={{project.title}}">{% trans "Investiments" %}</a></li>
+			        	<li class="item ico ico-texto localizacao-menor-verde"><a href="{% page_url "map" %}?s_project_name={{project.title}}">{% trans "Project location map" %}</a></li>
+			        	<li class="item ico ico-texto impressao"><a href="#">{% trans "Print" %}</a></li>     
+			        </ul>
+		    	</div>
+		  		<!-- fim de opcoes-adicionais da ficha -->
+		  		
+		  		<!-- Controle de Edição -->
+                {%if perm%}
+                    <div class="controles-edicao edicao-ficha projeto">
+                        <a class="ico pequeno editar" href="{% page_url "project-form" %}?id={{ project.entity_id }}" title="{% trans "Edit project" %}: {{ project.title }}">Edit</a>
+                        <a class="ico pequeno excluir" href="#delete-modal" title="{% trans "Delete project" %}: {{ project.title }}">Delete</a>
+                    </div>
+                
+                	<div id="delete-modal" class="camada-exclusao projeto">
+	                    <div class="confirmacao">
+	                        <p>{% trans "The project" %} <em>{{ project.title }}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable person or an organization administrator." %}</p>
+	                        
+	                        <p>{% trans "Do you really want to delete this project from Ecofunds?" %}</p>
+	                        
+	                        <a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep project in Ecofunds" %}">{% trans "No, keep project in Ecofunds" %}</a>
+	                        
+	                        <a class="confirmar" href="javascript:;" title="{% trans "Yes, delete project" %}">{% trans "Yes, delete project" %}</a>
+	                    </div>
+	                </div>
+                
+                {%endif%}
+                <!-- fim de controle de edicao -->
+	  		</div>
+
+			<div class="conteudo-abas-container">
+				<!-- Informacoes da ficha -->
+				<section id="informacoes">	
+					<!-- Informações Básicas -->
+					<div class="info basica">
+						<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
+						
+						<!-- Compartilhar nas redes sociais -->
+						<div class="compartilhar">
+							<ul>
+								<li class="facebook">
+									<div class="fb-like" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false" data-font="arial"></div>
+								</li>
+								<li class="twitter">
+									<a href="https://twitter.com/share" class="twitter-share-button" data-via="funbio" data-lang="en" data-hashtags="Ecofunds" data-text="{% trans "I like project" %} {{ project.title }}">Tweet</a>
+								</li>
+								<li class="email"><a class="botao secundario" title="Enviar por email"><span class="ico pequeno email"></span>Email</a></li>
+							</ul>
+						</div>
+						<!-- fim de compartilhar nas redes sociais -->
+						
+						<div class="img-profile-container">
+							<img id="picture" src="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/projeto-sem-foto.jpg" width="185" height="130" alt="Image: {{ project.title }}"> 
+						</div>
+						
+						
+						<h3>{% trans "Project Description" %}</h3>
+						<div class="descricao">
+							<p>
+								{% autoescape off %}{{ project.description }}{% endautoescape %}
+							</p>						
+						</div>
+						
+						
+						<!-- tabela de informacoes basicas -->
+						<table class="tabela horizontal" caption="Basic information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Acronym" %}</th>
+									<td class="conteudo-registro">{%if project.acronym %}{{ project.acronym }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Category" %}</th>
+									<td class="conteudo-registro">{% trans "Program" %}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Executor organizations" %}</th>
+									<td class="conteudo-registro">
+										<ul class="lista-etiquetas">
+	                                        {% for po in project.organizations.all %}
+											    <li><a class="etiqueta" href="{% page_url "organization-detail" po.organization.id %}" title="Search: {{ po.organization.name }}">{{ po.organization.name }}</a></li>
+										    {% endfor %}
+	                                    </ul>
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Manager/responsible" %}</th>
+									<td class="conteudo-registro">{%if project.creater.first_name%}{{ project.creater.first_name }} {{ project.creater.last_name }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Start date" %}</th>
+									<td class="conteudo-registro">{%if project.grant_from%}{{ project.grant_from|date:"d/M/Y" }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Expected completion" %}</th>
+									<td class="conteudo-registro">{%if project.grant_to%}{{ project.grant_to|date:"d/M/Y" }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Estimated Annual Budget" %}</th>
+									<td class="conteudo-registro destaque">{%if project.get_year_recipient_investments %}{% currency project.get_current_investment|get_sum %}{% else %}{% currency 0 %}{% endif %}</td>
+								</tr>										
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes basicas -->
+					</div>
+					<!-- fim de Informações Básicas -->
+	
+	
+					<!-- Informações de Contato -->
+					<div class="info contato">
+						<h2 class="titulo-tabela">{% trans "Contact information" %}</h2>
+	
+						<!-- tabela de informacoes de contato -->
+						<table class="tabela horizontal" caption="Contact information" summary="">					
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Email" %}</th>
+                                    <td class="conteudo-registro">
+										{% if project.email %}
+											<a href="mailto: {{ project.email }}" title="{{ project.email }}">{{project.email}}</a>
+										{% else %}
+											-
+										{% endif %}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Phone numbers" %}</th>
+									<td class="conteudo-registro">
+										{% if project.phone_number_01 %}
+											{{project.phone_country_prefix_01}} {{project.phone_local_prefix_01}} {{ project.phone_number_01 }}
+										{% else %}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "FAX" %}</th>
+								    <td class="conteudo-registro">
+										{% if project.fax %}
+											{{ project.fax }}
+										{% else %}
+											-
+										{% endif %}
+                                    </td>
+	                            </tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Website" %}</th>
+								    <td class="conteudo-registro">
+										{% if project.website %}
+											<a href="{{ project.website }}">{{project.website}}</a>
+										{% else %}
+											-
+										{% endif%}
+									</td>
+	                            </tr>										
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de contato -->
+					</div>
+					<!-- Fim de Informações de Contato -->
+	
+					<!-- Informações de escopo geografico -->
+					<div class="info escopo-geo">
+						<h2 class="titulo-tabela">{% trans "Geographical scope" %}</h2>
+						
+						<!-- tabela de informacoes de escopo geografico -->
+						<table class="tabela horizontal" caption="Geographical scope" summary="">
+							<tbody>
+								<tr>
+									<td class="conteudo-registro">
+	                                    {%if project.locations.count%}
+											<ul class="lista-etiquetas">
+	                                			{% for lo in project.locations.all %}
+													<li><a class="etiqueta" href="{%page_url "projects"%}?s_country={{lo.country.name}}" title="Search: {{ lo.country.name }}">{{ lo.country.name }}</a></li>
+												{% endfor %}
+											</ul>	
+	                                    {%else%}
+	                                    	{%trans "No locations"%}							
+	                                    {%endif%}
+									</td>
+								</tr>								
+							</tbody>
+						</table>				
+						<!-- fim de tabela de informacoes de escopo geografico -->
+					</div>
+					<!-- fim de Informações de escopo geografico -->
+	
+					<!-- Informacoes de tipo de atividades -->
+					<div class="info tipo-atividades">
+						<h2 class="titulo-tabela">{% trans "Activities type" %}</h2>
+						
+						<!-- tabela de informacoes de tipo de atividades -->
+						<table class="tabela horizontal" caption="{%trans "Activities type"%}" summary="">
+							<tbody>
+	                            {%if  project.activities.all.count%}
+	                                <tr>
+									    <td class="conteudo-registro" colspan="2">
+										    <ul class="lista-etiquetas">
+	                                            {% for ac in project.activities.all %}
+											        <li><a class="etiqueta" href="{%page_url "projects"%}?s_project_activity_type={{ac.pk}}" title="Search: {{ ac.name }}">{{ ac.name}}</a></li>
+											    {% endfor %}
+										    </ul>								
+									    </td>
+								    </tr>
+	                            {%else%}
+	                                <tr>
+									    <td colspan="2" class="conteudo-registro texto">{%trans "No activity types"%}</td>
+								    </tr>  
+	                            {%endif%}
+	                            
+	                            <tr>
+								    <th class="titulo-registro" scope="row">{%trans "Activity description" %}</th>
+								    <td class="conteudo-registro">{%if project.activity_description%}{{project.activity_description}}{%else%}-{%endif%}</td>
+							    </tr>	
+							</tbody>
+						</table>				
+						<!-- fim de tabela de informacoes de tipo de atividades -->
+					</div>
+					<!-- fim de Informacoes de tipo de atividades -->
+	
+	
+	                {% if attachments.count > 0 %}
+						<!-- Anexos -->
+						<div class="info anexos">
+							<h2 class="titulo-tabela">{% trans "Attachments" %}</h2>
+	
+	            			{%if True or attachments.count%}					
+								<!-- tabela de anexos -->
+								<table class="tabela vertical" caption="Attachments" summary="">
+									<thead>
+										<tr>
+											<th class="titulo-registro" scope="col">{% trans "File name" %}</th>
+											<th class="titulo-registro" scope="col">{% trans "Date of publishing" %}</th>
+											<th class="titulo-registro" colspan="2" scope="col"></th>
+										</tr>
+									</thead>
+	
+									<tfoot>
+										<tr>
+											<td class="rodape-tabela" colspan="4">
+												<div class="paginacao-resultados">
+												    {% pagination attachments True %}
+												</div>
+											</td>
+										</tr>
+									</tfoot>
+	
+									<tbody>
+										{% for attachment in attachments %}
+			                                <tr>
+											    <td class="conteudo-registro texto"><a href="{{ attachment.path.url }}" title="{{ attachment.name }}">{{ attachment.name }}</a></td>
+											    <td class="conteudo-registro">{{ attachment.created_at|date:"d/M/Y"}}</td>
+											    <td class="conteudo-registro preview"><a href="#" title="">{% trans "View" %}</a></td>
+											    <td class="conteudo-registro download"><a class="ico ico-texto pdf" href="#" title="">{% trans "Download" %}</a></td>
+										    </tr>  
+			                            {% endfor %}
+									</tbody>
+								</table>		
+	            			{%else%}
+								<table class="tabela vertical" caption="Attachments" summary="">
+								<tbody>
+									<tr>
+										<td class="conteudo-registro texto">{%trans "No attachments"%}</td> 
+									</tr> 
+								</tbody>
+								</table>	
+	            			{%endif%}
+							<!-- fim de tabela de anexos -->
+						</div>	
+						<!-- fim de Anexos -->
+	                {% endif %}
+				</section>
+				<!-- fim de Informacoes da ficha -->
+			</div>
+    	</div>
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% if similar_location_projects.count > 0 %}
+			<!-- Escopo Geográfico -->
+			<section class="relacao resumida escopo-geo">
+				<h3>{% trans "Similar geographical scope" %}</h3>
+				<ul>
+	                {% for project in similar_location_projects %}
+					<li>
+						<h4><a href="{% page_url current_page project.entity_id %}" title="{{ project.title }}">{{ project.title }}</a></h4>
+						<p>{{ project.resume }}</p>
+					</li>
+	                {% endfor %}																			
+				</ul>	
+			</section>
+			<!-- fim de Escopo Geográfico -->
+        {% endif %}
+        
+        
+        {% if similar_activity_projects.count > 0 %}
+			<!-- Tipo de atividades -->
+			<section class="relacao resumida tipo-atividades">
+				<h3>{% trans "Similar activities types" %}</h3>
+				<ul>
+					{% for project in similar_activity_projects %}
+					<li>
+						<h4><a href="{% page_url current_page project.entity_id %}" title="{{ project.title }}">{{ project.title }}</a></h4>
+						<p>{{ project.resume }}</p>
+					</li>
+	                {% endfor %}																					
+				</ul>	
+			</section>
+			<!-- fim de Tipo de atividades --> 
+		{% endif %}
+
+		{% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

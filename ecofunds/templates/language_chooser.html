@@ -1,0 +1,7 @@
+{% load menu_tags i18n %}
+
+<select name="language" id="idioma">
+    {% for lang in languages %}
+    <option value="{% page_language_url lang.0 %}"{% ifequal current_language lang.0 %} selected="selected"{% endifequal %}>{{ lang.0|language_name_local|capfirst }}</option>
+    {% endfor %}
+</select>

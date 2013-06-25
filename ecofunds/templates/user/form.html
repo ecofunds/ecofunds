@@ -1,0 +1,276 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+   {% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/form.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/user/form.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+{% block base_content %}
+    <section class="cadastro usuario">
+        <header class="info-cadastro-preliminar">
+            <h3 class="titulo-cadastro">{%trans "[Complete user name]" %}</h3>
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+        </header>
+
+        <form method="post" action="" enctype="multipart/form-data" class="form-cadastro usuario">
+            {% csrf_token %}
+            
+            <div class="controles superiores">
+                <input type="submit" class="botao primario" value="{%trans "Save user record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>
+            
+            <div class="mensagem-informativa">* {% trans "Required fields" %}</div>          
+            
+            <div class="campos-formulario">
+                <!-- Basic Information -->
+                <fieldset class="info-cadastro basico">
+                    <legend class="titulo-info">{% trans "Basic information"%}</legend>
+                    
+                    <div class="grupo grupo-nome">
+                        <div class="envolve-campo menor-para-imagem">
+                            <div class="titulo-campo">
+                                <label for="id_first_name"><span class="obrigatorio">{{ formset.first_name.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.first_name }}
+                                {{ formset.first_name.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo menor-para-imagem">
+                            <div class="titulo-campo">
+                                <label for="id_last_name"><span class="obrigatorio">{{ formset.last_name.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.last_name }}
+                                {{ formset.last_name.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo imagem-flutuante">                            
+                            <div class="campo-imagem">
+                                <div class="espaco-imagem">
+                                    <img id="picture" src="{% if formset.instance.image %}{{ formset.instance.image.url }}{% else %}{% get_static_prefix %}images/usuario-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/usuario-sem-foto.jpg" width="71" height="71" alt="Image: {{ formset.instance.first_name }} {{ formset.instance.last_name }}">
+                                </div>
+                                
+                                <div class="caminho-imagem">
+                                    {{ formset.image }}
+                                </div>
+                                
+                                <div class="controle-imagem">
+                                    <a id="change-picture" href="javascript:;" class="botao primario">{% trans "Change" %}</a>
+                                    <a id="remove-picture" href="javascript:;" class="botao primario">{% trans "Remove" %}</a>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>                    
+                                                  
+                    <div class="grupo grupo-senha">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_password"><span class="obrigatorio">{{ formset.password.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.password }}
+                                {{ formset.password.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_check_password"><span class="obrigatorio">{{ formset.check_password.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.check_password }}
+                                {{ formset.check_password.errors }}
+                            </div>
+                        </div>                        
+                    </div>
+                    {% if user.is_superuser %}
+                    <div class="grupo grupo-status">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                            <label for="id_user_type">{{formset.user_type.label}}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                    <span class="links-adicionais">
+                                            {{formset.user_type}}
+                                            {{formset.user_type.errors}}
+                                            {% trans "This defines what this user can do in Ecofunds" %}</span>
+                            </div>
+                        </div>                     
+                </div>
+                {% endif %}
+                    
+                    <div class="grupo grupo-email">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_email"><span class="obrigatorio">{{ formset.email.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.email }}
+                                {{ formset.email.errors }}
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_receive_notes">{{ formset.receive_notes.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.receive_notes }}
+                                {{ formset.receive_notes.errors }}
+                            </div>
+                        </div>                        
+                    </div>
+                </fieldset>
+                <!-- Fim Basic-->
+
+                <!-- Organizations -->
+                <fieldset class="info-cadastro organizacao">
+                    <legend class="titulo-info">{% trans "Organizations "%}</legend>
+                    
+                    <div class="grupo grupo-organizacao">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_organizations">{{ formset.organizations.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.organizations }}
+                                {{ formset.organizations.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grupo grupo-organizacao">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_organizations">Job title</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                    {{formset.title}}
+                                    {{formset.title.errors}}
+                            </div>
+                        </div>
+                    </div>                    
+                </fieldset> 
+                <!-- Fim Organizations -->
+                
+                <!-- Contact information-->
+                <fieldset class="info-cadastro contato">
+                    <legend class="titulo-info">{% trans "Contact information"%}</legend>
+                
+                    <div class="grupo grupo-telefone">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_phone_country_prefix_01"><span class="obrigatorio">{{ formset.phone_country_prefix_01.label }}*</span></label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.phone_country_prefix_01 }}
+                                
+                                {{ formset.phone_local_prefix_01 }}
+                                
+                                {{ formset.phone1 }}
+                                {{ formset.phone1.errors }}                                                                                                
+                            </div>
+                        </div>
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_phone_country_prefix_02">{{ formset.phone_country_prefix_02.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.phone_country_prefix_02 }}
+                                
+                                {{ formset.phone_local_prefix_02 }}
+                                
+                                {{ formset.phone2 }}
+                                {{ formset.phone2.errors }}                                                                                                
+                            </div>
+                        </div>                        
+                        
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_fax_country_prefix">{{ formset.fax_country_prefix.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.fax_country_prefix }}
+                                
+                                {{ formset.fax_local_prefix }}
+                                
+                                {{ formset.fax }}
+                                {{ formset.fax.errors }}                                                                                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="grupo grupo-email-alt">
+                        <div class="envolve-campo">
+                            <div class="titulo-campo">
+                                <label for="id_email_alt">{{ formset.email_alt.label }}</label>
+                            </div>
+                            
+                            <div class="campos-editaveis">
+                                {{ formset.email_alt }}
+                                {{ formset.email_alt.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </fieldset> 
+                <!-- Fim Contact information-->
+                
+            </div>
+            
+            
+            <div class="controles inferiores">
+                <input type="submit" class="botao primario" value="{%trans "Save user record" %}" />
+                <a href="{% page_url 'home' %}" class="botao secundario">{%trans "Cancel" %}</a>
+            </div>            
+        </form>
+        
+        {% block extra_script %}
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery('.ui-autocomplete-input').each(function(i,v){
+                    jQuery(this).addClass('combo');
+                });
+
+                //Cria o estilo dos elementos combo.
+                createCombo();
+            });
+        </script>
+        {% endblock %}
+    </section>
+{%endblock%}

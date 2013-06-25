@@ -1,0 +1,278 @@
+{% load sekizai_tags tags i18n static %}
+
+{% addtoblock "meta" %}
+
+<!-- Facebook Meta Tags -->
+    <meta property="og:title" content="{{ organization.name }}" /> 
+    <meta property="og:type" content="detail organization" /> 
+    <meta property="og:url" content="" /> 
+    <meta property="og:image" content="{% if organization.image %}{{ organization.image.url }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" /> 
+    <meta property="og:site_name" content="http://ecofundsdatabase.org"/> 
+    <meta property="og:description" content="{% autoescape off %}{{ organization.mission }}{% endautoescape %}" /> 
+<!-- End of Facebook Meta Tags -->
+
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+<!-- Funções específicas dessa página -->
+<script type="text/javascript" src="{% get_static_prefix %}scripts/organization/detail.js"></script>
+
+<!-- Utilizado pelo Facebook -->
+<script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=277399048946696";
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script>
+<!-- fim Utilizado pelo Facebook -->
+
+<!-- Utilizado pelo Twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<!-- fim Utilizado pelo Twitter -->
+
+{% endaddtoblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto oportunidade-maior-branco">{% trans "Opportunities" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+    	<a class="voltar link-destaque" href="#" title="{% trans "Previous search" %}">{% trans "Previous search" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo">
+    	<div class="ficha organizacao">
+            <input type="hidden" name="id" value="#" />
+    		<h2 class="titulo-ficha">{% trans "Opportunity Name" %}</h2>
+    		<div class="opcoes">
+	    		<!-- menu com abas da ficha -->
+	    		<div class="menu-abas">
+			        <ul class="menu-abas-container">
+		        		<li class="item aba"><a href="#informacoes">{% trans "Opportunity Record" %}</a></li>
+			        </ul>
+			    </div>
+			    <!-- fim de menu com abas da ficha -->
+			        
+			    <!-- opcoes-adicionais da ficha -->
+			    <div class="opcoes-adicionais">
+                    
+			        <ul class="opcoes-adicionais-container">
+		        		<li class="item ico ico-texto impressao"><a href="#" id="bt-print">{% trans "Print" %}</a></li>     
+			        </ul>
+		    	</div>
+		  		<!-- fim de opcoes-adicionais da ficha -->
+	  		</div>
+
+	        <!-- Informacoes da ficha -->
+	        <section id="informacoes">
+
+				<!-- Informações Básicas -->
+				<div class="info basica">
+					<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
+					
+					<!-- Compartilhar nas redes sociais -->
+					<div class="compartilhar">
+						<ul>
+							<li class="facebook">
+								<div class="fb-like" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false" data-font="arial"></div>
+							</li>
+							<li class="twitter">
+								<a href="https://twitter.com/share" class="twitter-share-button" data-via="funbio" data-lang="en">Tweet</a>
+							</li>
+							<li class="email"><a class="botao secundario" title="Enviar por email"><span class="ico pequeno email"></span>Email</a></li>
+						</ul>
+					</div>
+					<!-- fim de compartilhar nas redes sociais -->
+
+					<!-- tabela de informacoes basicas -->
+					<table class="tabela horizontal" caption="Basic information" summary="">
+						<tbody>
+							<tr>
+								<th class="titulo-registro" scope="row">{% trans "Scope" %}</th>
+								<td class="conteudo-registro">Lorem ipsum...</td>
+							</tr>
+							<tr>
+								<th class="titulo-registro" scope="row">{% trans "Objetivo" %}</th>
+								<td class="conteudo-registro">Lorem...</td>
+							</tr>
+							<tr>
+								<th class="titulo-registro" scope="row">{% trans "Description" %}</th>
+								<td class="conteudo-registro">Lorem...</td>
+							</tr>																						
+						</tbody>
+					</table>
+					<!-- fim de tabela de informacoes basicas -->
+				</div>
+				<!-- fim de Informações Básicas -->
+
+				<!-- Informações de investimentos -->
+				<div class="info investimentos">
+					<h2 class="titulo-tabela">{% trans "Amount" %}</h2>
+
+					<!-- tabela de informacoes de investimentos -->
+					<table class="tabela horizontal" caption="Address" summary="">					
+						<tbody>
+							<tr>
+								<th class="titulo-registro" scope="row">{% trans "Funding value" %}</th>
+								<td class="conteudo-registro destaque">$ 400,980 U.S. Dollars</td>
+							</tr>
+							<tr>
+								<th class="titulo-registro" scope="row">{% trans "Original currency" %}</th>
+								<td class="conteudo-registro destaque">$ 400,980 U.S. Dollars</td>
+							</tr>																								
+						</tbody>
+					</table>
+					<!-- fim de tabela de informacoes de investimentos -->
+				</div>
+				<!-- Fim de Informações de investimentos -->
+
+				<!-- Informações de escopo geografico -->
+				<div class="info escopo-geo">
+					<h2 class="titulo-tabela">{% trans "Geographical scope" %}</h2>
+					
+					<!-- tabela de informacoes de escopo geografico -->
+					<table class="tabela horizontal" caption="Geographical scope" summary="">
+						<tbody>
+							<tr>
+								<td class="conteudo-registro">
+									<ul class="lista-etiquetas">
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+									</ul>								
+								</td>
+							</tr>									
+						</tbody>
+					</table>				
+					<!-- fim de tabela de informacoes de escopo geografico -->
+				</div>
+				<!-- fim de Informações de escopo geografico -->
+
+				<!-- Informações de Atividades -->
+				<div class="info atividades">
+					<h2 class="titulo-tabela">{% trans "Supported activities" %}</h2>
+					
+					<!-- tabela de informacoes de Atividades -->
+					<table class="tabela horizontal" caption="Geographical scope" summary="">
+						<tbody>
+							<tr>
+								<td class="conteudo-registro">
+									<ul class="lista-etiquetas">
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+										<li><a class="etiqueta" href="#" title="Search: Lorem">Lorem</a></li>
+									</ul>									
+								</td>
+							</tr>									
+						</tbody>
+					</table>				
+					<!-- fim de tabela de informacoes de Atividades -->
+				</div>
+				<!-- fim de Informações de Atividades -->
+
+                {% if attachments.count > 0 %}
+				<!-- Anexos -->
+				<div class="info anexos">
+					<h2 class="titulo-tabela">{% trans "Attachments" %}</h2>
+						
+					<!-- tabela de anexos -->
+					<table class="tabela vertical" caption="Attachments" summary="">
+						<thead>
+							<tr>
+								<th class="titulo-registro" scope="col">{% trans "File name" %}</th>
+								<th class="titulo-registro" scope="col">{% trans "Date of publishing" %}</th>
+								<th class="titulo-registro" colspan="2" scope="col"></th>
+							</tr>
+						</thead>
+
+						<tfoot>
+							<tr>
+								<td class="rodape-tabela" colspan="4">
+									<div class="paginacao-resultados">
+									    {% pagination attachments True %}
+									</div>
+								</td>
+							</tr>
+						</tfoot>
+
+						<tbody>
+                            {% for attachment in attachments %}
+							<tr>
+								<td class="conteudo-registro texto"><a href="{{ attachment.path.url }}" title="{{ attachment.name }}">{{ attachment.name }}</a></td>
+								<td class="conteudo-registro">{{ attachment.created_at|date:"d/M/Y" }}</td>
+								<td class="conteudo-registro preview"><a href="{{ attachment.path.url }}" title="">{% trans "View" %}</a></td>
+								<td class="conteudo-registro download"><a class="ico ico-texto pdf" href="#" title="">{% trans "Download" %}</a></td>
+							</tr>
+                            {% endfor %}											
+
+						</tbody>
+					</table>				
+					<!-- fim de tabela de anexos -->
+				</div>	
+				<!-- fim de Anexos -->
+                {% endif %}
+
+	        </section>
+	        <!-- fim de Informacoes da ficha -->
+
+    	</div>
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+		<!-- Escopo Geográfico -->
+		<section class="relacao resumida escopo-geo">
+			<h3>{% trans "Similar geographical scope" %}</h3>
+			<ul>
+				<li>
+					<h4><a href="#" title="Opportunity name">Opportunity name</a></h4>
+					<p>
+						Opportunity mission
+					</p>
+				</li>
+                {% endfor %}																			
+			</ul>	
+		</section>
+		<!-- fim de Escopo Geográfico -->
+        {% endif %}
+
+        {% if similar_activity_organizations.count > 0 %}
+		<!-- Tipo de atividades -->
+		<section class="relacao resumida tipo-atividades">
+			<h3>{% trans "Similar activities types" %}</h3>
+			<ul>
+				{% for organization in similar_activity_organizations %}
+				<li>
+					<h4><a href="#" title="Opportunity name">Opportunity name</a></h4>
+					<p>
+						Opportunity mission
+					</p>
+				</li>
+                {% endfor %}																			
+			</ul>	
+		</section>
+		<!-- fim de Tipo de atividades --> 
+		{% endif %}
+
+		{% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

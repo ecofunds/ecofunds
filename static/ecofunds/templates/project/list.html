@@ -1,0 +1,215 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+    {% endaddtoblock %}
+    
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/project/list.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto projeto-maior-branco">{% trans "Projects" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">    
+        <a class="link-destaque" href="javascript:;" title="{% trans "Show all projects" %}">{% trans "Show all projects" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+    
+    <!-- conteudo principal -->
+    <div class="conteudo filtros-listas-tabelas">
+        {% if labels %}
+            <!-- Filtros Aplicados -->
+            <div class="filtros-aplicados">
+                <p>{% trans "Filters: " %}</p>
+                <ul class="lista">
+                    {% for k, v in labels.items %}
+                    <li class="item etiqueta" title="{% field_label search_project_form k %}" data-field="{{ k }}">{{ v }} <span class="fechar-filtro"></span></li>
+                    {% endfor %} 
+                </ul>
+            </div>
+            <!-- fim de Filtros Aplicados -->
+        {% endif %}
+
+        {% if list|count > 0 %}
+            <!-- visualizacao -->
+            <div class="visualizacao">
+                <p class="texto-lista">{% trans "View: " %}</p>
+                <ul class="visualizacao-container">
+                    <li class="item {% if search_project_form.list_type.value == None or search_project_form.list_type.value == '1'%}ativo{% else %}inativo{% endif %}">
+                        <a href="#listagem" class="link ico ico-texto grid-icone {% if search_project_form.list_type.value == None or search_project_form.list_type.value == '1' %}ativo{% else %}inativo{% endif %}">{% trans "Grid" %}
+                        </a>
+                    </li>
+                    
+                    <li class="item {% if search_project_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">
+                        <a href="#tabela" class="link ico ico-texto lista-icone {% if search_project_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">{% trans "List" %}
+                        </a>
+                    </li> <!-- Para cada um desses, existe um icone inativo -->
+                </ul>
+            </div>
+            <!-- fim de visualizacao -->
+            
+            <!-- Ordenacao -->  
+            <div class="ordenacao">
+                <p>{% trans "Order by: " %}</p>
+                <ul class="lista">
+                    <li class="item atual"><a href="#-created_at">{% trans "Latest projects" %}</a></li>
+                    <li class="item"><a href="#title">{% trans "A-Z" %}</a></li>
+                    <li class="item"><a href="#-budget">{% trans "Highest budget" %}</a></li>
+                    <li class="item"><a href="#budget">{% trans "Lowest budget" %}</a></li>
+                    <li class="item"><a href="#-grant_to">{% trans "Completion date" %}</a></li> 
+                </ul>
+            </div>
+            <!-- fim de Ordenacao -->
+        {%endif%}
+       
+        <!-- modos de visualizacao -->
+        <div class="modos-visualizacao">
+            <!-- listagem de projetos -->
+            <section id="listagem" class="listagem projetos">                
+                {% if list|count > 0 %}
+                    <!-- Paginação -->
+                    {% pagination list %}
+
+                    {% for project,perm in itempermlist %}
+                        <!-- cartao-projeto -->
+                        <div class="cartao projeto {% if forloop.counter|mod:3 == 1 %}primeiro{% endif %} {%if perm%}pode-editar{%endif%}" data-index="{{ project.pk }}">
+                            <h3 class="titulo" title="{{ project.title }}">{{ project.title }}</h3>
+
+                            <p class="subtitulo">
+                            {% if project.get_firstlocation.location.country.name %}
+                                <a href="#" onclick="$('#id_s_country').val('{{ project.get_firstlocation.location.country.name }}').keyup();return false;" class="country">{{ project.get_firstlocation.location.country.name }}</a> - <a href="#" onclick="$('#id_s_state').val('{{ project.get_firstlocation.location.name }}').keyup();return false;" class="state">{{ project.get_firstlocation.location.name }}</a>
+                            {%else%}<span style="visibility:hidden">-</span>
+                            {%endif%}
+                            </p>
+                        
+                            <img class="thumb" src="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" alt="{% trans "Project Image" %}" />
+                            <p class="invest-recebido">
+                                {% trans "Current Investments:" %}
+                                <span class="valor">{%if project.get_current_investment and project.get_current_investment.amount_usd %}{% currency project.get_current_investment.amount_usd %}{% else %}{% currency 0 %}{% endif %}</span>
+                            </p>
+                            
+                            <p><strong>{% trans "Annual budget: " %}</strong>{% currency project.budget %}</p>
+                            <p><strong>{% trans "Completion date: " %}</strong>{{ project.grant_to|date:"d/M/Y" }}</p> <!-- Acrescentei essa linha para formatar a data -->
+                            
+                            <p class="resumo" title="{% autoescape off %}{{ project.resume }}{% endautoescape %}">
+                                {% autoescape off %}{{ project.resume }}{% endautoescape %}
+                            </p>
+                            <a class="veja-mais" href="{% page_url page_detail %}?id={{ project.entity_id }}" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                            {%if perm%}
+                                <div class="controles-edicao lista projeto">
+                                    <a class="ico pequeno editar" href="{% page_url "project-form" %}?id={{ project.entity_id }}" title="{% trans "Edit project" %}: {{ project.title }}">Edit</a>
+                                    <a class="ico pequeno excluir" href="javascript:;" title="{% trans "Delete project" %}: {{ project.title }}">Delete</a>
+                                </div>
+                                
+                                <div class="camada-exclusao projeto">
+                                    <div class="confirmacao">
+                                        <p>{% trans "The project" %} <em>{{ project.title }}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable  person or an organization administrator." %}</p>
+                                        
+                                        <p>{% trans "Do you really want to delete this project from Ecofunds?" %}</p>
+                                        
+                                        <a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep project in Ecofunds" %}">{% trans "No, keep project in Ecofunds" %}</a>
+                                        
+                                        <a class="confirmar" href="javascript:;" title="{% trans "Yes, delete project" %}">{% trans "Yes, delete project" %}</a>
+                                    </div>
+                                    
+                                    <div class="excluido">
+                                        <a class="botao primario ativar" href="javascript:;" title="{% trans "Enable project" %}">{% trans "Enable project" %}</a>
+                                    </div>
+                                </div>
+                            {%endif%}      
+                        </div>
+{% if project.is_completed %}
+    <div class="faixa-conclusao">
+         {% trans "Project completed"%}
+    </div>
+{% endif%}
+                        <!-- fim de cartao-projeto -->
+                    {% endfor %}
+
+                    <!-- Paginação -->
+                    {% pagination list %}                    
+                {% else %}
+                    {% include "no-results.html" %}
+                {% endif %}
+            </section>
+            <!-- fim de listagem de projetos -->
+            
+            
+            <!-- tabela projetos -->
+            <section id="tabelas" class="tabelas projetos">
+                {%if list|count%}
+                    <div class="cabecalho-tabela">
+                        <h2 class="titulo-tabela">{% trans "Projects" %}</h2>
+                        <span class="gerar-relatorio ico ico-texto relatorio"><a href="/ajax/project/excel">{% trans "Generate Report" %}</a></span>
+                    </div>
+
+                    <!-- tabela -->
+                    <table class="tabela vertical" caption="Supported projects / Executed projects" summary="">
+                        <thead>
+                            <tr>
+                                <th class="titulo-registro" scope="col">{% trans "Name" %}</th>
+                                <th class="titulo-registro" scope="col">{% trans "Completion date" %}</th>
+                                <th class="titulo-registro" scope="col">{% trans "Received total (U$)" %}</th>
+                                <th class="titulo-registro" scope="col">{% trans "Region" %}</th>
+                                <th class="titulo-registro" colspan="2" scope="col"></th>
+                            </tr>
+                        </thead>
+
+                        <tfoot>
+                            <!-- Paginação -->
+                            <tr>
+                                <td class="rodape-tabela" colspan="6">
+                                    <div class="paginacao-resultados">
+                                        {% pagination list True %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Fim de Paginação -->
+                        </tfoot>
+
+                        <tbody>
+                            {% for project in list %}
+                            <tr>
+                                <td class="conteudo-registro texto-linha medio"><a href="{% page_url page_detail %}?id={{ project.entity_id }}" title="{{ project.title }}">{{ project.title }}</a></td>
+                                <td class="conteudo-registro data">{{ project.grant_to|date:"d/M/Y" }}</td>
+                                <td class="conteudo-registro valor">{%if project.get_current_investment and project.get_current_investment.amount_usd %}{% currency project.get_current_investment.amount_usd %}{% else %}{% currency 0 %}{% endif %}</td>
+                                <td class="conteudo-registro regiao">{{ project.get_firstlocation.name }} - {{ project.get_firstlocation.iso_cc }}</td>
+                                <td class="conteudo-registro link"><a href="{% page_url page_detail %}?id={{ project.entity_id }}" title="">{% trans "Project record" %}</a></td>
+                                <td class="conteudo-registro link"><a href="{%page_url "map"%}?s_project_name={{project.title}}" title="">{% trans "Location map" %}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>                
+                    <!-- fim de tabela  -->
+                {%else%}
+                    {%include "no-results.html"%}
+                {%endif%}
+            </section>
+            <!-- fim de tabela projetos -->
+
+        </div>
+        <!-- fim de modos de visualizacao -->
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% include "project/advanced-search.html" %}
+
+        {% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

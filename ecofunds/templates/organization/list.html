@@ -1,0 +1,207 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+    {% endaddtoblock %}
+    
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/organization/list.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto organizacao-maior-branco">{% trans "Organizations" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+        <a class="link-destaque" href="#" title="{% trans "Show all organizations" %}">{% trans "Show all organizations" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo filtros-listas-tabelas">
+
+        {% if labels %}
+            <!-- Filtros Aplicados -->
+            <div class="filtros-aplicados">
+                <p>{% trans "Filters: " %}</p>
+                <ul class="lista">
+                    {% for k, v in labels.items %}
+                    <li class="item etiqueta" title="{% field_label search_organization_form k %}" data-field="{{ k }}">{{ v }} <span class="fechar-filtro"></span></li>
+                    {% endfor %} 
+                </ul>
+            </div>
+            <!-- fim de Filtros Aplicados -->
+        {% endif %}
+        
+ 
+        {%if list|count > 0%}
+            <!-- visualizacao -->
+            <div class="visualizacao">
+                <p class="texto-lista">{% trans "View: " %}</p>
+                <ul class="visualizacao-container">
+                    <li class="item {% if search_organization_form.list_type.value == None or search_organization_form.list_type.value == '1'%}ativo{% else %}inativo{% endif %}">
+                        <a href="#listagem" class="link ico ico-texto grid-icone {% if search_organization_form.list_type.value == None or search_organization_form.list_type.value == '1' %}ativo{% else %}inativo{% endif %}">{% trans "Grid" %}
+                        </a>
+                    </li>
+                    
+                    <li class="item {% if search_organization_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">
+                        <a href="#tabela" class="link ico ico-texto lista-icone {% if search_organization_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">{% trans "List" %}
+                        </a>
+                    </li> <!-- Para cada um desses, existe um icone inativo -->
+                </ul>
+            </div>
+            <!-- fim de visualizacao --> 
+
+            <!-- Ordenacao -->
+            <div class="ordenacao">
+                <p>{% trans "Order by: " %}</p>
+                <ul class="lista">
+                    <li class="item atual"><a href="#">{% trans "Last entries" %}</a></li>
+                    <li class="item"><a href="#name">{% trans "A-Z" %}</a></li>
+                    <li class="item"><a href="#-last_investment_date">{% trans "Date of last investment" %}</a></li>
+                    <li class="item"><a href="#-investment_amnt">{% trans "Highest investment" %}</a></li>
+                    <li class="item"><a href="#-count_projects">{% trans "Projects" %}</a></li>
+                </ul>            
+            </div>
+            <!-- fim de Ordenacao -->
+        {%endif%}
+
+        <!-- modos de visualizacao -->
+        <div class="modos-visualizacao">
+            <!-- listagem de organizacoes -->
+            <section id="listagem" class="listagem organizacoes">      
+                {% if list|count > 0 %} 
+                    <!-- Paginação -->
+                    {% pagination list %}  
+                                  
+                    {% for organization,perm in itempermlist %}
+                        <!-- cartao-organizacao -->
+                        <div class="cartao organizacao {% if forloop.counter|mod:3 == 1 %}primeiro{% endif %} {%if perm%}pode-editar{%endif%}" data-index="{{ organization.pk }}"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                            <h3 class="titulo" title="Organization name lorem ipsum">{{ organization.name }}</h3>
+                            <p class="subtitulo">{{ organization.type.name }}</p>
+                          
+                            <img class="thumb" src="{% if organization.image %}{{ organization.image }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" alt="{% trans "Organization image" %}" />                
+
+                            <p><strong>{{ organization.country.name }}, {{ organization.state }}, {{ organization.city }} </strong></p>
+                                          
+                            <p class="resumo" title="{% autoescape off %}{{ organization.acronym }}{% endautoescape %}">
+                                {% autoescape off %}{{ organization.mission }}{% endautoescape %}
+                            </p>
+                            <a class="veja-mais" href="{% page_url page_detail %}?id={{ organization.id }}" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                            {%if perm%}
+                                <div class="controles-edicao lista organizacao">
+                                    <a class="ico pequeno editar" href="{% page_url "organization-form" %}?id={{ organization.id }}" title="{% trans "Edit organization" %}: {{ organization.name }}">Edit</a>
+                                    <a class="ico pequeno excluir" href="javascript:;" title="{% trans "Delete organization" %}: {{ organization.name }}">Delete</a>
+                                </div>
+                                
+                                <div class="camada-exclusao organizacao">
+                                    <div class="confirmacao">
+                                        <p>{% trans "The organization" %} <em>{{ organization.name }}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable  person or an organization administrator." %}</p>
+                                        
+                                        <p>{% trans "Do you really want to delete this organization from Ecofunds?" %}</p>
+                                        
+                                        <a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep organization in Ecofunds" %}">{% trans "No, keep organization in Ecofunds" %}</a>
+                                        
+                                        <a class="confirmar" href="javascript:;" title="{% trans "Yes, delete organization" %}">{% trans "Yes, delete organization" %}</a>
+                                    </div>
+                                    
+                                    <div class="excluido">
+                                        <a class="botao primario ativar" href="javascript:;" title="{% trans "Enable organization" %}">{% trans "Enable organization" %}</a>
+                                    </div>
+                                </div>
+                            {%endif%}   
+                        </div>
+
+                        <!-- fim de cartao-organizacao -->
+                    {% endfor %}
+
+                    <!-- Paginação -->
+                    {% pagination list %}
+
+                {% else %}
+                    {% include "organization/no-results.html" %}
+                {% endif %}
+                
+            </section>
+            <!-- fim de listagem de organizacoes -->
+            
+            
+            <!-- tabela organizacoes -->
+            <section id="tabelas" class="tabelas organizacoes">
+                
+                {%if list|count%}
+                    <div class="cabecalho-tabela">
+                        <h2 class="titulo-tabela">{% trans "Organizations" %}</h2>
+                        <span class="gerar-relatorio ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></span>
+                    </div>
+
+
+                    <!-- tabela -->
+                    <table class="tabela vertical" caption="Organizations" summary="">
+                        <thead>
+                            <tr>
+                                <th class="titulo-registro" scope="col">{% trans "Name" %}</th>
+                                <th class="titulo-registro" scope="col">{% trans "Region" %}</th>
+                                <th class="titulo-registro" colspan="4" scope="col">{% trans "Mission" %}</th>
+                                <!--<th class="titulo-registro" scope="col"></th>-->
+                            </tr>
+                        </thead>
+
+                        <tfoot>
+                            <!-- Paginação -->
+                            <tr>
+                                <td class="rodape-tabela" colspan="7">
+                                    {% pagination list %}
+                                </td>
+                            </tr>
+                            <!-- Fim de Paginação -->
+
+                                                 
+                        </tfoot>
+
+                        <tbody>
+                            {% for organization in list %}
+                                <tr>
+                                    <td class="conteudo-registro texto-linha curto"><a href="{% page_url "organization-detail" %}?id={{ organization.id }}" title="{{ organization.name }}">{{ organization.name }}</a></td>
+                                    <td class="conteudo-registro regiao">{%if organization.country.name%}{{ organization.country.name }}, {%endif%}{%if organization.state%}{{ organization.state }}, {%endif%}{{ organization.city }}</td>
+                                    <td class="conteudo-registro texto-linha longo" colspan="4"><a href="{% page_url page_detail %}?id={{ organization.id }}" title="{{ organization.mission }}">{{ organization.mission }}</a></td>
+                                    <!-- <td class="conteudo-registro link"><a href="{% page_url "organization-detail" %}?id={{ organization.id }}" title="">{% trans "Organization record" %}</a></td>-->
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>                
+                    <!-- fim de tabela  -->
+
+                 {% else %}
+                    {% include "organization/no-results.html" %}
+                {% endif %}
+
+            </section>
+            <!-- fim de tabela organizacoes -->
+
+        </div>
+        <!-- fim de modos de visualizacao -->
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% include "organization/advanced-search.html" %}
+
+        {% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

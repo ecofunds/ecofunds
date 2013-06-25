@@ -1,0 +1,228 @@
+{% load sekizai_tags tags i18n static %}
+
+{%block head%}
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/detail.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/user/detail.js"></script>     
+    {% endaddtoblock %}
+{% endblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto usuario-maior-branco">{% trans "Users" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+    	<a class="voltar link-destaque" href="{% page_url "users" %}" title="{% trans "Previous search" %}">{% trans "Previous search" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+	<div class="conteudo">
+		<div class="ficha usuario {%if perm%}pode-editar{%endif%}" data-index="{{ user.pk }}">
+			<h2 class="titulo-ficha">{{user.first_name}} {{user.last_name}}</h2>
+            <p class="autoria-data">
+            {% if formset.instance.pk %}
+                {% if formset.instance.updater %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.updater }}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.updated_at}}</span>
+                {% elif formset.instance.creater  %}
+                {%trans "Last edited by " %}<a href="{% page_url 'user-form' %}" id="" class="editado-por">{{formset.instance.creater}}</a> {% trans "in" %} <span class="editado-em">{{formset.instance.created_at}}</span>
+                {% endif %}
+            {% endif %}
+            </p>
+            
+			<!-- Opcoes -->
+			<div class="opcoes">
+				<!-- menu com abas da ficha -->
+				<div class="menu-abas">
+					<ul class="menu-abas-container">
+						<li class="item aba"><a class="link-aba" href="#informacoes">{% trans "User Record" %}</a></li>
+					</ul>
+				</div>
+				<!-- fim de menu com abas da ficha -->
+
+				<!-- opcoes-adicionais da ficha -->
+				<div class="opcoes-adicionais">
+					<ul class="opcoes-adicionais-container">
+						<li class="item ico ico-texto impressao"><a href="#" id="bt-print">{% trans "Print" %}</a></li>     
+					</ul>
+				</div>
+				<!-- fim de opcoes-adicionais da ficha -->
+
+				<!-- Controle de Edição -->
+				{%if perm%}
+					<div class="controles-edicao edicao-ficha usuario">
+						<a class="ico pequeno editar" href="{% page_url "user-form" %}?id={{ user.id }}" title="{% trans "Edit user" %}: {{user.first_name}} {{user.last_name}}">Edit</a>
+						<a class="ico pequeno excluir" href="#delete-modal" title="{% trans "Delete user" %}: {{user.first_name}} {{user.last_name}}">Delete</a>
+					</div>
+
+					<div id="delete-modal" class="camada-exclusao usuario">
+						<div class="confirmacao">
+							<p>{% trans "The user" %} <em>{{user.first_name}} {{user.last_name}}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable person or an user administrator." %}</p>
+
+							<p>{% trans "Do you really want to delete this user from Ecofunds?" %}</p>
+
+							<a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep user in Ecofunds" %}">{% trans "No, keep user in Ecofunds" %}</a>
+
+							<a class="confirmar" href="javascript:;" title="{% trans "Yes, delete user" %}">{% trans "Yes, delete user" %}</a>
+						</div>
+					</div>                    
+				{%endif%}
+				<!-- fim de controle de edicao -->		  		
+			</div>						
+			<!-- Fim de Opcoes -->
+			
+			<!-- Conteudo de Abas -->
+			<div class="conteudo-abas-container">
+				<!-- Informacoes da ficha -->
+				<section id="informacoes">
+					<!-- Informações Básicas -->
+					<div class="info basica">
+						<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
+
+						<div class="img-profile-container">
+							<img id="picture" src="{% if user.image %}{{ user.image.url }}{% else %}{% get_static_prefix %}images/usuario-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/usuario-sem-foto.jpg" width="70" height="70" alt="Image: {{ user.first_name }} {{ user.last_name }}"> 
+						</div>
+						
+						<!-- tabela de informacoes basicas -->
+						<table class="tabela horizontal" caption="Basic information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "First Name" %}</th>
+									<td class="conteudo-registro">{% if userprofile.user.first_name %}{{userprofile.user.first_name}}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Last Name" %}</th>
+									<td class="conteudo-registro">{% if userprofile.user.last_name %}{{userprofile.user.last_name}}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Email" %}</th><p/>
+									<td class="conteudo-registro">{% if userprofile.user.username %}{{userprofile.user.username}}{%else%}-{%endif%}</td>
+								</tr>								
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Ecofunds status" %}</th>
+									<td class="conteudo-registro">{% if userprofile.user_type %}{{userprofile.user_type}}{%else%}-{%endif%}</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes basicas -->
+					</div>
+					<!-- Fim de Informações Básicas -->
+					
+					<!-- Informações das Organizações -->
+					<div class="info organizacao">
+						<h2 class="titulo-tabela">{% trans "Organization information" %}</h2>
+						
+						<!-- tabela de informacoes da organização -->
+						<table class="tabela horizontal" caption="Organization information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Organizations the user belongs to" %}</th>
+									<td class="conteudo-registro">
+										{%if organizations.all.count%}
+											<ul class="lista-etiquetas">							
+												{% for org in organizations %}
+													<li><a class="etiqueta" href="{% page_url "organization-detail" %}?id={{org.id}}"  title="{% trans "Show organization detail: " %} {{org.name}}">{{org.name}}</a></li>
+												{% endfor %}
+											</ul>
+										{%else%}
+											-
+										{%endif%}										
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Job title" %}</th>
+									<td class="conteudo-registro">{% if userprofile.title %}{{userprofile.title}}{%else%}-{%endif%}</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes da organização -->
+					</div>
+					<!-- Fim Informações das Organizações -->
+					
+					<!-- Informações de Contato -->
+					<div class="info contato">
+						<h2 class="titulo-tabela">{% trans "Contact information" %}</h2>
+											
+						<!-- tabela de informacoes de contato -->
+						<table class="tabela horizontal" caption="Contact information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Phone Numbers" %}</th>
+									<td class="conteudo-registro">
+										{% if userprofile.phone1 %}
+											+{{userprofile.phone_country_prefix_01}} ({{userprofile.phone_local_prefix_01}}) {{userprofile.phone1}}
+										{%else%}
+											-
+										{%endif%}
+										
+										{% if userprofile.phone2 %} 
+											/ +{{userprofile.phone_country_prefix_02}} ({{userprofile.phone_local_prefix_02}}) {{userprofile.phone2}}
+										{%endif%}
+									</td>
+								</tr>						
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "FAX" %}</th>
+									<td class="conteudo-registro">{% if userprofile.fax %}{{userprofile.fax}}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Second email" %}</th>
+									<td class="conteudo-registro">{% if userprofile.email_alt %}{{userprofile.email_alt}}{%else%}-{%endif%}</td>
+								</tr>								
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de contato -->
+					</div>
+					<!-- Fim Informações de Contato -->
+				</section>
+				<!-- Fim de Informacoes da ficha -->
+			</div>
+			<!-- Fim Conteudo de Abas -->
+		</div>
+	</div>
+	<!-- Fim de conteudo principal -->
+	
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% if same_organizations.count > 0 %}
+			<!-- Mesma organização -->
+			<section class="relacao resumida mesma-organizacao">
+				<h3>{% trans "Users in the same organization" %}</h3>
+				<ul>
+	                {% for user in same_organizations %}
+					<li>
+						<h4><a href="{%page_url "user-detail"%}?id={{user.id}}" title="{{ user.name }}">{{ user.name }}</a></h4>
+					</li>
+	                {% endfor %}																			
+				</ul>	
+			</section>
+			<!-- fim de Mesma organização -->
+        {% endif %}
+
+        {% if same_projects.count > 0 %}
+			<!-- Mesmo projeto -->
+			<section class="relacao resumida mesmo-projeto">
+				<h3>{% trans "Users in the same projects" %}</h3>
+				<ul>
+	                {% for user in same_projects %}
+					<li>
+						<h4><a href="{%page_url "user-detail"%}?id={{user.id}}" title="{{ user.name }}">{{ user.name }}</a></h4>
+					</li>
+	                {% endfor %}																			
+				</ul>	
+			</section>
+			<!-- fim de Mesmo projeto -->
+        {% endif %}
+				
+		{% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

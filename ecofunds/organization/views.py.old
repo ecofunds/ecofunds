@@ -1,0 +1,108 @@
+from django import http
+from django.core.cache import cache
+from django.core.context_processors import csrf
+from django.utils.simplejson import dumps
+from django.db import models
+from django.db.models import Count
+from django.template import loader, Context
+from django.utils.functional import curry
+from django.views.generic.list import ListView
+from django.views.generic.detail import BaseDetailView
+
+from ecofunds.views import DjangoJSONEncoder
+from ecofunds.business import *
+from ecofunds.maps import *
+from ecofunds.maps.models import GoogleMapView
+
+from gmapi import maps
+from babel import numbers
+from BeautifulSoup import BeautifulSoup
+
+import colorsys
+import math
+
+import pylab
+
+class OrganizationChartSourceView(BaseDetailView):
+    def get(self, request, *args, **kwargs):
+
+        if request.method == "POST":
+            data = request.POST
+        else:
+            data = request.GET
+
+        result = [['Country', 'Organizations']]
+
+        list = OrganizationData.list(order_by='country__name', country_id__gt=0).values('country__name').annotate(total=Count('id'))
+        
+        for item in list:
+            result.append([item['country__name'], item['total']])
+
+        return http.HttpResponse(dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+class OrganizationMapSourceView(GoogleMapView, BaseDetailView):
+
+    def get(self, request, *args, **kwargs):
+
+        if request.method == "POST":
+            data = request.POST
+        else:
+            data = request.GET
+
+        center = None
+        zoom = 4
+        mapTypeId = None
+
+        if data.has_key('center'):
+            c = data.get('center').split(',')
+            center = maps.LatLng(c[0], c[1])
+
+        if data.has_key('zoom'):
+            zoom = int(data.get('zoom'))
+
+        if data.has_key('mapTypeId'):
+            mapTypeId = data.get('mapTypeId')
+
+        gmap = self.get_map(request, center, zoom, mapTypeId)
+
+        list = OrganizationData.filteredList(request, 0, desired_location_lat__isnull=False, desired_location_lng__isnull=False)
+        markers = []
+        for item in list:
+            marker = maps.Marker(opts = {
+                'map': gmap,
+                'position': maps.LatLng(item.desired_location_lat, item.desired_location_lng),
+                'icon': maps.MarkerImage('http://maps.google.com/mapfiles/marker_white.png')
+            })
+
+            maps.event.addListener(marker, 'click', 'ecofundsMap.markerClick')
+
+            t = loader.get_template('maps/info-bubble.html')
+            c = Context({ 'org': item })
+
+            info = InfoBubble({
+                'content': t.render(c),
+                'disableAutoPan': True,
+                'backgroundColor': '#FFF',
+                'borderRadius': 10,
+                'borderWidth': 0,
+                'padding': 0,
+                'minHeight': 40,
+                'minWidth': 400,
+                'maxWidth': 400,
+                'shadowStyle': 1,
+                'arrowPosition':10,
+                'hideCloseButton': True,
+            })
+            info.open(gmap, marker)
+            markers.append(marker)
+
+        clusterer = MarkerClusterer(gmap, markers, opts = {'gridSize': 30, 'maxZoom':14})
+
+        return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
+
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)

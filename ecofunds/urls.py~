@@ -1,0 +1,27 @@
+from django.conf.urls.defaults import *
+from django.contrib import admin
+from django.conf import settings
+
+from ecofunds.views import *
+
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^dowser/', include('django_dowser.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^opportunity/', include('ecofunds.opportunity.urls')),
+    url(r'^ajax/project/', include('ecofunds.project.urls')),
+    url(r'^ajax/organization/', include('ecofunds.organization.urls')),
+    url(r'^ajax/investment/', include('ecofunds.investment.urls')),
+    url(r'^ajax/suggest', GlobalSuggestListView.as_view()),
+
+    url(r'^attachment/download/(?P<id>[\d]+)/$', FileDownload.as_view()),
+
+    url(r'^maps/', include('ecofunds.maps.urls')),
+    url(r'^', include('cms.urls')),
+)
+
+if settings.DEBUG:
+    urlpatterns = patterns('',
+        (r'^' + settings.MEDIA_URL.lstrip('/'), include('appmedia.urls')),
+    ) + urlpatterns

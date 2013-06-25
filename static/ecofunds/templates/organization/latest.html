@@ -1,0 +1,16 @@
+{% load static i18n cms_tags %}
+<!-- ultimas organizações -->
+<section class="relacao resumida ultimas-organizacoes">
+	<h3>{% trans "New organizations in Ecofunds" %}</h3>
+	<ul>
+        {% for organization in list %}
+		<li>
+			<h4><a href="{%page_url "organization-detail"%}?id={{organization.id}}" title="{{ organization.name }}">{{ organization.name }}</a></h4>
+			<p>
+				{{ organization.mission }}
+			</p>
+		</li>
+        {% endfor %}																										
+	</ul>	
+</section>
+<!-- fim ultimas organizações -->

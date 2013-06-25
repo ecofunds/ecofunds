@@ -1,0 +1,2 @@
+{% load cms_tags menu_tags i18n %}
+<a href="{{ url }}" title="{% trans title|default:page %}"{% if target %} target="{{ target }}"{% endif %}{% if css %} class="{{ css }}"{% endif %}>{% trans text|default:page %}</a>

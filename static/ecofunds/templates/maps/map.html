@@ -1,0 +1,166 @@
+{% load cms_tags sekizai_tags static i18n %}
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.css" />
+    {% endaddtoblock %}
+    
+    {% addtoblock "js" %} 
+        {{ form.media.js }}
+        <script type="text/javascript" 
+            src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'pt'}]}">
+        </script>      
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/maps/map.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+{% if instance.show_search_projects or instance.show_search_organizations or instance.show_search_investments %}
+    <!-- area-site -->
+    <div class="area-site">
+        <div class="container">
+            <h2 class="ico ico-texto mapa-maior-branco">{% trans "Navigate Map" %}</h2>    
+        </div>
+    </div>
+    <!-- fim area-site -->
+
+    <div class="container">
+        <div class="area-filtros-mapa">
+            <div class="menu-abas">
+                <ul class="menu-abas-container">
+                    {% if instance.show_search_projects %}<li class="item aba"><a class="link-aba" href="#filtro-projetos">{% trans "Projects" %}</a></li>{% endif %}
+                    {% if instance.show_search_organizations %}<li class="item aba"><a class="link-aba" href="#filtro-organizacoes">{% trans "Organizations" %}</a></li>{% endif %}
+                    {% if instance.show_search_investments %}<li class="item aba"><a class="link-aba" href="#filtro-investimentos">{% trans "Investments" %}</a></li>{% endif %}
+                </ul>
+            </div>
+
+            <div class="opcoes">
+                <!-- tipo -->
+                <div class="tipo">
+                    <ul class="tipo-container" id="visualizacao-mapa">
+                        <li class="item"><label><input type="radio" name="view" value="heat" checked="checked" />{% trans "Heat Map" %}</label></li>
+                        <li class="item"><label><input type="radio" name="view" value="density" />{% trans "Density" %}</label></li>
+                        <li class="item"><label><input type="radio" name="view" value="bubble" />{% trans "Bubble" %}</label></li>
+                    </ul>
+                </div>
+                <!-- fim de tipo mapa -->
+
+                <!-- visualizacao -->
+                <div class="visualizacao">
+                    <p class="texto-lista">{% trans "View: " %}</p>
+                    <ul class="visualizacao-container">
+                        <li class="item ativo">
+                            <a href="#mapa" class="link ico ico-texto mapa-icone ativo">{% trans "Map" %}
+                            </a>
+                        </li>
+                        
+                        <li class="item inativo">
+                            <a href="#graficos" class="link ico ico-texto grafico-icone inativo">{% trans "Chart" %}
+                            </a>
+                        </li> <!-- Para cada um desses, existe um icone inativo -->
+                    </ul>
+                </div>
+                <!-- fim de visualizacao -->
+
+                <!-- menu-auxiliar-mapa -->
+                <div class="opcoes-adicionais">
+                    <ul class="opcoes-adicionais-container">
+                        <li class="item ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></li>
+                        <li class="item ico ico-texto impressao"><a href="#">{% trans "Print" %}</a></li>     
+                    </ul>
+                </div>
+                <!-- fim de operacoes-mapa -->
+            </div>
+            
+            <div class="conteudo-abas-container">
+                {% if instance.show_search_projects %}
+                    {% addtoblock "js" %}
+                    <script type="text/javascript">
+                        jQuery(function ($) {
+
+                            if(document.location.href.indexOf('#filtro-investimentos')>0)
+                                ecofundsMap.loadInvestments();
+                            else
+                                ecofundsMap.loadProjects();
+                        });
+                    </script>
+                    {% endaddtoblock %}
+                    
+                    <section id="filtro-projetos">
+                        {% include "project/advanced-search.html" %}
+                    </section>
+                {% endif %}
+
+                {% if instance.show_search_organizations %}
+                    <section id="filtro-organizacoes">
+                        {% include "organization/advanced-search.html" %}
+                    </section>
+                {% endif %}
+                
+                {% if instance.show_search_investments %}
+                    <section id="filtro-investimentos">
+                        {% include "investment/advanced-search.html" %}
+                    </section>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<section id="map-view" class="mapa">
+    <div class="container">
+        <div class="botoes-container">
+            <a href="javascript:;" class="botao secundario destacado" id="bt-layers">{% trans "Add Layer" %}</a>
+            <a href="javascript:;" class="botao secundario destacado" id="bt-fullscreen">{% trans "Full Screen" %}</a>
+            <a href="javascript:;" class="botao secundario maptype" id="bt-terrain">{% trans "Map" %}</a>
+            <a href="javascript:;" class="botao secundario selecionado maptype" id="bt-hybrid">{% trans "Satellite" %}</a>
+        </div>
+    
+        <div class="slider-control-container">
+            <div class="zoom-in"></div>
+            <div class="slider-control"></div>
+            <div class="zoom-out"></div>
+        </div>
+
+        <div class="legenda">
+            <p>{% trans "Investments concentration:" %}</p>
+            <div class="densidade">
+                <span class="valor valor-inicial">0,000,000.00</span>
+                <img class="cores" src="{% get_static_prefix %}images/bg/bg-legenda.png" alt="" />
+                <span class="valor valor-final">0,000,000.00</span>
+            </div>
+        </div>  
+    </div>
+
+    {{ form.map }}
+</section>
+
+<section id="chart-view" class="graficos">
+    <div class="container">
+        <div class="botoes-container">
+            <a href="javascript:;" class="botao secundario btn-regiao">{% trans "Location" %}</a>
+            <a href="javascript:;" class="botao secundario btn-tipo-atividades">{% trans "Activity type" %}</a>
+            <a href="javascript:;" class="botao secundario btn-investimentos selecionado">{% trans "Investments" %}</a>
+        </div>
+
+        <!-- visualizacao tipo de graficos -->
+        <div class="visualizacao">
+            <p class="texto-lista">{% trans "Chart type: " %}</p>
+            <ul class="visualizacao-container">
+                <li class="item ativo">
+                    <a href="#bars" class="link ico ico-texto grafico-barra-icone ativo">{% trans "Bars" %}
+                    </a>
+                </li>
+                
+                <li class="item inativo">
+                    <a href="#pie" class="link ico ico-texto grafico-pizza-icone inativo">{% trans "Pie" %}
+                    </a>
+                </li> <!-- Para cada um desses, existe um icone inativo -->
+            </ul>
+        </div>
+        <!-- fim de visualizacao tipo de graficos-->
+
+        <!-- O grafico é gerado aqui -->
+        <div id="chart-content" class="grafico-container"></div>
+    </div>
+</section>
+

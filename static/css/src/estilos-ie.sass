@@ -1,0 +1,136 @@
+/* Mixins e funções
+/* ================================================================*/
+@import mixins
+@import compass/css3
+
+/* Variaveis, configuracoes */
+@import basico
+
+/* Estilos específicos do IE */
+
+
+/* Formulários */
+/* ================================================================*/
+
+/* GERAL **********************************************************/
+input[type="text"], input[type="password"], input[type="search"], textarea, select, .qx-stylingForms-focus-text
+	@include filter-gradient(lighten($cor-padrao, 57%), $cor-fundo-padrao)
+	background: -ms-linear-gradient(top, lighten($cor-padrao, 57%), $cor-fundo-padrao)/* IE10+ */
+
+input[type="submit"]
+	@include filter-gradient($verde-degrade-primario, $verde-degrade-secundario)
+	background: -ms-linear-gradient(top, $verde-degrade-primario, $verde-degrade-secundario)/* IE10+ */
+
+	&:hover
+		@include filter-gradient($verde-degrade-primario-hover, $verde-degrade-secundario-hover)
+		background: -ms-linear-gradient(top, $verde-degrade-primario-hover, $verde-degrade-secundario-hover)/* IE10+ */
+
+	&:active
+		@include filter-gradient($verde-degrade-primario-hover, $verde-degrade-secundario-hover, bottom)
+		background: -ms-linear-gradient(bottom, $verde-degrade-primario-hover, $verde-degrade-secundario-hover)/* IE10+ */
+
+/* BOTAO **********************************************************/
+.botao
+	&.primario
+		/* Para o IE*/
+		@include filter-gradient($verde-degrade-primario, $verde-degrade-secundario)
+		
+		&:hover
+			/* Para o IE*/
+			@include filter-gradient($verde-degrade-primario-hover, $verde-degrade-secundario-hover)
+
+		&:active
+			/* Para o IE*/
+			@include filter-gradient($verde-degrade-primario-hover, $verde-degrade-secundario-hover,bottom)
+	
+	&.secundario
+		/* Para o IE*/
+		@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%))
+
+		&.selecionado
+			/* Para o IE*/
+			@include filter-gradient(lighten($cor-padrao, 49%), $cor-fundo-padrao)
+		
+		&:active
+			/* Para o IE*/
+			@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%),bottom)
+
+
+
+
+/* Slider do Mapa */
+/* ================================================================*/
+.slider-destaques
+	.slider-lista-opcoes 
+		.slider-item 
+			@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%))
+
+			&:hover, &.slider-item-selecionado
+				@include filter-gradient($cor-auxiliar-3, $cor-auxiliar-3)
+
+
+
+
+
+/* ABAS */
+/* ================================================================*/
+.menu-abas
+	.menu-abas-container
+		.aba
+			@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%))
+
+			&:active
+				@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%), bottom)
+
+
+/* Abas específicas das fichas */
+.ficha, .area-filtros-mapa
+	.menu-abas
+		.menu-abas-container
+			.aba
+				&.ui-state-active
+					filter: none
+					-ms-filter: none
+
+
+
+
+/* CARTAO - Cartao de Info do projeto branco*/
+/* ================================================================*/
+.cartao
+	filter: progid:DXImageTransform.Microsoft.Shadow(Color=#c2c2c2, Strength=5, Direction=0), progid:DXImageTransform.Microsoft.Shadow(Color=#c2c2c2, Strength=5, Direction=90), progid:DXImageTransform.Microsoft.Shadow(Color=#c2c2c2, Strength=5, Direction=180), progid:DXImageTransform.Microsoft.Shadow(Color=#c2c2c2, Strength=5, Direction=270)
+	&.investimento
+		.direcao-investimento
+			@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 54.7%))
+
+			a
+				&:hover
+					@include filter-gradient($cor-fundo-padrao, lighten($cor-padrao, 48%))
+
+
+
+
+
+/* Area do usuario */
+/* ================================================================*/
+.ferramentas-usuario
+	#area-usuario
+		.controles-usuario-logado
+			/* Menu Logado - Geral */
+			.menu-logado
+
+				/* Menu Logado de Tarefas */
+				&.tarefas
+					.principal
+						@extend .botao.primario
+
+						&:after
+							background: imageUrl("ico/setas-simples/ico-seta-simples-baixo-branca.png") no-repeat right center
+
+				/* Menu Logado de Usuário */
+				&.usuario
+					.principal
+						@extend .botao.secundario
+
+						&:after
+							background: imageUrl("ico/setas-simples/ico-seta-simples-baixo.png") no-repeat right center

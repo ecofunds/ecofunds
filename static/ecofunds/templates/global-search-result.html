@@ -1,0 +1,223 @@
+{% load cms_tags sekizai_tags tags i18n static %}
+
+{% addtoblock "js" %}
+    <script type="text/javascript" src="{%get_static_prefix%}scripts/search.js"></script>
+{% endaddtoblock %}
+
+<form method="POST" action="{% page_url "global-search-result" %}" name="searchForm">
+    {% csrf_token %}
+    {{form.query}}{{form.page}}{{form.order_by}}{{form.search_type}}
+</form>
+
+<!-- Ordenacao -->
+<div class="ordenacao">
+    <div class="ordenacao-padroes">
+        <p>{% trans "Order by: " %}</p>
+        <ul class="lista" id="ordenacao">
+            <li class="item"><a href="#-created_at">{% trans "Last entries" %}</a></li>
+            <li class="item"><a href="#title">{% trans "A-Z" %}</a></li> 
+        </ul>
+    </div>
+
+    <div class="ordenacao-tipos">
+        <p>{% trans "Show only: " %}</p>
+        <ul class="lista">
+            <li class="item"><a href="#projetos" data-search_type="PRO">{% trans "Projects" %}</a></li>
+            <li class="item"><a href="#organizacoes" data-search_type="ORG">{% trans "Organizations" %}</a></li>
+            <li class="item"><a href="#regioes" data-search_type="LOC">{% trans "Regions" %}</a></li>
+            <li class="item"><a href="#investimentos" data-search_type="INV">{% trans "Investments" %}</a></li>
+        </ul>
+    </div>
+</div>
+<!-- fim de Ordenacao -->
+
+<div class="resultado-busca"> 
+
+    <!-- RESULTADO DE BUSCA: PROJETOS -->
+    {% if projects != None%}
+        {% if projects|count > 0 %}
+            <div class="resultado-busca-container projetos ativo">
+                {% pagination projects %}
+
+                {% for project in projects %}
+                	<!-- Item -->
+                	<div class="resultado-item">
+                		<div class="cabecalho">
+                        	<h3 class="ico ico-texto projeto-maior-verde titulo"><a href="{% page_url "project-detail" project.entity_id %}" title="">{{ project.title }}</a></h3>
+                    	</div>
+                            
+                        <div class="info">
+                            <span class="data">{%if project.grant_to%}{% trans "Completion date: " %} {{project.grant_to|date:"d/M/Y"}}{%endif%}</span>
+                            <span class="regiao">
+                                {% for pl in project.projects_locations.all %}
+                                <span>{{pl.location.name}} - {{pl.location.country.name}}</span>
+                                {%endfor%}
+                            </span>
+                        </div>
+                        
+                        <div class="alinhado esquerda">
+                            <ul class="lista-links">
+                                <li><a href="{% page_url "project-detail" project.entity_id %}" title="">{% trans "Project record" %}</a></li>
+                                <li><a href="{% page_url "map" %}?s_project_name={{project.title}}" title="">{% trans "Project location map" %}</a></li>
+                                <li><a href="{% page_url "investments" %}?s_project_name={{project.title}}" title="">{% trans "Investments" %}</a></li>
+                            </ul>
+
+                            <span class="valor">
+                                {% trans "Investmented amount: " %}
+                                <span class="valor-numero">$ {{project.budget}}</span>
+                            </span>
+                        </div>
+                        
+                        <div class="alinhado direita">
+                            <p class="resumo">
+                                {% autoescape off %}
+                                    {{project.description}}
+                                {% endautoescape %}
+                            </p>
+                        </div>
+                	</div>
+                	<!-- fim de Item -->
+                {% endfor %}
+
+                {% pagination projects %}
+            </div>
+        {% else %}
+            {% include "no-results.html" %}
+        {% endif %}
+    {%endif%}
+    
+    <!-- Fim de RESULTADO DE BUSCA: PROJETOS -->
+
+    <!-- RESULTADO DE BUSCA: ORGANIZAÇÕES -->
+    {%if organizations != None%}
+        {%if organizations|count > 0%}
+            <div class="resultado-busca-container organizacoes ativo">
+                {% pagination organizations %}
+
+                {% for organization in organizations %}
+                    <!-- Item -->
+                    <div class="resultado-item">
+                        <div class="cabecalho">
+                            <h3 class="ico ico-texto organizacao-maior-verde titulo"><a href="{%page_url "organization-detail" organization.id%}" title="">{{ organization.name }}</a></h3>
+                        </div>
+                            
+                        <div class="info">
+                            <span class="categoria">{{organization.type.name}}</span>
+                            <span class="regiao">{%if organization.country.name%}{{organization.country.name}} -{%endif%} {%if organization.state%}{{organization.state}} -{%endif%} {{organization.city}}</span>
+                        </div>
+                        
+                        <div class="alinhado esquerda">
+                            <ul class="lista-links">
+                                <li><a href="{%page_url "organization-detail" organization.id%}" title="">{% trans "Organization record" %}</a></li>
+                                <li><a href="#" title="">{% trans "Investments focus map" %}</a></li>
+                                <li><a href="{%page_url "projects"%}?s_organization={{organization.name}}" title="">{% trans "Projects" %}</a></li>
+                                <li><a href="{%page_url "investments"%}?s_organization={{organization.name}}" title="">{% trans "Investments" %}</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alinhado direita">
+                            <p class="resumo">
+                                {{organization.mission}}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- fim de Item -->
+                {% endfor %}
+
+                {% pagination organizations %}
+            </div>
+        {% else %}
+            {% include "no-results.html" %}
+        {% endif %}
+    {%endif%}
+    <!-- Fim RESULTADO DE BUSCA: ORGANIZAÇÕES -->
+        
+    <!-- RESULTADO DE BUSCA: INVESTIMENTOS -->
+    {%if investments != None%}
+
+        {%if investments|count > 0%}  
+            <div class="resultado-busca-container investimentos ativo">
+                {%pagination investments%}
+                
+                <!-- Item -->
+                {%for investment in investments%}
+                    <div class="resultado-item">
+                        <div class="cabecalho">
+                            <h3 class="ico ico-texto investimento-maior-verde titulo">
+                                <a href="{%page_url "organization-detail" investment.funding_organization.id%}" title="">{{investment.funding_organization.name}}</a> {%trans "to"%}
+                                <a href="{%page_url "organization-detail" investment.recipient_organization.id%}" title="">{{investment.recipient_organization.name}}</a>
+                            </h3>
+                        </div>
+                            
+                        <div class="info">
+                            <span class="categoria">{{investment.type.name}}</span>
+                            <span class="data">{% trans "Investment date: " %} {{investment.created_at|date:"d/M/Y"}}</span>
+                        </div>
+                        
+                        <div class="alinhado esquerda">
+                            <ul class="lista-links">
+                                <li><a href="{%page_url "investment-detail" investment.id%}" title="">{% trans "Investment record" %}</a></li>
+                                <li><a href="{%page_url "investment-detail" investment.id%}#fluxo" title="">{% trans "Investment flow map" %}</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alinhado direita">
+                            <span class="valor">
+                                {% trans "Investment amount: " %}
+                                <span class="valor-numero"> {% currency investment.amount_usd %}</span>
+                            </span>
+                        </div>
+                    </div>
+                {%endfor%}
+                <!-- fim de Item -->
+                
+                {%pagination investments%}
+            </div>
+        {% else %}
+            {% include "no-results.html" %}
+        {% endif %}
+    {%endif%}
+    <!-- Fim RESULTADO DE BUSCA: INVESTIMENTOS -->
+
+    <!-- RESULTADO DE BUSCA: LOCALIZAÇÃO -->
+    {%if locations != None%}
+        {%if locations|count > 0%}
+        
+            <div class="resultado-busca-container regioes ativo">
+                {%pagination locations%}
+                
+                {%for location in locations%}
+                
+                    <!-- Item -->
+                    <div class="resultado-item">
+                        <div class="cabecalho">
+                            <h3 class="ico ico-texto localizacao-maior-verde titulo">
+                                <a href="#" title="">{{location.name}}</a>
+                            </h3>
+                        </div>
+
+                        <div style="display:none" class="info">{{location.country__name}}</div>
+                                            
+                        <div class="alinhado">
+                            <ul class="lista-links">
+                                <li><a href="{%page_url "projects"%}?s_country={{location.country__name}}&s_state={{location.name}}" title="">{% trans "Projects list" %}</a></li>
+                                <li><a href="{%page_url "investments"%}?s_country={{location.country__name}}&s_state={{location.name}}" title="">{% trans "Investments list" %}</a></li>
+                                <li><a href="{%page_url "map"%}?s_country={{location.country__name}}&s_state={{location.name}}" title="">{% trans "Projects map" %}</a></li>
+                                <li><a href="{%page_url "map"%}?s_country={{location.country__name}}&s_state={{location.name}}#filtro-investimentos"  title="">{% trans "Investments map" %}</a></li>                      
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- fim de Item -->
+                
+                {%endfor%}
+                
+                {%pagination locations%}
+            </div>
+        
+        {%else%}
+            {% include "no-results.html" %}
+        {%endif%}
+    {%endif%}
+    <!-- Fim RESULTADO DE BUSCA: LOCALIZAÇÃO -->
+   
+</div>

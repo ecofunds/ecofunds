@@ -1,0 +1,47 @@
+{% load static i18n tags %}
+<!-- destaques -->
+<section id="destaques">
+    <!-- pequeno azul-->
+    <div class="box pequeno secundario">
+        <h4 class="numero-box">{{ total_projects }}</h4>
+        <p class="texto-box">{% trans "Projects" %}</p>
+    </div>
+    <!-- fim de pequeno azul--> 
+
+    <!-- pequeno cinza-->
+    <div class="box pequeno primario">
+        <h4 class="numero-box">{{ total_countries }}</h4>
+        <p class="texto-box">{% trans "Countries" %}</p>
+    </div>
+    <!-- fim de pequeno cinza--> 
+
+    <!-- pequeno cinza-->
+    <div class="box pequeno primario">
+        <h4 class="numero-box">{{ total_organizations }}</h4>
+        <p class="texto-box">{% trans "Organizations" %}</p>
+    </div>
+    <!-- fim de pequeno cinza--> 
+
+    <!-- links-sobre -->
+    <div class="links-sobre">
+        <ul>
+            <li>
+                <a class="botao primario" href="{% page_url "why-register" %}" title="{% trans 'Why register in Ecofunds?' %}">
+                    <span class="ico pequeno contraste investimento-menor-branco"></span>{% trans "Why register in Ecofunds?" %}
+                </a>
+            </li>
+            <li>
+                <a class="botao primario" href="{% page_url "how-to-start" %}" title="{% trans 'How to start?' %}">
+                    <span class="ico pequeno contraste localizacao-menor-branco"></span>{% trans "How to start?" %}
+                </a>
+            </li>
+            <li>
+                <a class="botao primario" href="{% page_url "about-ecofunds" %}" title="{% trans 'About Ecofunds' %}">
+                    <span class="ico pequeno contraste sobre-menor-branco"></span>{% trans "About Ecofunds" %}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- fim de links-sobre -->
+</section>
+<!-- fim de destaques -->

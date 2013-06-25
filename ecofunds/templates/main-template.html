@@ -1,0 +1,26 @@
+{% extends "base-cms.html" %}
+{% load cms_tags %}
+
+{% block base_content %}
+    <!-- area-site -->
+    <div class="area-site">
+        <div class="container">
+            {% placeholder title_content %} 
+        </div>
+    </div>
+    <!-- fim area-site -->
+
+    <div class="container">
+        <!-- conteudo principal -->
+        <div class="conteudo">
+            {% placeholder main_content %}
+        </div>
+        <!-- fim de conteudo -->
+
+        <!-- barra lateral -->
+        <div class="barra-lateral">
+            {% placeholder right_content %}
+        </div>
+        <!-- fim de barra lateral -->
+    </div>
+{% endblock %}

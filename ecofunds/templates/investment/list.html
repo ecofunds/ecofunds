@@ -1,0 +1,236 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+{%block head%}
+    {% addtoblock "css" %}
+        <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+    {% endaddtoblock %}
+    
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+                        
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/investment/list.js"></script>
+    {% endaddtoblock %}
+{% endblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto investimento-maior-branco">{% trans "Investments" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+        <a class="link-destaque" href="#" title="{% trans "Show all investments" %}">{% trans "Show all investments" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo filtros-listas-tabelas">
+        {% if labels %}
+
+        <!-- Filtros Aplicados -->
+        <div class="filtros-aplicados">
+            <p>{% trans "Filters: " %}</p>
+            <ul class="lista">
+                {% for k, v in labels.items %}
+                    <li class="item etiqueta" title="{% field_label search_investment_form k %}" data-field="{{ k }}">{{ v }} <span class="fechar-filtro"></span></li>
+                {% endfor %} 
+            </ul>
+        </div>
+        <!-- fim de Filtros Aplicados -->
+    
+        {% endif %}
+        
+       <!-- tipo 
+        <div class="tipo">
+            <p class="texto-lista">{% trans "Show investments: " %}</p>
+            <ul class="tipo-container">
+                <li class="item"><label><input type="checkbox" name="view" value="received" />{% trans "Received" %}</label></li>
+                <li class="item"><label><input type="checkbox" name="view" value="made" />{% trans "Made" %}</label></li>
+            </ul>
+        </div>
+         fim de tipo mapa -->
+
+        {%if list|count%}
+
+        <!-- visualizacao -->
+        <div class="visualizacao">
+            <p class="texto-lista">{% trans "View: " %}</p>
+            <ul class="visualizacao-container">
+                <li class="item {% if search_investment_form.list_type.value == None or search_investment_form.list_type.value == '1'%}ativo{% else %}inativo{% endif %}">
+                    <a href="#listagem" class="link ico ico-texto grid-icone {% if search_investment_form.list_type.value == None or search_investment_form.list_type.value == '1' %}ativo{% else %}inativo{% endif %}">{% trans "Grid" %}
+                    </a>
+                </li>
+                
+                <li class="item {% if search_investment_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">
+                    <a href="#tabela" class="link ico ico-texto lista-icone {% if search_investment_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">{% trans "List" %}
+                    </a>
+                </li> <!-- Para cada um desses, existe um icone inativo -->
+            </ul>
+        </div>
+        <!-- fim de visualizacao -->   
+
+        <!-- Ordenacao -->
+        <div class="ordenacao">
+            <p>{% trans "Order by: " %}</p>
+            <ul class="lista">
+                <li class="item atual"><a href="#-created_at">{% trans "Last entries" %}</a></li>
+                <li class="item"><a href="#-created_at">{% trans "Investment date" %}</a></li>
+                <li class="item"><a href="#funding_organization__name">{% trans "Investor name" %}</a></li>
+                <li class="item"><a href="#-amount_usd">{% trans "Highest" %}</a></li>
+                <li class="item"><a href="#amount_usd">{% trans "Lowest" %}</a></li>
+            </ul>            
+        </div>
+
+        {%endif%}
+
+        <!-- fim de Ordenacao -->
+
+        <!-- modos de visualizacao -->
+        <div class="modos-visualizacao">
+            <!-- listagem de investimentos -->
+            <section id="listagem" class="listagem investimentos">    
+                {% if list|count > 0 %}
+                    <!-- Paginação -->
+                    {% pagination list %}
+
+                    {% for investment,perm in itempermlist %}                                           
+                        <!-- cartao-investimento -->
+                        <div class="cartao investimento {% if forloop.counter|mod:3 == 1 %}primeiro{% endif %} {%if perm%}pode-editar{%endif%}" data-index="{{ investment.pk }}"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                            <div class="direcao-investimento">
+                                <a href="{% page_url page_detail investment.id %}?id={{investment.pk}}" title="{% trans "Investment: " %}">
+                                    <span class="doador" title="{{ investment.funding_organization.name }}">
+                                        {{ investment.funding_organization.name }}
+                                    </span>
+                                    <span class="ico seta-fluxo"></span>
+                                    <span class="direcao">{{ investment.type.name }}</span>
+                                    <span class="receptor">
+                                        {{ investment.recipient_entity.title }}
+                                    </span>
+                                </a>
+                            </div>
+                            
+                            <p class="subtitulo">{%if investment.recipient_entity.get_firstlocation.name%}{{ investment.recipient_entity.get_firstlocation.name }} - {{ investment.recipient_entity.get_firstlocation.iso_sub }}{%endif%}</p>
+                            <p class="invest-recebido">
+                            {%if investment.amount_usd%}
+                            
+                                {% trans "Amount:" %}
+                                <span class="valor">{% currency investment.amount_usd %}</span>
+                            
+                            {%endif%}
+                            </p>
+                            <p><strong>{% trans "Investment date: " %}</strong>{{ investment.created_at|date:"d/M/Y" }}</p>
+
+                            <a class="veja-mais" href="{% page_url page_detail investment.id %}?id={{investment.pk}}" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                            {%if perm%}
+                                <div class="controles-edicao lista investimento">
+                                    <a class="ico pequeno editar" href="{% page_url "investment-form" %}?id={{ investment.pk }}" title="{% trans "Edit investment of" %}: {{ investment.funding_organization.name }} {% trans "for" %} {{ investment.recipient_entity.title }}">Edit</a>
+                                    <a class="ico pequeno excluir" href="javascript:;" title="{% trans "Delete investment of" %}: {{ investment.funding_organization.name }} {% trans "for" %} {{ investment.recipient_entity.title }}">Delete</a>
+                                </div>
+                                
+                                <div class="camada-exclusao investimento">
+                                    <div class="confirmacao">
+                                        <p>{% trans "The investment" %} <em>{{ investment.code }}</em> {% trans "will be deleted from Ecofunds and can only be recovered by an Ecofunds accountable  person or an investment administrator." %}</p>
+                                        
+                                        <p>{% trans "Do you really want to delete this investment from Ecofunds?" %}</p>
+                                        
+                                        <a class="botao primario cancelar" href="javascript:;" title="{% trans "No, keep investment in Ecofunds" %}">{% trans "No, keep investment in Ecofunds" %}</a>
+                                        
+                                        <a class="confirmar" href="javascript:;" title="{% trans "Yes, delete investment" %}">{% trans "Yes, delete investment" %}</a>
+                                    </div>
+                                    
+                                    <div class="excluido">
+                                        <a class="botao primario ativar" href="javascript:;" title="{% trans "Enable investment" %}">{% trans "Enable investment" %}</a>
+                                    </div>
+                                </div>
+                            {%endif%}
+                        </div>
+                                  
+                        <!-- fim de cartao-investimento -->                       
+                    {% endfor %}
+
+                    <!-- Paginação -->
+                    {% pagination list %}
+
+                {% else %}
+                    {% include "investment/no-results.html" %}
+                {% endif %}
+            </section>
+            <!-- fim de listagem de investimentos -->
+            
+            <!-- tabela investimentos -->
+            <section id="tabelas" class="tabelas investimentos">
+
+                {%if list|count%}
+
+                <div class="cabecalho-tabela">
+                    <h2 class="titulo-tabela">{% trans "Investments" %}</h2>
+                    <span class="gerar-relatorio ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></span>
+                </div>
+
+                <!-- tabela -->
+                <table class="tabela vertical" caption="Investments received" summary="">
+                    <thead>
+                        <tr>
+                            <th class="titulo-registro" scope="col">{% trans "Date" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Type" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Investor" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Amount (US$)" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Completation date" %}</th>
+                            <th class="titulo-registro" colspan="2" scope="col"></th>
+                        </tr>
+                    </thead>
+
+                    <tfoot>
+                        <!-- Paginação -->
+                        <tr>
+                            <td class="rodape-tabela" colspan="7">
+                                {% pagination list True %}
+                            </td>
+                        </tr>
+                        <!-- Fim de Paginação -->
+
+                        <!-- TOTAIS -->
+                        <tr>
+                            <td class="totais" colspan="7" scope="col"><strong>{% trans "Total investments: " %}</strong> {% currency amount_usd__sum%}</td>
+                        </tr>
+                        <!-- fim de TOTAIS -->                          
+                    </tfoot>
+
+                    <tbody>
+                        {% for investment in list %}
+                        <tr>
+                            <td class="conteudo-registro data">{{ investment.created_at|date:"d/M/Y" }}</td>
+                            <td class="conteudo-registro texto-simples">{{investment.type.name}}</td>
+                            <td class="conteudo-registro descricao-longa"><a href="{%page_url "organization-detail" investment.funding_organization.id%}" title="{{investment.funding_organization.name}}">{{investment.funding_organization.name}}</a></td>
+                            <td class="conteudo-registro numero">{%currency investment.amount_usd%}</td>
+                            <td class="conteudo-registro data">00-00-00</td>
+                            <td class="conteudo-registro link"><a href="{% page_url page_detail investment.id %}?id={{investment.pk}}" title="{% trans "Investment record" %}">{% trans "Investment record" %}</a></td>
+                            <td class="conteudo-registro link"><a href="{% page_url page_detail investment.id %}?id={{investment.pk}}#flow" title="{% trans "Flow map" %}">{% trans "Flow map" %}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                
+                <!-- fim de tabela  -->
+                {%else%}{%include "investment/no-results.html"%}{%endif%}
+            </section>
+            <!-- fim de tabela investimentos -->
+
+        </div>
+        <!-- fim de modos de visualizacao -->
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% include "investment/advanced-search.html" %}
+
+        {% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>

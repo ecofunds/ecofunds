@@ -1,0 +1,43 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+
+<!-- ultimos-projetos -->
+<section id="ultimos-projetos">
+    <h2>{% trans "Latest Project Entries in Ecofunds" %}</h2>
+    
+    <!-- ultimos-projetos-container -->
+    <ul class="ultimos-projetos-container">
+        <div class="ultimos-projetos-controle">
+            <div class="controle anterior"></div>
+            <div class="controle proximo"></div>
+        </div>            
+
+        {% for project in list %}
+        <!-- cartao-projeto -->
+        <li class="cartao projeto">
+            <h3 class="titulo" title="{{ project.title }}">{{ project.title }}</h3>
+
+            <p class="subtitulo">{%if project.get_firstlocation.name%}{{ project.get_firstlocation.name }} - {{ project.get_firstlocation.iso_cc }}{%endif%}</p>
+
+            <img class="thumb" src="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/projeto-sem-foto.jpg" width="185" height="130"  alt="Image: {{ project.title }}">
+                
+            
+            <p class="invest-recebido">
+                {% trans "Current Investments:" %}
+                <span class="valor">{%if project.get_current_investment and project.get_current_investment.amount_usd %}{% currency project.get_current_investment.amount_usd %}{% else %}{% currency 0 %}{% endif %}</span>
+            </p>
+            
+            <p><strong>{% trans "Annual budget: " %}</strong>{%if project.get_year_recipient_investments %}{% currency project.get_year_recipient_investments|get_sum %}{% else %}{% currency 0 %}{% endif %}</p>
+            <p><strong>{% trans "Completion date: " %}</strong>{{ project.created_at|date:"d/M/Y" }}</p>
+            
+            <p class="resumo" title="{% autoescape off %}{{ project.resume }}{% endautoescape %}">
+                {% autoescape off %}{{ project.resume }}{% endautoescape %}
+            </p>
+            <a class="veja-mais" href="{% page_url page_detail %}?id={{ project.entity_id }}" title="{% trans "More information" %}">{% trans "More information" %}</a>
+        </li>
+        <!-- fim de cartao-projeto -->
+        {% endfor %}
+    </ul>
+    <!-- fim de ultimos-projetos-container -->
+    
+</section>
+<!-- fim de ultimos-projetos --> 

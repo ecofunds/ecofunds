@@ -1,0 +1,7 @@
+<html>
+    <body>
+{% for project in list %}
+UPDATE `ecofunds_entities` SET `resume`=SUBSTRING(TRIM('{% autoescape off %}{{ project.description }}{% endautoescape %}'), 0, 150) WHERE  `entity_id`={{ project.entity_id }} LIMIT 1;<br />
+{% endfor %}
+    <body>
+</html>

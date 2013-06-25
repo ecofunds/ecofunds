@@ -1,0 +1,37 @@
+{% load tags i18n %}        
+        <div class="paginacao-resultados">
+            <div class="total-resultados">
+                <p>{% trans "Approximately" %} <strong> {{ paginator.paginator.num_pages }} </strong> {% trans "results" %}</p>
+            </div>
+
+            <div class="paginacao">
+                <ul class="lista">
+                    <li class="item anterior">
+                        {% if paginator.has_previous %}
+                            <a href="?page={{ paginator.previous_page_number }}">Previous</a>
+                        {% endif %}
+                    </li>
+                    
+                {% if not begin %}
+                    <li class="item"><a href="?page=1">1</a></li>
+                    <li class="item"><a href="javascript:;">...</a></li>
+                {% endif %}
+                {% for i in pages %}
+                    <li class="item {% if i == paginator.number %} atual{% endif %}"><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endfor %}
+                {% if not end %}
+                    <li class="item"><a href="javascript:;">...</a></li>
+                    <li class="item "><a href="?page={{ paginator.paginator.num_pages }}">{{ paginator.paginator.num_pages }}</a></li>
+                {% endif %}
+
+                    <li class="item proximo">
+                        {% if paginator.has_next %}
+                            <a href="?page={{ paginator.next_page_number }}">Next</a>
+                        {% endif %}
+                    </li>
+
+                </ul>
+
+
+            </div>
+        </div>

@@ -1,0 +1,136 @@
+{% load tags i18n %}
+<!-- Filtros de Busca por Investimentos -->
+<section class="filtros investimentos aberto">
+    <header class="cabecalho">
+        <h4>{% trans "Search investiments by" %}</h4>
+        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
+        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>           
+    </header>
+
+    <form class="form-filtros investimentos" action="#" method="post">
+        {{ search_investment_form.page }}
+        {{ search_investment_form.limit }}
+        {{ search_investment_form.list_type }}
+        {{ search_investment_form.order_by }}
+        
+        <div class="borda primeiro">
+            <fieldset>
+                <legend>{% trans "Type" %} <span class="total">({{count_investment_types}})</span></legend>
+                
+                {{ search_investment_form.s_investment_type }}
+
+                <label for="id_s_all_type_investments" class="check"> 
+                    {{ search_investment_form.s_all_type_investments }}
+                    {{ search_investment_form.s_all_type_investments.label }}
+                </label>
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Date" %} <span class="total">({{count_investments}})</span></legend>
+    
+                <label for="id_s_investment_date_from">{{ search_investment_form.s_investment_date_from.label }}</label>
+                {{ search_investment_form.s_investment_date_from }}
+
+                <label class="emlinha" for="id_s_investment_date_to">{{ search_investment_form.s_investment_date_to.label }}</label>
+                {{ search_investment_form.s_investment_date_to }}
+
+                <label for="id_s_all_investments_date" class="check"> 
+                    {{ search_investment_form.s_all_investments_date }}
+                    {{ search_investment_form.s_all_investments_date.label }}
+                </label>
+            </fieldset>
+        </div>   
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Value" %} <span class="total">({{count_investments}})</span></legend>
+    
+                <label for="id_s_investment_from">{{ search_investment_form.s_investment_from.label }}</label>
+                {{ search_investment_form.s_investment_from }}
+
+                <label class="emlinha" for="id_s_investment_to">{{ search_investment_form.s_investment_to.label }}</label>
+                {{ search_investment_form.s_investment_to }}
+
+                <label for="id_s_all_investments_value" class="check"> 
+                    {{ search_investment_form.s_all_investments_value }}
+                    {{ search_investment_form.s_all_investments_value.label }}
+                </label>
+            </fieldset>
+        </div>   
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Organization type" %} <span class="total">({{count_organization_types}})</span></legend>
+                
+                {{ search_investment_form.s_organization_type }}
+
+                <label for="id_s_all_type_organizations" class="check"> 
+                    {{ search_investment_form.s_all_type_organizations }}
+                    {{ search_investment_form.s_all_type_organizations.label }}
+                </label>
+
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Organization" %} <span class="total">({{count_organizations}})</span></legend>
+                
+                {{ search_investment_form.s_organization }}
+
+                <label for="id_s_all_organizations" class="check"> 
+                    {{ search_investment_form.s_all_organizations }}
+                    {{ search_investment_form.s_all_organizations.label }}
+                </label>
+
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Project Name" %} <span class="total">({{count_projects}})</span></legend>
+                
+                {{ search_investment_form.s_project_name }}
+
+                <label for="id_s_all_project_name" class="check"> 
+                    {{ search_investment_form.s_all_project_name }}
+                    {{ search_investment_form.s_all_project_name.label }}
+                </label>
+
+            </fieldset>
+        </div>
+
+        <div class="borda ultimo">
+            <fieldset>
+                <legend>{% trans "Supported Region" %} <span class="total">({{count_recipient_entity_investments}})</span></legend>
+                
+                <label for="id_s_country">{{ search_investment_form.s_country.label }}</label>
+                {{ search_investment_form.s_country }}
+
+                <label for="id_s_state">{{ search_investment_form.s_state.label }}</label>
+                {{ search_investment_form.s_state }}
+
+            </fieldset>
+        </div>
+
+    </form>
+
+    {% block extra_script %}
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            //Cria o estilo dos elementos combo.
+            createCombo();
+
+            //Chama o plugin de datepicker do jqueryUI.
+            jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+
+            //Formatação do campo de valor. Classe específica = numero
+            jQuery('.numero').setMask('{{number_format}}');
+        });
+    </script>
+    {% endblock %}   
+
+</section>
+<!-- Fim de Filtros de Busca por investimentos -->

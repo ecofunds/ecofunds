@@ -1,0 +1,179 @@
+{% load sekizai_tags tags i18n static cms_tags %}
+{% addtoblock "js" %}
+<script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}scripts/opportunity/list.js"></script>
+{% endaddtoblock %}
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto oportunidade-maior-branco">{% trans "Opportunities" %}</h2>    
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- Link auxiliar -->
+    <div class="link-auxiliar">
+        <a class="link-destaque" href="#" title="{% trans "Show all opportunities" %}">{% trans "Show all opportunities" %}</a>
+    </div>
+    <!-- fim de Link auxiliar -->
+
+    <!-- conteudo principal -->
+    <div class="conteudo filtros-listas-tabelas">
+        {% if labels %}
+
+        <!-- Filtros Aplicados -->
+        <div class="filtros-aplicados">
+            <p>{% trans "Filters: " %}</p>
+            <ul class="lista">
+                {% for k, v in labels.items %}
+                <li class="item etiqueta" title="{% field_label search_opportunity_form k %}" data-field="{{ k }}">{{ v }} <span class="fechar-filtro"></span></li>
+                {% endfor %} 
+            </ul>
+        </div>
+        <!-- fim de Filtros Aplicados -->
+    
+        {% endif %}
+
+        <!-- tipo -->
+        <div class="tipo">
+            <p class="texto-lista">{% trans "Show investments: " %}</p>
+            <ul class="tipo-container">
+                <li class="item"><label><input type="checkbox" name="view" value="received" />{% trans "Received" %}</label></li>
+                <li class="item"><label><input type="checkbox" name="view" value="made" />{% trans "Made" %}</label></li>
+            </ul>
+        </div>
+        <!-- fim de tipo mapa -->
+
+        <!-- visualizacao -->
+        <div class="visualizacao">
+            <p class="texto-lista">{% trans "View: " %}</p>
+            <ul class="visualizacao-container">
+                <li class="item {% if search_opportunity_form.list_type.value == None or search_opportunity_form.list_type.value == '1'%}ativo{% else %}inativo{% endif %}">
+                    <a href="#listagem" class="link ico ico-texto grid-icone {% if search_opportunity_form.list_type.value == None or search_opportunity_form.list_type.value == '1' %}ativo{% else %}inativo{% endif %}">{% trans "List" %}
+                    </a>
+                </li>
+                
+                <li class="item {% if search_opportunity_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">
+                    <a href="#tabela" class="link ico ico-texto lista-icone {% if search_opportunity_form.list_type.value == '2' %}ativo{% else %}inativo{% endif %}">{% trans "Table" %}
+                    </a>
+                </li> <!-- Para cada um desses, existe um icone inativo -->
+            </ul>
+        </div>
+        <!-- fim de visualizacao --> 
+ 
+
+        <!-- Ordenacao -->
+        <div class="ordenacao">
+            <p>{% trans "Order by: " %}</p>
+            <ul class="lista">
+                <li class="item atual"><a href="#">{% trans "Last entries" %}</a></li>
+                <li class="item"><a href="#name">{% trans "A-Z" %}</a></li>
+                <li class="item"><a href="#">{% trans "Date of last investment" %}</a></li>
+                <li class="item"><a href="#">{% trans "Highest investment" %}</a></li>
+            </ul>            
+        </div>
+        <!-- fim de Ordenacao -->
+
+        <!-- modos de visualizacao -->
+        <div class="modos-visualizacao">
+            <!-- listagem de oportunidades -->
+            <section id="listagem" class="listagem oportunidades">      
+                {% if list|count > 0 %} 
+                    <!-- Paginação -->
+                      
+                                  
+                    {% for opportunity in list %}
+                        <!-- cartao-oportunidade -->
+                        <div class="cartao oportunidade{% if forloop.counter|mod:3 == 1 %} primeiro {% endif %}"> <!-- atribui a classe ao primeiro elemento da linha. serve para retirar a margem --> 
+                            
+                            <h3 class="titulo" title="{{ opportunity.name }}">{{ opportunity.name }}</h3>
+                            <p class="subtitulo">{{ opportunity.type.name }}</p>
+                          
+                            <img class="thumb" src="{% if opportunity.logo %}{{ opportunity.logo }}{% else %}{% get_static_prefix %}images/oportunidade-sem-foto.jpg{% endif %}" alt="" />                
+
+                            <p><strong>{{ opportunity.country.name }}, {{ opportunity.state }}, {{ opportunity.city }} </strong></p>
+                                          
+                            <p class="resumo" title="{% autoescape off %}{{ opportunity.acronym }}{% endautoescape %}">
+                                {% autoescape off %}{{ opportunity.mission }}{% endautoescape %}
+                            </p>
+                            <a class="veja-mais" href="{% page_url page_detail %}?id={{ opportunity.id }}" title="{% trans "More information" %}">{% trans "More information" %}</a>
+                        </div>
+                        <!-- fim de cartao-oportunidade -->
+                    {% endfor %}
+
+                    <!-- Paginação -->
+                    
+
+                {% else %}
+                    {% include "no-results.html" %}
+                {% endif %}
+                
+            </section>
+            <!-- fim de listagem de oportunidades -->
+            
+            <!-- tabela oportunidades -->
+            <section id="tabelas" class="tabelas oportunidades">
+                <div class="cabecalho-tabela">
+                    <h2 class="titulo-tabela">{% trans "Opportunities" %}</h2>
+                    <span class="gerar-relatorio ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></span>
+                </div>
+
+                <!-- tabela -->
+                <table class="tabela vertical" caption="Opportunities" summary="">
+                    <thead>
+                        <tr>
+                            <th class="titulo-registro" scope="col">{% trans "Name" %}</th>
+                            <th class="titulo-registro" scope="col">{% trans "Region" %}</th>
+                            <th class="titulo-registro" colspan="4" scope="col">{% trans "Mission" %}</th>
+                            <th class="titulo-registro" scope="col"></th>
+                        </tr>
+                    </thead>
+
+                    <tfoot>
+                        <!-- Paginação -->
+                        <tr>
+                            <td class="rodape-tabela" colspan="7">
+                                
+                            </td>
+                        </tr>
+                        <!-- Fim de Paginação -->
+
+                        <!-- TOTAIS -->
+                        <tr>
+                            <td class="totais" colspan="7" scope="col"><strong>Total:</strong> 1.298.900.300</td>
+                        </tr>
+                        <!-- fim de TOTAIS -->                          
+                    </tfoot>
+
+                    <tbody>
+                        {% for opportunity in list %}
+                        <tr>
+                            <td class="conteudo-registro texto-linha curto"><a href="#" title="{{ opportunity.name }}">{{ opportunity.name }}</a></td>
+                            <td class="conteudo-registro regiao">{{ opportunity.country.name }}, {{ opportunity.state }}, {{ opportunity.city }}</td>
+                            <td class="conteudo-registro texto-linha longo" colspan="4"><a href="#" title="{{ opportunity.mission }}">{{ opportunity.mission }}</a></td>
+                            <td class="conteudo-registro link"><a href="{% page_url "opportunity-form" %}?id={{ opportunity.id }}" title="">{% trans "Opportunity record" %}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                
+                <!-- fim de tabela  -->
+
+            </section>
+            <!-- fim de tabela oportunidades -->
+
+        </div>
+        <!-- fim de modos de visualizacao -->
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+        {% include "opportunity/advanced-search.html" %}
+
+        {% include "./map-link.html" %}
+    </div>
+    <!-- fim de barra lateral -->
+</div>
