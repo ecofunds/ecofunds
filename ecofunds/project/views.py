@@ -315,7 +315,6 @@ WHERE b.validated = 1
             location_id = item[0]
             entity_id = item[1]
             amount = item[2]
-            import pdb; pdb.set_trace()
             xml = BeautifulSoup(item[3])
 
             key = 'pos'+str(location_id)
