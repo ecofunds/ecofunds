@@ -542,7 +542,8 @@ class GeoIpView(ListView):
             ip = "201.76.161.146"
 
 
-        geo = GeoIP("geoip/GeoLiteCity.dat")
+        from django.conf import settings
+        geo = GeoIP(settings.GEOIP_DATABASE)
         region = geo.record_by_addr(ip)
 
 
