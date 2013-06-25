@@ -447,7 +447,7 @@ WHERE b.validated = 1
 
                         h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
                     else:
-                        g = "#000000"
+                        h = "#000000"
 
                     polygon = maps.Polygon(opts = {
                         'map': gmap,

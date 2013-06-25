@@ -32,7 +32,7 @@ class Attachment(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField()
     #creater = models.ForeignKey(User, related_name='attachment_creaters')
-    
+
 
     class Meta:
         db_table = u'ecofunds_attachments'
@@ -89,7 +89,7 @@ class CurrencyExchangeRate(models.Model):
 
 class Geopoint(models.Model):
     geopoint_id = models.BigIntegerField(primary_key=True)
-    
+
     #location = models.PointField() #PointField() # This field type is a guess.
 
     location_lat = models.DecimalField(blank=True, max_digits=18, decimal_places=16)
@@ -105,7 +105,7 @@ class GeographicFocus(models.Model):
     class Meta:
         db_table = u'ecofunds_geographic_focus'
 
-    
+
 class OrganizationType(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=48)
@@ -166,10 +166,10 @@ class Organization(models.Model):
 
     def funding_investments():
         return Investment.all_objects.filter(Q(funding_organization=self.id))
-    
+
     def received_investments():
         return Investment.all_objects.filter(Q(recipient_organization=self.id))
-    
+
     def get_year_recipient_investments(self):
         now = datetime.now()
         return self.recipient_investments.all().filter(created_at__year=now.year)
@@ -197,7 +197,7 @@ class OrganizationAttachment(models.Model):
 class Location(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=500)
-    
+
     country = models.ForeignKey(Country, related_name='locations')
 
     iso_code = models.CharField(max_length=10)
@@ -269,7 +269,7 @@ class Project(models.Model):
         return investments[0] if investments.count() > 0 else None
 
     def get_firstlocation(self):
-        
+
         return self.projects_locations.all()[:1].get() if self.projects_locations.count() > 0 else None
 
     def __unicode__(self):
@@ -339,7 +339,7 @@ class ProjectOrganization(models.Model):
 class InvestmentType(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=765)
-    
+
     def __unicode__(self):
         return self.name
 
@@ -352,7 +352,7 @@ class Investment(models.Model):
     funding_entity = models.ForeignKey(Project,null=True,blank=True,related_name='funding_investments')
     recipient_organization = models.ForeignKey(Organization, related_name='recipient_investments')
     funding_organization = models.ForeignKey(Organization, blank=True,null=True ,related_name='funding_investments')
-    
+
     currency = models.ForeignKey(Currency, null=True, blank=True)
     amount = models.DecimalField(_('Amount'), null=True, max_digits=20, decimal_places=2, blank=True)
     amount_usd = models.DecimalField(_('Amount (USD)'), null=True, max_digits=20, decimal_places=2, blank=True)
@@ -401,10 +401,10 @@ class UicnCatalog(models.Model):
 
 class ListImagePlugin(CMSPlugin):
     limit = models.PositiveIntegerField(
-                _('Number of news items to show'), 
+                _('Number of news items to show'),
                 help_text=_('Limits the number of items that will be displayed')
             )
-    
+
     def __unicode__(self):
         str = ""
         if self.page:
@@ -428,15 +428,15 @@ class Image(models.Model):
                      (LEFT, _("left")),
                      (RIGHT, _("right")),
                      )
-    
-    
+
+
     image = models.ImageField(_("image"), upload_to=get_media_path,null=True,blank=True)
     url = models.CharField(_("link"), max_length=255, blank=True, null=True, help_text=_("if present image will be clickable"))
     page_link = models.ForeignKey(Page, verbose_name=_("page"), null=True, blank=True, help_text=_("if present image will be clickable"))
     alt = models.CharField(_("alternate text"), max_length=255, blank=True, null=True, help_text=_("textual description of the image"))
     longdesc = models.CharField(_("long description"), max_length=255, blank=True, null=True, help_text=_("additional description of the image"))
     float = models.CharField(_("side"), max_length=10, blank=True, null=True, choices=FLOAT_CHOICES)
-    
+
     position = models.PositiveSmallIntegerField(_("position"), blank=True, null=True)
 
     plugin = models.ForeignKey(ListImagePlugin, null=False, blank=False, related_name='images')
@@ -444,7 +444,7 @@ class Image(models.Model):
     class Meta:
         db_table = u'ecofunds_images'
 
-    
+
 
     def __unicode__(self):
         if self.alt:
