@@ -9,6 +9,8 @@ gettext = lambda s: s
 import matplotlib
 matplotlib.use('Agg')
 
+from unipath import Path
+
 LANGUAGES_NUMBERFORMAT = {
     'pt-br':'decimal',
     'en':'decimal-us',
@@ -16,7 +18,7 @@ LANGUAGES_NUMBERFORMAT = {
 }
 
 STATIC_PREFIX_URL = '/'
-PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+PROJECT_PATH = Path(__file__).parent
 
 GOOGLE_KEY = 'AIzaSyAZpfiGAvTO1zpd-eWWZcbkHm40BrFp0tI'
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
@@ -97,19 +99,19 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = os.path.join(os.path.dirname(PROJECT_PATH), "static/media")
+MEDIA_ROOT = PROJECT_PATH.child('static').child('media')
 MEDIA_URL = STATIC_PREFIX_URL + 'static/media/'
 
-#STATIC_ROOT = os.path.join(os.path.dirname(PROJECT_PATH), "static")
+#STATIC_ROOT = PROJECT_PATH.child('static')
 STATIC_URL = STATIC_PREFIX_URL + 'static/'
 
 ADMIN_MEDIA_PREFIX = STATIC_PREFIX_URL + 'static/admin/'
 
-GEOIP_DATABASE = PROJECT_PATH + '/geoip/GeoLiteCity.dat'
+GEOIP_DATABASE = PROJECT_PATH.child('geoip').child('GeoLiteCity.dat')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(os.path.join(PROJECT_PATH, ".."), "static"),
+    PROJECT_PATH.parent.child('static'),
     #os.path.join(os.path.dirname(PROJECT_PATH), "static")
 )
 
@@ -165,7 +167,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'ecofunds.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, "templates"),
+    PROJECT_PATH.child('templates'),
 )
 
 
@@ -208,7 +210,7 @@ INSTALLED_APPS = (
     'ecofunds.investment',
 )
 
-CMS_MEDIA_ROOT = os.path.join(os.path.dirname(PROJECT_PATH), "static/cms")
+CMS_MEDIA_ROOT = PROJECT_PATH.child('static').child('cms')
 CMS_MEDIA_URL= STATIC_PREFIX_URL + 'static/cms'
 
 CMS_TEMPLATES = (
