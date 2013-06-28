@@ -17,7 +17,7 @@ from babel import numbers
 import colorsys
 import math
 from ecofunds.utils import ignore_pylab
-if not ignore_pylab:
+if not ignore_pylab():
     import pylab
 import sys
 sys.setrecursionlimit(10000)
@@ -630,7 +630,7 @@ WHERE b.validated = 1
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
 
-                    if not ignore_pylab:
+                    if not ignore_pylab():
                         tp = pylab.cm.RdYlGn(1 - scale)
                         rgb = []
                         for c in tp[:3]:
