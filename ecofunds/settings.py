@@ -144,23 +144,18 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-
-
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-
     #'cms.middleware.multilingual.MultilingualURLMiddleware',
-
     'ecofunds.middleware.multilingual.CustomMultilingualURLMiddleware',
     'ecofunds.middleware.forcedresponse.ForceResponseMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-
     #'cms.middleware.media.PlaceholderMediaMiddleware',
 )
 
