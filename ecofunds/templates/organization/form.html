@@ -3,6 +3,7 @@
 {%block head%}
     {% addtoblock "css" %}
         <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.min.css" />
+        <!--       <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}uploadify/uploadify.css" />-->
     {% endaddtoblock %}
 
     {% addtoblock "js" %}
@@ -11,6 +12,17 @@
                 
         <!-- Funções específicas dessa página -->
         <script type="text/javascript" src="{% get_static_prefix %}scripts/organization/form.js"></script>
+        <script type="text/javascript" src="{% get_static_prefix %}uploadify/jquery.uploadify.js" /></script>
+        <script type="text/javascript">
+                $(function(){
+                        $("#file_upload").uploadify({
+                                height:30,
+                                swf: '{% get_static_prefix %}uploadify/uploadify.swf',
+                                uploader:'/ajax/upload',
+                                width: 120
+                        });
+                });
+        </script>
     {% endaddtoblock %}
 {% endblock %}
 
@@ -319,15 +331,9 @@
                     </div>                    
                 </fieldset> 
                 <!-- Fim Connections scope-->
-
+                                <input type='file' name='file_upload' id='file_upload' />
                 
                 <!-- Attachments-->
-                <fieldset class="info-cadastro anexos">
-                    <legend class="titulo-info">{% trans "Attachments"%}</legend>
-                    <p>
-                        Teste
-                    </p>       
-                </fieldset>             
                 <!--Fim  Attachments --> 
             </div>
             

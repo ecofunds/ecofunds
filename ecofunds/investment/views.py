@@ -16,7 +16,9 @@ from babel import numbers
 
 import colorsys
 import math
-import pylab
+from ecofunds.utils import ignore_pylab
+if not ignore_pylab():
+    import pylab
 import sys
 sys.setrecursionlimit(10000)
 
@@ -202,7 +204,7 @@ def trans_date(v):
         return v
     else:
         return ''
-    
+
 SymbolPath = MapConstantClass('SymbolPath',
                              ('CIRCLE',))
 
@@ -233,22 +235,22 @@ class InvestmentFlowSource(BaseDetailView):
         self.after_projects = []
 
     def before_flow(self, investment, childrens, level=1):
-        
+
         investment = self.dict2obj(investment)
         self.before_investments.append(investment.id)
         # Financiadores
         if investment.funding_entity:
             funding = ProjectData.item(investment.funding_entity)
-                
+
             investments = InvestmentData.list(recipient_entity_id=funding.entity_id).exclude(pk__in=self.before_investments, created_at__gt=investment.created_at).all().values('id', 'created_at', 'funding_entity', 'funding_organization').annotate(projects=Count('funding_entity'), organizations=Count('funding_organization'))
             #investments = funding.recipient_investments.all()
-            
+
             obj = {'id': 'p_%d_%d' % (level, funding.entity_id), 'name': funding.title, 'data': {'level': level, 'css': 'project', 'count': len(investments)}, 'children': [] }
             childrens.append(obj)
 
             self.before_projects.append(funding.entity_id)
             c = Counter(self.before_projects)
-            
+
             if len(investments) > 0 and c[funding.entity_id] < 2:
                 for inv in investments:
                     self.before_flow(inv, obj['children'], level+1)
@@ -264,7 +266,7 @@ class InvestmentFlowSource(BaseDetailView):
 
             self.before_orgs.append(funding.id)
             c = Counter(self.before_orgs)
-            
+
             if len(investments) > 0 and c[funding.id] < 2:
                 for inv in investments:
                     self.before_flow(inv, obj['children'], level+1)
@@ -276,7 +278,7 @@ class InvestmentFlowSource(BaseDetailView):
         # Financiadores
         if investment.recipient_entity_id:
             recipient = investment.funding_entity
-            
+
             investments = InvestmentData.list(funding_entity_id=recipient.entity_id).exclude(pk__in=self.after_investments, created_at__gt=investment.created_at).all()
             #investments = funding.funding_investments.all()
 
@@ -334,10 +336,10 @@ class InvestmentFlowSource(BaseDetailView):
                             obj = {'id': 'o'+str(funding.id), 'name': funding.name, 'data': {'level': 0, 'css': 'project'}, 'children': [] }
                     else:
                         obj = {'id': 'p'+str(funding.entity_id), 'name': funding.title, 'data': {'level': 0, 'css': 'project'}, 'children': [] }
-                    
+
 
                 elif investment.recipient_organization_id:
-                    recipient = investment.recipient_organization          
+                    recipient = investment.recipient_organization
                     result.update({'id': 'o'+str(recipient.id), 'name': recipient.name, 'data': {'level': 0, 'css': 'organization'}, 'children': [] })
 
                     funding = InvestmentData.list(funding_entity_id = recipient.entity_id)[:1]
@@ -360,7 +362,7 @@ class InvestmentFlowSource(BaseDetailView):
 
         return http.HttpResponse(dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
 
-        
+
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
@@ -397,7 +399,7 @@ class InvestmentMapSourceView(GoogleMapView, BaseDetailView):
         gmap = self.get_map(request, center, zoom, mapTypeId)
 
         sql_columns = """
-        a.location_id, 
+        a.location_id,
 			a.entity_id,
 			sum(c.amount_usd) sum_ammount,
 			d.polygon
@@ -409,7 +411,7 @@ class InvestmentMapSourceView(GoogleMapView, BaseDetailView):
 
         sql = "SELECT 	" + sql_columns + """
 FROM ecofunds_entity_locations a
-INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id) 
+INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id)
 INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
 INNER JOIN ecofunds_locations d ON d.id = a.location_id
 inner join ecofunds_countries cou on cou.id = d.country_id
@@ -433,7 +435,7 @@ WHERE b.validated = 1
             sql+=' and exists (select 1 from ecofunds_organization f where f.id in (c.recipient_organization_id, c.funding_organization_id) and f.type_id like %s) '
             query_params.append('%' + data['s_organization_type'] + '%')
 
-        
+
         if data.has_key('s_country') and data['s_country'] != '':
             sql+=" and cou.name like %s "
             query_params.append('%'+data['s_country'] + '%')
@@ -444,7 +446,7 @@ WHERE b.validated = 1
             query_params.append('%'+data['s_state']+'%')
 
 
-        
+
         if data.has_key('s_investment_type') and data['s_investment_type'] != '':
             sql+= " and c.type_id = %s "
             query_params.append(data['s_investment_type'])
@@ -462,7 +464,7 @@ WHERE b.validated = 1
             if dt_to:
                 sql+= " and c.created_at <= %s "
                 query_params.append(dt_to)
-            
+
 
         if view != 'concentration':
             sql+=" group by a.location_id, a.entity_id "
@@ -486,9 +488,9 @@ WHERE b.validated = 1
 
         cursor = db.connection.cursor()
         cursor.execute(sql, query_params)
-       
+
         #list = ProjectData.locationFilteredList(request)
-            
+
 
         if view == 'concentration':
             start, end = 0, 0
@@ -500,7 +502,7 @@ WHERE b.validated = 1
             return http.HttpResponse(dumps(json, cls=DjangoJSONEncoder), content_type='application/json')
 
         points = {}
-        
+
 
         for item in cursor.fetchall():
             location_id = item[0]
@@ -508,18 +510,18 @@ WHERE b.validated = 1
             amount = item[2]
             xml = BeautifulSoup(item[3])
 
-            key = 'pos'+str(location_id)            
+            key = 'pos'+str(location_id)
 
             if not points.has_key(key):
                 paths = []
-                
+
                 for polygon in xml.findAll('polygon'):
                     corners = []
                     latlngs = []
                     coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
-                    
+
                     for c in coordinates:
-                        
+
                         o = c.split(',')
                         cx = float(o[1])
                         cy = float(o[0])
@@ -529,7 +531,7 @@ WHERE b.validated = 1
                     x, y = self.polygon_centroid(corners)
                     paths.append(latlngs)
 
-                    
+
                 points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
             else:
                 b= False
@@ -563,14 +565,14 @@ WHERE b.validated = 1
                             'fillColor': '#FFFFFF',
                             'strokeOpacity': 1.0,
                             'strokeColor': '#00539f',
-                            'strokeWeight': 1, 
+                            'strokeWeight': 1,
                             'scale': scale
                         }
                     })
 
                     #t = loader.get_template('maps/info-bubble.html')
                     #c = Context({ 'org': org })
-                
+
                     info = InfoBubble({
                         'content': 'teste',#t.render(c),
                         'disableAutoPan': True,
@@ -588,7 +590,7 @@ WHERE b.validated = 1
                     info.open(gmap, marker)
 
             elif view == 'density':
-            
+
                 for key in points:
                     amount = points[key]['investment']
                     text = numbers.format_currency(
@@ -605,7 +607,7 @@ WHERE b.validated = 1
                             'path': SymbolPath.CIRCLE,
                             'fillOpacity': 0.8,
                             'fillColor': '#8eb737',
-                            'strokeWeight': 0, 
+                            'strokeWeight': 0,
                             'scale': scale
                         }
                     })
@@ -628,12 +630,15 @@ WHERE b.validated = 1
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
 
-                    tp = pylab.cm.RdYlGn(1 - scale)
-                    rgb = []
-                    for c in tp[:3]:
-                        rgb.append(c * 255)
+                    if not ignore_pylab():
+                        tp = pylab.cm.RdYlGn(1 - scale)
+                        rgb = []
+                        for c in tp[:3]:
+                            rgb.append(c * 255)
 
-                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
+                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
+                    else:
+                        h = "#000000"
 
                     polygon = maps.Polygon(opts = {
                         'map': gmap,
@@ -647,7 +652,7 @@ WHERE b.validated = 1
                     maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
 
 
-        
+
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 

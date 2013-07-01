@@ -1,8 +1,0 @@
-{% extends "base-cms.html" %}
-{% load cms_tags %}
-
-{% block base_content %}
-    {% for opportunity in items %}
-    <h2>{{ opportunity.title }}</h2>
-    {% endfor %}
-{% endblock %}

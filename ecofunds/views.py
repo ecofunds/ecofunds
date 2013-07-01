@@ -7,6 +7,7 @@ from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.views.generic.list import ListView
 from django.views.generic.detail import BaseDetailView
 from django.views.generic import CreateView,DeleteView
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from ecofunds.business import *
@@ -197,3 +198,19 @@ class JSONResponse(HttpResponse):
     def __init__(self,obj='',json_opts={},mimetype="application/json",*args,**kwargs):
         content = simplejson.dumps(obj,**json_opts)
         super(JSONResponse,self).__init__(content,mimetype,*args,**kwargs)
+
+
+@csrf_exempt
+def uploadify_upload(request):
+    if request.method == 'POST':
+        upload = request.FILES['Filedata']
+        try:
+            dest = open('../static/media/'+upload.name,"wb+")
+            for block in upload.chunks():
+                dest.write(block)
+            dest.close()
+        except IOError:
+            pass
+        response = HttpResponse()
+        response.write("%s\r\n"%upload.name)
+        return response
