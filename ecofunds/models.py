@@ -1,7 +1,6 @@
-
 import os
-
 from datetime import datetime, date
+
 from django.db import models
 from django.db.models import Max
 from django.conf import settings
@@ -17,27 +16,30 @@ def get_media_path(instance, filename):
     return os.path.join(model,
             str(today.year), str(today.month), str(today.day), filename)
 
+
 class Country(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=200)
 
     class Meta:
         db_table = u'ecofunds_countries'
+
     def __unicode__(self):
         return self.name
+
 
 class Attachment(models.Model):
     id = models.BigIntegerField(primary_key=True)
     path = models.FileField(_("File"), upload_to=get_media_path)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField()
-    #creater = models.ForeignKey(User, related_name='attachment_creaters')
-
 
     class Meta:
         db_table = u'ecofunds_attachments'
+
     def __unicode__(self):
         return self.name
+
     def save(self,*args,**kwargs):
         self.name = self.path.name
         super(Attachment,self).save(*args,**kwargs)
@@ -46,6 +48,7 @@ class Attachment(models.Model):
         self.path.delete(False)
         super(Attachment,self).delete(*args,**kwargs)
 
+
 class Activity(models.Model):
     activity_id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -53,8 +56,10 @@ class Activity(models.Model):
 
     class Meta:
         db_table = u'ecofunds_activities'
+
     def __unicode__(self):
         return self.name
+
 
 class Currency(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -63,47 +68,12 @@ class Currency(models.Model):
     decimalnumbers = models.BigIntegerField()
     htmlsymbol = models.CharField(max_length=150, blank=True)
     ordering = models.BigIntegerField(null=True, blank=True)
+
     class Meta:
         db_table = u'ecofunds_currency'
+
     def __unicode__(self):
         return self.name
-
-class CurrencyDefExchangeRate(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    currency = models.ForeignKey(Currency, null=True, blank=True)
-    grant_year = models.IntegerField()
-    rate = models.DecimalField(null=True, max_digits=20, decimal_places=9, blank=True)
-    region = models.CharField(max_length=765)
-    class Meta:
-        db_table = u'ecofunds_currency_def_exchange_rate'
-
-class CurrencyExchangeRate(models.Model):
-    currency_exchange_rate_id = models.BigIntegerField(primary_key=True)
-    currency_source = models.ForeignKey(Currency, null=True, blank=True, related_name='+')
-    currency_target = models.ForeignKey(Currency, null=True, blank=True, related_name='+')
-    grant_year = models.IntegerField()
-    rate = models.DecimalField(null=True, max_digits=20, decimal_places=9, blank=True)
-    region = models.CharField(max_length=765)
-    class Meta:
-        db_table = u'ecofunds_currency_exchange_rate'
-
-class Geopoint(models.Model):
-    geopoint_id = models.BigIntegerField(primary_key=True)
-
-    #location = models.PointField() #PointField() # This field type is a guess.
-
-    location_lat = models.DecimalField(blank=True, max_digits=18, decimal_places=16)
-    location_lng = models.DecimalField(blank=True, max_digits=18, decimal_places=16)
-
-    description = models.CharField(max_length=1524, blank=True)
-    class Meta:
-        db_table = u'ecofunds_geopoints'
-
-class GeographicFocus(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    country = models.CharField(max_length=150, blank=True)
-    class Meta:
-        db_table = u'ecofunds_geographic_focus'
 
 
 class OrganizationType(models.Model):
@@ -116,6 +86,7 @@ class OrganizationType(models.Model):
     class Meta:
         db_table = u'ecofunds_organization_type'
 
+
 class Organization(models.Model):
     name = models.CharField(_('Name'), max_length=765)
     acronym = models.CharField(_('Acronym'), max_length=60, blank=True,null=True)
@@ -125,7 +96,6 @@ class Organization(models.Model):
     contact_first_name = models.CharField(max_length=150, blank=True,null=True)
     contact_last_name = models.CharField(max_length=150, blank=True,null=True)
     contact_title = models.CharField(max_length=150, blank=True,null=True)
-
     country = models.ForeignKey(Country)
     toolkit = models.CharField(max_length=140,null=True,blank=True)
     political_divition_id = models.BigIntegerField(null=True, blank=True)
@@ -145,11 +115,8 @@ class Organization(models.Model):
     activities_other = models.CharField(max_length=765, blank=True,null=True)
     logo = models.CharField(max_length=765, blank=True,null=True)
     userprofiles = models.ManyToManyField('user.UserProfile',through='user.UserProfileOrganization',blank=True,null=True)
-    #desired_location = models.PointField(blank=True) # PointField(blank=True) # This field type is a guess.
-
     desired_location_lat = models.DecimalField(blank=True,null=True, max_digits=19, decimal_places=16)
     desired_location_lng = models.DecimalField(blank=True,null=True, max_digits=19, decimal_places=16)
-
     desired_location_text = models.CharField(max_length=765, blank=True,null=True)
     created_at = models.DateTimeField(_('Created at'), null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
@@ -160,7 +127,6 @@ class Organization(models.Model):
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
     website = models.CharField(max_length=150,blank=True,null=True)
     active = models.BooleanField(default=1)
-
     projects = models.ManyToManyField('Project', through='ProjectOrganization',
             related_name='projects_by_org',blank=True,null=True)
 
@@ -197,9 +163,7 @@ class OrganizationAttachment(models.Model):
 class Location(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=500)
-
     country = models.ForeignKey(Country, related_name='locations')
-
     iso_code = models.CharField(max_length=10)
     iso_cc = models.CharField(max_length=10)
     iso_sub = models.CharField(max_length=10)
@@ -209,19 +173,19 @@ class Location(models.Model):
     continent = models.CharField(max_length=50)
     shape_length = models.FloatField()
     polygon = models.TextField()
-
     projects = models.ManyToManyField('Project', through='ProjectLocation')
 
     class Meta:
         db_table = u'ecofunds_locations'
+
     def __unicode__(self):
         if self.country:
             return unicode(self.country)+'/'+unicode(self.name)
         else:
             return self.name
 
-class Project(models.Model):
 
+class Project(models.Model):
     entity_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255,unique=True)
     acronym = models.CharField(_('Acronym'), max_length=60, blank=True)
@@ -236,9 +200,7 @@ class Project(models.Model):
     updater = models.ForeignKey(User, null=True, blank=True, related_name='+')
     validated = models.IntegerField(null=True, blank=True)
     is_project = models.IntegerField(null=True, blank=True)
-
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
-
     currency = models.ForeignKey(Currency, null=True, blank=True)
     budget = models.DecimalField(_('Budget'), null=False, max_digits=20, decimal_places=2, blank=False)
     organization = models.ManyToManyField(Organization,through=Organization.projects.through,related_name='organizations_set')
@@ -269,7 +231,6 @@ class Project(models.Model):
         return investments[0] if investments.count() > 0 else None
 
     def get_firstlocation(self):
-
         return self.projects_locations.all()[:1].get() if self.projects_locations.count() > 0 else None
 
     def __unicode__(self):
@@ -280,17 +241,21 @@ class Project(models.Model):
 
     class Meta:
         db_table = u'ecofunds_entities'
+
     def save(self,*args,**kwargs):
         if self.grant_from:
             self.grant_year = self.grant_from.year
         self.created_at = datetime.now()
         super(Project,self).save(*args,**kwargs)
 
+
 class ProjectXProject(models.Model):
     parent_project = models.ForeignKey('Project',related_name='children_projects')
     child_project = models.ForeignKey('Project',related_name='father_projects')
+
     class Meta:
         unique_together=('parent_project','child_project')
+
 
 class ProjectAttachment(models.Model):
     entity = models.ForeignKey(Project, primary_key=True, related_name='attachments')
@@ -300,41 +265,34 @@ class ProjectAttachment(models.Model):
         db_table = u'ecofunds_entity_attachments'
         unique_together=('entity','attachment')
 
+
 class ProjectLocation(models.Model):
     entity = models.ForeignKey(Project, primary_key=True, related_name='projects_locations')
     location = models.ForeignKey(Location, primary_key=True)
+
     class Meta:
         db_table = u'ecofunds_entity_locations'
         unique_together=('entity','location')
 
+
 class ProjectActivity(models.Model):
     entity = models.ForeignKey(Project, primary_key=True, related_name='projects_activities')
     activity = models.ForeignKey(Activity)
+
     class Meta:
         db_table = u'ecofunds_entity_activities'
         unique_together=('entity','activity')
 
-class ProjectGeographicfocus(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True)
-    geographic_focus = models.ForeignKey(GeographicFocus)
-    class Meta:
-        db_table = u'ecofunds_entity_geographicfocus'
-        unique_together=('entity','geographic_focus')
-
-class ProjectGeopoint(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True)
-    geopoint = models.ForeignKey(Geopoint)
-    class Meta:
-        db_table = u'ecofunds_entity_geopoints'
-        unique_together = ('entity','geopoint')
 
 class ProjectOrganization(models.Model):
     entity = models.ForeignKey(Project, related_name='organizations')
     organization = models.ForeignKey(Organization, related_name='projects_organizations')
     main = models.BooleanField()
+
     class Meta:
         db_table = u'ecofunds_entity_organizations'
         unique_together=('entity','organization')
+
 
 class InvestmentType(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -346,13 +304,13 @@ class InvestmentType(models.Model):
     class Meta:
         db_table = u'ecofunds_investment_types'
 
+
 class Investment(models.Model):
     id = models.AutoField(primary_key=True)
     recipient_entity = models.ForeignKey(Project,null=True,blank=True,related_name='recipient_investments')
     funding_entity = models.ForeignKey(Project,null=True,blank=True,related_name='funding_investments')
     recipient_organization = models.ForeignKey(Organization, related_name='recipient_investments')
     funding_organization = models.ForeignKey(Organization, blank=True,null=True ,related_name='funding_investments')
-
     currency = models.ForeignKey(Currency, null=True, blank=True)
     amount = models.DecimalField(_('Amount'), null=True, max_digits=20, decimal_places=2, blank=True)
     amount_usd = models.DecimalField(_('Amount (USD)'), null=True, max_digits=20, decimal_places=2, blank=True)
@@ -365,6 +323,7 @@ class Investment(models.Model):
     code = models.CharField(max_length=20)
     active = models.BooleanField(default=1)
     investment_flow = models.ManyToManyField('Investment',null=True,blank=True,through='InvestmentFlow')
+
     class Meta:
         db_table = u'ecofunds_investments'
         verbose_name = _('Investment')
@@ -373,6 +332,7 @@ class Investment(models.Model):
 
     def __radd__(self, other):
         return other + self.amount_usd
+
     def save(self,*args,**kwargs):
         if not self.code:
             start = self.funding_organization.name[:3].upper()
@@ -381,8 +341,10 @@ class Investment(models.Model):
             dat=datetime.now().strftime("%Y-%m-%d")
             self.code="%s-%s-%s-%s"%(dat,t,start,end)
         super(Investment,self).save(*args,**kwargs)
+
     def __unicode__(self):
         return self.code
+
 
 class InvestmentAttachment(models.Model):
     investment = models.ForeignKey(Investment, primary_key=True, related_name='attachments')
@@ -391,12 +353,6 @@ class InvestmentAttachment(models.Model):
     class Meta:
         db_table = u'ecofunds_investment_attachments'
         unique_together = ('investment','attachment')
-
-class UicnCatalog(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=765)
-    class Meta:
-        db_table = u'ecofunds_uicn_catalog'
 
 
 class ListImagePlugin(CMSPlugin):
@@ -417,6 +373,7 @@ class ListImagePlugin(CMSPlugin):
 
         return str
 
+
 class Image(models.Model):
     """
     A Picture with or without a link
@@ -428,23 +385,17 @@ class Image(models.Model):
                      (LEFT, _("left")),
                      (RIGHT, _("right")),
                      )
-
-
     image = models.ImageField(_("image"), upload_to=get_media_path,null=True,blank=True)
     url = models.CharField(_("link"), max_length=255, blank=True, null=True, help_text=_("if present image will be clickable"))
     page_link = models.ForeignKey(Page, verbose_name=_("page"), null=True, blank=True, help_text=_("if present image will be clickable"))
     alt = models.CharField(_("alternate text"), max_length=255, blank=True, null=True, help_text=_("textual description of the image"))
     longdesc = models.CharField(_("long description"), max_length=255, blank=True, null=True, help_text=_("additional description of the image"))
     float = models.CharField(_("side"), max_length=10, blank=True, null=True, choices=FLOAT_CHOICES)
-
     position = models.PositiveSmallIntegerField(_("position"), blank=True, null=True)
-
     plugin = models.ForeignKey(ListImagePlugin, null=False, blank=False, related_name='images')
 
     class Meta:
         db_table = u'ecofunds_images'
-
-
 
     def __unicode__(self):
         if self.alt:
@@ -457,11 +408,13 @@ class Image(models.Model):
                 pass
         return "<empty>"
 
+
 class NotificationType(models.Model):
     id = models.BigIntegerField(primary_key=True)
     description = models.CharField(max_length=150,blank=True,null=True,unique=True)
     def __unicode__(self):
         return self.description
+
 
 class Notification(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -475,30 +428,40 @@ class Notification(models.Model):
     user_updated = models.ForeignKey(User,blank=True,null=True,related_name='update_notes')
     inserted_date = models.DateTimeField(auto_now=True)
     message = models.TextField(blank=True)
+
     def __unicode__(self):
         return self.message
+
     class Meta:
         db_table = u'ecofunds_notifications'
+
 
 class InvestmentFlow(models.Model):
     father = models.ForeignKey(Investment,related_name='supported_investments')
     child = models.ForeignKey(Investment,related_name='children_investments')
+
     class Meta:
         unique_together = ('father','child')
+
 
 class NotificationReader(models.Model):
     reader = models.ForeignKey(User,primary_key=True,related_name='users_notification')
     notification = models.ForeignKey(Notification,related_name='project_notification')
     readed_date = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         unique_together=('reader','notification')
 
+
 class AttachmentType(models.Model):
     name = models.CharField(unique=True,max_length=80)
+
     def __unicode__(self):
         return self.name
 
+
 class AttachmentPlugin(CMSPlugin):
     model = models.ForeignKey(AttachmentType)
+
     def __unicode__(self):
         return u'attachment %s'%self.model
