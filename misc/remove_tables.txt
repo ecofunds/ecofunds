@@ -1,0 +1,66 @@
+'''
+drop table ecofunds_uicn_catalog;
+drop table ecofunds_currency_exchange_rate;
+drop table ecofunds_currency_def_exchange_rate;
+drop table ecofunds_geopoints;
+drop table ecofunds_entity_geopoints;
+drop table ecofunds_entity_geographicfocus;
+drop table ecofunds_geographic_focus;
+'''
+
+class Geopoint(models.Model):
+    geopoint_id = models.BigIntegerField(primary_key=True)
+
+    #location = models.PointField() #PointField() # This field type is a guess.
+
+    location_lat = models.DecimalField(blank=True, max_digits=18, decimal_places=16)
+    location_lng = models.DecimalField(blank=True, max_digits=18, decimal_places=16)
+
+    description = models.CharField(max_length=1524, blank=True)
+    class Meta:
+        db_table = u'ecofunds_geopoints'
+
+class ProjectGeopoint(models.Model):
+    entity = models.ForeignKey(Project, primary_key=True)
+    geopoint = models.ForeignKey(Geopoint)
+    class Meta:
+        db_table = u'ecofunds_entity_geopoints'
+        unique_together = ('entity','geopoint')
+
+class ProjectGeographicfocus(models.Model):
+    entity = models.ForeignKey(Project, primary_key=True)
+    geographic_focus = models.ForeignKey(GeographicFocus)
+    class Meta:
+        db_table = u'ecofunds_entity_geographicfocus'
+        unique_together=('entity','geographic_focus')
+
+class GeographicFocus(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    country = models.CharField(max_length=150, blank=True)
+    class Meta:
+        db_table = u'ecofunds_geographic_focus'
+
+class CurrencyDefExchangeRate(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    currency = models.ForeignKey(Currency, null=True, blank=True)
+    grant_year = models.IntegerField()
+    rate = models.DecimalField(null=True, max_digits=20, decimal_places=9, blank=True)
+    region = models.CharField(max_length=765)
+    class Meta:
+        db_table = u'ecofunds_currency_def_exchange_rate'
+
+class CurrencyExchangeRate(models.Model):
+    currency_exchange_rate_id = models.BigIntegerField(primary_key=True)
+    currency_source = models.ForeignKey(Currency, null=True, blank=True, related_name='+')
+    currency_target = models.ForeignKey(Currency, null=True, blank=True, related_name='+')
+    grant_year = models.IntegerField()
+    rate = models.DecimalField(null=True, max_digits=20, decimal_places=9, blank=True)
+    region = models.CharField(max_length=765)
+    class Meta:
+        db_table = u'ecofunds_currency_exchange_rate'
+
+class UicnCatalog(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=765)
+    class Meta:
+        db_table = u'ecofunds_uicn_catalog'

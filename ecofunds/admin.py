@@ -22,6 +22,8 @@ class OrganizationAdmin(admin.ModelAdmin):
         js = (settings.STATIC_URL+'tiny_mce/tiny_mce.js', settings.STATIC_URL+'tiny_mce/textareas.js')
 
 class LocationAdmin(admin.ModelAdmin):
+    list_filter = ['country']
+
     class Media:
         js = (settings.STATIC_URL+'tiny_mce/tiny_mce.js', settings.STATIC_URL+'tiny_mce/textareas.js')
 
@@ -31,7 +33,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ['created_at']
     search_fields = ['title']
     fields = ['title', 'resume', 'description', 'image']
-    
+
     class Media:
         js = (settings.STATIC_URL+'tiny_mce/tiny_mce.js', settings.STATIC_URL+'tiny_mce/textareas.js')
 
