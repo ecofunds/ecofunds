@@ -1,0 +1,31 @@
+server {
+  # This server block handles the removal of www
+  # found at http://forum.nginx.org/read.php?2,171023 specific for Nginx 0.7.65
+  listen 80;
+  server_name www.ecofundsdatabase.org;
+  rewrite ^ $scheme://ecofundsdatabase.org$request_uri? permanent;
+}
+
+server {
+    listen 80;
+    charset utf-8;
+    server_name ecofundsdatabase.org, stage.ecofundsdatabase.org;
+    client_max_body_size 50M;
+
+    root /home/ecofunds/stage.ecofunds/releases/current;
+
+    location /static {
+        # if asset versioning is used
+        if ($query_string) {
+            expires max;
+        }
+
+        root /home/ecofunds/stage.ecofunds/releases/current/;
+    }
+
+    location / {
+        uwsgi_pass unix:/home/ecofunds/stage.ecofunds/ecofunds.sock;
+        include uwsgi_params;
+        include /etc/nginx/bots.conf;
+    }
+}
