@@ -1,4 +1,7 @@
-import os
+# coding: utf-8
+from decouple import Config
+from dj_database_url import db_url
+
 gettext = lambda s: s
 
 import matplotlib
@@ -8,7 +11,12 @@ from unipath import Path
 
 PROJECT_ROOT = Path(__file__).parent
 
-GOOGLE_KEY = 'AIzaSyAZpfiGAvTO1zpd-eWWZcbkHm40BrFp0tI'
+config = Config(PROJECT_ROOT.child('settings.ini'))
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+TEMPLATE_DEBUG = DEBUG
+
+GOOGLE_KEY = config('GOOGLE_KEY')
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
 
 DEBUG = True
@@ -21,24 +29,17 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ecofunds',                   # Or path to database file if using sqlite3.
-        'USER': 'root',                   # Not used with sqlite3.
-        'PASSWORD': '',               # Not used with sqlite3.
-        'HOST': '',                # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                           # Set to empty string for default. Not used with sqlite3.
-    }
+    'default': config('DATABASE_URL', cast=db_url)
 }
 
 # Email Configuration
 
-VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"
-EMAIL_HOST = ""
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
-EMAIL_USE_TLS = True
+VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"  # FIXME: ?
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -105,9 +106,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-# FIXME: remove before stage deploy
-SECRET_KEY = '^28avlv8e$sky_08pu926q^+b5&4&5&+ob7ma%v(tn$bg#=&k4'
+SECRET_KEY = config('SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

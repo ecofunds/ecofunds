@@ -18,3 +18,5 @@ django-mptt==0.5.2
 django-cms==2.3.3
 PIL==1.1.7
 BeautifulSoup==3.2.1
+django-decouple==1.1
+dj-database-url==0.2.1
