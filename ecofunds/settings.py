@@ -61,15 +61,15 @@ LANGUAGES = [
 ]
 
 LANGUAGES_DATEFORMAT = {
-    'pt-br':'dd/mm/yy',
-    'en':'mm/dd/yy',
-    'es':'dd/mm/yy',
+    'pt-br': 'dd/mm/yy',
+    'en': 'mm/dd/yy',
+    'es': 'dd/mm/yy',
 }
 
 LANGUAGES_NUMBERFORMAT = {
-    'pt-br':'decimal',
-    'en':'decimal-us',
-    'es':'decimal',
+    'pt-br': 'decimal',
+    'en': 'decimal-us',
+    'es': 'decimal',
 }
 
 DEFAULT_LANGUAGE = 0
@@ -112,7 +112,7 @@ SECRET_KEY = config('SECRET_KEY')
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -183,7 +183,7 @@ INSTALLED_APPS = (
 )
 
 CMS_MEDIA_ROOT = PROJECT_ROOT.child('static', 'cms')
-CMS_MEDIA_URL= '/static/cms'
+CMS_MEDIA_URL = '/static/cms'
 
 CMS_TEMPLATES = (
     ('home-template.html', gettext('Home Template')),
@@ -194,9 +194,9 @@ CMS_TEMPLATES = (
 )
 
 CMS_LANGUAGE_CONF = {
-    'pt-br':['en'],
-    'en':['pt-br'],
-    'es':['en'],
+    'pt-br': ['en'],
+    'en': ['pt-br'],
+    'es': ['en'],
 }
 
 CMS_LANGUAGES = (
@@ -205,7 +205,7 @@ CMS_LANGUAGES = (
     ('es', gettext('Espanol')),
 )
 CMS_SITE_LANGUAGES = {
-    1:['pt-br','en', 'es'],
+    1: ['pt-br', 'en', 'es'],
 }
 CMS_FRONTEND_LANGUAGES = ('pt-br', 'en', 'es')
 
@@ -215,7 +215,8 @@ CMS_APPLICATIONS_URLS = (
 )
 CMS_NAVIGATION_EXTENDERS = (
     #('cmsplugin_news.navigation.get_nodes','News navigation'),
-    ('ecofunds.opportunity.navigation.get_nodes','Funding Oportunity Navigation'),
+    ('ecofunds.opportunity.navigation.get_nodes',
+     'Funding Oportunity Navigation'),
 )
 
 URLS_WITHOUT_LANGUAGE_REDIRECT = [
@@ -259,13 +260,13 @@ LOGGING = {
 }
 
 AJAX_LOOKUP_CHANNELS = {
-    'organization':('ecofunds.lookups','OrganizationLookUp'),
-    'location':('ecofunds.lookups','LocationLookUp'),
-    'activity':('ecofunds.lookups','ActivityLookUp'),
-    'userprofile':('ecofunds.lookups','UserProfileLookUp'),
-    'project':('ecofunds.lookups','ProjectLookUp'),
-    'country':('ecofunds.lookups','CountryLookUp'),
-    'investment':('ecofunds.lookups','InvestmentLookUp'),
+    'organization': ('ecofunds.lookups', 'OrganizationLookUp'),
+    'location': ('ecofunds.lookups', 'LocationLookUp'),
+    'activity': ('ecofunds.lookups', 'ActivityLookUp'),
+    'userprofile': ('ecofunds.lookups', 'UserProfileLookUp'),
+    'project': ('ecofunds.lookups', 'ProjectLookUp'),
+    'country': ('ecofunds.lookups', 'CountryLookUp'),
+    'investment': ('ecofunds.lookups', 'InvestmentLookUp'),
 }
 
 AJAX_SELECT_BOOTSTRAP = False
