@@ -6,7 +6,7 @@ matplotlib.use('Agg')
 
 from unipath import Path
 
-PROJECT_PATH = Path(__file__).parent
+PROJECT_ROOT = Path(__file__).parent
 
 GOOGLE_KEY = 'AIzaSyAZpfiGAvTO1zpd-eWWZcbkHm40BrFp0tI'
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
@@ -82,19 +82,19 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = PROJECT_PATH.child('static').child('media')
+MEDIA_ROOT = PROJECT_ROOT.child('static', 'media')
 MEDIA_URL = '/static/media/'
 
-STATIC_ROOT = PROJECT_PATH.child('assets')
+STATIC_ROOT = PROJECT_ROOT.child('assets')
 STATIC_URL = '/static/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-GEOIP_DATABASE = PROJECT_PATH.child('geoip').child('GeoLiteCity.dat')
+GEOIP_DATABASE = PROJECT_ROOT.child('geoip', 'GeoLiteCity.dat')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_PATH.parent.child('static'),
+    PROJECT_ROOT.parent.child('static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -145,7 +145,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'ecofunds.urls'
 
 TEMPLATE_DIRS = (
-    PROJECT_PATH.child('templates'),
+    PROJECT_ROOT.child('templates'),
 )
 
 INSTALLED_APPS = (
@@ -183,7 +183,7 @@ INSTALLED_APPS = (
     'ecofunds.investment',
 )
 
-CMS_MEDIA_ROOT = PROJECT_PATH.child('static').child('cms')
+CMS_MEDIA_ROOT = PROJECT_ROOT.child('static', 'cms')
 CMS_MEDIA_URL= '/static/cms'
 
 CMS_TEMPLATES = (
