@@ -1,7 +1,7 @@
 from django import http
 from django.core.cache import cache
 from django.core.context_processors import csrf
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
 from django.db import models
 from django.db.models import Count
 from django.utils.functional import curry
@@ -322,24 +322,39 @@ WHERE b.validated = 1
             if not points.has_key(key):
                 paths = []
 
-                for polygon in xml.findAll('polygon'):
-                    corners = []
-                    latlngs = []
-                    coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                if not cache.get(location_id):
+                    for polygon in xml.findAll('polygon'):
+                        corners = []
+                        latlngs = []
+                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
 
-                    for c in coordinates:
+                        for c in coordinates:
 
-                        o = c.split(',')
-                        cx = float(o[1])
-                        cy = float(o[0])
-                        corners.append((cx, cy))
-                        latlngs.append(maps.LatLng(cx, cy))
+                            o = c.split(',')
+                            cx = float(o[1])
+                            cy = float(o[0])
+                            corners.append((cx, cy))
+                            latlngs.append(maps.LatLng(cx, cy))
 
-                    x, y = self.polygon_centroid(corners)
-                    paths.append(latlngs)
+                        x, y = self.polygon_centroid(corners)
+                        paths.append(latlngs)
 
+                    data = {'centroid': maps.LatLng(x, y),
+                            'paths': paths,
+                            'investment': 0,
+                            'projects': [{
+                                'id': entity_id,
+                                'amount': amount
+                                }]
+                            }
+                    cached_data = dumps(data, cls=DjangoJSONEncoder)
+                    cache.set(location_id, cached_data)
+                else:
+                    print("CACHED")
+                    data = loads(cache.get(location_id))
 
-                points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                points[key] = data
+
             else:
                 b = False
                 for p in points[key]['projects']:
