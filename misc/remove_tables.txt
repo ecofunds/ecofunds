@@ -1,11 +1,50 @@
+
+'''
+drop table wp_commentmeta;
+drop table wp_comments;
+drop table wp_easymail_recipients;
+drop table wp_easymail_stats;
+drop table wp_easymail_subscribers;
+drop table wp_easymail_unsubscribed;
+drop table wp_email;
+drop table wp_links;
+drop table wp_options;
+drop table wp_post_notification_cats;
+drop table wp_post_notification_emails;
+drop table wp_post_notification_posts;
+drop table wp_postmeta;
+drop table wp_posts;
+drop table wp_term_relationships;
+drop table wp_term_taxonomy;
+drop table wp_terms;
+drop table wp_tn3_documents;
+drop table wp_tn3_relations;
+drop table wp_usermeta;
+drop table wp_users;
+drop table wp_wysija_campaign;
+drop table wp_wysija_campaign_list;
+drop table wp_wysija_email;
+drop table wp_wysija_email_user_stat;
+drop table wp_wysija_email_user_url;
+drop table wp_wysija_list;
+drop table wp_wysija_queue;
+drop table wp_wysija_url;
+drop table wp_wysija_url_mail;
+drop table wp_wysija_user;
+drop table wp_wysija_user_field;
+drop table wp_wysija_user_history;
+drop table wp_wysija_user_list;
+drop table z_locatizacoes;
+'''
+
 '''
 drop table ecofunds_uicn_catalog;
 drop table ecofunds_currency_exchange_rate;
 drop table ecofunds_currency_def_exchange_rate;
-drop table ecofunds_geopoints;
 drop table ecofunds_entity_geopoints;
 drop table ecofunds_entity_geographicfocus;
 drop table ecofunds_geographic_focus;
+drop table ecofunds_geopoints;
 '''
 
 class Geopoint(models.Model):

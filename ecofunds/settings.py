@@ -1,8 +1,3 @@
-# Django settings for funbio project.
-#sys.path.insert(0, '/path_to_app/app/')
-
-
-
 import os
 gettext = lambda s: s
 
@@ -11,13 +6,6 @@ matplotlib.use('Agg')
 
 from unipath import Path
 
-LANGUAGES_NUMBERFORMAT = {
-    'pt-br':'decimal',
-    'en':'decimal-us',
-    'es':'decimal',
-}
-
-STATIC_PREFIX_URL = '/'
 PROJECT_PATH = Path(__file__).parent
 
 GOOGLE_KEY = 'AIzaSyAZpfiGAvTO1zpd-eWWZcbkHm40BrFp0tI'
@@ -43,23 +31,14 @@ DATABASES = {
     }
 }
 
-VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "ecofunds@qx3.com.br"
-EMAIL_HOST_PASSWORD = "ecofundsqx3"
-EMAIL_USE_TLS = True
+# Email Configuration
 
-"""DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ecofunds',                   # Or path to database file if using sqlite3.
-        'USER': 'root',                   # Not used with sqlite3.
-        'PASSWORD': '1234',               # Not used with sqlite3.
-        'HOST': '127.0.0.1',                # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                           # Set to empty string for default. Not used with sqlite3.
-    }
-}"""
+VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"
+EMAIL_HOST = ""
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = True
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -73,21 +52,25 @@ TIME_ZONE = 'America/Chicago'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'pt-br'
+
 LANGUAGES = [
     ('pt-br', 'Brazilian Portuguese'),
     ('en', 'English'),
     ('es', 'Espanol')
 ]
+
 LANGUAGES_DATEFORMAT = {
     'pt-br':'dd/mm/yy',
     'en':'mm/dd/yy',
     'es':'dd/mm/yy',
 }
+
 LANGUAGES_NUMBERFORMAT = {
     'pt-br':'decimal',
     'en':'decimal-us',
     'es':'decimal',
 }
+
 DEFAULT_LANGUAGE = 0
 SITE_ID = 1
 
@@ -100,19 +83,18 @@ USE_I18N = True
 USE_L10N = True
 
 MEDIA_ROOT = PROJECT_PATH.child('static').child('media')
-MEDIA_URL = STATIC_PREFIX_URL + 'static/media/'
+MEDIA_URL = '/static/media/'
 
-#STATIC_ROOT = PROJECT_PATH.child('static')
-STATIC_URL = STATIC_PREFIX_URL + 'static/'
+STATIC_ROOT = PROJECT_PATH.child('assets')
+STATIC_URL = '/static/'
 
-ADMIN_MEDIA_PREFIX = STATIC_PREFIX_URL + 'static/admin/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 GEOIP_DATABASE = PROJECT_PATH.child('geoip').child('GeoLiteCity.dat')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
     PROJECT_PATH.parent.child('static'),
-    #os.path.join(os.path.dirname(PROJECT_PATH), "static")
 )
 
 # List of finder classes that know how to find static files in
@@ -124,6 +106,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
+# FIXME: remove before stage deploy
 SECRET_KEY = '^28avlv8e$sky_08pu926q^+b5&4&5&+ob7ma%v(tn$bg#=&k4'
 
 # List of callables that know how to import templates from various sources.
@@ -165,7 +148,6 @@ TEMPLATE_DIRS = (
     PROJECT_PATH.child('templates'),
 )
 
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -174,15 +156,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    # 'django.contrib.admindocs',
-
     'cms',
     'cms.plugins.picture',
     'cms.plugins.text',
     'cms.plugins.link',
     'cms.plugins.file',
     #'cmsplugin_news',
-
     'mptt',
     'menus',
     'south',
@@ -195,7 +174,6 @@ INSTALLED_APPS = (
     'ajax_select',
     'rosetta',
     #'endless_pagination',
-
     'ecofunds',
     'ecofunds.user',
     'ecofunds.maps',
@@ -206,13 +184,14 @@ INSTALLED_APPS = (
 )
 
 CMS_MEDIA_ROOT = PROJECT_PATH.child('static').child('cms')
-CMS_MEDIA_URL= STATIC_PREFIX_URL + 'static/cms'
+CMS_MEDIA_URL= '/static/cms'
 
 CMS_TEMPLATES = (
     ('home-template.html', gettext('Home Template')),
     ('main-template.html', gettext('Main Template')),
     ('institutional-template.html', gettext('Institutional Template')),
-    ('default-template.html', gettext('Default Template'))
+    ('default-template.html', gettext('Default Template')),
+    ('form-template.html', gettext('Form Template'))
 )
 
 CMS_LANGUAGE_CONF = {
@@ -281,14 +260,15 @@ LOGGING = {
 }
 
 AJAX_LOOKUP_CHANNELS = {
-        'organization':('ecofunds.lookups','OrganizationLookUp'),
-        'location':('ecofunds.lookups','LocationLookUp'),
-        'activity':('ecofunds.lookups','ActivityLookUp'),
-        'userprofile':('ecofunds.lookups','UserProfileLookUp'),
-        'project':('ecofunds.lookups','ProjectLookUp'),
-	'country':('ecofunds.lookups','CountryLookUp'),
-	'investment':('ecofunds.lookups','InvestmentLookUp'),
-        }
+    'organization':('ecofunds.lookups','OrganizationLookUp'),
+    'location':('ecofunds.lookups','LocationLookUp'),
+    'activity':('ecofunds.lookups','ActivityLookUp'),
+    'userprofile':('ecofunds.lookups','UserProfileLookUp'),
+    'project':('ecofunds.lookups','ProjectLookUp'),
+    'country':('ecofunds.lookups','CountryLookUp'),
+    'investment':('ecofunds.lookups','InvestmentLookUp'),
+}
+
 AJAX_SELECT_BOOTSTRAP = False
 AJAX_SELECT_INLINES = 'inline'
 
