@@ -271,3 +271,11 @@ AJAX_LOOKUP_CHANNELS = {
 
 AJAX_SELECT_BOOTSTRAP = False
 AJAX_SELECT_INLINES = 'inline'
+
+CACHE = {
+    'default': {
+        'BACKEND': 'django.core.cache.backend.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 3000
+    }
+}

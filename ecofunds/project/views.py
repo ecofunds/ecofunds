@@ -1,7 +1,9 @@
+import time
+
 from django import http
 from django.core.cache import cache
 from django.core.context_processors import csrf
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
 from django.db import models
 from django.db.models import Count
 from django.utils.functional import curry
@@ -196,7 +198,6 @@ class ProjectChartSourceView(BaseDetailView):
 
 class ProjectMapSourceView(GoogleMapView, BaseDetailView):
     def get(self, request, *args, **kwargs):
-        db.reset_queries()
         if request.method == "POST":
             data = request.POST
         else:
@@ -294,8 +295,11 @@ WHERE b.validated = 1
         if view != 'concentration':
             sql+=" group by a.location_id "
 
+        t1 = time.time()
         cursor = db.connection.cursor()
         cursor.execute(sql, query_params)
+        t2 = time.time() - t1
+        print("Exec query %s" % (t2))
 
         #list = ProjectData.locationFilteredList(request)
         points = {}
@@ -315,31 +319,53 @@ WHERE b.validated = 1
             location_id = item[0]
             entity_id = item[1]
             amount = item[2]
-            xml = BeautifulSoup(item[3])
 
-            key = 'pos'+str(location_id)
+            xml_key = "xml-%s" % location_id
+            location_key = "location-%s" % location_id
+            key = location_key
 
+            t1 = time.time()
+            if not cache.get(xml_key):
+                xml = BeautifulSoup(item[3])
+                cache.set(xml_key, xml)
+            else:
+                xml = cache.get(xml_key)
+            t2 = time.time() - t1
+            print("Init BeautifulSoup %s" % (t2))
+
+            t1 = time.time()
             if not points.has_key(key):
-                paths = []
+                if not cache.get(location_key):
+                    paths = []
+                    for polygon in xml.findAll('polygon'):
+                        latlngs = []
+                        corners = []
+                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
 
-                for polygon in xml.findAll('polygon'):
-                    corners = []
-                    latlngs = []
-                    coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                        for c in coordinates:
 
-                    for c in coordinates:
+                            o = c.split(',')
+                            cx = float(o[1])
+                            cy = float(o[0])
+                            latlngs.append(maps.LatLng(cx, cy))
+                            corners.append((cx, cy))
 
-                        o = c.split(',')
-                        cx = float(o[1])
-                        cy = float(o[0])
-                        corners.append((cx, cy))
-                        latlngs.append(maps.LatLng(cx, cy))
+                        x, y = self.polygon_centroid(corners)
+                        paths.append(latlngs)
 
-                    x, y = self.polygon_centroid(corners)
-                    paths.append(latlngs)
+                    data = {'centroid': maps.LatLng(x, y),
+                            'paths': paths,
+                            'investment': 0,
+                            'projects': [{
+                                'id': entity_id,
+                                'amount': amount
+                                }]
+                            }
 
-
-                points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    points[key] = data
+                    cache.set(location_key, dumps(data))
+                else:
+                    points[key] = loads(cache.get(location_key))
             else:
                 b = False
                 for p in points[key]['projects']:
@@ -347,6 +373,9 @@ WHERE b.validated = 1
                         b = True
                 if not b:
                     points[key]['projects'].append({'id': entity_id, 'amount': amount})
+
+            t2 = time.time() - t1
+            print("Ploygon Processing %s" % (t2))
 
         for key in points:
             for o in points[key]['projects']:
@@ -429,7 +458,7 @@ WHERE b.validated = 1
                     })
 
             elif view == 'heat':
-
+                t1 = time.time()
                 fill_colors = ['#28B9D4', '#7CC22C', '#ECCE0A', '#ED8A09', '#ED0B0C']
                 for key in points:
                     amount = points[key]['investment']
@@ -460,6 +489,8 @@ WHERE b.validated = 1
                     maps.event.addListener(polygon, 'mouseover', 'ecofundsMap.polygonOver')
                     maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
 
+                t2 = time.time() - t1
+                print("Heat Color Processing %s" % (t2))
 
 
 
