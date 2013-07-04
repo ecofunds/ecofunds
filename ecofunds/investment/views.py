@@ -1,29 +1,27 @@
+import math
+import sys
+from collections import Counter
+
+from django import db
 from django import http
 from django.core.cache import cache
 from django.db.models import Count
 from django.utils.simplejson import dumps
 from django.views.generic.detail import BaseDetailView
+
 from ecofunds.business import ProjectData, OrganizationData, InvestmentData
 from ecofunds.views import DjangoJSONEncoder
-from collections import Counter
-from django import db
 from ecofunds.maps.models import GoogleMapView
 from ecofunds.models import Investment
+from ecofunds.colors_RdYlGn import scale as color_scale
+
+from gmapi.maps import MapConstantClass, MapClass, Args
 from BeautifulSoup import BeautifulSoup
 from gmapi import maps
 from babel import numbers
 
 
-import colorsys
-import math
-from ecofunds.utils import ignore_pylab
-if not ignore_pylab():
-    import pylab
-import sys
 sys.setrecursionlimit(10000)
-
-from gmapi.maps import MapConstantClass, MapClass, Args
-
 SymbolPath = MapConstantClass('SymbolPath', ('CIRCLE',))
 
 def format_currency(value):
@@ -629,16 +627,8 @@ WHERE b.validated = 1
                     else:
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
-
-                    if not ignore_pylab():
-                        tp = pylab.cm.RdYlGn(1 - scale)
-                        rgb = []
-                        for c in tp[:3]:
-                            rgb.append(c * 255)
-
-                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
-                    else:
-                        h = "#000000"
+                    rgb = color_scale[int(round(scale * 100))]
+                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
 
                     polygon = maps.Polygon(opts = {
                         'map': gmap,

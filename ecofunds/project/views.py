@@ -1,5 +1,7 @@
+import math
 import time
 
+from django import db
 from django import http
 from django.core.cache import cache
 from django.core.context_processors import csrf
@@ -16,22 +18,15 @@ from ecofunds.business import *
 from ecofunds.maps import *
 from ecofunds.maps.models import GoogleMapView
 from ecofunds.models import Project
+from ecofunds.colors_RdYlGn import scale as color_scale
+
+import xlwt
 
 from gmapi import maps
 from babel import numbers
 from BeautifulSoup import BeautifulSoup
-
-import colorsys
-import math
-from ecofunds.utils import ignore_pylab
-if not ignore_pylab():
-    import pylab
-import xlwt
-
-
 from pygeoip import GeoIP
 
-from django import db
 
 class ProjectFilteredListExcel(BaseDetailView):
     http_method_names = ['get']
@@ -468,15 +463,8 @@ WHERE b.validated = 1
                     else:
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
-                    if not ignore_pylab():
-                        tp = pylab.cm.RdYlGn(1 - scale)
-                        rgb = []
-                        for c in tp[:3]:
-                            rgb.append(c * 255)
-
-                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
-                    else:
-                        h = "#000000"
+                    rgb = color_scale[int(round(scale * 100))]
+                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
 
                     polygon = maps.Polygon(opts = {
                         'map': gmap,
