@@ -1,12 +1,14 @@
 import math
 import sys
+import time
+
 from collections import Counter
 
 from django import db
 from django import http
 from django.core.cache import cache
 from django.db.models import Count
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
 from django.views.generic.detail import BaseDetailView
 
 from ecofunds.business import ProjectData, OrganizationData, InvestmentData
@@ -505,32 +507,46 @@ WHERE b.validated = 1
         for item in cursor.fetchall():
             location_id = item[0]
             entity_id = item[1]
-            amount = item[2]
-            xml = BeautifulSoup(item[3])
+            amount = int(item[2])
 
-            key = 'pos'+str(location_id)
+            xml_key = "xml-%s" % location_id
+            location_key = "location-%s" % location_id
+            key = location_key
+
+            t1 = time.time()
+            if not cache.get(xml_key):
+                xml = BeautifulSoup(item[3])
+                cache.set(xml_key, xml)
+            else:
+                xml = cache.get(xml_key)
+            t2 = time.time() - t1
+            print("Init BeautifulSoup %s" % (t2))
 
             if not points.has_key(key):
-                paths = []
+                if not cache.get(location_key):
+                    paths = []
 
-                for polygon in xml.findAll('polygon'):
-                    corners = []
-                    latlngs = []
-                    coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                    for polygon in xml.findAll('polygon'):
+                        corners = []
+                        latlngs = []
+                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
 
-                    for c in coordinates:
+                        for c in coordinates:
 
-                        o = c.split(',')
-                        cx = float(o[1])
-                        cy = float(o[0])
-                        corners.append((cx, cy))
-                        latlngs.append(maps.LatLng(cx, cy))
+                            o = c.split(',')
+                            cx = float(o[1])
+                            cy = float(o[0])
+                            corners.append((cx, cy))
+                            latlngs.append(maps.LatLng(cx, cy))
 
-                    x, y = self.polygon_centroid(corners)
-                    paths.append(latlngs)
+                        x, y = self.polygon_centroid(corners)
+                        paths.append(latlngs)
 
-
-                points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    data = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    points[key] = data
+                    cache.set(location_key, dumps(data))
+                else:
+                    points[key] = loads(cache.get(location_key))
             else:
                 b= False
                 for p in points[key]['projects']:
