@@ -35,7 +35,7 @@ def server(hostname, fqdn, email):
 
     # Create superuser
     if 'Y' == ask('Create superuser? [Y]es or [N]o ', options=('Y', 'N')):
-        superuser()
+        createuser(as_root=True)
 
     # Upload files and fixes execution mode
     for localfile in files:
@@ -108,11 +108,10 @@ def delete_app():
 
 
 @task
-def superuser(pubkey=None, username=None):
-    """
-    fab env superuser
-    """
-    env.user = 'root'
+def createuser(pubkey=None, username=None, as_root=True):
+    if as_root:
+        env.user = 'root'
+        sudo = run
 
     keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
 
@@ -137,34 +136,17 @@ def superuser(pubkey=None, username=None):
     )
 
     for command in commands:
-        run(command.format(**locals()))
-
+        sudo(command.format(**locals()))
 
 @task
-def projectuser(pubkey=None, username=None):
-    """
-    fab env superuser
-    """
-    keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
+def createprojectuser(pubkey=None, username=None, as_root=True):
+    createuser(pubkey, username, as_root)
 
-    if not keyfile.exists():
-        abort('Public key file does not exist: %s' % keyfile)
-
-    username = username or prompt('Username: ')
-    password = getpass('Password: ')
-    password = local('perl -e \'print crypt(\"%s\", \"password\")\'' % (password),
-                     capture=True)
-
-    with open(keyfile, 'r') as f:
-        pubkey = f.read(65535)
+    if as_root:
+        env.user = 'root'
+        sudo = run
 
     commands = (
-        'useradd -m -s /bin/bash -p {password} {username}',
-        'mkdir ~{username}/.ssh -m 700',
-        'echo "{pubkey}" >> ~{username}/.ssh/authorized_keys',
-        'chmod 644 ~{username}/.ssh/authorized_keys',
-        'chown -R {username}:{username} ~{username}/.ssh',
-        'usermod -a -G sudo {username}',
         'usermod -a -G www-data {username}',
         'echo "{username} ALL=(root) NOPASSWD: /usr/bin/pip, /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers'
     )
