@@ -1,9 +1,5 @@
 import os
 gettext = lambda s: s
-
-import matplotlib
-matplotlib.use('Agg')
-
 from unipath import Path
 
 PROJECT_PATH = Path(__file__).parent
