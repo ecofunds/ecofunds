@@ -466,31 +466,37 @@ WHERE b.validated = 1
                     rgb = color_scale[int(round(scale * 100))]
                     h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
 
-                    polygon = maps.Polygon(opts = {
+                    marker = maps.Marker(opts = {
                         'map': gmap,
-                        'paths': points[key]['paths'],
-                        'strokeWeight': 0.8,
-                        'strokeColor': h,
-                        'fillColor':  h,
-                        'fillOpacity': 0.5
+                        'position': points[key]['centroid'],
                     })
-                    maps.event.addListener(polygon, 'mouseover', 'ecofundsMap.polygonOver')
-                    maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
+                    maps.event.addListener(marker, 'mouseover', 'ecofundsMap.markerOver')
+                    maps.event.addListener(marker, 'mouseout', 'ecofundsMap.markerOut')
+
+                    info_text = "Projects %d" % (amount)
+
+                    info = InfoBubble({
+                        'content': info_text,
+                        'disableAutoPan': True,
+                        'backgroundColor': '#FFF',
+                        'borderRadius': 10,
+                        'borderWidth': 0,
+                        'padding': 0,
+                        'minHeight': 40,
+                        'minWidth': 400,
+                        'maxWidth': 400,
+                        'shadowStyle': 1,
+                        'arrowPosition':10,
+                    })
+                    info.open(gmap, marker)
 
                 t2 = time.time() - t1
                 print("Heat Color Processing %s" % (t2))
-
-
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
-
-
-
-
-
 
 
 class CountriesSuggestListView(ListView):
