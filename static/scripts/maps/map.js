@@ -444,6 +444,8 @@ Funbio.Ecofunds.Map = function () {
         }, 200);
     };
 
+    this.markerOver = this.markerClick;
+
     this.markerOut = function () {
         this.closeInfoWindow();
     };
