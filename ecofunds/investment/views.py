@@ -1,29 +1,29 @@
+import math
+import sys
+import time
+
+from collections import Counter
+
+from django import db
 from django import http
 from django.core.cache import cache
 from django.db.models import Count
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
 from django.views.generic.detail import BaseDetailView
+
 from ecofunds.business import ProjectData, OrganizationData, InvestmentData
 from ecofunds.views import DjangoJSONEncoder
-from collections import Counter
-from django import db
 from ecofunds.maps.models import GoogleMapView
 from ecofunds.models import Investment
+from ecofunds.colors_RdYlGn import scale as color_scale
+
+from gmapi.maps import MapConstantClass, MapClass, Args
 from BeautifulSoup import BeautifulSoup
 from gmapi import maps
 from babel import numbers
 
 
-import colorsys
-import math
-from ecofunds.utils import ignore_pylab
-if not ignore_pylab():
-    import pylab
-import sys
 sys.setrecursionlimit(10000)
-
-from gmapi.maps import MapConstantClass, MapClass, Args
-
 SymbolPath = MapConstantClass('SymbolPath', ('CIRCLE',))
 
 def format_currency(value):
@@ -507,32 +507,46 @@ WHERE b.validated = 1
         for item in cursor.fetchall():
             location_id = item[0]
             entity_id = item[1]
-            amount = item[2]
-            xml = BeautifulSoup(item[3])
+            amount = int(item[2])
 
-            key = 'pos'+str(location_id)
+            xml_key = "xml-%s" % location_id
+            location_key = "location-%s" % location_id
+            key = location_key
+
+            t1 = time.time()
+            if not cache.get(xml_key):
+                xml = BeautifulSoup(item[3])
+                cache.set(xml_key, xml)
+            else:
+                xml = cache.get(xml_key)
+            t2 = time.time() - t1
+            print("Init BeautifulSoup %s" % (t2))
 
             if not points.has_key(key):
-                paths = []
+                if not cache.get(location_key):
+                    paths = []
 
-                for polygon in xml.findAll('polygon'):
-                    corners = []
-                    latlngs = []
-                    coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                    for polygon in xml.findAll('polygon'):
+                        corners = []
+                        latlngs = []
+                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
 
-                    for c in coordinates:
+                        for c in coordinates:
 
-                        o = c.split(',')
-                        cx = float(o[1])
-                        cy = float(o[0])
-                        corners.append((cx, cy))
-                        latlngs.append(maps.LatLng(cx, cy))
+                            o = c.split(',')
+                            cx = float(o[1])
+                            cy = float(o[0])
+                            corners.append((cx, cy))
+                            latlngs.append(maps.LatLng(cx, cy))
 
-                    x, y = self.polygon_centroid(corners)
-                    paths.append(latlngs)
+                        x, y = self.polygon_centroid(corners)
+                        paths.append(latlngs)
 
-
-                points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    data = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    points[key] = data
+                    cache.set(location_key, dumps(data))
+                else:
+                    points[key] = loads(cache.get(location_key))
             else:
                 b= False
                 for p in points[key]['projects']:
@@ -629,30 +643,32 @@ WHERE b.validated = 1
                     else:
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
+                    rgb = color_scale[int(round(scale * 100))]
+                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
 
-                    if not ignore_pylab():
-                        tp = pylab.cm.RdYlGn(1 - scale)
-                        rgb = []
-                        for c in tp[:3]:
-                            rgb.append(c * 255)
-
-                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
-                    else:
-                        h = "#000000"
-
-                    polygon = maps.Polygon(opts = {
+                    marker = maps.Marker(opts = {
                         'map': gmap,
-                        'paths': points[key]['paths'],
-                        'strokeWeight': 0.8,
-                        'strokeColor': h,
-                        'fillColor':  h,
-                        'fillOpacity': 0.5
+                        'position': points[key]['centroid'],
                     })
-                    maps.event.addListener(polygon, 'mouseover', 'ecofundsMap.polygonOver')
-                    maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
+                    maps.event.addListener(marker, 'mouseover', 'ecofundsMap.markerOver')
+                    maps.event.addListener(marker, 'mouseout', 'ecofundsMap.markerOut')
 
+                    info_text = "Investment %d" % (amount)
 
-
+                    info = InfoBubble({
+                        'content': info_text,
+                        'disableAutoPan': True,
+                        'backgroundColor': '#FFF',
+                        'borderRadius': 10,
+                        'borderWidth': 0,
+                        'padding': 0,
+                        'minHeight': 40,
+                        'minWidth': 400,
+                        'maxWidth': 400,
+                        'shadowStyle': 1,
+                        'arrowPosition':10,
+                    })
+                    info.open(gmap, marker)
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 

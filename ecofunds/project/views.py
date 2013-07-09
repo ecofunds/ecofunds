@@ -1,7 +1,11 @@
+import math
+import time
+
+from django import db
 from django import http
 from django.core.cache import cache
 from django.core.context_processors import csrf
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
 from django.db import models
 from django.db.models import Count
 from django.utils.functional import curry
@@ -14,22 +18,15 @@ from ecofunds.business import *
 from ecofunds.maps import *
 from ecofunds.maps.models import GoogleMapView
 from ecofunds.models import Project
+from ecofunds.colors_RdYlGn import scale as color_scale
+
+import xlwt
 
 from gmapi import maps
 from babel import numbers
 from BeautifulSoup import BeautifulSoup
-
-import colorsys
-import math
-from ecofunds.utils import ignore_pylab
-if not ignore_pylab():
-    import pylab
-import xlwt
-
-
 from pygeoip import GeoIP
 
-from django import db
 
 class ProjectFilteredListExcel(BaseDetailView):
     http_method_names = ['get']
@@ -196,7 +193,6 @@ class ProjectChartSourceView(BaseDetailView):
 
 class ProjectMapSourceView(GoogleMapView, BaseDetailView):
     def get(self, request, *args, **kwargs):
-        db.reset_queries()
         if request.method == "POST":
             data = request.POST
         else:
@@ -294,8 +290,11 @@ WHERE b.validated = 1
         if view != 'concentration':
             sql+=" group by a.location_id "
 
+        t1 = time.time()
         cursor = db.connection.cursor()
         cursor.execute(sql, query_params)
+        t2 = time.time() - t1
+        print("Exec query %s" % (t2))
 
         #list = ProjectData.locationFilteredList(request)
         points = {}
@@ -315,31 +314,53 @@ WHERE b.validated = 1
             location_id = item[0]
             entity_id = item[1]
             amount = item[2]
-            xml = BeautifulSoup(item[3])
 
-            key = 'pos'+str(location_id)
+            xml_key = "xml-%s" % location_id
+            location_key = "location-%s" % location_id
+            key = location_key
 
+            t1 = time.time()
+            if not cache.get(xml_key):
+                xml = BeautifulSoup(item[3])
+                cache.set(xml_key, xml)
+            else:
+                xml = cache.get(xml_key)
+            t2 = time.time() - t1
+            print("Init BeautifulSoup %s" % (t2))
+
+            t1 = time.time()
             if not points.has_key(key):
-                paths = []
+                if not cache.get(location_key):
+                    paths = []
+                    for polygon in xml.findAll('polygon'):
+                        latlngs = []
+                        corners = []
+                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
 
-                for polygon in xml.findAll('polygon'):
-                    corners = []
-                    latlngs = []
-                    coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                        for c in coordinates:
 
-                    for c in coordinates:
+                            o = c.split(',')
+                            cx = float(o[1])
+                            cy = float(o[0])
+                            latlngs.append(maps.LatLng(cx, cy))
+                            corners.append((cx, cy))
 
-                        o = c.split(',')
-                        cx = float(o[1])
-                        cy = float(o[0])
-                        corners.append((cx, cy))
-                        latlngs.append(maps.LatLng(cx, cy))
+                        x, y = self.polygon_centroid(corners)
+                        paths.append(latlngs)
 
-                    x, y = self.polygon_centroid(corners)
-                    paths.append(latlngs)
+                    data = {'centroid': maps.LatLng(x, y),
+                            'paths': paths,
+                            'investment': 0,
+                            'projects': [{
+                                'id': entity_id,
+                                'amount': amount
+                                }]
+                            }
 
-
-                points[key] = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
+                    points[key] = data
+                    cache.set(location_key, dumps(data))
+                else:
+                    points[key] = loads(cache.get(location_key))
             else:
                 b = False
                 for p in points[key]['projects']:
@@ -347,6 +368,9 @@ WHERE b.validated = 1
                         b = True
                 if not b:
                     points[key]['projects'].append({'id': entity_id, 'amount': amount})
+
+            t2 = time.time() - t1
+            print("Ploygon Processing %s" % (t2))
 
         for key in points:
             for o in points[key]['projects']:
@@ -429,7 +453,7 @@ WHERE b.validated = 1
                     })
 
             elif view == 'heat':
-
+                t1 = time.time()
                 fill_colors = ['#28B9D4', '#7CC22C', '#ECCE0A', '#ED8A09', '#ED0B0C']
                 for key in points:
                     amount = points[key]['investment']
@@ -439,39 +463,40 @@ WHERE b.validated = 1
                     else:
                         scale = round( float(amount-min_inv)/float(max_inv-min_inv), 2)
 
-                    if not ignore_pylab():
-                        tp = pylab.cm.RdYlGn(1 - scale)
-                        rgb = []
-                        for c in tp[:3]:
-                            rgb.append(c * 255)
+                    rgb = color_scale[int(round(scale * 100))]
+                    h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
 
-                        h = '#%02X%02X%02X' % (rgb[0], rgb[1], rgb[2])
-                    else:
-                        h = "#000000"
-
-                    polygon = maps.Polygon(opts = {
+                    marker = maps.Marker(opts = {
                         'map': gmap,
-                        'paths': points[key]['paths'],
-                        'strokeWeight': 0.8,
-                        'strokeColor': h,
-                        'fillColor':  h,
-                        'fillOpacity': 0.5
+                        'position': points[key]['centroid'],
                     })
-                    maps.event.addListener(polygon, 'mouseover', 'ecofundsMap.polygonOver')
-                    maps.event.addListener(polygon, 'mouseout', 'ecofundsMap.polygonOut')
+                    maps.event.addListener(marker, 'mouseover', 'ecofundsMap.markerOver')
+                    maps.event.addListener(marker, 'mouseout', 'ecofundsMap.markerOut')
 
+                    info_text = "Projects %d" % (amount)
 
+                    info = InfoBubble({
+                        'content': info_text,
+                        'disableAutoPan': True,
+                        'backgroundColor': '#FFF',
+                        'borderRadius': 10,
+                        'borderWidth': 0,
+                        'padding': 0,
+                        'minHeight': 40,
+                        'minWidth': 400,
+                        'maxWidth': 400,
+                        'shadowStyle': 1,
+                        'arrowPosition':10,
+                    })
+                    info.open(gmap, marker)
 
+                t2 = time.time() - t1
+                print("Heat Color Processing %s" % (t2))
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
-
-
-
-
-
 
 
 class CountriesSuggestListView(ListView):

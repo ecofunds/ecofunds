@@ -180,7 +180,7 @@ class Location(models.Model):
 
     def __unicode__(self):
         if self.country:
-            return unicode(self.country)+'/'+unicode(self.name)
+            return u"%s - %s" % (self.country, self.name)
         else:
             return self.name
 
@@ -273,6 +273,9 @@ class ProjectLocation(models.Model):
     class Meta:
         db_table = u'ecofunds_entity_locations'
         unique_together=('entity','location')
+
+    def __unicode__(self):
+        return u"%s - %s" % (self.entity, self.location)
 
 
 class ProjectActivity(models.Model):
