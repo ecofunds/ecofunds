@@ -223,7 +223,7 @@ class ProjectMapSourceView(GoogleMapView, BaseDetailView):
         sql_columns = """a.location_id,
 			a.entity_id,
 			count(b.entity_id),
-			d.polygon
+			d.centroid
             """
         if view == 'concentration':
             sql_columns = "	min(c.amount_usd), max(c.amount_usd) "
@@ -314,53 +314,23 @@ WHERE b.validated = 1
             location_id = item[0]
             entity_id = item[1]
             amount = item[2]
+            centroid = item[3]
 
-            xml_key = "xml-%s" % location_id
-            location_key = "location-%s" % location_id
-            key = location_key
+            key = location_id
 
-            t1 = time.time()
-            if not cache.get(xml_key):
-                xml = BeautifulSoup(item[3])
-                cache.set(xml_key, xml)
-            else:
-                xml = cache.get(xml_key)
-            t2 = time.time() - t1
-            print("Init BeautifulSoup %s" % (t2))
-
-            t1 = time.time()
             if not points.has_key(key):
-                if not cache.get(location_key):
-                    paths = []
-                    for polygon in xml.findAll('polygon'):
-                        latlngs = []
-                        corners = []
-                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
+                o = centroid.split(',')
+                x = float(o[0])
+                y = float(o[1])
+                data = {'centroid': maps.LatLng(x, y),
+                        'investment': 0,
+                        'projects': [{
+                            'id': entity_id,
+                            'amount': amount
+                            }]
+                        }
 
-                        for c in coordinates:
-
-                            o = c.split(',')
-                            cx = float(o[1])
-                            cy = float(o[0])
-                            latlngs.append(maps.LatLng(cx, cy))
-                            corners.append((cx, cy))
-
-                        x, y = self.polygon_centroid(corners)
-                        paths.append(latlngs)
-
-                    data = {'centroid': maps.LatLng(x, y),
-                            'paths': paths,
-                            'investment': 0,
-                            'projects': [{
-                                'id': entity_id,
-                                'amount': amount
-                                }]
-                            }
-
-                    points[key] = data
-                    cache.set(location_key, dumps(data))
-                else:
-                    points[key] = loads(cache.get(location_key))
+                points[key] = data
             else:
                 b = False
                 for p in points[key]['projects']:
@@ -368,9 +338,6 @@ WHERE b.validated = 1
                         b = True
                 if not b:
                     points[key]['projects'].append({'id': entity_id, 'amount': amount})
-
-            t2 = time.time() - t1
-            print("Ploygon Processing %s" % (t2))
 
         for key in points:
             for o in points[key]['projects']:
