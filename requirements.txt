@@ -10,9 +10,6 @@ django-gmapi==1.0.1
 django-menus==1.1.1
 django-rosetta==0.7.2
 django-tinymce==1.5.1
-numpy==1.7.1
-scipy==0.12.0
-matplotlib==1.2.1
 pygeoip==0.2.6
 wsgiref==0.1.2
 xlwt==0.7.5
