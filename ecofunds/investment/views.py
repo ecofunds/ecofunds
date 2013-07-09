@@ -402,7 +402,7 @@ class InvestmentMapSourceView(GoogleMapView, BaseDetailView):
         a.location_id,
 			a.entity_id,
 			sum(c.amount_usd) sum_ammount,
-			d.polygon
+			d.centroid
         """
 
         if view == 'concentration':
@@ -508,45 +508,23 @@ WHERE b.validated = 1
             location_id = item[0]
             entity_id = item[1]
             amount = int(item[2])
+            centroid = item[3]
 
-            xml_key = "xml-%s" % location_id
-            location_key = "location-%s" % location_id
-            key = location_key
-
-            t1 = time.time()
-            if not cache.get(xml_key):
-                xml = BeautifulSoup(item[3])
-                cache.set(xml_key, xml)
-            else:
-                xml = cache.get(xml_key)
-            t2 = time.time() - t1
-            print("Init BeautifulSoup %s" % (t2))
+            key = location_id
 
             if not points.has_key(key):
-                if not cache.get(location_key):
-                    paths = []
+                o = centroid.split(',')
+                x = float(o[0])
+                y = float(o[1])
+                data = {'centroid': maps.LatLng(x, y),
+                        'investment': 0,
+                        'projects': [{
+                            'id': entity_id,
+                            'amount': amount
+                            }]
+                        }
 
-                    for polygon in xml.findAll('polygon'):
-                        corners = []
-                        latlngs = []
-                        coordinates = polygon.outerboundaryis.linearring.coordinates.text.split(' ')
-
-                        for c in coordinates:
-
-                            o = c.split(',')
-                            cx = float(o[1])
-                            cy = float(o[0])
-                            corners.append((cx, cy))
-                            latlngs.append(maps.LatLng(cx, cy))
-
-                        x, y = self.polygon_centroid(corners)
-                        paths.append(latlngs)
-
-                    data = {'centroid': maps.LatLng(x, y), 'paths': paths, 'investment': 0, 'projects': [{'id': entity_id, 'amount': amount}]}
-                    points[key] = data
-                    cache.set(location_key, dumps(data))
-                else:
-                    points[key] = loads(cache.get(location_key))
+                points[key] = data
             else:
                 b= False
                 for p in points[key]['projects']:

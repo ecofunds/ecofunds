@@ -21,11 +21,11 @@ for location in Location.objects.all():
                 cy = float(o[0])
                 corners.append((cx, cy))
         except Exception as e:
-            print("Error %s - %s" % (location.name.encode('utf-8'), e))
+            print("Error %d %s - %s" % (location.id, location.name.encode('utf-8'), e))
 
     try:
         x, y = polygon_centroid(corners)
-        #print(location.name.encode('utf-8'))
-        #print(x, y)
+        location.centroid = "%s,%s" % (str(x), str(y))
+        location.save()
     except:
         print("Error Centroid %s - %s" % (location.name.encode('utf-8'), e))
