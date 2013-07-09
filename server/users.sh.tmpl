@@ -1,0 +1,20 @@
+#!/bin/bash
+
+useradd -m -s /bin/bash -p ##ENCPASSWD## ##USERNAME##
+mkdir ~##USERNAME##/.ssh -m 700
+echo "##PUBKEY##" >> ~##USERNAME##/.ssh/authorized_keys
+chmod 644 ~##USERNAME##/.ssh/authorized_keys
+chown -R ##USERNAME##:##USERNAME## ~##USERNAME##/.ssh
+usermod -a -G sudo ##USERNAME##
+
+# Usuário deploy
+useradd -m -s /bin/bash -p ##ENCPASSWD## deploy
+mkdir ~deploy/.ssh -m 700
+echo "##PUBKEY##" >> ~deploy/.ssh/authorized_keys
+chmod 644 ~deploy/.ssh/authorized_keys
+chown -R deploy:deploy ~deploy/.ssh
+usermod -a -G sudo deploy
+usermod -a -G www-data deploy
+
+# Sudoers
+echo "deploy ALL=(root) NOPASSWD: /usr/bin/pip, /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers

@@ -1,10 +1,18 @@
-import os
+# coding: utf-8
+from decouple import Config
+from dj_database_url import db_url
+
 gettext = lambda s: s
 from unipath import Path
 
-PROJECT_PATH = Path(__file__).parent
+PROJECT_ROOT = Path(__file__).parent
 
-GOOGLE_KEY = 'AIzaSyAZpfiGAvTO1zpd-eWWZcbkHm40BrFp0tI'
+config = Config(PROJECT_ROOT.child('settings.ini'))
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+TEMPLATE_DEBUG = DEBUG
+
+GOOGLE_KEY = config('GOOGLE_KEY')
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
 
 DEBUG = True
@@ -17,24 +25,17 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ecofunds',                   # Or path to database file if using sqlite3.
-        'USER': 'root',                   # Not used with sqlite3.
-        'PASSWORD': '',               # Not used with sqlite3.
-        'HOST': '',                # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                           # Set to empty string for default. Not used with sqlite3.
-    }
+    'default': config('DATABASE_URL', cast=db_url)
 }
 
 # Email Configuration
 
-VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"
-EMAIL_HOST = ""
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
-EMAIL_USE_TLS = True
+VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"  # FIXME: ?
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -43,7 +44,7 @@ EMAIL_USE_TLS = True
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Sao_Paulo'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -56,15 +57,15 @@ LANGUAGES = [
 ]
 
 LANGUAGES_DATEFORMAT = {
-    'pt-br':'dd/mm/yy',
-    'en':'mm/dd/yy',
-    'es':'dd/mm/yy',
+    'pt-br': 'dd/mm/yy',
+    'en': 'mm/dd/yy',
+    'es': 'dd/mm/yy',
 }
 
 LANGUAGES_NUMBERFORMAT = {
-    'pt-br':'decimal',
-    'en':'decimal-us',
-    'es':'decimal',
+    'pt-br': 'decimal',
+    'en': 'decimal-us',
+    'es': 'decimal',
 }
 
 DEFAULT_LANGUAGE = 0
@@ -78,19 +79,19 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = PROJECT_PATH.child('static').child('media')
+MEDIA_ROOT = PROJECT_ROOT.child('static', 'media')
 MEDIA_URL = '/static/media/'
 
-STATIC_ROOT = PROJECT_PATH.child('assets')
+STATIC_ROOT = PROJECT_ROOT.child('assets')
 STATIC_URL = '/static/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-GEOIP_DATABASE = PROJECT_PATH.child('geoip').child('GeoLiteCity.dat')
+GEOIP_DATABASE = PROJECT_ROOT.child('geoip', 'GeoLiteCity.dat')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_PATH.parent.child('static'),
+    PROJECT_ROOT.parent.child('static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -101,15 +102,13 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-# FIXME: remove before stage deploy
-SECRET_KEY = '^28avlv8e$sky_08pu926q^+b5&4&5&+ob7ma%v(tn$bg#=&k4'
+SECRET_KEY = config('SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -141,7 +140,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'ecofunds.urls'
 
 TEMPLATE_DIRS = (
-    PROJECT_PATH.child('templates'),
+    PROJECT_ROOT.child('templates'),
 )
 
 INSTALLED_APPS = (
@@ -179,8 +178,8 @@ INSTALLED_APPS = (
     'ecofunds.investment',
 )
 
-CMS_MEDIA_ROOT = PROJECT_PATH.child('static').child('cms')
-CMS_MEDIA_URL= '/static/cms'
+CMS_MEDIA_ROOT = PROJECT_ROOT.child('static', 'cms')
+CMS_MEDIA_URL = '/static/cms'
 
 CMS_TEMPLATES = (
     ('home-template.html', gettext('Home Template')),
@@ -191,9 +190,9 @@ CMS_TEMPLATES = (
 )
 
 CMS_LANGUAGE_CONF = {
-    'pt-br':['en'],
-    'en':['pt-br'],
-    'es':['en'],
+    'pt-br': ['en'],
+    'en': ['pt-br'],
+    'es': ['en'],
 }
 
 CMS_LANGUAGES = (
@@ -202,7 +201,7 @@ CMS_LANGUAGES = (
     ('es', gettext('Espanol')),
 )
 CMS_SITE_LANGUAGES = {
-    1:['pt-br','en', 'es'],
+    1: ['pt-br', 'en', 'es'],
 }
 CMS_FRONTEND_LANGUAGES = ('pt-br', 'en', 'es')
 
@@ -212,7 +211,8 @@ CMS_APPLICATIONS_URLS = (
 )
 CMS_NAVIGATION_EXTENDERS = (
     #('cmsplugin_news.navigation.get_nodes','News navigation'),
-    ('ecofunds.opportunity.navigation.get_nodes','Funding Oportunity Navigation'),
+    ('ecofunds.opportunity.navigation.get_nodes',
+     'Funding Oportunity Navigation'),
 )
 
 URLS_WITHOUT_LANGUAGE_REDIRECT = [
@@ -256,13 +256,13 @@ LOGGING = {
 }
 
 AJAX_LOOKUP_CHANNELS = {
-    'organization':('ecofunds.lookups','OrganizationLookUp'),
-    'location':('ecofunds.lookups','LocationLookUp'),
-    'activity':('ecofunds.lookups','ActivityLookUp'),
-    'userprofile':('ecofunds.lookups','UserProfileLookUp'),
-    'project':('ecofunds.lookups','ProjectLookUp'),
-    'country':('ecofunds.lookups','CountryLookUp'),
-    'investment':('ecofunds.lookups','InvestmentLookUp'),
+    'organization': ('ecofunds.lookups', 'OrganizationLookUp'),
+    'location': ('ecofunds.lookups', 'LocationLookUp'),
+    'activity': ('ecofunds.lookups', 'ActivityLookUp'),
+    'userprofile': ('ecofunds.lookups', 'UserProfileLookUp'),
+    'project': ('ecofunds.lookups', 'ProjectLookUp'),
+    'country': ('ecofunds.lookups', 'CountryLookUp'),
+    'investment': ('ecofunds.lookups', 'InvestmentLookUp'),
 }
 
 AJAX_SELECT_BOOTSTRAP = False

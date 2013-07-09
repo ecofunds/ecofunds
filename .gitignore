@@ -35,3 +35,6 @@ nosetests.xml
 .pydevproject
 
 .DS_Store
+
+# Sensitive Data
+settings.ini
