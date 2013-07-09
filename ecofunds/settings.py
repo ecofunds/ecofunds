@@ -79,8 +79,8 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = PROJECT_ROOT.child('static', 'media')
-MEDIA_URL = '/static/media/'
+MEDIA_ROOT = PROJECT_ROOT.child('media')
+MEDIA_URL = '/media/'
 
 STATIC_ROOT = PROJECT_ROOT.child('assets')
 STATIC_URL = '/static/'
@@ -178,7 +178,7 @@ INSTALLED_APPS = (
     'ecofunds.investment',
 )
 
-CMS_MEDIA_ROOT = PROJECT_ROOT.child('static', 'cms')
+CMS_MEDIA_ROOT = PROJECT_ROOT.parent.child('static', 'cms')
 CMS_MEDIA_URL = '/static/cms'
 
 CMS_TEMPLATES = (
