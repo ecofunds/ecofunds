@@ -1,6 +1,6 @@
 # coding: utf-8
 from decouple import Config
-from dj_database_url import db_url
+from dj_database_url import parse as db_url
 
 gettext = lambda s: s
 from unipath import Path
