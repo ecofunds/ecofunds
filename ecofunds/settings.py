@@ -1,9 +1,12 @@
 # coding: utf-8
+import os
+from sys import argv
+
 from decouple import Config
 from dj_database_url import parse as db_url
+from unipath import Path
 
 gettext = lambda s: s
-from unipath import Path
 
 PROJECT_ROOT = Path(__file__).parent
 
@@ -27,6 +30,18 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': config('DATABASE_URL', cast=db_url)
 }
+
+if len(argv) > 2 and argv[1] == "test":
+    DATABASES = { ########## IN-MEMORY TEST DATABASE
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+            "USER": "",
+            "PASSWORD": "",
+            "HOST": "",
+            "PORT": "",
+        },
+    }
 
 # Email Configuration
 
