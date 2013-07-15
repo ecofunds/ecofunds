@@ -19,3 +19,5 @@ MySQL-python==1.2.3
 PIL==1.1.7
 beautifulsoup==3.2.1
 Fabric==1.6.1
+sphinx
+django-reversion
