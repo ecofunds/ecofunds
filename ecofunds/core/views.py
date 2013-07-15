@@ -10,11 +10,12 @@ from django.views.generic import CreateView,DeleteView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
+
 from ecofunds.business import *
-from ecofunds.models import Attachment
+from ecofunds.core.models import Attachment
 from ecofunds.user.models import UserProfile
 from ecofunds.user.permissions import edit_allowance
-from filetransfers.api import serve_file
+from ecofunds.filetransfers.api import serve_file
 
 class DjangoJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -22,7 +23,7 @@ class DjangoJSONEncoder(JSONEncoder):
             #do the same as above by making it a queryset first
             set_obj = [obj]
             set_str = dumps(loads(serialize('json', set_obj)))
-            #eliminate brackets in the beginning and the end 
+            #eliminate brackets in the beginning and the end
             str_obj = set_str[1:len(set_str)-2]
             return str_obj
 
@@ -58,7 +59,7 @@ class GlobalSuggestListView(ListView):
 class SearchSuggestListView(ListView):
     context_object_name = 'list'
     http_method_names = ['get','post']
-    template_name='search_suggest.html'   
+    template_name='search_suggest.html'
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -69,7 +70,7 @@ class SearchSuggestListView(ListView):
         else:
             data = self.request.GET
 
-        
+
         sql = """
 select b.* from (
 	select 	'P' as result_type,
@@ -93,8 +94,8 @@ select b.* from (
 	from		ecofunds_locations l
 	where		l.name like %s
 ) b order by 3
-        
-        """    
+
+        """
         search = data.get('search')
         if search:
             search = '%' + search + '%'
@@ -124,7 +125,7 @@ select b.* from (
             else:
                 onclick = 'fireSearch("' + x[2] + '")'
             results.append({'id': x[1], 'title':x[2], 'url': url, 'onclick' : onclick})
-            
+
 
         self.object_list = results
         context = self.get_context_data(object_list=results)
@@ -144,7 +145,7 @@ class FileDownload(BaseDetailView):
         return serve_file(request, file.path, None, True)
 
 def item_permission_list(request,list):
-    if request.user.is_authenticated(): 
+    if request.user.is_authenticated():
         try:
             profile = request.user.get_profile()
         except UserProfile.DoesNotExist:
@@ -169,7 +170,7 @@ class AttachmentCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         f = self.request.FILES.get('file')
-        data = [{'name': f.name, 'url': get_media_path(self.object,f.name), 'thumbnail_url': get_media_path(self.object,f.name), 
+        data = [{'name': f.name, 'url': get_media_path(self.object,f.name), 'thumbnail_url': get_media_path(self.object,f.name),
             'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
         print data
         response = JSONResponse(data, {}, response_mimetype(self.request))
@@ -192,7 +193,7 @@ class AttachmentDeleteView(DeleteView):
             return response
         else:
             return HttpResponseRedirect('/upload/new')
-            
+
 class JSONResponse(HttpResponse):
     """JSON response class."""
     def __init__(self,obj='',json_opts={},mimetype="application/json",*args,**kwargs):

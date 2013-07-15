@@ -3,8 +3,8 @@ from django.core.cache import cache
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
-from ecofunds.models import Activity,Project, Currency
-from ecofunds.forms import AdvancedSearchForm
+from ecofunds.core.models import Activity,Project, Currency
+from ecofunds.core.forms import AdvancedSearchForm
 from ajax_select import make_ajax_field
 
 import datetime
@@ -16,7 +16,7 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 
     def render(self):
         """Outputs a <ul> for this set of radio fields."""
-        return mark_safe(u'<ul class="radio-buttons">\n%s\n</ul>' % 
+        return mark_safe(u'<ul class="radio-buttons">\n%s\n</ul>' %
                 u'\n'.join([u'<li>%s</li>'
                 % force_unicode(w) for w in self]))
 
@@ -46,14 +46,14 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 #    ('23','Waste treatment')
 #)
 
-ACTIVITY_CHOICES = (('', 'Choose an activity type'),) + tuple(Activity.objects.all().values_list('activity_id', 'name'))
+#ACTIVITY_CHOICES = (('', 'Choose an activity type'),) + tuple(Activity.objects.all().values_list('activity_id', 'name'))
 
 class ProjectAdvancedSearchForm(AdvancedSearchForm):
 
     s_project_name = forms.CharField(label=_('Project name'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a project')}))
-    s_all_project_name = forms.BooleanField(label=_('All projects'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))    
+    s_all_project_name = forms.BooleanField(label=_('All projects'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
-    s_project_activity_type = forms.IntegerField(label=_('Project activity type'), widget=forms.Select(choices=ACTIVITY_CHOICES, attrs={'class':''}))
+    #s_project_activity_type = forms.IntegerField(label=_('Project activity type'), widget=forms.Select(choices=ACTIVITY_CHOICES, attrs={'class':''}))
 
     s_all_project_activity_type = forms.BooleanField(label=_('All activities types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
@@ -81,10 +81,10 @@ class ProjectAdvancedSearchForm(AdvancedSearchForm):
             self.cleaned_data = {}
 
     def get_value(self, key, persist=False):
-        
+
         value = None
         #if self.data.has_key(key):
-        #    
+        #
         #    self._force_data()
         #    if self.cleaned_data.has_key(key):
         #        value = self.cleaned_data[key]
@@ -122,30 +122,30 @@ class ProjectForm(ModelForm):
     title = forms.CharField(label=_('Project name'), required=True, widget=forms.TextInput(attrs={'placeholder': _('Enter the name of a project')}))
     acronym = forms.CharField(label=_('Acronym'), required=False, widget=forms.TextInput(attrs={'placeholder': _('Enter the abbreviation of a project')}))
     description = forms.CharField(label=_('Project description'), required=True, widget=forms.Textarea(attrs={'placeholder': _('Enter the description of a project')}))
-    
+
     cat_choices = [('True',_('Project')),('False',_('Program'))]
     category = forms.ChoiceField(choices=cat_choices,widget=forms.RadioSelect(renderer=MyRadioFieldRenderer),initial='True',required=True)
 
     includes_choices = [('True',_('Yes')),('False',_('No'))]
     include = forms.ChoiceField(choices=includes_choices, widget=forms.RadioSelect(renderer=MyRadioFieldRenderer),
             label=_("Is the project or program included in a program?"),initial='False',required=False)
-    
+
     grant_from = forms.DateField(label=_("Start date"), required=True, widget=forms.DateInput(attrs={'class':'data'}))
     grant_to = forms.DateField(label=_("Expected completion"), required=True, widget=forms.DateInput(attrs={'class':'data'}))
 
     currency = forms.ModelChoiceField(queryset=Currency.objects.all(),label=_('Estimated budget'), required=True, widget=forms.Select(attrs={'class':'select-curto moeda'}))
     budget = forms.FloatField(widget=forms.TextInput(attrs={'class':'numero'}), required=True)
-    
+
     email = forms.EmailField(label=_('Email'), required=True, widget=forms.TextInput(attrs={'placeholder': _('Enter the email')}))
 
     phone_country_prefix_01 = forms.CharField(label=_('Phone number 01'), required=True, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     phone_local_prefix_01 = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     phone_number_01 = forms.CharField(label=_('Phone number 01'), required=True, widget=forms.TextInput(attrs={'class':'telefone'}))
-    
+
     phone_country_prefix_02 = forms.CharField(label=_('Phone number 02'), required=False, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     phone_local_prefix_02 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     phone_number_02 = forms.CharField(label=_('Phone number 02'), required=False, widget=forms.TextInput(attrs={'class':'telefone'}))
-    
+
     fax_country_prefix = forms.CharField(label=_('FAX'), required=False, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     fax_local_prefix = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'prefixo',  'maxlength':'2'}))
     fax = forms.CharField(label=_('FAX'), required=False, widget=forms.TextInput(attrs={'class':'telefone'}))
