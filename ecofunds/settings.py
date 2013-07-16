@@ -166,7 +166,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'south',
+    #'south',
     'cms',
     'cms.plugins.picture',
     'cms.plugins.text',
