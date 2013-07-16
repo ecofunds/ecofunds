@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.cache import cache
 
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.project.forms import *
 from ecofunds.organization.forms import *
 from ecofunds.investment.forms import *
@@ -10,7 +10,7 @@ import datetime
 
 from django import db
 from django.db.models import Q
-from ecofunds.templatetags.tags import currency
+from ecofunds.core.templatetags.tags import currency
 import locale
 import re
 from babel import numbers
@@ -94,7 +94,7 @@ class InvestmentData(object):
             quantity = 10
 
         query = Attachment.objects.filter(investments__investment__id__exact=investment_id)
-        
+
         paginator = Paginator(query, quantity)
         #print(paginator.object_list)
         try:
@@ -114,12 +114,12 @@ class InvestmentData(object):
         list = InvestmentData.list(order_by, **kwargs)
         if not project_id is None:
             list.filter((Q(recipient_entity_id=project_id)|Q(funding_entity_id=project_id)))
-        
-        
+
+
         #print_queries(list)
         orig_list = list
         paginator = Paginator(list, quantity)
-        
+
         try:
             list = paginator.page(page)
         except PageNotAnInteger:
@@ -165,7 +165,7 @@ class InvestmentData(object):
 
         project_id = None
         if request.GET.has_key('project'):
-            project_id = request.GET['project'] 
+            project_id = request.GET['project']
 
         s_investment_type = data.get('s_investment_type')
 
@@ -254,11 +254,11 @@ class InvestmentData(object):
             filters.update({'recipient_organization__state__icontains': s_investment_state})
             labels.update({'s_state': s_investment_state})
 
-        
+
         list, orig_list = InvestmentData.paginatedList(quantity, page, order_by, project_id, **filters)
         print orig_list.query
         return list, form, labels, orig_list
-    
+
 class OrganizationData(object):
 
     @staticmethod
@@ -303,8 +303,8 @@ class OrganizationData(object):
             quantity = 10
 
         paginator = Paginator(OrganizationData.list(order_by, **kwargs), quantity)
-        
-        
+
+
 
         try:
             list = paginator.page(page)
@@ -424,14 +424,14 @@ class OrganizationData(object):
                 data = request.GET
                 form = OrganizationAdvancedSearchForm(data)
 
-        
+
 
 
 
         f, labels = OrganizationData.get_filters_labels_from_request_data(data)
 
-        
-       
+
+
 
         criteria = {}
 
@@ -439,18 +439,18 @@ class OrganizationData(object):
             criteria.update(filters)
 
         criteria.update(f)
-        
+
         page = data.get('page')
         order_by = data.get('order_by')
 
         if quantity == 0:
             return OrganizationData.list(order_by, **criteria)
-        
+
         return OrganizationData.paginatedList(quantity, page, order_by, **criteria), form, labels
 
     @staticmethod
     def suggestList(search, quantity):
-        
+
         return OrganizationData.paginatedList(quantity, 1, 'name', title__icontains = search)
 
 class ProjectData(object):
@@ -460,7 +460,7 @@ class ProjectData(object):
         try:
             return Project.objects.get(pk=id)
         except Project.DoesNotExist:
-            return 
+            return
 
     @staticmethod
     def locationList(**kwargs):
@@ -479,7 +479,7 @@ class ProjectData(object):
             data = request.GET
 
         query = ProjectLocation.objects.filter(entity__validated=1)
-        
+
         filters, labels = ProjectData.get_filters_labels_from_request_data(data, 'entity__')
 
         if filters != None and filters.keys().count > 0:
@@ -505,11 +505,11 @@ class ProjectData(object):
     def paginatedAttachmentList(project_id, quantity, page, **kwargs):
 
         paginator = Paginator(ProjectData.attachmentList(project_id, **kwargs), quantity)
-        
+
 
         if page is None:
             page = 1
-        
+
         try:
             list = paginator.page(page)
         except PageNotAnInteger:
@@ -535,7 +535,7 @@ class ProjectData(object):
             query = query.order_by('-created_at')
 
         return query
-    
+
     @staticmethod
     def paginatedList(quantity, page, order_by=None, **kwargs):
         list = ProjectData.list(order_by, **kwargs)
@@ -581,7 +581,7 @@ class ProjectData(object):
 
         s_grant_from = trans_date(data.get('s_date_from'))
         s_grant_to = trans_date(data.get('s_date_to'))
-        
+
 
 
         if data.has_key('search'):
@@ -620,7 +620,7 @@ class ProjectData(object):
         if  s_state != None and s_state != '':
             filters.update({prefix_property+'projects_locations__location__name__icontains': s_state})
             labels.update({'s_state': s_state})
-            
+
 
 
         if s_investments_from!= None and (s_investments_from!= ''):
@@ -632,14 +632,14 @@ class ProjectData(object):
             if s_investments_to != '0.00':
                 labels.update({prefix_property+'s_investments_to': _('budget') +' <= ' + format_currency( s_investments_to)})
 
-                
+
         print 'Grant from: ', s_grant_from
         if s_grant_from:
             filters.update({prefix_property+'grant_from__gte': s_grant_from})
         if s_grant_to:
             filters.update({prefix_property+'grant_to__lte': s_grant_to})
 
-        
+
         return filters, labels
 
     @staticmethod
@@ -656,14 +656,14 @@ class ProjectData(object):
             else:
                 data = request.GET
                 form = ProjectAdvancedSearchForm(data)
-        
+
         page = data.get('page')
         order_by = data.get('order_by')
-        
-        filters, labels = ProjectData.get_filters_labels_from_request_data(data)
-       
 
-        
+        filters, labels = ProjectData.get_filters_labels_from_request_data(data)
+
+
+
 
         if quantity == 0:
             return ProjectData.list(order_by, **filters)
@@ -672,7 +672,7 @@ class ProjectData(object):
 
     @staticmethod
     def suggestList(search, quantity):
-        
+
         return ProjectData.paginatedList(quantity, 1, 'title', title__icontains = search)
 
 

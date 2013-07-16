@@ -10,14 +10,14 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import get_language
 
 from ecofunds import settings
-from ecofunds.models import *
+from ecofunds.core.models import *
+from ecofunds.core.views import item_permission_list
+from ecofunds.core.cms_plugins import GenericCMSFormPlugin
 from ecofunds.user.models import *
 from ecofunds.user.notification import notificate
 from ecofunds.business import *
 from ecofunds.organization.forms import *
 from ecofunds.organization.models import *
-from ecofunds.views import item_permission_list
-from ecofunds.cms_plugins import GenericCMSFormPlugin
 from ecofunds.user.permissions import edit_allowance
 
 from gmapi import maps
@@ -74,10 +74,10 @@ limit 5
                 item.id = x[0]
                 item.name = x[1]
                 item.mission = x[2]
-                latest.append(item)            
-                        
+                latest.append(item)
+
             context.update({
-                            'new_organizations': OrganizationData.list()[:5], 
+                            'new_organizations': OrganizationData.list()[:5],
                             'latest_investment_organizations': latest
             })
 
@@ -142,7 +142,7 @@ class CMSPFormOrganizationPlugin(GenericCMSFormPlugin):
     module = _("Organization")
     DjangoModel = Organization
     DjangoForm = OrganizationForm
- 
+
     redirect_language = {'pt-br':'../ficha-organizacao',
             'en':'../organization-detail',
             'es':'../ficha-organizacion',

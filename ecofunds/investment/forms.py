@@ -3,8 +3,8 @@ from django.core.cache import cache
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
-from ecofunds.models import *
-from ecofunds.forms import AdvancedSearchForm
+from ecofunds.core.models import *
+from ecofunds.core.forms import AdvancedSearchForm
 from ajax_select import make_ajax_field
 
 from django.utils.encoding import force_unicode
@@ -14,7 +14,7 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 
     def render(self):
         """Outputs a <ul> for this set of radio fields."""
-        return mark_safe(u'<ul class="radio-buttons">\n%s\n</ul>' % 
+        return mark_safe(u'<ul class="radio-buttons">\n%s\n</ul>' %
                 u'\n'.join([u'<li>%s</li>'
                 % force_unicode(w) for w in self]))
 
@@ -40,12 +40,12 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 #    ('8', 'Other')
 #)
 
-INVESTMENTTYPE_CHOICES = (('', 'Choose an investment type'),) + tuple(InvestmentType.objects.all().values_list('id', 'name'))
-ORGANIZATIONTYPE_CHOICES = (('', 'Choose an organization type'),) + tuple(OrganizationType.objects.all().values_list('id', 'name'))
+#INVESTMENTTYPE_CHOICES = (('', 'Choose an investment type'),) + tuple(InvestmentType.objects.all().values_list('id', 'name'))
+#ORGANIZATIONTYPE_CHOICES = (('', 'Choose an organization type'),) + tuple(OrganizationType.objects.all().values_list('id', 'name'))
 
 class InvestmentAdvancedSearchForm(AdvancedSearchForm):
-    
-    s_investment_type = forms.IntegerField(label=_('Investment type'), widget=forms.Select(choices=INVESTMENTTYPE_CHOICES, attrs={'class':''}))
+
+#    s_investment_type = forms.IntegerField(label=_('Investment type'), widget=forms.Select(choices=INVESTMENTTYPE_CHOICES, attrs={'class':''}))
 
     s_all_type_investments = forms.BooleanField(label=_('All organization types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
@@ -57,8 +57,8 @@ class InvestmentAdvancedSearchForm(AdvancedSearchForm):
     s_investment_to = forms.CharField(label=_('To'), widget=forms.TextInput(attrs={'class':'numero'}))
     s_all_investments_value = forms.BooleanField(label=_('All investments value'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
-    s_organization_type = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
-    
+#    s_organization_type = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
+
     s_all_type_organizations = forms.BooleanField(label=_('All organization types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
     s_organization_id = forms.IntegerField(widget=forms.HiddenInput())
@@ -79,7 +79,7 @@ class InvestmentAdvancedSearchForm(AdvancedSearchForm):
             self.cleaned_data = {}
 
     def get_value(self, key, persist=False):
-        
+
         value = None
         if hasattr(self, 'cleaned_data') and self.cleaned_data.has_key(key):
             value = self.cleaned_data[key]
@@ -106,7 +106,7 @@ class InvestmentForm(ModelForm):
 
     currency = forms.ModelChoiceField(queryset=Currency.objects.all(),label=_('Investment total value'), required=True, widget=forms.Select(attrs={'class':'select-curto moeda'}))
     amount = forms.FloatField(widget=forms.TextInput(attrs={'class':'numero'}),required=True)
-    
+
     third_party = forms.ChoiceField(choices=y_n_choices,widget=forms.RadioSelect(),label=_('Did the main investor receive this amount from third-party institutions?'),required=False)
 
     class Meta:
@@ -116,7 +116,7 @@ class InvestmentForm(ModelForm):
                 'estimated_completion','currency','amount')
 
     funding_organization = make_ajax_field(Investment,'funding_organization','organization',help_text=_('Enter text to search'),label=_('Investor organization'), required=True)
-    
+
     recipient_organization = make_ajax_field(Investment,'recipient_organization','organization',help_text=_('Enter text to search'),label=_('Recepient organization'), required=True)
     recipient_entity = make_ajax_field(Investment,'recipient_entity','project',help_text=_('Enter text to search'),label=_('Recipient Project'),
             required = False)

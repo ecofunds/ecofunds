@@ -11,7 +11,7 @@ from ecofunds.maps.models import GoogleMapView, GoogleMapPlugin
 from ecofunds.project.forms import ProjectAdvancedSearchForm
 from ecofunds.organization.forms import OrganizationAdvancedSearchForm
 from ecofunds.investment.forms import InvestmentAdvancedSearchForm
-from ecofunds.models import *
+from ecofunds.core.models import *
 
 class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
     name = _('Google Map')
@@ -60,7 +60,7 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
             'search_organization_form': search_organization_form,
             'search_investment_form': search_investment_form,
 
-            
+
             'count_projects': Project.objects.count,
             'count_project_activity_types': Activity.objects.count,
             'count_project_regions': Project.objects.values('projects_locations__location__name').annotate(total=Count('projects_locations__location__name')).count,

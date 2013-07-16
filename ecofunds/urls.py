@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.conf import settings
 
-from ecofunds.views import *
+from ecofunds.core.views import *
 
 from ajax_select import urls as ajax_select_urls
 

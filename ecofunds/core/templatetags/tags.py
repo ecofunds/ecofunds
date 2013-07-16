@@ -13,11 +13,11 @@ import decimal
 register = template.Library()
 
 class SetVarNode(template.Node):
- 
+
     def __init__(self, var_name, var_value):
         self.var_name = var_name
         self.var_value = var_value
- 
+
     def render(self, context):
         try:
             value = template.Variable(self.var_value).resolve(context)
@@ -35,7 +35,7 @@ def set_var(parser, token):
     if len(parts) < 4:
         raise template.TemplateSyntaxError("'set' tag must be of the form:  {% set <var_name>  = <var_value> %}")
     return SetVarNode(parts[1], parts[3])
- 
+
 @register.simple_tag
 def field_value(form, name):
     """ returns field value """
@@ -166,7 +166,7 @@ def page_url(context, page_lookup, params=None, lang=None, site=None):
 
 def get_page(request, page_lookup, lang, site=None):
     site_id = cms_tags.get_site_id(site)
-    
+
     if page_lookup:
         if isinstance(page_lookup, Page):
             return page_lookup

@@ -1,7 +1,7 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.utils.translation import ugettext_lazy as _
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.user.notification import notificate
 from ecofunds.user.models import *
 from ecofunds.user.forms import *
@@ -134,7 +134,7 @@ class CMSUserFormPlugin(CMSPluginBase):
                 return context
 
 
-class CMSNotificationPlugin(CMSPluginBase):    
+class CMSNotificationPlugin(CMSPluginBase):
     model = NotificationPlugin
     name = _("Notifications")
     render_template = "user/notelist.html"
@@ -148,7 +148,7 @@ class CMSNotificationPlugin(CMSPluginBase):
         for note in notes:
             out.append(note.notification)
             note.readed_date = datetime.now()
-        context.update( {"notifications":out} ) 
+        context.update( {"notifications":out} )
         return context
 
 class CMSDetailUserPlugin(CMSPluginBase):

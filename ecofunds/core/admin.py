@@ -1,6 +1,6 @@
 from django.contrib import admin
 from cms.admin.placeholderadmin import PlaceholderAdmin
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.opportunity.models import *
 from ecofunds import settings
 from django.contrib.auth.models import User

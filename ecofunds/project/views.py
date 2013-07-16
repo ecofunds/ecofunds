@@ -13,11 +13,11 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import BaseDetailView
 from django.utils.translation import ugettext_lazy as _
 
-from ecofunds.views import DjangoJSONEncoder
+from ecofunds.core.models import Project
+from ecofunds.core.views import DjangoJSONEncoder
 from ecofunds.business import *
 from ecofunds.maps import *
 from ecofunds.maps.models import GoogleMapView
-from ecofunds.models import Project
 from ecofunds.colors_RdYlGn import scale as color_scale
 
 import xlwt

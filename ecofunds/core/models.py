@@ -4,7 +4,6 @@ from datetime import datetime, date
 from django.db import models
 from django.db.models import Max
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
@@ -120,8 +119,8 @@ class Organization(models.Model):
     desired_location_text = models.CharField(max_length=765, blank=True,null=True)
     created_at = models.DateTimeField(_('Created at'), null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-    creater = models.ForeignKey(User, null=True, blank=True, related_name='+')
-    updater = models.ForeignKey(User, null=True, blank=True, related_name='+')
+    creater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
+    updater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
     validated = models.BooleanField(default=0)
     type = models.ForeignKey(OrganizationType, null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
@@ -152,8 +151,8 @@ class Organization(models.Model):
 
 
 class OrganizationAttachment(models.Model):
-    organization = models.ForeignKey(Organization, primary_key=True, related_name='organizations_attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='organizations_attachments')
+    organization = models.ForeignKey(Organization, related_name='organizations_attachments')
+    attachment = models.ForeignKey(Attachment, related_name='organizations_attachments')
 
     class Meta:
         db_table = u'ecofunds_organization_attachments'
@@ -197,8 +196,8 @@ class Project(models.Model):
     description = models.TextField(blank=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(null=True, blank=True)
-    creater = models.ForeignKey(User, related_name='+')
-    updater = models.ForeignKey(User, null=True, blank=True, related_name='+')
+    creater = models.ForeignKey('auth.User', related_name='+')
+    updater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
     validated = models.IntegerField(null=True, blank=True)
     is_project = models.IntegerField(null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
@@ -232,7 +231,7 @@ class Project(models.Model):
         return investments[0] if investments.count() > 0 else None
 
     def get_firstlocation(self):
-        return self.projects_locations.all()[:1].get() if self.projects_locations.count() > 0 else None
+        return self.locations.all()[:1].get() if self.locations.count() > 0 else None
 
     def __unicode__(self):
         return self.title
@@ -259,8 +258,8 @@ class ProjectXProject(models.Model):
 
 
 class ProjectAttachment(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True, related_name='attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='projects')
+    entity = models.ForeignKey(Project, related_name='attachments')
+    attachment = models.ForeignKey(Attachment, related_name='projects')
 
     class Meta:
         db_table = u'ecofunds_entity_attachments'
@@ -268,8 +267,8 @@ class ProjectAttachment(models.Model):
 
 
 class ProjectLocation(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True, related_name='projects_locations')
-    location = models.ForeignKey(Location, primary_key=True)
+    entity = models.ForeignKey(Project, related_name='projects_locations')
+    location = models.ForeignKey(Location)
 
     class Meta:
         db_table = u'ecofunds_entity_locations'
@@ -351,8 +350,8 @@ class Investment(models.Model):
 
 
 class InvestmentAttachment(models.Model):
-    investment = models.ForeignKey(Investment, primary_key=True, related_name='attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='investments')
+    investment = models.ForeignKey(Investment, related_name='attachments')
+    attachment = models.ForeignKey(Attachment, related_name='investments')
 
     class Meta:
         db_table = u'ecofunds_investment_attachments'
@@ -423,13 +422,13 @@ class NotificationType(models.Model):
 class Notification(models.Model):
     id = models.BigIntegerField(primary_key=True)
     #Usuarios que devem receber a notificacao
-    users_reader = models.ManyToManyField(User,through='NotificationReader',related_name="users_readers")
+    users_reader = models.ManyToManyField('auth.User',through='NotificationReader',related_name="users_readers")
     notification_type = models.ForeignKey(NotificationType)
     #objetos ao qual a notificacao faz referencia
-    user = models.ForeignKey(User,blank=True,null=True,related_name="user_owner")
+    user = models.ForeignKey('auth.User',blank=True,null=True,related_name="user_owner")
     organization = models.ForeignKey(Organization,blank=True,null=True)
     project = models.ForeignKey(Project,blank=True,null=True)
-    user_updated = models.ForeignKey(User,blank=True,null=True,related_name='update_notes')
+    user_updated = models.ForeignKey('auth.User',blank=True,null=True,related_name='update_notes')
     inserted_date = models.DateTimeField(auto_now=True)
     message = models.TextField(blank=True)
 
@@ -449,7 +448,7 @@ class InvestmentFlow(models.Model):
 
 
 class NotificationReader(models.Model):
-    reader = models.ForeignKey(User,primary_key=True,related_name='users_notification')
+    reader = models.ForeignKey('auth.User',primary_key=True,related_name='users_notification')
     notification = models.ForeignKey(Notification,related_name='project_notification')
     readed_date = models.DateTimeField(null=True, blank=True)
 

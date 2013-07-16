@@ -1,10 +1,8 @@
-
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
-from django.contrib.auth.models import User, UserManager,Permission
 from django.utils.translation import ugettext_lazy as _
 
-from ecofunds.models import *
 from cms.models import CMSPlugin, Page
 from django.core.mail import send_mail
 from ecofunds.settings import VALIDATE_EMAIL_URL
@@ -12,18 +10,25 @@ from ecofunds.user.notification import create_notification_type
 
 import uuid
 
+
+def get_media_path(instance, filename):
+    today = datetime.now()
+    model = str(instance.__class__.__name__)
+    return os.path.join(model,
+            str(today.year), str(today.month), str(today.day), filename)
+
 class UserType(models.Model):
     name = models.CharField(max_length=80,unique=True)
-    permissions = models.ManyToManyField(Permission,blank=True,null=True)
+    permissions = models.ManyToManyField('auth.Permission',blank=True,null=True)
     def __unicode__(self):
         return self.name
 
 class UserProfile(models.Model):
     #Campo necessario
-    user = models.OneToOneField(User)
-    organizations = models.ManyToManyField('ecofunds.Organization',null=True,through='UserProfileOrganization')
+    user = models.OneToOneField('auth.User')
+    organizations = models.ManyToManyField('core.Organization',null=True,through='UserProfileOrganization')
     title = models.CharField(max_length=80,blank=True,null=True)
-    country = models.ForeignKey('ecofunds.Country',blank=True,null=True)
+    country = models.ForeignKey('core.Country',blank=True,null=True)
     phone_country_prefix_01 = models.CharField(max_length=3, blank=True,null=True)
     phone_local_prefix_01 = models.CharField(max_length=30, blank=True,null=True)
     phone1 = models.CharField(max_length=15,blank=True,null=True)
@@ -35,7 +40,7 @@ class UserProfile(models.Model):
     fax = models.CharField(max_length=15,blank=True,null=True)
     website = models.CharField(max_length=80,blank=True,null=True)
     aim = models.CharField(max_length=80,blank=True,null=True)
-    user_type = models.ForeignKey(UserType,null=True)   
+    user_type = models.ForeignKey(UserType,null=True)
     email_alt = models.CharField(max_length=80,null=True,blank=True)
     image = models.ImageField(_("image"), upload_to=get_media_path,null=True,blank=True)
     active = models.BooleanField(default=1)
@@ -57,7 +62,7 @@ class UserProfile(models.Model):
             if has:
                 return has
         return False
-    
+
     def can_ownedit(self,obj):
         """verifica se foi criado pelo usuario,
         se sim, ele tem permissao ao objeto"""
@@ -183,12 +188,12 @@ class UserProfile(models.Model):
             print 'has'
             if type in ('add','change','delete'):
                 #essas permissoes sao Model based
-                #entao, se ele as tem, tem para todas 
+                #entao, se ele as tem, tem para todas
                 #instancias do modelo
                 return True
             else:
                 #se nao for o caso, precisamos verificar
-                #permissoes object based, seguindo as 
+                #permissoes object based, seguindo as
                 #regras de negocio estipuladas
                 if type=='ownedit':
                     return self.can_ownedit(obj)
@@ -198,7 +203,7 @@ class UserProfile(models.Model):
                     return self.can_orgedit(obj)
                 else:
                     raise ValueError("esse tipo de permissao %s nao esta definido"%type)
-        else: 
+        else:
             return False
     #em templates, eh util para saber se deve mostrar um conjunto de edicoes ou nao
     def can_edit(self,obj,permissions=('change','delete','ownedit','orgedit','regionedit')):
@@ -219,23 +224,23 @@ class UserProfile(models.Model):
             self.user.save()
         return out
 
-    
+
 
 class UserProfileProjects(models.Model):
     userprofile = models.ForeignKey(UserProfile,related_name='userprofile_id_project')
-    project = models.ForeignKey('ecofunds.Project',related_name='project_id')
+    project = models.ForeignKey('core.Project',related_name='project_id')
     class Meta:
         unique_together=('userprofile','project')
 
 class UserProfileOrganization(models.Model):
     userprofile = models.ForeignKey(UserProfile,related_name='userprofile_id_organization')
-    organization = models.ForeignKey('ecofunds.Organization',related_name='organ')
+    organization = models.ForeignKey('core.Organization',related_name='organ')
     admin = models.BooleanField()
     class Meta:
         unique_together=('userprofile','organization')
 
 class MailValidation(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField('auth.User')
     code = models.CharField(max_length=60,blank=False,unique=True)
     validated = models.BooleanField(blank=True)
     def save(self,*args,**kwargs):
@@ -255,8 +260,8 @@ class MailValidation(models.Model):
         msg = 'Click in the link below to create your new user on ecofunds %s%s/%s/'%(VALIDATE_EMAIL_URL,self.user.pk,self.code)
         send_mail(subject,msg,address,[address],fail_silently=False)
 
-def create_user_profile(sender, instance, created, **kwargs):  
-    if created:  
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
        profile, created = UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
@@ -276,6 +281,6 @@ from ecofunds.user.permissions import create_permissions,get_content_type,relate
 #tenta salvar permissoes e tipos de usuarios.
 #porem, caso as tabelas nao estejam syncadas, pode resultar em erro
 #create_notification_type()
-create_permissions()
-relate_user_type()
+#create_permissions()
+#relate_user_type()
 
