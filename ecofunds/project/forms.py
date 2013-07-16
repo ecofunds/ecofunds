@@ -46,14 +46,14 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 #    ('23','Waste treatment')
 #)
 
-#ACTIVITY_CHOICES = (('', 'Choose an activity type'),) + tuple(Activity.objects.all().values_list('activity_id', 'name'))
+ACTIVITY_CHOICES = (('', 'Choose an activity type'),) + tuple(Activity.objects.all().values_list('activity_id', 'name'))
 
 class ProjectAdvancedSearchForm(AdvancedSearchForm):
 
     s_project_name = forms.CharField(label=_('Project name'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a project')}))
     s_all_project_name = forms.BooleanField(label=_('All projects'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
-    #s_project_activity_type = forms.IntegerField(label=_('Project activity type'), widget=forms.Select(choices=ACTIVITY_CHOICES, attrs={'class':''}))
+    s_project_activity_type = forms.IntegerField(label=_('Project activity type'), widget=forms.Select(choices=ACTIVITY_CHOICES, attrs={'class':''}))
 
     s_all_project_activity_type = forms.BooleanField(label=_('All activities types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 

@@ -40,12 +40,12 @@ class MyRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
 #    ('8', 'Other')
 #)
 
-#INVESTMENTTYPE_CHOICES = (('', 'Choose an investment type'),) + tuple(InvestmentType.objects.all().values_list('id', 'name'))
-#ORGANIZATIONTYPE_CHOICES = (('', 'Choose an organization type'),) + tuple(OrganizationType.objects.all().values_list('id', 'name'))
+INVESTMENTTYPE_CHOICES = (('', 'Choose an investment type'),) + tuple(InvestmentType.objects.all().values_list('id', 'name'))
+ORGANIZATIONTYPE_CHOICES = (('', 'Choose an organization type'),) + tuple(OrganizationType.objects.all().values_list('id', 'name'))
 
 class InvestmentAdvancedSearchForm(AdvancedSearchForm):
 
-#    s_investment_type = forms.IntegerField(label=_('Investment type'), widget=forms.Select(choices=INVESTMENTTYPE_CHOICES, attrs={'class':''}))
+    s_investment_type = forms.IntegerField(label=_('Investment type'), widget=forms.Select(choices=INVESTMENTTYPE_CHOICES, attrs={'class':''}))
 
     s_all_type_investments = forms.BooleanField(label=_('All organization types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
@@ -57,7 +57,7 @@ class InvestmentAdvancedSearchForm(AdvancedSearchForm):
     s_investment_to = forms.CharField(label=_('To'), widget=forms.TextInput(attrs={'class':'numero'}))
     s_all_investments_value = forms.BooleanField(label=_('All investments value'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
-#    s_organization_type = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
+    s_organization_type = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
 
     s_all_type_organizations = forms.BooleanField(label=_('All organization types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
 
