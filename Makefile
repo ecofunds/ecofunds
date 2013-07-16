@@ -5,3 +5,6 @@ test:
 
 run:
 	python manage.py runserver
+
+alljson:
+	python manage.py dumpdata --indent=4 auth contenttypes cms text picture link file maps core opportunity project organization investment > all.json
