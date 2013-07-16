@@ -65,7 +65,8 @@ class Currency(models.Model):
     name = models.CharField(max_length=765)
     code = models.CharField(max_length=765)
     decimalnumbers = models.BigIntegerField()
-    htmlsymbol = models.CharField(max_length=150, blank=True)
+    # TODO verify field change effect
+    htmlsymbol = models.CharField(max_length=150, blank=True, null=True)
     ordering = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
@@ -95,14 +96,17 @@ class Organization(models.Model):
     contact_first_name = models.CharField(max_length=150, blank=True,null=True)
     contact_last_name = models.CharField(max_length=150, blank=True,null=True)
     contact_title = models.CharField(max_length=150, blank=True,null=True)
-    country = models.ForeignKey(Country)
+    # TODO check ogrnaization with no locations
+    country = models.ForeignKey(Country, null=True, blank=True)
     toolkit = models.CharField(max_length=140,null=True,blank=True)
     political_divition_id = models.BigIntegerField(null=True, blank=True)
     street1 = models.CharField(max_length=765, blank=True,null=True)
     street2 = models.CharField(max_length=765, blank=True,null=True)
     city = models.CharField(max_length=150, blank=True,null=True)
     zip = models.CharField(max_length=60, blank=True,null=True)
-    state = models.ForeignKey('Location')
+    # TODO check ogrnaization with no locations
+    state = models.ForeignKey('Location', null=True, blank=True)
+
     phone_country_prefix = models.CharField(max_length=3, blank=True,null=True)
     phone_local_prefix = models.CharField(max_length=30, blank=True,null=True)
     phone_number = models.CharField(max_length=30, blank=True,null=True)
@@ -187,13 +191,16 @@ class Location(models.Model):
 
 class Project(models.Model):
     entity_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255,unique=True)
-    acronym = models.CharField(_('Acronym'), max_length=60, blank=True)
+    # TODO verify effect since title was unique
+    title = models.CharField(max_length=255, unique=False)
+    # TODO check effect of null True
+    acronym = models.CharField(_('Acronym'), max_length=60, blank=True, null=True)
     resume = models.CharField(max_length=150)
     grant_year = models.IntegerField()
     grant_from = models.DateTimeField(null=True, blank=True)
     grant_to = models.DateTimeField(null=True, blank=True)
-    description = models.TextField(blank=True)
+    # TODO check effect of null True
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(null=True, blank=True)
     creater = models.ForeignKey('auth.User', related_name='+')
@@ -204,8 +211,10 @@ class Project(models.Model):
     currency = models.ForeignKey(Currency, null=True, blank=True)
     budget = models.DecimalField(_('Budget'), null=False, max_digits=20, decimal_places=2, blank=False)
     organization = models.ManyToManyField(Organization,through=Organization.projects.through,related_name='organizations_set')
-    main_organization = models.ForeignKey(Organization,related_name="main_org")
-    activity_description = models.TextField(blank=True)
+    # TODO check no main_organization
+    main_organization = models.ForeignKey(Organization,related_name="main_org", null=True, blank=True)
+    # TODO check effect of null True
+    activity_description = models.TextField(blank=True, null=True)
     activities = models.ManyToManyField('Activity',through='ProjectActivity',related_name='activities')
     locations = models.ManyToManyField(Location,through=Location.projects.through,related_name="location_project")
     phone_country_prefix_01 = models.CharField(max_length=3, blank=True,null=True)
@@ -434,7 +443,8 @@ class Notification(models.Model):
     project = models.ForeignKey(Project,blank=True,null=True)
     user_updated = models.ForeignKey('auth.User',blank=True,null=True,related_name='update_notes')
     inserted_date = models.DateTimeField(auto_now=True)
-    message = models.TextField(blank=True)
+    # TODO check effect of null True
+    message = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return self.message
