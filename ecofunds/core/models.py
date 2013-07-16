@@ -254,6 +254,7 @@ class ProjectXProject(models.Model):
     child_project = models.ForeignKey('Project',related_name='father_projects')
 
     class Meta:
+        db_table = u'ecofunds_projectxproject'
         unique_together=('parent_project','child_project')
 
 
@@ -418,6 +419,9 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.description
 
+    class Meta:
+        db_table = u'ecofunds_notificationtype'
+
 
 class Notification(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -444,6 +448,7 @@ class InvestmentFlow(models.Model):
     child = models.ForeignKey(Investment,related_name='children_investments')
 
     class Meta:
+        db_table = u"ecofunds_investmentflow"
         unique_together = ('father','child')
 
 
@@ -453,6 +458,7 @@ class NotificationReader(models.Model):
     readed_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
+        db_table = u"ecofunds_notificationreader"
         unique_together=('reader','notification')
 
 
@@ -461,6 +467,9 @@ class AttachmentType(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        db_table = u"ecofunds_attachmenttype"
 
 
 class AttachmentPlugin(CMSPlugin):
