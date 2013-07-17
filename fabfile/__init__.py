@@ -22,7 +22,7 @@ def stage():
 
     env.user = 'ecofunds'
     env.hosts = ['stage.ecofundsdatabase.org']
-    env.settings = 'stage.settings'
+    env.settings = 'ecofunds.settings'
     env.PROJECT = Project('~', 'stage.ecofunds', 'ecofunds')
 
 
