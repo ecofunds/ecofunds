@@ -11,14 +11,14 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from ecofunds import settings
-from ecofunds.models import *
+from ecofunds.core.models import *
+from ecofunds.core.views import item_permission_list
 from ecofunds.user.models import UserProfile
 from ecofunds.user.notification import notificate
 from ecofunds.project.models import *
 from ecofunds.project.forms import *
 from ecofunds.business import *
-from ecofunds.views import item_permission_list
-from ecofunds.cms_plugins import GenericCMSFormPlugin
+from ecofunds.core.cms_plugins import GenericCMSFormPlugin
 from ecofunds.user.permissions import edit_allowance
 
 from gmapi import maps

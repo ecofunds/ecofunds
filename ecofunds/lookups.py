@@ -1,5 +1,5 @@
 from ajax_select import LookupChannel
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.user.models import UserProfile
 from django.contrib.auth.models import User
 from django.db.models import Q

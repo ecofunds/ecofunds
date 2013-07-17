@@ -9,14 +9,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language
 from django.db import IntegrityError
 
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.user.models import *
 from ecofunds.user.notification import notificate
 from ecofunds.business import *
 from ecofunds.investment.models import InvestmentsPlugin,InvestmentFormPlugin
 from ecofunds.investment.forms import InvestmentForm
-from ecofunds.views import item_permission_list
-from ecofunds.cms_plugins import GenericCMSFormPlugin
+from ecofunds.core.views import item_permission_list
+from ecofunds.core.cms_plugins import GenericCMSFormPlugin
 
 from ecofunds.user.permissions import edit_allowance
 from django import db
@@ -75,8 +75,8 @@ limit 5
                 item.entity_id = x[0]
                 item.title = x[1]
                 item.resume = x[2]
-                latest.append(item)            
-                        
+                latest.append(item)
+
             context.update({'new_project_investments': latest})
 
         return context

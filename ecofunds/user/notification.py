@@ -1,5 +1,4 @@
-
-from  ecofunds.models import *
+from ecofunds.core.models import *
 from django.contrib.auth.models import User
 
 def notificate(obj,type,user,msg):

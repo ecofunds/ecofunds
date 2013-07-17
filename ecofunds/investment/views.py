@@ -12,9 +12,9 @@ from django.utils.simplejson import dumps, loads
 from django.views.generic.detail import BaseDetailView
 
 from ecofunds.business import ProjectData, OrganizationData, InvestmentData
-from ecofunds.views import DjangoJSONEncoder
+from ecofunds.core.views import DjangoJSONEncoder
 from ecofunds.maps.models import GoogleMapView
-from ecofunds.models import Investment
+from ecofunds.core.models import Investment
 from ecofunds.colors_RdYlGn import scale as color_scale
 
 from gmapi.maps import MapConstantClass, MapClass, Args

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import Http404
 
 from ecofunds import settings
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.project.models import *
 from ecofunds.business import *
 from ecofunds.user.notification import notificate
@@ -36,7 +36,7 @@ class CMSListImagePlugin(CMSPluginBase):
     model = ListImagePlugin
     name = _("List Images")
     render_template = "list-images.html"
-    
+
     def render(self, context, instance, placeholder):
         request = context['request']
 
@@ -87,7 +87,7 @@ class CMSGlobalSearchListPlugin(CMSPluginBase):
 
         order_by = data.get('order_by')
         page = data.get('page')
-        
+
         if not order_by:
             order_by = '-created_at'
 
@@ -95,7 +95,7 @@ class CMSGlobalSearchListPlugin(CMSPluginBase):
             page = 1
 
         search_type = data.get('search_type')
-        
+
         projects = None
         organizations = None
         investments = None
@@ -135,7 +135,7 @@ class CMSGlobalSearchListPlugin(CMSPluginBase):
 
 class GenericCMSFormPlugin(CMSPluginBase):
 
- 
+
     #FALTA CRIAR AS NOTIFICACOES
     def render(self,context,instance,placeholder):
         request = context['request']

@@ -1,9 +1,12 @@
 # coding: utf-8
+import os
+from sys import argv
+
 from decouple import Config
 from dj_database_url import parse as db_url
+from unipath import Path
 
 gettext = lambda s: s
-from unipath import Path
 
 PROJECT_ROOT = Path(__file__).parent
 
@@ -27,6 +30,18 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': config('DATABASE_URL', cast=db_url)
 }
+
+if len(argv) > 1 and argv[1] == "test":
+    DATABASES = { ########## IN-MEMORY TEST DATABASE
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+            "USER": "",
+            "PASSWORD": "",
+            "HOST": "",
+            "PORT": "",
+        },
+    }
 
 # Email Configuration
 
@@ -151,6 +166,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    #'south',
     'cms',
     'cms.plugins.picture',
     'cms.plugins.text',
@@ -159,7 +175,6 @@ INSTALLED_APPS = (
     #'cmsplugin_news',
     'mptt',
     'menus',
-    'south',
     'appmedia',
     'sekizai',
     'pygeoip',
@@ -169,7 +184,7 @@ INSTALLED_APPS = (
     'ajax_select',
     'rosetta',
     #'endless_pagination',
-    'ecofunds',
+    'ecofunds.core',
     'ecofunds.user',
     'ecofunds.maps',
     'ecofunds.opportunity',

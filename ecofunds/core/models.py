@@ -4,7 +4,6 @@ from datetime import datetime, date
 from django.db import models
 from django.db.models import Max
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
@@ -66,7 +65,8 @@ class Currency(models.Model):
     name = models.CharField(max_length=765)
     code = models.CharField(max_length=765)
     decimalnumbers = models.BigIntegerField()
-    htmlsymbol = models.CharField(max_length=150, blank=True)
+    # TODO verify field change effect
+    htmlsymbol = models.CharField(max_length=150, blank=True, null=True)
     ordering = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
@@ -96,14 +96,17 @@ class Organization(models.Model):
     contact_first_name = models.CharField(max_length=150, blank=True,null=True)
     contact_last_name = models.CharField(max_length=150, blank=True,null=True)
     contact_title = models.CharField(max_length=150, blank=True,null=True)
-    country = models.ForeignKey(Country)
+    # TODO check ogrnaization with no locations
+    country = models.ForeignKey(Country, null=True, blank=True)
     toolkit = models.CharField(max_length=140,null=True,blank=True)
     political_divition_id = models.BigIntegerField(null=True, blank=True)
     street1 = models.CharField(max_length=765, blank=True,null=True)
     street2 = models.CharField(max_length=765, blank=True,null=True)
     city = models.CharField(max_length=150, blank=True,null=True)
     zip = models.CharField(max_length=60, blank=True,null=True)
-    state = models.ForeignKey('Location')
+    # TODO check ogrnaization with no locations
+    state = models.ForeignKey('Location', null=True, blank=True)
+
     phone_country_prefix = models.CharField(max_length=3, blank=True,null=True)
     phone_local_prefix = models.CharField(max_length=30, blank=True,null=True)
     phone_number = models.CharField(max_length=30, blank=True,null=True)
@@ -120,8 +123,8 @@ class Organization(models.Model):
     desired_location_text = models.CharField(max_length=765, blank=True,null=True)
     created_at = models.DateTimeField(_('Created at'), null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-    creater = models.ForeignKey(User, null=True, blank=True, related_name='+')
-    updater = models.ForeignKey(User, null=True, blank=True, related_name='+')
+    creater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
+    updater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
     validated = models.BooleanField(default=0)
     type = models.ForeignKey(OrganizationType, null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
@@ -152,8 +155,8 @@ class Organization(models.Model):
 
 
 class OrganizationAttachment(models.Model):
-    organization = models.ForeignKey(Organization, primary_key=True, related_name='organizations_attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='organizations_attachments')
+    organization = models.ForeignKey(Organization, related_name='organizations_attachments')
+    attachment = models.ForeignKey(Attachment, related_name='organizations_attachments')
 
     class Meta:
         db_table = u'ecofunds_organization_attachments'
@@ -188,25 +191,30 @@ class Location(models.Model):
 
 class Project(models.Model):
     entity_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255,unique=True)
-    acronym = models.CharField(_('Acronym'), max_length=60, blank=True)
+    # TODO verify effect since title was unique
+    title = models.CharField(max_length=255, unique=False)
+    # TODO check effect of null True
+    acronym = models.CharField(_('Acronym'), max_length=60, blank=True, null=True)
     resume = models.CharField(max_length=150)
     grant_year = models.IntegerField()
     grant_from = models.DateTimeField(null=True, blank=True)
     grant_to = models.DateTimeField(null=True, blank=True)
-    description = models.TextField(blank=True)
+    # TODO check effect of null True
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(null=True, blank=True)
-    creater = models.ForeignKey(User, related_name='+')
-    updater = models.ForeignKey(User, null=True, blank=True, related_name='+')
+    creater = models.ForeignKey('auth.User', related_name='+')
+    updater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
     validated = models.IntegerField(null=True, blank=True)
     is_project = models.IntegerField(null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
     currency = models.ForeignKey(Currency, null=True, blank=True)
     budget = models.DecimalField(_('Budget'), null=False, max_digits=20, decimal_places=2, blank=False)
     organization = models.ManyToManyField(Organization,through=Organization.projects.through,related_name='organizations_set')
-    main_organization = models.ForeignKey(Organization,related_name="main_org")
-    activity_description = models.TextField(blank=True)
+    # TODO check no main_organization
+    main_organization = models.ForeignKey(Organization,related_name="main_org", null=True, blank=True)
+    # TODO check effect of null True
+    activity_description = models.TextField(blank=True, null=True)
     activities = models.ManyToManyField('Activity',through='ProjectActivity',related_name='activities')
     locations = models.ManyToManyField(Location,through=Location.projects.through,related_name="location_project")
     phone_country_prefix_01 = models.CharField(max_length=3, blank=True,null=True)
@@ -232,7 +240,7 @@ class Project(models.Model):
         return investments[0] if investments.count() > 0 else None
 
     def get_firstlocation(self):
-        return self.projects_locations.all()[:1].get() if self.projects_locations.count() > 0 else None
+        return self.locations.all()[:1].get() if self.locations.count() > 0 else None
 
     def __unicode__(self):
         return self.title
@@ -255,12 +263,13 @@ class ProjectXProject(models.Model):
     child_project = models.ForeignKey('Project',related_name='father_projects')
 
     class Meta:
+        db_table = u'ecofunds_projectxproject'
         unique_together=('parent_project','child_project')
 
 
 class ProjectAttachment(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True, related_name='attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='projects')
+    entity = models.ForeignKey(Project, related_name='attachments')
+    attachment = models.ForeignKey(Attachment, related_name='projects')
 
     class Meta:
         db_table = u'ecofunds_entity_attachments'
@@ -268,8 +277,8 @@ class ProjectAttachment(models.Model):
 
 
 class ProjectLocation(models.Model):
-    entity = models.ForeignKey(Project, primary_key=True, related_name='projects_locations')
-    location = models.ForeignKey(Location, primary_key=True)
+    entity = models.ForeignKey(Project, related_name='projects_locations')
+    location = models.ForeignKey(Location)
 
     class Meta:
         db_table = u'ecofunds_entity_locations'
@@ -351,8 +360,8 @@ class Investment(models.Model):
 
 
 class InvestmentAttachment(models.Model):
-    investment = models.ForeignKey(Investment, primary_key=True, related_name='attachments')
-    attachment = models.ForeignKey(Attachment, primary_key=True, related_name='investments')
+    investment = models.ForeignKey(Investment, related_name='attachments')
+    attachment = models.ForeignKey(Attachment, related_name='investments')
 
     class Meta:
         db_table = u'ecofunds_investment_attachments'
@@ -419,19 +428,23 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.description
 
+    class Meta:
+        db_table = u'ecofunds_notificationtype'
+
 
 class Notification(models.Model):
     id = models.BigIntegerField(primary_key=True)
     #Usuarios que devem receber a notificacao
-    users_reader = models.ManyToManyField(User,through='NotificationReader',related_name="users_readers")
+    users_reader = models.ManyToManyField('auth.User',through='NotificationReader',related_name="users_readers")
     notification_type = models.ForeignKey(NotificationType)
     #objetos ao qual a notificacao faz referencia
-    user = models.ForeignKey(User,blank=True,null=True,related_name="user_owner")
+    user = models.ForeignKey('auth.User',blank=True,null=True,related_name="user_owner")
     organization = models.ForeignKey(Organization,blank=True,null=True)
     project = models.ForeignKey(Project,blank=True,null=True)
-    user_updated = models.ForeignKey(User,blank=True,null=True,related_name='update_notes')
+    user_updated = models.ForeignKey('auth.User',blank=True,null=True,related_name='update_notes')
     inserted_date = models.DateTimeField(auto_now=True)
-    message = models.TextField(blank=True)
+    # TODO check effect of null True
+    message = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return self.message
@@ -445,15 +458,17 @@ class InvestmentFlow(models.Model):
     child = models.ForeignKey(Investment,related_name='children_investments')
 
     class Meta:
+        db_table = u"ecofunds_investmentflow"
         unique_together = ('father','child')
 
 
 class NotificationReader(models.Model):
-    reader = models.ForeignKey(User,primary_key=True,related_name='users_notification')
+    reader = models.ForeignKey('auth.User',primary_key=True,related_name='users_notification')
     notification = models.ForeignKey(Notification,related_name='project_notification')
     readed_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
+        db_table = u"ecofunds_notificationreader"
         unique_together=('reader','notification')
 
 
@@ -462,6 +477,9 @@ class AttachmentType(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        db_table = u"ecofunds_attachmenttype"
 
 
 class AttachmentPlugin(CMSPlugin):

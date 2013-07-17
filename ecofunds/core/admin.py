@@ -1,6 +1,6 @@
 from django.contrib import admin
 from cms.admin.placeholderadmin import PlaceholderAdmin
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.opportunity.models import *
 from ecofunds import settings
 from django.contrib.auth.models import User
@@ -58,3 +58,24 @@ admin.site.unregister(User)
 admin.site.register(User,UserProfileAdmin)
 admin.site.register(UserType,UserTypeAdmin)
 admin.site.register(ProjectLocation)
+
+
+admin.site.register(Country)
+admin.site.register(Attachment)
+admin.site.register(Activity)
+admin.site.register(Currency)
+admin.site.register(OrganizationType)
+admin.site.register(OrganizationAttachment)
+admin.site.register(ProjectXProject)
+admin.site.register(ProjectAttachment)
+admin.site.register(ProjectActivity)
+admin.site.register(ProjectOrganization)
+admin.site.register(InvestmentType)
+admin.site.register(InvestmentAttachment)
+admin.site.register(ListImagePlugin)
+admin.site.register(NotificationType)
+admin.site.register(Notification)
+admin.site.register(InvestmentFlow)
+admin.site.register(NotificationReader)
+admin.site.register(AttachmentType)
+admin.site.register(AttachmentPlugin)

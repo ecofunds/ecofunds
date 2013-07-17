@@ -1,7 +1,7 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.utils.translation import ugettext_lazy as _
-from ecofunds.models import *
+from ecofunds.core.models import *
 from ecofunds.user.models import *
 from ecofunds.user.forms import *
 
