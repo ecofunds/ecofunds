@@ -34,11 +34,13 @@ def build(release_dir):
     """
     with cd(release_dir):
         #release_static = Path(release_dir, env.PROJECT.package, 'static')
-        release_static = Path(release_dir, 'static')
+        #release_static = Path(release_dir, 'static')
         release_media = Path(release_dir, env.PROJECT.package, 'media')
         release_settings = Path(release_dir, env.PROJECT.package, 'settings.ini')
 
         run('ln -s %s %s' % (env.PROJECT.settings, release_settings))
+        run('ln -s %s %s' % (env.PROJECT.media, release_media))
+
         run("python bootstrap")
 
         with prefix('source bin/activate'):
