@@ -184,12 +184,6 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var info_window = new google.maps.InfoWindow({
                 content: total_str
             });
-            //var marker_ = new google.maps.Marker({
-            //    map: _map,
-            //    position: myLatlng,
-            //    title: total_str
-            //});
-
             var marker = new MarkerWithLabel({
                 position: myLatlng,
                 draggable: true,
