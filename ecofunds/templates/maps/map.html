@@ -2,15 +2,33 @@
 {%block head%}
     {% addtoblock "css" %}
         <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.css" />
+        <style>
+          #map_canvas {
+            height: 300px;
+          }
+        </style>
+        <style type="text/css">
+        .labels {
+            color: white;
+            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            width: 100px;
+            "border: 2px solid black;"
+            white-space: nowrap;
+        }
+        </style>
     {% endaddtoblock %}
-    
-    {% addtoblock "js" %} 
+
+    {% addtoblock "js" %}
         {{ form.media.js }}
-        <script type="text/javascript" 
+        <script type="text/javascript"
             src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'pt'}]}">
-        </script>      
+        </script>
         <!-- Funções específicas dessa página -->
-        <script type="text/javascript" src="{% get_static_prefix %}scripts/maps/map.js"></script>
+        <!--script type="text/javascript" src="{% get_static_prefix %}scripts/maps/map.js"></script-->
+        <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
     {% endaddtoblock %}
 {% endblock %}
 
@@ -128,10 +146,9 @@
                 <img class="cores" src="{% get_static_prefix %}images/bg/bg-legenda.png" alt="" />
                 <span class="valor valor-final">0,000,000.00</span>
             </div>
-        </div>  
+        </div>
     </div>
-
-    {{ form.map }}
+    <div id="map_canvas"></div>
 </section>
 
 <section id="chart-view" class="graficos">
