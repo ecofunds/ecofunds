@@ -371,7 +371,6 @@ class InvestmentFlowSource(BaseDetailView):
 
 class InvestmentMapSourceView(GoogleMapView, BaseDetailView):
     def get(self, request, *args, **kwargs):
-        db.reset_queries()
         if request.method == "POST":
             data = request.POST
         else:
