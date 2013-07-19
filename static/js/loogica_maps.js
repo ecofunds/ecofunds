@@ -186,7 +186,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             });
             var marker = new MarkerWithLabel({
                 position: myLatlng,
-                draggable: true,
+                draggable: false,
                 map: _map,
                 labelContent: total_str,
                 labelAnchor: new google.maps.Point(22, 0),
