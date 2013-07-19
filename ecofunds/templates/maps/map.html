@@ -3,8 +3,8 @@
     {% addtoblock "css" %}
         <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.css" />
         <style>
-          #map_canvas {
-            height: 300px;
+          .map-wrapper {
+            height: 400px;
           }
         </style>
         <style type="text/css">
@@ -148,7 +148,9 @@
             </div>
         </div>
     </div>
-    <div id="map_canvas"></div>
+    <div class="map-wrapper">
+      <div id="map_canvas"></div>
+    </div>
 </section>
 
 <section id="chart-view" class="graficos">

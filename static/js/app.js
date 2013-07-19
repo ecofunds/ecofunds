@@ -41,12 +41,7 @@ requirejs.config({
 });
 
 require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
-
-    $(window).resize(function () {
-        var h = $(window).height(),
-            offsetTop = 40; // Calculate the top offset
-        $('#map_canvas').css('height', (h - offsetTop));
-    }).resize();
+    $('#map_canvas').css('height', 400);
 
     require(["marker"], function () {
         $("#loader").hide();
