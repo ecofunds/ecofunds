@@ -7,15 +7,8 @@
     {% addtoblock "js" %}
         <!-- Funções específicas dessa página -->
         <script type="text/javascript" src="{% get_static_prefix %}scripts/home/home-template.js"></script>
-        
         <script type="text/javascript" src="{% get_static_prefix %}scripts/global/list.js"></script>
         <script type="text/javascript" src="{% get_static_prefix %}scripts/project/list.js"></script>
-
-        <script type="text/javascript">
-            $(function(){
-                ecofundsMap.loadDensityInvestments();
-            });
-        </script>
     {% endaddtoblock %}
         
     <div class="container">
