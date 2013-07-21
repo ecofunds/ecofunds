@@ -244,7 +244,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
         },
         fetch_investments: function() {
             this.investment_places = new Places();
-            this.investment_places.url = '/ajax/investment/density';
+            this.investment_places.url = '/geo_api/investment/density';
             this.investment_places_view = new PlacesView({
                 collection: this.investment_places
             });
