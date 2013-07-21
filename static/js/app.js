@@ -41,12 +41,13 @@ requirejs.config({
 });
 
 require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
-    $('#map_canvas').css('height', 400);
+    $('#id_map').css('height', global_map_height);
+    $('#chart-view').hide();
 
     require(["marker"], function () {
-        $("#loader").hide();
         window.map_router = new loogica.MapRouter();
         Backbone.history.start({pushState: false});
         window.map_router.navigate('investments', {trigger: true});
+        $('.carregando.tela-mapa', '.mapa').hide();
     });
 });

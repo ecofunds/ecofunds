@@ -6,30 +6,33 @@
 
     <!--Resolve os problemas de compatibilidade do IE / edge = renderiza como a última versão do IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    
+
     <meta name="description" content="Ecofunds Database é um portal na internet sobre investimentos em conservação da biodiversidade na região Andino-Amazônica. Seu objetivo é mapear investimentos em projetos de conservação, bem como sua temática, localização geográfica, organizações envolvidas e natureza financeira." />
-    <meta name="keywords" content="ecofunds, investimentos, conservação, biodiversidade, projetos, andino-amazônica, funbio, 
-    redlac" /> 
-    <meta name="author" content="QX3" />
+    <meta name="keywords" content="ecofunds, investimentos, conservação, biodiversidade, projetos, andino-amazônica, funbio,
+    redlac" />
+    <meta name="author" content="QX3/Dekode" />
 
     {% render_block "meta" %}
 
-   
     <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/estilos.css" media="all" />
-    
+
     <!-- CSS com correções de BUGS do IE -->
     <!--[if lt IE 10]>
         <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/estilos-ie.css" media="all" />
-    <![endif]-->    
-    
-    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/ajax_select.css" media="all" /> 
-    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/fancybox/jquery.fancybox.css" media="all" /> 
-    
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/ajax_select.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/fancybox/jquery.fancybox.css" media="all" />
+
     {% render_block "css" %}
 
+    <script type="text/javascript">
+        var global_map_height = 400;
+    </script>
+
     <!-- Carrega jQuery -->
-     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-1.8.2.min.js"></script> 
-    
+     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-1.8.2.min.js"></script>
+
     <!-- Carrega jQuery UI-->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery-ui-1.9.2.custom.min.js"></script>
 
@@ -38,23 +41,23 @@
 
     <!-- Estiliza os Formulários -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jQuery.qxStylingForms.js"></script>
-    
+
     <!-- Suggest -->
-    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.qxSuggest.js"></script>    
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.qxSuggest.js"></script>
 
     <!-- Slider Simples -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.fitSlide.js"></script>
 
     <!-- Slider de Cartões Home -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.roundabout.js"></script>
-    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.roundabout-shapes.js"></script>    
+    <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.roundabout-shapes.js"></script>
 
     <!-- Carrega plugin que coloca os três pontos nos titulos, resumos e etc. -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.dotdotdot-1.5.1.js"></script>
 
     <!-- Mascaras -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.meio.mask.js"></script>
-    
+
     <!-- Estiliza a scrollbar dos elementos -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.jscrollpane.min.js"></script>
     <script type="text/javascript" src="{% get_static_prefix %}scripts/libs/jquery.mousewheel.js"></script>
@@ -70,7 +73,7 @@
 
     <!-- Arquivo de Funções Genéricas de Interface/Desenv -->
     <script type="text/javascript" src="{% get_static_prefix %}scripts/jquery.fx.js"></script>
-       
+
     <!-- Script que ensina o IE a interpretar as tags HTML5 -->
     <!--[if lt IE 9]>
         <script type="text/javascript" src="{% get_static_prefix %}scripts/extras/html5.js"></script>
@@ -84,7 +87,7 @@
     {% render_block "js" %}
     <title>{% block title %}Ecofunds Database{% endblock %}</title>
 
-    {% block head %}{% endblock %} 
+    {% block head %}{% endblock %}
 
 </head>
 <body id="{{ request.current_page.reverse_id }}">
@@ -113,7 +116,7 @@
             <!-- seletor-idiomas -->
             <div id="seletor-idioma">
                 {% trans "Language" %}
-                {% language_chooser "language_chooser.html" %}                
+                {% language_chooser "language_chooser.html" %}
             </div>
             <!-- fim de seletor-idiomas -->
 
@@ -128,8 +131,8 @@
                         <span class="auxiliar-imagem-background busca"><input class="botao-busca-topo" type="submit" value="Search" /></span>
                     </form>
                 </div>
-                <!-- fim busca-principal -->    
-         
+                <!-- fim busca-principal -->
+
                 <!-- area-usuario -->
                 <div id="area-usuario">
                     {% if not user.is_authenticated %}
@@ -138,53 +141,53 @@
                             <a class="botao secundario" href="/user/login">{% trans "Log in" %}</a>
                         </div>
                     {% else %}
-                        <div class="controles-usuario-logado">                            
+                        <div class="controles-usuario-logado">
                             <ul class="menu-logado tarefas">
                                 <li class="link principal"><span class="auxiliar">{% trans "New register" %}</span>
-                                    
+
                                     <ul class="submenu">
                                         <li class="link link-projeto">
                                             <a href="{% page_url 'project-form' %}"><span class="ico pequeno projeto-menor-branco"></span>{% trans "Project" %}</a>
                                         </li>
-                                        
+
                                         <li class="link link-organizacao">
                                             <a href="{% page_url 'organization-form' %}"><span class="ico pequeno organizacao-menor-branco"></span>{% trans "Organization" %}</a>
                                         </li>
-                                        
+
                                         <li class="link link-investimento">
                                             <a href="{% page_url 'investment-form' %}"><span class="ico pequeno investimento-menor-branco"></span>{% trans "Investment" %}</a>
                                         </li>
-                                        
+
                                         <li class="link link-usuario">
                                             <a href="{% page_url 'user-form' %}"><span class="ico pequeno usuario-menor-branco"></span>{% trans "User" %}</a>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
-                            
+
                             <ul class="menu-logado usuario">
                                     <li class="link principal"><span class="auxiliar nome-usuario" title="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</span>
-                                    
+
                                     <ul class="submenu">
                                         <li class="link link-perfil">
                                             <a href="{% page_url 'user-detail' %}?id={{user.id}}"><span class="ico pequeno usuario-menor-verde"></span>{% trans "Profile" %}</a>
                                         </li>
-                                        
+
                                         <li class="link link-notificacoes">
                                             <a href="{% page_url 'notifications' %}"><span class="ico pequeno notificacao-menor-verde"></span>{% trans "Notifications" %}</a>
                                         </li>
-                                        
+
                                         <li class="link link-sair">
                                             <a href="/user/logout"><span class="ico pequeno logout-padrao"></span>{% trans "Log out" %}</a>
                                         </li>
                                     </ul>
                                 </li>
-                            </ul>                            
-                        </div>    
+                            </ul>
+                        </div>
                     {%endif%}
                 </div>
                 <!-- fim de area-usuario -->
-                
+
             </div>
             <!-- fim de ferramentas-usuario -->
 
@@ -198,7 +201,7 @@
     <section id="principal">
         {% block base_content %}{% endblock %}
     </section>
-    
+
     <!-- rodape-pagina -->
 
     <footer id="rodape-pagina">
@@ -216,7 +219,7 @@
                             <li>{% page_link "opportunities" %}</li>
                             {% if user.is_authenticated %}
                                 <li>{% page_link "users" %}</li>
-                            {% endif %}                            
+                            {% endif %}
                         </ul>
                     </dd>
                 </dl>
@@ -273,7 +276,7 @@
                 <p>&copy; {% trans "Copyright 2012 - Ecofunds" %}</p>
             </div>
         </div>
-        <!-- copyright -->        
+        <!-- copyright -->
     </footer>
     <!-- fim de rodape-pagina -->
 

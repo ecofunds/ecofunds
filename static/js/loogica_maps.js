@@ -209,7 +209,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
         },
         render: function() {
-            var map = new google.maps.Map(document.getElementById('map_canvas'),
+            var map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
             return map;
         }

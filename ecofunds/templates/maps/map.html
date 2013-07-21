@@ -31,6 +31,9 @@
 {% endblock %}
 
 {% if instance.show_search_projects or instance.show_search_organizations or instance.show_search_investments %}
+    <script type="text/javascript">
+        var global_map_height = 583;
+    </script>
     <!-- area-site -->
     <div class="area-site">
         <div class="container">
@@ -146,8 +149,9 @@
             </div>
         </div>
     </div>
-    <div class="map-wrapper">
-      <div id="map_canvas"></div>
+    <div class="carregando tela-mapa" style="position:absolute;width:100%;"></div>
+    <div style="position:relative;width:100%;height:400px;" class="gmap" id="id_map">
+        <div style="position:absolute;width:100%;height:100%"></div>
     </div>
 </section>
 
