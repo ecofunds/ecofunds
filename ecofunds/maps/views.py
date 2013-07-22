@@ -1,3 +1,4 @@
+from django import db
 from django import http
 from django.core.cache import cache
 from django.utils import simplejson as json
@@ -82,7 +83,6 @@ def trans_date(v):
     v = str(v)
     if len(v)==10:
         tup = v.split('/')
-        print int(tup[2])
         if int(tup[2]) < 1900:
             return ''
 
@@ -115,7 +115,6 @@ def geoapi_map(request, domain, map_type):
         mapTypeId = data.get('mapTypeId')
 
     gmap = get_map(request, center, zoom, mapTypeId)
-    print(gmap)
 
     select_data = {
         'investment':
@@ -140,9 +139,12 @@ def geoapi_map(request, domain, map_type):
         """
     }
 
+    if map_type == "concentration":
+        sql_columns = "	min(c.amount_usd), max(c.amount_usd) "
+
     default_from = """
         FROM ecofunds_entity_locations a
-        INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id)
+        INNER JOIN ecofunds_entities b ON (a.entity_id = b.entity_id)
         INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
         INNER JOIN ecofunds_locations d ON d.id = a.location_id
         inner join ecofunds_countries cou on cou.id = d.country_id
@@ -163,8 +165,13 @@ def geoapi_map(request, domain, map_type):
                         'desired_location_lng is not null'
     }
 
+    if map_type == "concentration":
+        sql_columns = "	min(c.amount_usd), max(c.amount_usd) "
+    else:
+        sql_columns = select_data[domain]
+
     context = {
-        'select_data': select_data[domain],
+        'select_data': sql_columns,
         'from_data': from_data[domain],
         'where_data': where_data[domain]
     }
@@ -181,7 +188,6 @@ def geoapi_map(request, domain, map_type):
 
     def wrap_like(data_id):
         return "%{0}%".format(data[data_id].encode('utf-8'))
-        #return " ".join(['%', data[data_id], '%'])
 
     filters = {
         's_project_name': {
@@ -216,7 +222,7 @@ def geoapi_map(request, domain, map_type):
         },
         's_state': {
             'where_data': ' and (d.iso_sub = %s or d.name like %s) ',
-            'parameter': lambda: (data['s_state'], wrap_like('s_state'))
+            'parameter': lambda: (data['s_state'], wrap_like('s_state'),)
         },
         's_investment_date_from': {
             'where_data': " and c.created_at >= %s "                         \
@@ -265,15 +271,22 @@ def geoapi_map(request, domain, map_type):
 
     query_params = []
     possible_filters = filters.keys()
-    print(data)
 
     for filter_id in possible_filters:
-        print(filter_id)
         if has_filter(filter_id):
-            base_query, query_params = apply_filter(filter_id, base_query,
-                                                               query_params)
+            base_query, query_params = apply_filter(filter_id,
+                                                    base_query,
+                                                    query_params)
+    cursor = db.connection.cursor()
+    cursor.execute(base_query, query_params)
 
-    print(base_query)
-    print(query_params)
-    return http.HttpResponse(json.dumps(dict(query=base_query,
-                                             params=query_params)), content_type="application/json")
+    for item in cursor.fetchall():
+        location_id = item[0]
+        entity_id = item[1]
+        amount = item[2]
+        centroid = item[3]
+
+    return http.HttpResponse(json.dumps(dict(map=gmap,
+                                             query=base_query,
+                                             params=query_params)),
+                             content_type="application/json")
