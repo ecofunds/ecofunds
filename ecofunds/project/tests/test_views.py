@@ -77,6 +77,9 @@ class ProjectJSONView(TestCase):
             response = self.client.get(reverse('geoapi',
                                        args=['project', 'density']),
                                        data)
+            self.assertEqual(200, response.status_code)
+
+
 class InvestmentJSONView(TestCase):
     def setUp(self):
         country = m(Country, name="Brasil")
@@ -141,3 +144,4 @@ class InvestmentJSONView(TestCase):
             response = self.client.get(reverse('geoapi',
                                        args=['investment', 'density']),
                                        data)
+            self.assertEqual(200, response.status_code)
