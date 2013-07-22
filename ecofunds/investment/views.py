@@ -465,6 +465,9 @@ WHERE b.validated = 1
                 query_params.append(dt_to)
 
 
+        # ok until here
+
+
         if view != 'concentration':
             sql+=" group by a.location_id, a.entity_id "
 
