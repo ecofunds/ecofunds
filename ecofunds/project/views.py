@@ -216,7 +216,6 @@ class ProjectMapSourceView(GoogleMapView, BaseDetailView):
             zoom = int(data.get('zoom'))
         if data.has_key('mapTypeId'):
             mapTypeId = data.get('mapTypeId')
-        print "Center ", center
         gmap = self.get_map(request, center, zoom, mapTypeId)
 
 
@@ -241,6 +240,7 @@ WHERE b.validated = 1
         if data.has_key('s_project_name') and data['s_project_name'] != '':
             sql+=" and b.title like %s "
             query_params.append('%' + data['s_project_name'] + '%')
+
         if data.has_key('s_project_activity_type') and data['s_project_activity_type']!='':
             sql+=" and exists (select 1 from ecofunds_entity_activities e where e.entity_id = b.entity_id and e.activity_id = %s) "
             query_params.append(data['s_project_activity_type'])
@@ -287,14 +287,13 @@ WHERE b.validated = 1
             query_params.append(min_invest)
             query_params.append(max_invest)
 
+        # ok until here
+
         if view != 'concentration':
             sql+=" group by a.location_id "
 
-        t1 = time.time()
         cursor = db.connection.cursor()
         cursor.execute(sql, query_params)
-        t2 = time.time() - t1
-        print("Exec query %s" % (t2))
 
         #list = ProjectData.locationFilteredList(request)
         points = {}
@@ -420,7 +419,6 @@ WHERE b.validated = 1
                     })
 
             elif view == 'heat':
-                t1 = time.time()
                 fill_colors = ['#28B9D4', '#7CC22C', '#ECCE0A', '#ED8A09', '#ED0B0C']
                 for key in points:
                     amount = points[key]['investment']
@@ -457,8 +455,6 @@ WHERE b.validated = 1
                     })
                     info.open(gmap, marker)
 
-                t2 = time.time() - t1
-                print("Heat Color Processing %s" % (t2))
 
         return http.HttpResponse(dumps(gmap, cls=DjangoJSONEncoder), content_type='application/json')
 
