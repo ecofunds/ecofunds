@@ -109,6 +109,8 @@ where			desired_location_lat is not null and desired_location_lng is not null
         dt_from = trans_date(data['s_investment_date_from'])
         dt_to = trans_date(data['s_investment_date_to'])
 
+        #TODO - This is the only filter missins - it's more tricky than
+        # the other ones
         if dt_from or dt_to:
             sql+= " and exists (select 1 from ecofunds_investments where o.id in (recipient_organization_id, funding_organization_id) "
             if dt_from:
@@ -117,8 +119,8 @@ where			desired_location_lat is not null and desired_location_lng is not null
             if dt_to:
                 sql+= " and created_at <= %s "
                 query_params.append(dt_to)
-
             sql+= ") "
+
         if data.has_key('s_investments_focus') and data['s_investments_focus'] != '':
             sql+=""" and exists (select 1 from ecofunds_entity_organizations eo
 inner join ecofunds_entity_activities ea on ea.entity_id = eo.entity_id
