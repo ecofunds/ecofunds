@@ -4,6 +4,9 @@ from django.core.cache import cache
 from django.utils import simplejson as json
 from django.views.generic.detail import BaseDetailView
 from django.utils.html import escape
+from django.utils.simplejson import dumps, loads
+
+from babel import numbers
 
 from gmapi import maps
 from gmapi.maps import Geocoder
@@ -35,6 +38,11 @@ class SourceView(BaseDetailView):
     def render_to_response(self, context):
         return self.get_json_response(json.dumps(cache.get('gmap_%s' % self.kwargs['slug']), separators=(',', ':')))
 
+def format_currency(value):
+    return numbers.format_currency(
+            float(value),
+            numbers.get_currency_symbol('USD', 'en_US'),
+            u'\xa4\xa4 #,##0.00', locale='pt_BR')
 
 def get_local_lat_lng(request):
     ip = request.META.get('REMOTE_ADDR', None)
@@ -65,17 +73,19 @@ def get_map(request, center_lat_lng=None, zoom=4, mapTypeId=maps.MapTypeId.HYBRI
         center_lat_lng = get_local_lat_lng(request)
 
     return {
-        'center': center_lat_lng,
-        'mapTypeId': mapTypeId,
-        'zoom': zoom,
-        'minZoom': 2,
-        'mapTypeControl': False,
-        'zoomControl': False,
-        'panControl':False,
-        'mapTypeControlOptions': {
-            'style': maps.MapTypeControlStyle.HORIZONTAL_BAR
+        'map': {
+            'center': center_lat_lng,
+            'mapTypeId': mapTypeId,
+            'zoom': zoom,
+            'minZoom': 2,
+            'mapTypeControl': False,
+            'zoomControl': False,
+            'panControl':False,
+            'mapTypeControlOptions': {
+                'style': maps.MapTypeControlStyle.HORIZONTAL_BAR
+            },
+            'streetViewControl': False,
         },
-        'streetViewControl': False,
         'items': []
     }
 
@@ -90,6 +100,10 @@ def trans_date(v):
         return v
     else:
         return ''
+
+def api_error(request, message):
+    return http.HttpResponse(dumps(dict(error=message)),
+                             content_type="application/json")
 
 def geoapi_map(request, domain, map_type):
     if request.method == "POST":
@@ -113,6 +127,15 @@ def geoapi_map(request, domain, map_type):
         zoom = int(data.get('zoom'))
     if data.has_key('mapTypeId'):
         mapTypeId = data.get('mapTypeId')
+
+    if domain not in ("project", "investment", "organization"):
+        return api_error(request, "Invalid Domain")
+
+    if map_type not in ("concentration", "heat", "density", "bubble"):
+        return api_error(request, "Invalid Map Type")
+
+    if domain == "organization" and map_type == "concentration":
+        return api_error(request, "Invalid Map Type")
 
     gmap = get_map(request, center, zoom, mapTypeId)
 
@@ -139,9 +162,6 @@ def geoapi_map(request, domain, map_type):
         """
     }
 
-    if map_type == "concentration":
-        sql_columns = "	min(c.amount_usd), max(c.amount_usd) "
-
     default_from = """
         FROM ecofunds_entity_locations a
         INNER JOIN ecofunds_entities b ON (a.entity_id = b.entity_id)
@@ -166,7 +186,7 @@ def geoapi_map(request, domain, map_type):
     }
 
     if map_type == "concentration":
-        sql_columns = "	min(c.amount_usd), max(c.amount_usd) "
+        sql_columns = "SELECT min(c.amount_usd), max(c.amount_usd) "
     else:
         sql_columns = select_data[domain]
 
@@ -175,7 +195,11 @@ def geoapi_map(request, domain, map_type):
         'from_data': from_data[domain],
         'where_data': where_data[domain]
     }
+
     base_query = "{select_data} {from_data} {where_data}".format(**context)
+
+    def wrap_like(data_id):
+        return "%{0}%".format(data[data_id].encode('utf-8'))
 
     min_invest = 0
     max_invest = 99999999999
@@ -185,9 +209,6 @@ def geoapi_map(request, domain, map_type):
         max_invest = data['s_investments_to']
     except Exception as e:
         pass
-
-    def wrap_like(data_id):
-        return "%{0}%".format(data[data_id].encode('utf-8'))
 
     filters = {
         's_project_name': {
@@ -280,13 +301,27 @@ def geoapi_map(request, domain, map_type):
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
 
+    if map_type == "concentration":
+        start, end = 0, 0
+        cursor = db.connection.cursor()
+        cursor.execute(base_query, query_params)
+        for item in cursor.fetchall():
+            if not (item[0] is None):
+                start = float(item[0])
+                end = float(item[1])
+        json = {'start': format_currency(start), 'end': format_currency(end),
+                'query': base_query}
+        return http.HttpResponse(dumps(json), content_type='application/json')
+
     for item in cursor.fetchall():
         location_id = item[0]
         entity_id = item[1]
         amount = item[2]
         centroid = item[3]
 
-    return http.HttpResponse(json.dumps(dict(map=gmap,
+
+
+    return http.HttpResponse(dumps(dict(map=gmap,
                                              query=base_query,
                                              params=query_params)),
                              content_type="application/json")

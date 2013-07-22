@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.utils.simplejson import dumps, loads
 
 from model_mommy import mommy
 m = mommy.make
@@ -41,6 +42,14 @@ class ProjectJSONView(TestCase):
     def test_get_projects(self):
         response = self.client.get(reverse('project_mapsource'))
         self.assertEqual(200, response.status_code)
+
+    def test_get_projects_concentration(self):
+        response = self.client.get(reverse('geoapi', args=['project', 'concentration']))
+        self.assertEqual(200, response.status_code)
+        expected_data = {'start': '$ 1.000.000,00', 'end': '$ 1.000.000,00'}
+        returned_data = loads(response.content)
+        for k, v in expected_data.items():
+            self.assertEqual(returned_data[k], v)
 
     def test_get_geoapi_project_density(self):
         response = self.client.get(reverse('geoapi', args=['project', 'density']))
@@ -89,20 +98,28 @@ class InvestmentJSONView(TestCase):
                                    funding_organization=funding_org,
                                    funding_entity=funding_proj,
                                    recipient_entity=project,
-                                   amount_usd=Decimal("1000000"),
-                                   amount=Decimal("1000000"))
+                                   amount_usd=Decimal("2000000"),
+                                   amount=Decimal("2000000"))
         project_location = m(ProjectLocation, entity=project,
                                               location=location)
 
-    def test_get_projects(self):
+    def test_get_investments(self):
         response = self.client.get(reverse('investment_mapsource'))
         self.assertEqual(200, response.status_code)
 
-    def test_get_geoapi_project_density(self):
+    def test_get_investments_concentration(self):
+        response = self.client.get(reverse('geoapi', args=['investment', 'concentration']))
+        self.assertEqual(200, response.status_code)
+        expected_data = {'start': '$ 2.000.000,00', 'end': '$ 2.000.000,00'}
+        returned_data = loads(response.content)
+        for k, v in expected_data.items():
+            self.assertEqual(returned_data[k], v)
+
+    def test_get_geoapi_investment_density(self):
         response = self.client.get(reverse('geoapi', args=['investment', 'density']))
         self.assertEqual(200, response.status_code)
 
-    def test_get_geoapi_project_density_parameters(self):
+    def test_get_geoapi_investment_density_parameters(self):
 
         parameters = {
             #'s_investment_date_from': ,
