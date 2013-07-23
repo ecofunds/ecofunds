@@ -56,7 +56,6 @@ class ProjectJSONView(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_get_geoapi_project_density_parameters(self):
-
         parameters = {
             #'s_investment_date_from': ,
             #'s_investment_date_to': ,
@@ -79,6 +78,59 @@ class ProjectJSONView(TestCase):
                                        data)
             self.assertEqual(200, response.status_code)
 
+    def test_get_geoapi_project_heat(self):
+        response = self.client.get(reverse('geoapi', args=['project', 'heat']))
+        self.assertEqual(200, response.status_code)
+
+    def test_get_geoapi_project_heat_parameters(self):
+        parameters = {
+            #'s_investment_date_from': ,
+            #'s_investment_date_to': ,
+            #'s_investment_type': ,
+            #'s_investments_from': ,
+            #'s_date_to': ,
+            #'s_date_from': ,
+            #'s_organization': ,
+            #'s_organization_type': ,
+            #'s_project_name:
+            #'s_project_activity_type': ,
+            's_state': 'Rio de Janeiro',
+            's_country': 'Brasil',
+        }
+
+        for parameter, value in parameters.items():
+            data = {parameter: value}
+            response = self.client.get(reverse('geoapi',
+                                       args=['project', 'heat']),
+                                       data)
+            self.assertEqual(200, response.status_code)
+
+    def test_get_geoapi_project_bubble(self):
+        response = self.client.get(reverse('geoapi', args=['project', 'bubble']))
+        self.assertEqual(200, response.status_code)
+
+    def test_get_geoapi_project_bubble_parameters(self):
+        parameters = {
+            #'s_investment_date_from': ,
+            #'s_investment_date_to': ,
+            #'s_investment_type': ,
+            #'s_investments_from': ,
+            #'s_date_to': ,
+            #'s_date_from': ,
+            #'s_organization': ,
+            #'s_organization_type': ,
+            #'s_project_name:
+            #'s_project_activity_type': ,
+            's_state': 'Rio de Janeiro',
+            's_country': 'Brasil',
+        }
+
+        for parameter, value in parameters.items():
+            data = {parameter: value}
+            response = self.client.get(reverse('geoapi',
+                                       args=['project', 'bubble']),
+                                       data)
+            self.assertEqual(200, response.status_code)
 
 class InvestmentJSONView(TestCase):
     def setUp(self):
