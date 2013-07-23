@@ -24,8 +24,9 @@
         <script type="text/javascript"
             src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'pt'}]}">
         </script>
-        <!-- Funções específicas dessa página -->
-        <!--script type="text/javascript" src="{% get_static_prefix %}scripts/maps/map.js"></script-->
+        <script type="text/javascript">
+            var default_domain = 'investment';
+        </script>
         <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
     {% endaddtoblock %}
 {% endblock %}
@@ -33,6 +34,7 @@
 {% if instance.show_search_projects or instance.show_search_organizations or instance.show_search_investments %}
     <script type="text/javascript">
         var global_map_height = 583;
+        var default_map_type = 'heat';
     </script>
     <!-- area-site -->
     <div class="area-site">
@@ -95,7 +97,6 @@
                     {% addtoblock "js" %}
                     <script type="text/javascript">
                         jQuery(function ($) {
-
                             //if(document.location.href.indexOf('#filtro-investimentos')>0)
                               //  ecofundsMap.loadInvestments();
                             //else

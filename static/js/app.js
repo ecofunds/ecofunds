@@ -47,7 +47,7 @@ require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
     require(["marker"], function () {
         window.map_router = new loogica.MapRouter();
         Backbone.history.start({pushState: false});
-        window.map_router.navigate('investments', {trigger: true});
+        window.map_router.navigate(default_domain, {trigger: true});
         $('.carregando.tela-mapa', '.mapa').hide();
     });
 });
