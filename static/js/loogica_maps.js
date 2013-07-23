@@ -217,7 +217,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
     MapRouter = Backbone.Router.extend({
         routes: {
-            'investments' : 'fetch_investments'
+            'investment' : 'fetch_investments',
+            'project' : 'fetch_projects',
+            'organization' : 'fetch_organizations'
         },
         initialize: function() {
             var _map = {
@@ -244,7 +246,23 @@ define('loogica', ["domReady!", "jquery", "underscore",
         },
         fetch_investments: function() {
             this.investment_places = new Places();
-            this.investment_places.url = '/geo_api/investment/density';
+            this.investment_places.url = '/geo_api/investment/' + default_map_type;
+            this.investment_places_view = new PlacesView({
+                collection: this.investment_places
+            });
+            this.investment_places.fetch();
+        },
+        fetch_projects: function() {
+            this.investment_places = new Places();
+            this.investment_places.url = '/geo_api/project/' + default_map_type;
+            this.investment_places_view = new PlacesView({
+                collection: this.investment_places
+            });
+            this.investment_places.fetch();
+        },
+        fetch_organizations: function() {
+            this.investment_places = new Places();
+            this.investment_places.url = '/geo_api/organization/' + default_map_type;
             this.investment_places_view = new PlacesView({
                 collection: this.investment_places
             });
