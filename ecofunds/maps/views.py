@@ -269,16 +269,17 @@ def geoapi_map(request, domain, map_type):
             'parameter': lambda: (trans_date(data.get('s_date_to')))              \
                          if trans_date(data.get('s_date_to')) else ()
         },
-        's_investments_from': {
-            'where_data': ' having sum_ammount between %s and %s ',
-            'parameter': lambda: (float(min_invest),
-                                  float(max_invest))
+        's_investments_focus': {
+            'where_data': 'and exists (select 1 from ecofunds_entity_organizations eo '
+                          'inner join ecofunds_entity_activities ea on ea.entity_id = '
+                          'eo.entity_id where eo.organization_id = o.id and ea.activity_id = %s)',
+            'parameter': lambda: (data['s_investments_focus'])
         }
     }
 
-    def apply_filter(filter_id, query, params):
-        query = " ".join([query, filters[filter_id]['where_data']])
-        parameter = filters[filter_id]['parameter']()
+    def apply_filter(filter_id, context, query, params):
+        query = " ".join([query, context[filter_id]['where_data']])
+        parameter = context[filter_id]['parameter']()
         if isinstance(parameter, str):
             params.append(parameter)
         else:
@@ -296,8 +297,41 @@ def geoapi_map(request, domain, map_type):
     for filter_id in possible_filters:
         if has_filter(filter_id):
             base_query, query_params = apply_filter(filter_id,
+                                                    filters,
                                                     base_query,
                                                     query_params)
+
+    group_by = {
+        'project': ' group by a.location_id ',
+        'investment': ' group by a.location_id, a.entity_id ',
+        'organization': 'group by o.name, o.desired_location_lat, o.desired_location_lat '
+    }
+
+    base_query = "{base_query} {group_by}".format(base_query=base_query,
+                                                  group_by=group_by[domain])
+
+    having = {
+        's_investments_from': {
+            'where_data': ' having sum_ammount between %s and %s ',
+            'parameter': lambda: (float(min_invest),
+                                  float(max_invest))
+        },
+        's_estimated_investments_value_from': {
+            'where_data': ' having sum(i.amount_usd) between %s and %s ',
+            'parameter': lambda: (float(min_invest),
+                                  float(max_invest))
+        }
+    }
+
+    possible_filters = having.keys()
+
+    for filter_id in possible_filters:
+        if has_filter(filter_id):
+            base_query, query_params = apply_filter(filter_id,
+                                                    having,
+                                                    base_query,
+                                                    query_params)
+
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
 
@@ -319,9 +353,16 @@ def geoapi_map(request, domain, map_type):
         amount = item[2]
         centroid = item[3]
 
+        marker = {
+            'location_id': location_id,
+            'entity_id': entity_id,
+            'amount': str(item[2]),
+            'centroid': centroid
+        }
 
+        gmap['items'].append(marker)
 
     return http.HttpResponse(dumps(dict(map=gmap,
-                                             query=base_query,
-                                             params=query_params)),
+                                            query=base_query,
+                                            params=query_params)),
                              content_type="application/json")
