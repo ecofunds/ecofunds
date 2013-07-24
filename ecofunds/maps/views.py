@@ -151,14 +151,18 @@ def geoapi_map(request, domain, map_type):
             a.location_id,
 			a.entity_id,
 			sum(c.amount_usd) sum_ammount,
-			d.centroid
+			d.centroid,
+            b.title,
+            b.website
         """,
         'project':
         """ SELECT
             a.location_id,
 			a.entity_id,
 			count(b.entity_id),
-			d.centroid
+			d.centroid,
+            b.title,
+            b.website
         """,
         'organization':
         """ SELECT
@@ -363,6 +367,8 @@ def geoapi_map(request, domain, map_type):
         int_amount = int(item[2])
         str_amount = str(item[2])
         centroid = item[3]
+        acronym = item[4] if len(item) > 4 else None
+        url = item[5] if len(item) > 6 else None
 
         print(item)
 
@@ -388,6 +394,8 @@ def geoapi_map(request, domain, map_type):
                 'total_investment_str': str_amount,
                 'scale': scale,
                 'projects': [{
+                    'acronym': acronym,
+                    'url': url,
                     'entity_id': entity_id,
                     'amount': int_amount
                 }]
@@ -399,7 +407,10 @@ def geoapi_map(request, domain, map_type):
                 if entity['entity_id'] == entity_id:
                     check_same_entity = True
             if not check_same_entity:
-                proj = {'entity_id': entity_id, 'amount': int_amount}
+                proj = {'entity_id': entity_id,
+                        'url': url,
+                        'amount': int_amount,
+                        'acronym': acronym}
                 points[location_id]['projects'].append(proj)
                 points[location_id]['total_investment'] += int_amount
                 points[location_id]['total_investment_str'] = \
