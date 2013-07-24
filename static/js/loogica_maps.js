@@ -159,12 +159,11 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
         },
         render_density: function() {
+            var _map = window.map_router.map;
+
             var lat = this.model.get('lat');
             var lng = this.model.get('lng');
             var myLatlng = new google.maps.LatLng(lat, lng);
-
-            //XXX refatorar para algo melhor
-            var _map = window.map_router.map;
             var scale = this.model.get('scale');
             var total = this.model.get('total_investment');
             var total_str = this.model.get('total_investment_str');
@@ -180,8 +179,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 radius: (scale * 10000)
             };
             var circle = new google.maps.Circle(circle_options);
-            var self_model = this.model;
 
+            var map_elements = [];
+            map_elements.push(circle);
 
             var info_label = $("#total_" + default_domain).html();
             var info_text_source = $('#info_' + default_domain + '_density').html();
@@ -201,11 +201,14 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 labelStyle: {opacity: 0.75},
                 icon: 'a.png'
             });
+            map_elements.push(marker);
             circle.bindTo('center', marker, 'position');
             google.maps.event.addListener(marker, "click",
                 function() {
                     info_window.open(_map, marker);
             });
+
+            this.model.set('map_elements', map_elements);
         }
     });
 
@@ -226,7 +229,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
         routes: {
             'investment' : 'fetch_investments',
             'project' : 'fetch_projects',
-            'organization' : 'fetch_organizations'
+            'organization' : 'fetch_organizations',
+            'clean_markers': 'clean_markers'
         },
         initialize: function() {
             var _map = {
@@ -252,28 +256,40 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.map = map_view.render();
         },
         fetch_investments: function() {
-            this.investment_places = new Places();
-            this.investment_places.url = '/geo_api/investment/' + default_map_type;
-            this.investment_places_view = new PlacesView({
-                collection: this.investment_places
+            this.clean_markers();
+            this.places = new Places();
+            this.places.url = '/geo_api/investment/' + default_map_type;
+            this.places_view = new PlacesView({
+                collection: this.places
             });
-            this.investment_places.fetch();
+            this.places.fetch();
         },
         fetch_projects: function() {
-            this.investment_places = new Places();
-            this.investment_places.url = '/geo_api/project/' + default_map_type;
-            this.investment_places_view = new PlacesView({
-                collection: this.investment_places
+            this.clean_markers();
+            this.places = new Places();
+            this.places.url = '/geo_api/project/' + default_map_type;
+            this.places_view = new PlacesView({
+                collection: this.places
             });
-            this.investment_places.fetch();
+            this.places.fetch();
         },
         fetch_organizations: function() {
-            this.investment_places = new Places();
-            this.investment_places.url = '/geo_api/organization/' + default_map_type;
-            this.investment_places_view = new PlacesView({
-                collection: this.investment_places
+            this.clean_markers();
+            this.places = new Places();
+            this.places.url = '/geo_api/organization/' + default_map_type;
+            this.places_view = new PlacesView({
+                collection: this.places
             });
-            this.investment_places.fetch();
+            this.places.fetch();
+        },
+        clean_markers: function() {
+            if (this.places) {
+                _.each(this.places.models, function(marker) {
+                    _.each(marker.get('map_elements'), function(element) {
+                        element.setMap(null);
+                    });
+                });
+            }
         }
     });
 
