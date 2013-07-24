@@ -258,6 +258,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.map = map_view.render();
         },
         fetch_investments: function() {
+            $("a[href=#investment]").parent().removeClass('inativa').addClass('ativa');
+            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
+            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            $(".opcoes .tipo").show();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/investment/' + default_map_type;
@@ -267,6 +271,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places.fetch();
         },
         fetch_projects: function() {
+            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
+            $("a[href=#project]").parent().removeClass('inativa').addClass('ativa');
+            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/project/' + default_map_type;
@@ -276,6 +284,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places.fetch();
         },
         fetch_organizations: function() {
+            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
+            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
+            $("a[href=#organization]").parent().removeClass('inativa').addClass('ativa');
+            $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/organization/' + default_map_type;
