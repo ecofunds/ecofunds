@@ -101,6 +101,12 @@ def trans_date(v):
     else:
         return ''
 
+def localize_currency(number, request):
+    return numbers.format_currency(number,
+               numbers.get_currency_symbol('USD', 'en_US'),
+               u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_'))
+
+
 def api_error(request, message):
     return http.HttpResponse(dumps(dict(error=message)),
                              content_type="application/json")
@@ -367,7 +373,13 @@ def geoapi_map(request, domain, map_type):
             return (x, y)
 
         if not location_id in points:
-            scale = (len(str_amount)+1) * 3
+
+            scale = 30
+            if map_type == "density":
+                scale = (len(str_amount)+1) * 3
+                if domain == "investment":
+                    str_amount = localize_currency(int_amount, request)
+
             marker = {
                 'location_id': location_id,
                 'lat': parse_centroid(centroid)[0],
@@ -390,7 +402,8 @@ def geoapi_map(request, domain, map_type):
                 proj = {'entity_id': entity_id, 'amount': int_amount}
                 points[location_id]['projects'].append(proj)
                 points[location_id]['total_investment'] += int_amount
-                points[location_id]['total_investment_str'] = str(points[location_id]['total_investment'])
+                points[location_id]['total_investment_str'] = \
+                    localize_currency(points[location_id]['total_investment'], request)
 
     gmap['items'] = points.values()
 
