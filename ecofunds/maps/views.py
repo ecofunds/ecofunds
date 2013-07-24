@@ -301,36 +301,38 @@ def geoapi_map(request, domain, map_type):
                                                     base_query,
                                                     query_params)
 
-    group_by = {
-        'project': ' group by a.location_id ',
-        'investment': ' group by a.location_id, a.entity_id ',
-        'organization': 'group by o.name, o.desired_location_lat, o.desired_location_lat '
-    }
-
-    base_query = "{base_query} {group_by}".format(base_query=base_query,
-                                                  group_by=group_by[domain])
-
-    having = {
-        's_investments_from': {
-            'where_data': ' having sum_ammount between %s and %s ',
-            'parameter': lambda: (float(min_invest),
-                                  float(max_invest))
-        },
-        's_estimated_investments_value_from': {
-            'where_data': ' having sum(i.amount_usd) between %s and %s ',
-            'parameter': lambda: (float(min_invest),
-                                  float(max_invest))
+    #TODO concentration maybe should be another view
+    if map_type != "concentration":
+        group_by = {
+            'project': ' group by a.location_id ',
+            'investment': ' group by a.location_id, a.entity_id ',
+            'organization': 'group by o.name, o.desired_location_lat, o.desired_location_lat '
         }
-    }
 
-    possible_filters = having.keys()
+        base_query = "{base_query} {group_by}".format(base_query=base_query,
+                                                    group_by=group_by[domain])
 
-    for filter_id in possible_filters:
-        if has_filter(filter_id):
-            base_query, query_params = apply_filter(filter_id,
-                                                    having,
-                                                    base_query,
-                                                    query_params)
+        having = {
+            's_investments_from': {
+                'where_data': ' having sum_ammount between %s and %s ',
+                'parameter': lambda: (float(min_invest),
+                                    float(max_invest))
+            },
+            's_estimated_investments_value_from': {
+                'where_data': ' having sum(i.amount_usd) between %s and %s ',
+                'parameter': lambda: (float(min_invest),
+                                    float(max_invest))
+            }
+        }
+
+        possible_filters = having.keys()
+
+        for filter_id in possible_filters:
+            if has_filter(filter_id):
+                base_query, query_params = apply_filter(filter_id,
+                                                        having,
+                                                        base_query,
+                                                        query_params)
 
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
