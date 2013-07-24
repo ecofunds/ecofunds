@@ -183,7 +183,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var map_elements = [];
             map_elements.push(circle);
 
-            var info_label = $("#total_" + default_domain).html();
+            var info_label = $("#title_" + default_domain).html();
             var info_text_source = $('#info_' + default_domain + '_density').html();
             var template = Handlebars.compile(info_text_source);
 
