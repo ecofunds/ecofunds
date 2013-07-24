@@ -28,6 +28,7 @@
             var default_domain = 'investment';
             var default_map_type = 'heat/';
         </script>
+        <script src="{% get_static_prefix %}js/handlebars.1.0.0.beta.3.js"></script>
         <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
     {% endaddtoblock %}
 {% endblock %}
@@ -187,3 +188,16 @@
     </div>
 </section>
 
+<div id="info_text_labels" style="display: none;">
+    <p id="total_projects">{% trans "Total Projects" %}</p>
+    <p id="total_investment">{% trans "Total Investments" %}</p>
+</div>
+
+{% verbatim %}
+<div id="info_project_density" style="display: none;">
+    <p>{{ label }} - {{ value }}</p>
+</div>
+<div id="info_investment_density" style="display: none;">
+    <p>{{ label }} - {{ value }}</p>
+</div>
+{% endverbatim %}

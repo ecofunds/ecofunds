@@ -181,9 +181,16 @@ define('loogica', ["domReady!", "jquery", "underscore",
             };
             var circle = new google.maps.Circle(circle_options);
             var self_model = this.model;
+
+
+            var info_label = $("#total_" + default_domain).html();
+            var info_text_source = $('#info_' + default_domain + '_density').html();
+            var template = Handlebars.compile(info_text_source);
+
             var info_window = new google.maps.InfoWindow({
-                content: total_str
+                content: template({label: info_label, value: total_str})
             });
+
             var marker = new MarkerWithLabel({
                 position: myLatlng,
                 draggable: false,
