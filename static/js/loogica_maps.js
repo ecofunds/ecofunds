@@ -139,7 +139,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
     Places = Backbone.Collection.extend({
         model: Place,
         parse: function(data, options) {
-            return data.items;
+            return data.map.items;
         }
     });
     PlacesView = Backbone.View.extend({
@@ -149,7 +149,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
         },
         render: function() {
             _.each(this.collection.models, function(place) {
-                new PlaceView({model: place}).render();
+                new PlaceView({model: place}).render_density();
             });
         }
     });
@@ -158,7 +158,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             _.bindAll(this, 'render');
             this.model.bind('change', this.render);
         },
-        render: function() {
+        render_density: function() {
             var lat = this.model.get('lat');
             var lng = this.model.get('lng');
             var myLatlng = new google.maps.LatLng(lat, lng);
@@ -177,7 +177,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 fillColor: '#8eb737',
                 map: _map,
                 center: myLatlng,
-                radius: (total /100)
+                radius: (scale * 10000)
             };
             var circle = new google.maps.Circle(circle_options);
             var self_model = this.model;
@@ -189,7 +189,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 draggable: false,
                 map: _map,
                 labelContent: total_str,
-                labelAnchor: new google.maps.Point(22, 0),
+                labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
                 icon: 'a.png'

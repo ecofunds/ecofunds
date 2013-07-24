@@ -347,20 +347,56 @@ def geoapi_map(request, domain, map_type):
                 'query': base_query}
         return http.HttpResponse(dumps(json), content_type='application/json')
 
+    points = {}
+
     for item in cursor.fetchall():
         location_id = item[0]
         entity_id = item[1]
-        amount = item[2]
+        int_amount = int(item[2])
+        str_amount = str(item[2])
         centroid = item[3]
 
-        marker = {
-            'location_id': location_id,
-            'entity_id': entity_id,
-            'amount': str(item[2]),
-            'centroid': centroid
-        }
+        print(item)
 
-        gmap['items'].append(marker)
+        def parse_centroid(centroid):
+            latlng = centroid.split(',')
+            x = float(latlng[0])
+            y = float(latlng[1])
+            return (x, y)
+
+        if not location_id in points:
+            scale = (len(str_amount)+1) * 3
+            marker = {
+                'location_id': location_id,
+                'lat': parse_centroid(centroid)[0],
+                'lng': parse_centroid(centroid)[1],
+                'total_investment': int_amount,
+                'total_investment_str': str_amount,
+                'scale': scale,
+                'projects': [{
+                    'entity_id': entity_id,
+                    'amount': int_amount
+                }]
+            }
+            points[location_id] = marker
+        else:
+            check_same_entity = False
+            for entity in points[location_id]['projects']:
+                if entity['entity_id'] == entity_id:
+                    check_same_entity = True
+            if not check_same_entity:
+                proj = {'entity_id': entity_id, 'amount': int_amount}
+                points[location_id]['projects'].append(proj)
+                points[location_id]['total_investment'] += int_amount
+                points[location_id]['total_investment_str'] = str(points[location_id]['total_investment'])
+
+    gmap['items'] = points.values()
+
+    if len(points) > 0:
+        sum_inv = sum(points[key]['total_investment'] for key in points)
+        max_inv = max(points[key]['total_investment'] for key in points)
+        min_inv = min(points[key]['total_investment'] for key in points)
+
 
     return http.HttpResponse(dumps(dict(map=gmap,
                                             query=base_query,
