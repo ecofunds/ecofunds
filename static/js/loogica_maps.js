@@ -188,7 +188,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var template = Handlebars.compile(info_text_source);
 
             var info_window = new google.maps.InfoWindow({
-                content: template({label: info_label, value: total_str})
+                content: template({label: info_label,
+                                   projects: this.model.get('projects'),
+                                   value: total_str})
             });
 
             var marker = new MarkerWithLabel({
