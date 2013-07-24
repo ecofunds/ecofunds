@@ -189,7 +189,7 @@
 </section>
 
 <div id="info_text_labels" style="display: none;">
-    <p id="total_projects">{% trans "Total Projects" %}</p>
+    <p id="total_project">{% trans "Total Projects" %}</p>
     <p id="total_investment">{% trans "Total Investments" %}</p>
 </div>
 
@@ -199,5 +199,10 @@
 </div>
 <div id="info_investment_density" style="display: none;">
     <p>{{ label }} - {{ value }}</p>
+    <ul>
+    {{#each projects}}
+        <li>{{ acronym }} - {{ amount }}</li>
+    {{/each}}
+    </ul>
 </div>
 {% endverbatim %}
