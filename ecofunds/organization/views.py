@@ -1,3 +1,6 @@
+import logging
+
+from django import db
 from django import http
 from django.core.cache import cache
 from django.core.context_processors import csrf
@@ -22,7 +25,8 @@ from BeautifulSoup import BeautifulSoup
 import colorsys
 import math
 
-from django import db
+
+log = logging.getLogger(__name__)
 
 class OrganizationChartSourceView(BaseDetailView):
     def get(self, request, *args, **kwargs):

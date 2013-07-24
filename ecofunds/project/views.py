@@ -1,3 +1,4 @@
+import logging
 import math
 import time
 
@@ -27,6 +28,7 @@ from babel import numbers
 from BeautifulSoup import BeautifulSoup
 from pygeoip import GeoIP
 
+log = logging.getLogger(__name__)
 
 class ProjectFilteredListExcel(BaseDetailView):
     http_method_names = ['get']

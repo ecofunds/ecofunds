@@ -1,3 +1,4 @@
+import logging
 import math
 import sys
 import time
@@ -22,6 +23,7 @@ from BeautifulSoup import BeautifulSoup
 from gmapi import maps
 from babel import numbers
 
+log = logging.getLogger(__name__)
 
 sys.setrecursionlimit(10000)
 SymbolPath = MapConstantClass('SymbolPath', ('CIRCLE',))
