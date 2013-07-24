@@ -1,3 +1,5 @@
+import logging
+
 from django import db
 from django import http
 from django.core.cache import cache
@@ -14,6 +16,9 @@ from gmapi.maps import Geocoder
 import pygeoip
 
 from ecofunds import settings
+
+
+log = logging.getLogger(__name__)
 
 class SourceView(BaseDetailView):
 
@@ -183,7 +188,9 @@ def geoapi_map(request, domain, map_type):
     from_data = {
         'investment': default_from,
         'project': default_from,
-        'organization': 'FROM ecofunds_organization o'
+        'organization': 'FROM ecofunds_organization o INNER JOIN ecofunds_locations d '
+                        'on o.state_id = d.id INNER JOIN ecofunds_countries cou on '
+                        'cou.id = d.country_id '
     }
 
     default_where = 'WHERE b.validated = 1'
@@ -362,15 +369,15 @@ def geoapi_map(request, domain, map_type):
     points = {}
 
     for item in cursor.fetchall():
-        location_id = item[0]
-        entity_id = item[1]
-        int_amount = int(item[2])
-        str_amount = str(item[2])
-        centroid = item[3]
+        log.debug(item)
+
+        location_id = item[0] if len(item) > 0 else None
+        entity_id = item[1] if len(item) > 1 else None
+        int_amount = int(item[2]) if len(item) > 2 else None
+        str_amount = str(item[2]) if len(item) > 2 else None
+        centroid = item[3] if len(item) > 3 else None
         acronym = item[4] if len(item) > 4 else None
         url = item[5] if len(item) > 6 else None
-
-        print(item)
 
         def parse_centroid(centroid):
             latlng = centroid.split(',')
@@ -378,18 +385,33 @@ def geoapi_map(request, domain, map_type):
             y = float(latlng[1])
             return (x, y)
 
+        lat = None
+        lng = None
+
+        if centroid:
+            lat = parse_centroid(centroid)[0]
+            lng = parse_centroid(centroid)[1]
+
+        if domain == "organization":
+            name = location_id
+            entity_id = None
+            int_amount = None
+            str_amount = None
+            lat = float(item[1])
+            lng = float(item[2])
+
         if not location_id in points:
 
             scale = 30
-            if map_type == "density":
+            if domain in ('investment', 'project') and map_type == "density":
                 scale = (len(str_amount)+1) * 3
                 if domain == "investment":
                     str_amount = localize_currency(int_amount, request)
 
             marker = {
                 'location_id': location_id,
-                'lat': parse_centroid(centroid)[0],
-                'lng': parse_centroid(centroid)[1],
+                'lat': lat,
+                'lng': lng,
                 'total_investment': int_amount,
                 'total_investment_str': str_amount,
                 'scale': scale,
@@ -418,7 +440,7 @@ def geoapi_map(request, domain, map_type):
 
     gmap['items'] = points.values()
 
-    if len(points) > 0:
+    if len(points) > 0 and domain != 'organization':
         sum_inv = sum(points[key]['total_investment'] for key in points)
         max_inv = max(points[key]['total_investment'] for key in points)
         min_inv = min(points[key]['total_investment'] for key in points)

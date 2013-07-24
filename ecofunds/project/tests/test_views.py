@@ -197,3 +197,61 @@ class InvestmentJSONView(TestCase):
                                        args=['investment', 'density']),
                                        data)
             self.assertEqual(200, response.status_code)
+
+
+class OrganizationJSONView(TestCase):
+    def setUp(self):
+        country = m(Country, name="Brasil")
+        location = m(Location, country=country, name="Rio de Janeiro",
+                     centroid="-22.5331067902,-43.2435698976",
+                     polygon=FIXTURE_PLOLYGON)
+        funding_org = m(Organization, name="Funding Ord", country=country,
+                                                          state=location,
+                                                          validated=True)
+        organization = m(Organization, name="Funbio", country=country,
+                                                      state=location,
+                                                      validated=True)
+        project = m(Project, main_organization=organization,
+                             locations=[],
+                             validated=True)
+        funding_proj = m(Project, main_organization=organization,
+                                  locations=[])
+        investment = m(Investment, recipient_organization=organization,
+                                   funding_organization=funding_org,
+                                   funding_entity=funding_proj,
+                                   recipient_entity=project,
+                                   amount_usd=Decimal("2000000"),
+                                   amount=Decimal("2000000"))
+        project_location = m(ProjectLocation, entity=project,
+                                              location=location)
+    def test_get_organization(self):
+        response = self.client.get(reverse('investment_mapsource'))
+        self.assertEqual(200, response.status_code)
+
+    def test_get_geoapi_organization_density(self):
+        response = self.client.get(reverse('geoapi', args=['organization', 'density']))
+        self.assertEqual(200, response.status_code)
+
+    def test_get_geoapi_organization_density_parameters(self):
+
+        parameters = {
+            #'s_investment_date_from': ,
+            #'s_investment_date_to': ,
+            #'s_investment_type': ,
+            #'s_investments_from': ,
+            #'s_date_to': ,
+            #'s_date_from': ,
+            #'s_organization': ,
+            #'s_organization_type': ,
+            #'s_project_name:
+            #'s_project_activity_type': ,
+            's_state': 'Rio de Janeiro',
+            's_country': 'Brasil',
+        }
+
+        for parameter, value in parameters.items():
+            data = {parameter: value}
+            response = self.client.get(reverse('geoapi',
+                                       args=['organization', 'density']),
+                                       data)
+            self.assertEqual(200, response.status_code)
