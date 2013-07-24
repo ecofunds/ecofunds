@@ -26,7 +26,7 @@
         </script>
         <script type="text/javascript">
             var default_domain = 'investment';
-            var default_map_type = 'heat/';
+            var default_map_type = 'density/';
         </script>
         <script src="{% get_static_prefix %}js/handlebars.1.0.0.beta.3.js"></script>
         <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
@@ -36,7 +36,8 @@
 {% if instance.show_search_projects or instance.show_search_organizations or instance.show_search_investments %}
     <script type="text/javascript">
         var global_map_height = 583;
-        var default_map_type = 'heat';
+        var default_domain = 'project';
+        var default_map_type = 'density/';
     </script>
     <!-- area-site -->
     <div class="area-site">
