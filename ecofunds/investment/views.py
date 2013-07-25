@@ -1,3 +1,4 @@
+import logging
 import math
 import sys
 import time
@@ -22,6 +23,7 @@ from BeautifulSoup import BeautifulSoup
 from gmapi import maps
 from babel import numbers
 
+log = logging.getLogger(__name__)
 
 sys.setrecursionlimit(10000)
 SymbolPath = MapConstantClass('SymbolPath', ('CIRCLE',))
@@ -371,7 +373,6 @@ class InvestmentFlowSource(BaseDetailView):
 
 class InvestmentMapSourceView(GoogleMapView, BaseDetailView):
     def get(self, request, *args, **kwargs):
-        db.reset_queries()
         if request.method == "POST":
             data = request.POST
         else:
@@ -464,6 +465,9 @@ WHERE b.validated = 1
             if dt_to:
                 sql+= " and c.created_at <= %s "
                 query_params.append(dt_to)
+
+
+        # ok until here
 
 
         if view != 'concentration':
@@ -665,4 +669,88 @@ def remove_investment(request):
     data = {'status':True}
     return http.HttpResponse(dumps(data,cls=DjangoJSONEncoder),content_type='application/json')
 
+def ajax_density_view(request):
+    sql_columns = """a.location_id,
+                        a.entity_id,
+                        sum(c.amount_usd) sum_ammount,
+                        d.centroid
+                    """
+    sql = """select {sql_columns}
+                FROM ecofunds_entity_locations a
+                INNER JOIN ecofunds_entities  b ON (a.entity_id = b.entity_id)
+                INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
+                INNER JOIN ecofunds_locations d ON d.id = a.location_id
+                inner join ecofunds_countries cou on cou.id = d.country_id
+                WHERE b.validated = 1
+                group by a.location_id, a.entity_id
+            """.format(sql_columns=sql_columns)
 
+    query_params = []
+    cursor = db.connection.cursor()
+    cursor.execute(sql, query_params)
+    points = {}
+    data = {'items': []}
+
+    for item in cursor.fetchall():
+        location_id = item[0]
+        entity_id = item[1]
+        amount = int(item[2])
+        centroid = item[3]
+        key = location_id
+
+        if not points.has_key(key):
+            o = centroid.split(',')
+            x = float(o[0])
+            y = float(o[1])
+            item = {'lat': x,
+                    'lng': y,
+                    'investment': 0,
+                    'projects': [{
+                        'id': entity_id,
+                        'amount': amount
+                        }]
+                    }
+            points[key] = item
+        else:
+            b= False
+            for p in points[key]['projects']:
+                if p['id'] == entity_id:
+                    b = True
+            if not b:
+                points[key]['projects'].append({'id': entity_id, 'amount': amount})
+
+    for key in points:
+        for o in points[key]['projects']:
+            points[key]['investment'] += o['amount']
+
+    if len(points) > 0:
+        sum_inv = sum(points[key]['investment'] for key in points)
+        max_inv = max(points[key]['investment'] for key in points)
+        min_inv = min(points[key]['investment'] for key in points)
+
+    for key in points:
+        amount = points[key]['investment']
+        text = numbers.format_currency(
+                float(amount),
+                numbers.get_currency_symbol('USD', 'en_US'),
+                u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_')
+            )
+        scale = (len(text)+1) * 3
+
+
+        item = {
+            'lat': points[key]['lat'],
+            'lng': points[key]['lng'],
+            'total_investment': points[key]['investment'],
+            'total_investment_str': text,
+            'scale': scale,
+            'icon': {
+                'path': SymbolPath.CIRCLE,
+                'fillOpacity': 0.8,
+                'fillColor': '#8eb737',
+                'strokeWeight': 0,
+                'scale': scale
+            }
+        }
+        data['items'].append(item)
+    return http.HttpResponse(dumps(data), content_type='application/json')

@@ -32,7 +32,6 @@ def format_currency(value):
 
 def trans_date(v):
     v = str(v)
-    print 'Data ', v
     if len(v)==10:
 
         if re.search('/', v):
