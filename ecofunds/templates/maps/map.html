@@ -37,7 +37,7 @@
     <script type="text/javascript">
         var global_map_height = 583;
         var default_domain = 'project';
-        var default_map_type = 'density/';
+        var default_map_type = 'marker/';
     </script>
     <!-- area-site -->
     <div class="area-site">
@@ -191,12 +191,15 @@
 <div id="info_text_labels" style="display: none;">
     <p id="title_project">{% trans "Total Projects" %}</p>
     <p id="title_investment">{% trans "Total Investments" %}</p>
-    <p id="title_investment">{% trans "Total Investments" %}</p>
+    <p id="title_organization">{% trans "Organization name" %}</p>
 </div>
 
 {% verbatim %}
-<div id="info_project_density" style="display: none;">
+<div id="info_project" style="display: none;">
     <p>{{ label }} - {{ value }}</p>
+</div>
+<div id="info_organization" style="display: none;">
+    <p>{{ value }}</p>
 </div>
 <div id="info_investment_density" style="display: none;">
     <p>{{ label }} - {{ value }}</p>

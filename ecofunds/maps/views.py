@@ -142,7 +142,7 @@ def geoapi_map(request, domain, map_type):
     if domain not in ("project", "investment", "organization"):
         return api_error(request, "Invalid Domain")
 
-    if map_type not in ("concentration", "heat", "density", "bubble"):
+    if map_type not in ("concentration", "heat", "density", "marker"):
         return api_error(request, "Invalid Map Type")
 
     if domain == "organization" and map_type == "concentration":

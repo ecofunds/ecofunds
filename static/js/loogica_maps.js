@@ -149,7 +149,11 @@ define('loogica', ["domReady!", "jquery", "underscore",
         },
         render: function() {
             _.each(this.collection.models, function(place) {
-                new PlaceView({model: place}).render_density();
+                var places_view = new PlaceView({model: place});
+                if (default_map_type == "density/")
+                    places_view.render_density();
+                if (default_map_type == "marker/")
+                    places_view.render_marker();
             });
         }
     });
@@ -157,6 +161,42 @@ define('loogica', ["domReady!", "jquery", "underscore",
         initialize: function() {
             _.bindAll(this, 'render');
             this.model.bind('change', this.render);
+        },
+        render_marker: function() {
+            var _map = window.map_router.map;
+
+            var name = this.model.get('location_id');
+            var lat = this.model.get('lat');
+            var lng = this.model.get('lng');
+            var myLatlng = new google.maps.LatLng(lat, lng);
+            var scale = this.model.get('scale');
+            var total = this.model.get('total_investment');
+            var total_str = this.model.get('total_investment_str');
+
+            var map_elements = [];
+
+            var info_label = $("#title_" + default_domain).html();
+            var info_text_source = $('#info_' + default_domain).html();
+            var template = Handlebars.compile(info_text_source);
+
+            var info_window = new google.maps.InfoWindow({
+                content: template({label: info_label,
+                                   projects: this.model.get('projects'),
+                                   value: name})
+            });
+
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: _map
+            });
+            map_elements.push(marker);
+
+            google.maps.event.addListener(marker, "click",
+                function() {
+                    info_window.open(_map, marker);
+            });
+
+            this.model.set('map_elements', map_elements);
         },
         render_density: function() {
             var _map = window.map_router.map;
@@ -258,10 +298,15 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.map = map_view.render();
         },
         fetch_investments: function() {
+            default_map_type = 'density/';
+            default_domain = 'investment';
             $("a[href=#investment]").parent().removeClass('inativa').addClass('ativa');
             $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
             $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
             $(".opcoes .tipo").show();
+            $("#filtro-investimentos").show();
+            $("#filtro-projetos").hide();
+            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/investment/' + default_map_type;
@@ -271,10 +316,15 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places.fetch();
         },
         fetch_projects: function() {
+            default_map_type = 'marker/';
+            default_domain = 'project';
             $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
             $("a[href=#project]").parent().removeClass('inativa').addClass('ativa');
             $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
             $(".opcoes .tipo").hide();
+            $("#filtro-investimentos").hide();
+            $("#filtro-projetos").show();
+            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/project/' + default_map_type;
@@ -284,10 +334,15 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places.fetch();
         },
         fetch_organizations: function() {
+            default_map_type = 'marker/';
+            default_domain = 'organization';
             $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
             $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
             $("a[href=#organization]").parent().removeClass('inativa').addClass('ativa');
             $(".opcoes .tipo").hide();
+            $("#filtro-investimentos").hide();
+            $("#filtro-projetos").hide();
+            $("#filtro-organizacoes").show();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/organization/' + default_map_type;
