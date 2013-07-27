@@ -89,6 +89,7 @@ def application():
     # Initialize environment settings file
     run('touch %(settings)s' % env.PROJECT)
     run('chmod 600 %(settings)s' % env.PROJECT)
+    run('echo "[settings]" > (%settings)s' % env.PROJECT)
 
     # Cria os symlinks configurando os serviços
     with cd('/etc/nginx/sites-enabled/'):
