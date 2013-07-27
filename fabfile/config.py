@@ -27,7 +27,7 @@ def set(option, value=None):
     if value is None:
         value = prompt('Value: ')
 
-    option = option.lower()
+    option = option.upper()
 
     after = '%s = %s' % (option, value)
 
