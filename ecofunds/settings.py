@@ -94,7 +94,7 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = PROJECT_ROOT.child('media')
+MEDIA_ROOT = PROJECT_ROOT.parent.child('media')
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = PROJECT_ROOT.child('assets')
