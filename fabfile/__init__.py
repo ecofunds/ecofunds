@@ -1,7 +1,7 @@
 # coding: utf-8
 from fabric.api import task, env
 from unipath import Path
-from .helpers import make_environment
+from .helpers import Project
 
 # Exposes other functionalities
 import setup
@@ -18,17 +18,29 @@ Path(__file__).parent.parent.chdir()
 
 @task
 def stage():
-    from helpers import Project
-
     env.user = 'ecofunds'
+    env.instance = 'stage'
+    env.project = 'ecofunds'
+    env.package = 'ecofunds'
+
     env.hosts = ['stage.ecofundsdatabase.org']
-    env.settings = 'ecofunds.settings'
-    env.PROJECT = Project('~', 'stage.ecofunds', 'ecofunds')
+
+    env.settings = '%s.settings' % env.package
+    env.PROJECT = Project(basedir='~', instance='production', project='ecofunds', package='ecofunds')
 
 
 @task
 def production():
-    make_environment('production', 'smallactsmanifesto.org')
+    env.user = 'ecofunds'
+    env.instance = 'production'
+    env.project = 'ecofunds'
+    env.package = 'ecofunds'
+
+    env.hosts = ['production.ecofundsdatabase.org']
+
+    env.settings = '%s.settings' % env.package
+
+    env.PROJECT = Project(basedir='~', instance='production', project='ecofunds', package='ecofunds')
 
 
 """
