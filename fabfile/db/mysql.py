@@ -33,7 +33,7 @@ def create(dbuser, dbname):
     sudo('chgrp www-data %(share)s/.my.cnf' % env.PROJECT)
 
 
-def mysql_db_backup(dbname):
+def backup(dbname):
     '''
     Get dump from server MySQL database
 
