@@ -9,7 +9,6 @@ import deploy
 import db
 import config
 import django
-import mysql5
 
 
 # Always run fabric from the repository root dir.
