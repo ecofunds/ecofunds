@@ -1,6 +1,7 @@
 # coding: utf-8
 from unipath import Path
-from fabric.api import task, local, run, cd, put, env, prefix, require
+from fabric.api import task, local, run, cd, put, env, prefix, require, puts
+from fabric.colors import yellow
 from .helpers import timestamp
 
 
@@ -14,7 +15,7 @@ def push(revision):
     remote_archive = Path(env.PROJECT.tmp, local_archive.name)
 
     local('git archive --format=tar %s | bzip2 -c > %s' % (rev, local_archive))
-    put(local_archive, remote_archive)
+    put(local_archive, env.PROJECT.tmp)
 
     release_dir = Path(env.PROJECT.releases, timestamp())
     run('mkdir -p %s' % release_dir)
@@ -23,7 +24,7 @@ def push(revision):
     # cleanup
     local('rm %s' % local_archive)
 
-    print release_dir
+    puts(yellow('Release Directory: ' + release_dir))
     return release_dir
 
 
