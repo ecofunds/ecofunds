@@ -18,19 +18,21 @@ def list():
 def set(option, value=None):
     """
     Update or create option line from remote settings.ini
+
+    fab production config.set:DEBUG,False
+
+    If value is omitted, a prompt will ask for it. This helps avoid
+    problems settings values with $ and alike.
     """
     if value is None:
         value = prompt('Value: ')
 
     option = option.lower()
 
-    before = '%s = .*' % option
     after = '%s = %s' % (option, value)
 
-    if contains(env.PROJECT.settings, before):
-        sed(env.PROJECT.settings, before, after, backup='')
-    else:
-        append(env.PROJECT.settings, after)
+    remove(option) # remove option if exists.
+    append(env.PROJECT.settings, after)
 
     # sanity check
     assert contains(env.PROJECT.settings, after), 'Config not found: "%s"' % after
@@ -46,8 +48,9 @@ def remove(option):
     before = '%s = .*' % option
     after = ''
 
-    if contains(env.PROJECT.settings, before):
+    if contains(env.PROJECT.settings, before, use_re=True):
         sed(env.PROJECT.settings, before, after, backup='')
+        run(r"tr -s '\n' < %(settings)s > %(settings)s.new && mv %(settings)s{.new,}" % env.PROJECT)
 
     # sanity check
     assert not contains(env.PROJECT.settings, '%s.*' % option), 'Config found: "%s"' % option
