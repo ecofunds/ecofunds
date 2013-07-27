@@ -50,8 +50,8 @@ def build(release_dir):
         run("python bootstrap")
 
         with prefix('source bin/activate'):
-            run("python manage.py syncdb --noinput" % env)
-            run("python manage.py collectstatic --noinput" % env)
+            run("python manage.py syncdb --noinput")
+            run("python manage.py collectstatic --noinput")
 
 
 @task
