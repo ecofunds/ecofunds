@@ -4,20 +4,19 @@ from datetime import datetime
 from fabric.api import run, env, put, sudo, get, task
 
 
-############################################################
-# MYSQL TASKS                                              #
-############################################################
-@task
-def mysql_db_create(dbuser, dbname):
+@task()
+def create(dbuser, dbname):
     """
-    Create a Mysql Database: db_create:dbuser,dbname
+    Create a Mysql Database and User: db.mysql.create:dbuser,dbname
 
-    Example: db_create:nossodesconto,nossodesconto
+    Example: db.mysql.create:myproject,myproject
 
     The password will be randomly generated.
     *  Run once.
     ** This command must be executed by a sudoer.
     """
+    env.user = env.local_user #FIXME: Need to avoid this.
+
     password = run('makepasswd --chars 32')
     assert(len(password) == 32)  # Ouch!
 
@@ -30,6 +29,7 @@ def mysql_db_create(dbuser, dbname):
     my_cfg = "[client]\ndatabase=%s\nuser=%s\npassword=%s" % (dbname, dbuser, password)
     sudo("echo '%s' > %s/.my.cnf" % (my_cfg, env.PROJECT.share))
     sudo('chmod 640 %(share)s/.my.cnf' % env.PROJECT)
+    sudo('chown %(user)s %(share)s/.my.cnf' % env.PROJECT)
     sudo('chgrp www-data %(share)s/.my.cnf' % env.PROJECT)
 
 
