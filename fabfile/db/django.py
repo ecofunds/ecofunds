@@ -2,7 +2,7 @@
 import os
 from fabric.api import task, get, env, put, abort, run, cd, require, prefix
 from unipath import Path
-from .helpers import timestamp
+from ..helpers import timestamp
 
 
 @task
