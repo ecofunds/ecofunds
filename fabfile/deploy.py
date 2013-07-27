@@ -40,8 +40,6 @@ def build(release_dir):
         upload_template(host_file, '%(current)s/host/' % env.PROJECT, env.PROJECT, backup=False)
 
     with cd(release_dir):
-        #release_static = Path(release_dir, env.PROJECT.package, 'static')
-        #release_static = Path(release_dir, 'static')
         release_media = Path(release_dir, env.PROJECT.package, 'media')
         release_settings = Path(release_dir, env.PROJECT.package, 'settings.ini')
 
