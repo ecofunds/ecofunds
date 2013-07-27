@@ -63,7 +63,7 @@ def application():
       +---- /logs
             +---- /stage.myproject.com.br (logs)
     """
-    require('PROJECT', provided_by=['stage', 'production'])
+    require('PROJECT')
 
     app_user = env.user
 
@@ -103,7 +103,7 @@ def delete_app():
     """
     Delete an application instance.
     """
-    require('PROJECT', provided_by=['stage', 'production'])
+    require('PROJECT')
 
     question = red('Do you want to DELETE the app at %(appdir)s ?' % env.PROJECT)
 
