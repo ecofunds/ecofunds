@@ -171,6 +171,8 @@ def remove_user(username):
     '''
         fab env remove_user
     '''
+    env.user = env.local_user
+
     commands = (
         'userdel {username}',
         'rm -rf /home/{username}',
