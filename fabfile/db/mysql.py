@@ -1,7 +1,8 @@
 # -*- encoding: utf-8 -*-
 from unipath import Path
 from ..helpers import timestamp
-from fabric.api import run, env, put, sudo, get, task
+from fabric.api import run, env, put, sudo, get, task, puts
+from fabric.colors import yellow
 
 
 @task()
@@ -31,6 +32,8 @@ def create(dbuser, dbname):
     sudo('chmod 640 %(share)s/.my.cnf' % env.PROJECT)
     sudo('chown %(user)s %(share)s/.my.cnf' % env.PROJECT)
     sudo('chgrp www-data %(share)s/.my.cnf' % env.PROJECT)
+
+    puts(yellow('DATABASE_URL => mysql://%(dbuser)s:%(password)s@localhost/%(dbname)s' % locals()))
 
 
 @task()
