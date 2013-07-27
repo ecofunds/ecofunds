@@ -45,11 +45,11 @@ def remove(option):
     """
     option = option.lower()
 
-    before = '%s = .*' % option
+    before = '%s\s+?=\s+?.*' % option
     after = ''
 
     if contains(env.PROJECT.settings, before, use_re=True):
-        sed(env.PROJECT.settings, before, after, backup='')
+        sed(env.PROJECT.settings, before, after, backup='', flags='I')
         run(r"tr -s '\n' < %(settings)s > %(settings)s.new && mv %(settings)s{.new,}" % env.PROJECT)
 
     # sanity check
@@ -76,7 +76,7 @@ def contains(filename, text, use_re=False):
     '''
     Check if a line exists in a file.
     '''
-    flag = '-E' if use_re else '-Fx'
+    flag = '-E -i' if use_re else '-Fx'
     with settings(hide('everything'), warn_only=True):
         cmd = "grep %s '%s' %s" % (flag, text, filename)
         return run(cmd).succeeded
