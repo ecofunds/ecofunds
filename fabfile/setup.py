@@ -72,15 +72,8 @@ def application():
             abort('Application already exists.')
 
     # Create directory structure
-    run('mkdir -m 755 -p %(appdir)s' % env.PROJECT)
-    run('mkdir -m 755 -p %(releases)s' % env.PROJECT)
-    run('mkdir -m 755 -p %(current)s' % env.PROJECT)
-    run('mkdir -m 755 -p %(share)s' % env.PROJECT)
-    run('mkdir -m 755 -p %(media)s' % env.PROJECT)
-    run('mkdir -m 755 -p %(tmp)s' % env.PROJECT)
-
-    with warn_only():
-        run('mkdir -m 755 -p %(logs)s' % env.PROJECT)
+    for directory in env.PROJECT.dirs.values():
+        run('mkdir -m 755 -p %s' % directory)
 
     # Initialize environment settings file
     run('touch %(settings)s' % env.PROJECT)
