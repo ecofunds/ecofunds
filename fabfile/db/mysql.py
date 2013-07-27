@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-import os
+from unipath import Path
 from ..helpers import timestamp
 from fabric.api import run, env, put, sudo, get, task
 
@@ -67,15 +67,25 @@ def backup(dbname):
     sudo('rm ' + remote_dbfile)
 
 
-def mysql_db_restore(dbname, local_file):
-    remote_bz2file = os.path.join('/tmp', os.path.basename(local_file))
-    remote_sqlfile = os.path.splitext(remote_bz2file)[0]
+@task
+def restore(dbname, local_file):
+    '''
+    Restore a MySQL dump into dbname.
 
-    put(local_file, remote_bz2file)
-    run('bunzip2 ' + remote_bz2file)
+    Usage: fab db.mysql.backup
+    '''
+    env.user = env.local_user #FIXME: Need to avoid this.
+
+    local_file = Path(local_file).absolute()
+
+    remote_file = Path(put(local_file, env.PROJECT.tmp, use_sudo=True)[0])
+
+    if remote_file.endswith('.bz2'):
+        sudo('bunzip2 ' + remote_file)
+        remote_file = remote_file.parent.child(remote_file.stem)
 
     sudo('mysql --defaults-extra-file=/root/.my.cnf -e "DROP DATABASE %(dbname)s; CREATE DATABASE %(dbname)s;"' % locals())
-    sudo('mysql --defaults-extra-file=/root/.my.cnf %(dbname)s < %(remote_sqlfile)s' % locals())
+    sudo('mysql --defaults-extra-file=/root/.my.cnf %(dbname)s < %(remote_file)s' % locals())
 
     # cleanup
-    sudo('rm ' + remote_sqlfile)
+    sudo('rm ' + remote_file)
