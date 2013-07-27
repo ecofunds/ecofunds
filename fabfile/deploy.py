@@ -2,6 +2,7 @@
 from unipath import Path
 from fabric.api import task, local, run, cd, put, env, prefix, require, puts, sudo
 from fabric.colors import yellow
+from fabric.contrib.files import upload_template
 from .helpers import timestamp
 
 
@@ -33,6 +34,10 @@ def build(release_dir):
     """
     Build the pushed version installing packages, running migrations, etc.
     """
+    host_files = Path('host').listdir()
+    for host_file in host_files:
+        upload_template(host_file, '%(current)s/host/' % env.PROJECT, env.PROJECT, backup=False)
+
     with cd(release_dir):
         #release_static = Path(release_dir, env.PROJECT.package, 'static')
         #release_static = Path(release_dir, 'static')
