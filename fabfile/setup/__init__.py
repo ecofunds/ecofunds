@@ -98,10 +98,10 @@ def application():
         sudo('ln -sf %(current)s/host/nginx.conf %(appname)s.conf' % env.PROJECT)
 
     with cd('/etc/nginx/sites-enabled/'):
-        sudo('ln -sf %s/host/nginx.vhost %s.vhost' % (env.PROJECT.current, env.PROJECT.appname))
+        sudo('ln -sf %(current)s/host/nginx.vhost %(appname)s.vhost' % env.PROJECT)
 
     with cd('/etc/supervisor/conf.d'):
-        sudo('ln -sf %s/host/app_wsgi.conf %s.conf' % (env.PROJECT.current, env.PROJECT.appname))
+        sudo('ln -sf %(current)s/host/uwsgi.conf %(appname)s.conf' % env.PROJECT)
 
 
 @task
