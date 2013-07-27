@@ -1,9 +1,10 @@
 # coding: utf-8
 from getpass import getpass
-from fabric.api import env, run, require, abort, task, warn_only, put, prompt, local, sudo, cd
+from fabric.api import env, run, require, abort, task, put, prompt, local, sudo, cd, puts, hide
 from fabric.colors import red, yellow
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
+from fabric.tasks import Task
 from unipath import Path
 from .helpers import ask
 
@@ -100,52 +101,60 @@ def delete_app():
         run('rm -rf %(appdir)s' % env.PROJECT)
 
 
-@task
-def createuser(pubkey=None, username=None, as_root=True):
-    if as_root:
-        env.user = 'root'
-        sudo = run
+class CreateUser(Task):
+    name = "createuser"
 
-    keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
+    def __init__(self):
+        super(CreateUser, self).__init__()
+        self.commands = (
+            'useradd -m -s /bin/bash -p {password} {username}',
+            'mkdir ~{username}/.ssh -m 700',
+            'echo "{pubkey}" >> ~{username}/.ssh/authorized_keys',
+            'chmod 644 ~{username}/.ssh/authorized_keys',
+            'chown -R {username}:{username} ~{username}/.ssh',
+            'usermod -a -G sudo {username}',
+        )
 
-    if not keyfile.exists():
-        abort('Public key file does not exist: %s' % keyfile)
+    def run(self, username=None, pubkey=None, as_root=False):
+        if as_root:
+            env.user = 'root'
+            execute = run
+        else:
+            env.user = env.local_user
+            execute = sudo
 
-    username = username or prompt('Username: ')
-    password = getpass('Password: ')
-    password = local('perl -e \'print crypt(\"%s\", \"password\")\'' % (password),
-                     capture=True)
+        keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
 
-    with open(keyfile, 'r') as f:
-        pubkey = f.read(65535)
+        if not keyfile.exists():
+            abort('Public key file does not exist: %s' % keyfile)
 
-    commands = (
-        'useradd -m -s /bin/bash -p {password} {username}',
-        'mkdir ~{username}/.ssh -m 700',
-        'echo "{pubkey}" >> ~{username}/.ssh/authorized_keys',
-        'chmod 644 ~{username}/.ssh/authorized_keys',
-        'chown -R {username}:{username} ~{username}/.ssh',
-        'usermod -a -G sudo {username}',
-    )
+        with open(keyfile, 'r') as f:
+            pubkey = f.read(65535)
 
-    for command in commands:
-        sudo(command.format(**locals()))
+        username = username or prompt('Username: ')
+        password = getpass("%s's password: " % username)
 
-@task
-def createprojectuser(pubkey=None, username=None, as_root=True):
-    createuser(pubkey, username, as_root)
+        with hide('running', 'stdout', 'stderr'):
+            password = local('perl -e \'print crypt(\"%s\", \"password\")\'' % (password),
+                         capture=True)
 
-    if as_root:
-        env.user = 'root'
-        sudo = run
+        for command in self.commands:
+            execute(command.format(**locals()))
 
-    commands = (
-        'usermod -a -G www-data {username}',
-        'echo "{username} ALL=(root) NOPASSWD: /usr/bin/pip, /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers'
-    )
+createuser = CreateUser()
 
-    for command in commands:
-        sudo(command.format(**locals()))
+
+class CreateProjectUser(CreateUser):
+    name = 'createprojectuser'
+    def __init__(self):
+        super(CreateProjectUser, self).__init__()
+        self.commands = self.commands + (
+            'usermod -a -G www-data {username}',
+            'echo "{username} ALL=(root) NOPASSWD: /usr/bin/pip, /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers'
+        )
+
+createprojectuser = CreateProjectUser()
+
 
 @task
 def remove_user(username):
