@@ -1,6 +1,6 @@
 # coding: utf-8
 from unipath import Path
-from fabric.api import task, run, env, require, settings, hide, fastprint, get, put
+from fabric.api import task, run, env, require, settings, hide, fastprint, get, put, prompt
 from fabric.contrib.files import append, sed
 
 
@@ -15,10 +15,13 @@ def list():
 
 
 @task
-def set(option, value):
+def set(option, value=None):
     """
     Update or create option line from remote settings.ini
     """
+    if value is None:
+        value = prompt('Value: ')
+
     option = option.lower()
 
     before = '%s = .*' % option
