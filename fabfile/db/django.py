@@ -13,7 +13,7 @@ def dumpdata(apps_or_models=''):
     '''
     require('PROJECT', provided_by=['stage', 'production'])
 
-    remote_file = '%(tmp)s/db-%(instance)s-%(project)s-' % env.PROJECT + timestamp() +'.sql.bz2'
+    remote_file = '%(tmp)s/db-%(instance)s-%(project)s-' % env.PROJECT + timestamp() +'.json.bz2'
 
     with cd(env.PROJECT.current):
         with prefix('source bin/activate'):
