@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 import os
-from datetime import datetime
+from ..helpers import timestamp
 from fabric.api import run, env, put, sudo, get, task
 
 
@@ -50,17 +50,18 @@ def drop(dbuser, dbname):
     sudo('rm %(share)s/.my.cnf' % env.PROJECT)
 
 
+@task
 def backup(dbname):
     '''
     Get dump from server MySQL database
 
-    Usage: fab mysql_db_backup
+    Usage: fab db.mysql.backup
     '''
-    remote_dbfile = '/tmp/mysql_db_backup-%s.sql.bz2' % datetime.now().strftime("%Y-%m-%d-%Hh%Mm%Ss")
+    env.user = env.local_user #FIXME: Need to avoid this.
 
+    remote_dbfile = '%(tmp)s/db-%(instance)s-%(project)s-' % env.PROJECT + timestamp() +'.sql.bz2'
     sudo('mysqldump --defaults-extra-file=/root/.my.cnf --default-character-set=utf8 -R -c --lock-tables=FALSE %(dbname)s | bzip2 -c  > %(remote_dbfile)s' % locals())
-
-    get(remote_dbfile, 'tmp/')
+    get(remote_dbfile, '.')
 
     #remove the temporary remote dump file
     sudo('rm ' + remote_dbfile)

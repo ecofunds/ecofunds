@@ -23,6 +23,8 @@ class Project(dict):
 
         super(Project, self).__init__(
             user=user,
+            instance=instance,
+            project=project,
             appname=appname,
             package=package,
             settings='%s/share/settings.ini' % appdir,
