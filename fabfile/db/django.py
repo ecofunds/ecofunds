@@ -31,10 +31,10 @@ def loaddata(local_file):
     require('PROJECT')
 
     local_file = Path(local_file).absolute()
-    remote_file = Path(put(local_file, env.PROJECT.tmp, use_sudo=True)[0])
+    remote_file = Path(put(local_file, env.PROJECT.tmp)[0])
 
     if remote_file.endswith('.bz2'):
-        sudo('bunzip2 ' + remote_file)
+        run('bunzip2 ' + remote_file)
         remote_file = remote_file.parent.child(remote_file.stem)
 
     with cd(env.PROJECT.current):
