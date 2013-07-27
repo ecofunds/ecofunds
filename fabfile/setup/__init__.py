@@ -18,18 +18,20 @@ def server(hostname, fqdn, email):
     '''
     env.user = 'root'
 
+    scripts = Path(__file__).parent.child('scripts')
+
     files = [
-        'server/server_setup.sh',
-        'server/postfix.sh',
-        'server/watchdog.sh',
-        'server/uwsgi.sh',
+        scripts.child('server_setup.sh'),
+        scripts.child('postfix.sh'),
+        scripts.child('watchdog.sh'),
+        scripts.child('uwsgi.sh'),
     ]
 
     # Choose database
     answer = ask('Which database to install? [P]ostgres, [M]ysql, [N]one ',
         options={
-            'P': ['server/pg_hba.conf', 'server/postgresql.sh'],
-            'M': ['server/mysql.sh'],
+            'P': [scripts.child('pg_hba.conf'), scripts.child('postgresql.sh')],
+            'M': [scripts.child('mysql.sh')],
             'N': []})
 
     files.extend(answer)
