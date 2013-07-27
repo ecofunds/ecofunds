@@ -7,11 +7,11 @@ class Project(dict):
     """
     Describes the remote directory structure for a project.
     """
-    def __init__(self, rootdir, appname, package):
-        appdir = '%s/%s' % (rootdir, appname)
+    def __init__(self, basedir, instance, project, package):
+        appname = '%s.%s' % (instance, project)
+        appdir = '%s/%s' % (basedir, appname)
 
-        super(Project, self).__init__(
-            appname  = appname,
+        self.dirs = dict(
             appdir   = appdir,
             releases = '%s/releases' % appdir,
             current  = '%s/releases/current' % appdir,
@@ -19,10 +19,10 @@ class Project(dict):
             media    = '%s/share/media' % appdir,
             settings = '%s/share/settings.ini' % appdir,
             tmp      = '%s/tmp' % appdir,
-            logs     = '%s/log' % appdir,
-
-            package  = package,
+            logs     = '%s/logs' % appdir,
         )
+
+        super(Project, self).__init__(appname=appname,package=package,**self.dirs)
 
     def __getattr__(self, item):
         if item in self:
