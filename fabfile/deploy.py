@@ -1,6 +1,6 @@
 # coding: utf-8
 from unipath import Path
-from fabric.api import task, local, run, cd, put, env, prefix, require, puts
+from fabric.api import task, local, run, cd, put, env, prefix, require, puts, sudo
 from fabric.colors import yellow
 from .helpers import timestamp
 
@@ -64,8 +64,8 @@ def restart():
     """
     Restart all services.
     """
-    run('sudo service nginx restart')
-    run('sudo supervisorctl reload')
+    sudo('service nginx restart', pty=False, shell=False)
+    sudo('supervisorctl reload', pty=False)
 
 
 @task(default=True)
