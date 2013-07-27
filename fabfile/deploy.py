@@ -3,6 +3,7 @@ from unipath import Path
 from fabric.api import task, local, run, cd, put, env, prefix, require, puts, sudo
 from fabric.colors import yellow
 from fabric.contrib.files import upload_template
+from fabric.contrib.project import rsync_project
 from .helpers import timestamp
 
 
@@ -86,3 +87,19 @@ def deploy(revision):
     build(release_dir)
     release(release_dir)
     restart()
+
+
+@task
+def sync_media(upload=False, delete=False):
+    require('PROJECT')
+
+    local_dir = add_slash(Path(env.PROJECT.package, 'media'))
+    remote_dir = add_slash(env.PROJECT.media)
+
+    rsync_project(remote_dir, local_dir, delete=delete, upload=upload)
+
+
+def add_slash(path):
+    if not path.endswith('/'):
+        path = path + '/'
+    return path
