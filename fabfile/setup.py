@@ -1,6 +1,6 @@
 # coding: utf-8
 from getpass import getpass
-from fabric.api import env, run, require, abort, task, put, prompt, local, sudo, cd, puts, hide
+from fabric.api import env, run, require, abort, task, put, prompt, local, sudo, cd, puts, hide, settings
 from fabric.colors import red, yellow
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
@@ -64,6 +64,16 @@ def application():
             +---- /stage.myproject.com.br (logs)
     """
     require('PROJECT', provided_by=['stage', 'production'])
+
+    app_user = env.user
+
+    with settings(user=env.local_user):
+        with hide('running', 'stdout', 'stderr'):
+            app_user_exists = run('getent passwd %s' % app_user, warn_only=True)
+
+        if not app_user_exists:
+            puts("Creating project user: %s" % app_user)
+            createprojectuser.run(username=app_user)
 
     if exists(env.PROJECT.appdir):
         print(yellow('Application detected at: %(appdir)s' % env.PROJECT))
