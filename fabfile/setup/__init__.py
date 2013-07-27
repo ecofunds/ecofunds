@@ -94,6 +94,9 @@ def application():
     run('echo "[settings]" > %(settings)s' % env.PROJECT)
 
     # Cria os symlinks configurando os serviços
+    with cd('/etc/nginx/conf.d/'):
+        sudo('ln -sf %(current)s/host/nginx.conf %(appname)s.conf' % env.PROJECT)
+
     with cd('/etc/nginx/sites-enabled/'):
         sudo('ln -sf %s/host/nginx.vhost %s.vhost' % (env.PROJECT.current, env.PROJECT.appname))
 
