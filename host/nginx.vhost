@@ -9,10 +9,10 @@ server {
 server {
     listen 80;
     charset utf-8;
-    server_name ecofundsdatabase.org, stage.ecofundsdatabase.org;
+    server_name ecofundsdatabase.org, stage.ecofundsdatabase.org, production.ecofundsdatabase.org;
     client_max_body_size 50M;
 
-    root /home/ecofunds/stage.ecofunds/releases/current;
+    root %(current)s;
 
     location /static {
         # if asset versioning is used
@@ -20,12 +20,21 @@ server {
             expires max;
         }
 
-        root /home/ecofunds/stage.ecofunds/releases/current/;
+        root %(current)s/%(package)s;
+    }
+
+    location /media {
+        # if asset versioning is used
+        if ($query_string) {
+            expires max;
+        }
+
+        root %(current)s/%(package)s;
     }
 
     location / {
-        uwsgi_pass unix:/home/ecofunds/stage.ecofunds/ecofunds.sock;
+        uwsgi_pass unix:%(share)s/%(project)s.sock;
         include uwsgi_params;
-        include /etc/nginx/bots.conf;
+        #include /etc/nginx/bots.conf;
     }
 }
