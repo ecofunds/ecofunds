@@ -17,12 +17,15 @@ class Project(dict):
             current  = '%s/releases/current' % appdir,
             share    = '%s/share' % appdir,
             media    = '%s/share/media' % appdir,
-            settings = '%s/share/settings.ini' % appdir,
             tmp      = '%s/tmp' % appdir,
             logs     = '%s/logs' % appdir,
         )
 
-        super(Project, self).__init__(appname=appname,package=package,**self.dirs)
+        super(Project, self).__init__(
+            appname=appname,
+            package=package,
+            settings='%s/share/settings.ini' % appdir,
+            **self.dirs)
 
     def __getattr__(self, item):
         if item in self:
