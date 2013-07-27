@@ -33,6 +33,23 @@ def create(dbuser, dbname):
     sudo('chgrp www-data %(share)s/.my.cnf' % env.PROJECT)
 
 
+@task()
+def drop(dbuser, dbname):
+    """
+    Drop a Mysql Database and User: db.mysql.drop:dbuser,dbname
+
+    Example: db.mysql.drop:myproject,myproject
+
+    *  Run once.
+    ** This command must be executed by a sudoer.
+    """
+    env.user = env.local_user #FIXME: Need to avoid this.
+
+    sudo("mysql --defaults-file=/root/.my.cnf -e \"DROP DATABASE %(dbname)s;\"" % locals())
+    sudo("mysql --defaults-file=/root/.my.cnf -e \"DROP USER '%(dbuser)s'@'localhost';\"" % locals())
+    sudo('rm %(share)s/.my.cnf' % env.PROJECT)
+
+
 def backup(dbname):
     '''
     Get dump from server MySQL database
