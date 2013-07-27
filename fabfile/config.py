@@ -69,7 +69,11 @@ def upload(config_file):
     put(config_file, env.PROJECT.settings)
 
 
-def contains(filename, text):
+def contains(filename, text, use_re=False):
+    '''
+    Check if a line exists in a file.
+    '''
+    flag = '-E' if use_re else '-Fx'
     with settings(hide('everything'), warn_only=True):
-        cmd = 'egrep "^%s$" %s' % (text, filename)
+        cmd = "grep %s '%s' %s" % (flag, text, filename)
         return run(cmd).succeeded
