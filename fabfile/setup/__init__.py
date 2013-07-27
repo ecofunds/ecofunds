@@ -6,7 +6,7 @@ from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.tasks import Task
 from unipath import Path
-from .helpers import ask
+from ..helpers import ask
 
 
 @task
