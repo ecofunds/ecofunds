@@ -36,7 +36,7 @@ def server(hostname, fqdn, email):
 
     # Create superuser
     if 'Y' == ask('Create superuser? [Y]es or [N]o ', options=('Y', 'N')):
-        createuser(as_root=True)
+        createuser.run(as_root=True)
 
     # Upload files and fixes execution mode
     for localfile in files:
