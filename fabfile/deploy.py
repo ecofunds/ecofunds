@@ -37,7 +37,7 @@ def build(release_dir):
     """
     host_files = Path('host').listdir()
     for host_file in host_files:
-        upload_template(host_file, '%(current)s/host/' % env.PROJECT, env.PROJECT, backup=False)
+        upload_template(host_file, '%s/host/' % release_dir, env.PROJECT, backup=False)
 
     with cd(release_dir):
         release_media = Path(release_dir, env.PROJECT.package, 'media')
