@@ -16,7 +16,7 @@ def push(revision):
     local_archive = Path('%s.tar.bz2' % rev)
     remote_archive = Path(env.PROJECT.tmp, local_archive.name)
 
-    local('git archive --format=tar %s | bzip2 -c > %s' % (rev, local_archive))
+    local('git archive --format=tar %s | bzip2 -9 -c > %s' % (rev, local_archive))
     put(local_archive, env.PROJECT.tmp)
 
     release_dir = Path(env.PROJECT.releases, timestamp())
