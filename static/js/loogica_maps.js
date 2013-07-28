@@ -182,7 +182,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var info_window = new google.maps.InfoWindow({
                 content: template({label: info_label,
                                    projects: this.model.get('projects'),
-                                   value: name})
+                                   value: total})
             });
 
             var marker = new google.maps.Marker({
