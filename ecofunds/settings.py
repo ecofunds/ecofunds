@@ -18,9 +18,6 @@ TEMPLATE_DEBUG = DEBUG
 GOOGLE_KEY = config('GOOGLE_KEY')
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     ('Administrator', 'administrator@ecofunds.org'),
 )
