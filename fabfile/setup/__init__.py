@@ -1,7 +1,7 @@
 # coding: utf-8
 from getpass import getpass
 from fabric.api import env, run, require, abort, task, put, prompt, local, sudo, cd, puts, hide, settings
-from fabric.colors import red, yellow
+from fabric.colors import red, yellow, green
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.tasks import Task
@@ -17,6 +17,7 @@ def server(hostname, fqdn, email):
 
     Example: server:palmas,palmas.dekode.com.br,admin@dekode.com.br
     '''
+    puts(green('Server setup...'))
 
     scripts = Path(__file__).parent.child('scripts')
 
@@ -65,6 +66,7 @@ def application():
       +---- /logs
             +---- /stage.myproject.com.br (logs)
     """
+    puts(green('Application setup...'))
 
 
     if not user_check(env.PROJECT.user, need_passwd=False):
