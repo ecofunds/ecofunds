@@ -16,7 +16,7 @@ FIXTURE_PLOLYGON = "<MultiGeometry><Polygon><tessellate>1</tessellate><outerBoun
 class ProjectJSONView(TestCase):
     def setUp(self):
         country = m(Country, name="Brasil")
-        location = m(Location, country=country, name="Rio de Janeiro",
+        location = m(Location, id=1, country=country, name="Rio de Janeiro",
                      centroid="-22.5331067902,-43.2435698976",
                      polygon=FIXTURE_PLOLYGON)
         funding_org = m(Organization, name="Funding Ord", country=country,
@@ -26,11 +26,13 @@ class ProjectJSONView(TestCase):
                                                       state=location,
                                                       validated=True)
         project = m(Project, main_organization=organization,
+                             title="Projeto de Teste",
+                             acronym="Projeto de Teste",
                              locations=[],
                              centroid="-27.2221329359,-50.0092212765",
                              validated=True)
         funding_proj = m(Project, main_organization=organization,
-                                  locations=[])
+                                  locations=[], validated=False)
         investment = m(Investment, recipient_organization=organization,
                                    funding_organization=funding_org,
                                    funding_entity=funding_proj,
@@ -43,6 +45,36 @@ class ProjectJSONView(TestCase):
     def test_get_projects(self):
         response = self.client.get(reverse('project_mapsource'))
         self.assertEqual(200, response.status_code)
+
+    def test_get_project_api(self):
+        response = self.client.get(reverse('project_api', args=['marker']))
+        self.assertEqual(200, response.status_code)
+
+        expected_items = [{
+            u'entity_id': 1,
+            u'location_id': 1,
+            u'lat': -27.2221329359,
+            u'lng': -50.0092212765,
+            u'acronym': u"Projeto de Teste",
+            u'url': None
+        }]
+
+        received_data = loads(response.content)
+        self.assertEqual(received_data['map']['items'], expected_items)
+
+    def test_get_project_api_marker_parameters(self):
+        parameters = {
+            's_state': 'Rio de Janeiro',
+            's_country': 'Brasil',
+        }
+
+        for parameter, value in parameters.items():
+            data = {parameter: value}
+            response = self.client.get(reverse('project_api', args=['marker']),
+                                       data)
+            self.assertEqual(200, response.status_code)
+            received_data = loads(response.content)
+            self.assertEqual(len(received_data['map']['items']), 1)
 
     def test_get_projects_concentration(self):
         response = self.client.get(reverse('geoapi', args=['project', 'concentration']))

@@ -1,4 +1,5 @@
 import logging
+import types
 
 from django import db
 from django import http
@@ -116,6 +117,272 @@ def api_error(request, message):
     return http.HttpResponse(dumps(dict(error=message)),
                              content_type="application/json")
 
+def wrap_like(data):
+    return "%{0}%".format(data.encode('utf-8'))
+
+select_data = {
+    'investment':
+    """ SELECT
+        a.location_id,
+        a.entity_id,
+        sum(c.amount_usd) sum_ammount,
+        d.centroid,
+        b.title,
+        b.website
+    """,
+    'project':
+    """ SELECT
+        a.entity_id,
+        a.location_id,
+        b.centroid,
+        b.title,
+        b.website
+    """,
+    'organization':
+    """ SELECT
+        o.name,
+        o.desired_location_lat,
+        o.desired_location_lng
+    """
+}
+
+default_from = """
+    FROM ecofunds_entity_locations a
+    INNER JOIN ecofunds_entities b ON (a.entity_id = b.entity_id)
+    INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
+    INNER JOIN ecofunds_locations d ON d.id = a.location_id
+    inner join ecofunds_countries cou on cou.id = d.country_id
+"""
+
+from_data = {
+    'investment': default_from,
+    'project': default_from,
+    'organization': 'FROM ecofunds_organization o INNER JOIN ecofunds_locations d '
+                    'on o.state_id = d.id INNER JOIN ecofunds_countries cou on '
+                    'cou.id = d.country_id '
+}
+
+default_where = 'WHERE b.validated = 1'
+
+where_data = {
+    'investment': default_where,
+    'project': default_where,
+    'organization': 'WHERE desired_location_lat is not null and '
+                    'desired_location_lng is not null'
+}
+
+
+filters = {
+    's_project_name': {
+        'where_data': ' and b.title like %s ',
+        'parameter': (wrap_like, 's_project_name')
+    },
+    's_project_activity_type': {
+        'where_data': ' and exists (select 1 from ecofunds_entity_activities '
+                        'e where e.entity_id = b.entity_id and e.activity_id = %s) ',
+        'parameter': ('s_project_activity_type')
+    },
+    's_organization': {
+        'where_data': ' and exists (select 1 from ecofunds_organization f '
+                        'where f.id in (c.recipient_organization_id, '
+                        'c.funding_organization_id) and {fn concat(f.name, '
+                        'f.acronym)} like %s) ',
+        'parameter': (wrap_like, 's_organization')
+    },
+    's_organization_type': {
+        'where_data': ' and exists (select 1 from ecofunds_organization f '
+                        'where f.id in (c.recipient_organization_id, '
+                        'c.funding_organization_id) and f.type_id like %s) ',
+        'parameter': (wrap_like, 's_organization_type')
+    },
+    's_investment_type': {
+        'where_data': ' and c.type_id = %s ',
+        'parameter': ('s_investment_type')
+    },
+    's_country': {
+        'where_data': ' and cou.name like %s ',
+        'parameter': (wrap_like, 's_country')
+    },
+    's_state': {
+        'where_data': ' and (d.iso_sub = %s or d.name like %s) ',
+        'parameter': ('s_state', wrap_like, 's_state')
+    },
+    's_investment_date_from': {
+        'where_data': " and c.created_at >= %s ",
+        'parameter': (trans_date, 's_investment_date_from')
+    },
+    's_investment_date_to': {
+        'where_data': " and c.created_at <= %s ",
+        'parameter': (trans_date, 's_investment_date_to')
+    },
+    's_date_from': {
+        'where_data': " and b.grant_from >= %s ",
+        'parameter': (trans_date, 's_date_from')
+    },
+    's_date_to': {
+        'where_data': " and b.grant_to <= %s ",
+        'parameter':  (trans_date, 's_date_to')
+    },
+    's_investments_focus': {
+        'where_data': 'and exists (select 1 from ecofunds_entity_organizations eo '
+                        'inner join ecofunds_entity_activities ea on ea.entity_id = '
+                        'eo.entity_id where eo.organization_id = o.id and ea.activity_id = %s)',
+        'parameter': ('s_investments_focus')
+    }
+}
+
+group_by = {
+    'project': '',
+    'investment': ' group by a.location_id, a.entity_id ',
+    'organization': 'group by o.name, o.desired_location_lat, o.desired_location_lat '
+}
+
+
+
+having = {
+    's_investments_from': {
+        'where_data': ' having sum_ammount between %s and %s ',
+        'parameter': lambda: (float(min_invest),
+                            float(max_invest))
+    },
+    's_estimated_investments_value_from': {
+        'where_data': ' having sum(i.amount_usd) between %s and %s ',
+        'parameter': lambda: (float(min_invest),
+                            float(max_invest))
+    }
+}
+
+
+def get_base_query(domain):
+    sql_columns = select_data[domain]
+
+    context = {
+        'select_data': sql_columns,
+        'from_data': from_data[domain],
+        'where_data': where_data[domain]
+    }
+
+    base_query = "{select_data} {from_data} {where_data}".format(**context)
+    return base_query
+
+def get_full_query(base_query, domain):
+    base_query = "{base_query} {group_by}".format(base_query=base_query,
+                                                  group_by=group_by[domain])
+    return base_query
+
+def resolve(parameters, context):
+    _return = []
+    _stacked_function = None
+    for parameter in parameters:
+        if isinstance(parameter, str):
+            if _stacked_function:
+                _return.append(_stacked_function(context[parameter]))
+            else:
+                _return.append(context[parameter])
+            _stacked_function = None
+        elif isinstance(parameter, types.FunctionType):
+            _stacked_function = parameter
+    return _return
+
+
+def apply_filter(filter_id, filters, context, query, params):
+    query = " ".join([query, filters[filter_id]['where_data']])
+    parameters = filters[filter_id]['parameter']
+    params.extend(resolve(parameters, context))
+    return query, params
+
+
+def has_filter(data, filter_id):
+    return data.has_key(filter_id) and data[filter_id] != ''
+
+
+def parse_centroid(centroid):
+    latlng = centroid.split(',')
+    x = float(latlng[0].strip())
+    y = float(latlng[1].strip())
+    return (x, y)
+
+
+def project_api(request, map_type):
+    if map_type not in ("concentration", "heat", "density", "marker"):
+        return api_error(request, "Invalid Map Type")
+
+    if request.method == "POST":
+        data = request.POST
+    else:
+        data = request.GET
+
+    base_query = get_base_query('project')
+
+    query_params = []
+    possible_filters = filters.keys()
+
+    for filter_id in possible_filters:
+        if has_filter(data, filter_id):
+            base_query, query_params = apply_filter(filter_id,
+                                                    filters,
+                                                    data,
+                                                    base_query,
+                                                    query_params)
+
+    possible_filters = having.keys()
+
+    for filter_id in possible_filters:
+        if has_filter(data, filter_id):
+            base_query, query_params = apply_filter(filter_id,
+                                                    having,
+                                                    base_query,
+                                                    query_params)
+
+    cursor = db.connection.cursor()
+    cursor.execute(base_query, query_params)
+
+    points = {}
+
+    for item in cursor.fetchall():
+        log.debug(item)
+
+        entity_id = item[0]
+        location_id = item[1]
+        centroid = item[2]
+        acronym = item[3]
+        url = item[4]
+
+        lat = None
+        lng = None
+
+        if centroid:
+            lat = parse_centroid(centroid)[0]
+            lng = parse_centroid(centroid)[1]
+
+        marker = {
+            'entity_id': entity_id,
+            'location_id': location_id,
+            'lat': lat,
+            'lng': lng,
+            'acronym': acronym,
+            'url': url,
+        }
+        points[entity_id] = marker
+
+
+    gmap = {}
+    gmap['items'] = points.values()
+
+    return http.HttpResponse(dumps(dict(map=gmap,
+                                            query=base_query,
+                                            params=query_params)),
+                                            content_type="application/json")
+
+
+def investment_api(request, map_type):
+    pass
+
+
+def organization_api(request, map_type):
+    pass
+
+
 def geoapi_map(request, domain, map_type):
     if request.method == "POST":
         data = request.POST
@@ -149,57 +416,6 @@ def geoapi_map(request, domain, map_type):
         return api_error(request, "Invalid Map Type")
 
     gmap = get_map(request, center, zoom, mapTypeId)
-
-    select_data = {
-        'investment':
-        """ SELECT
-            a.location_id,
-			a.entity_id,
-			sum(c.amount_usd) sum_ammount,
-			d.centroid,
-            b.title,
-            b.website
-        """,
-        'project':
-        """ SELECT
-			a.entity_id,
-            a.location_id,
-			b.centroid,
-            b.title,
-            b.website
-        """,
-        'organization':
-        """ SELECT
-            o.name,
-		    o.desired_location_lat,
-		    o.desired_location_lng
-        """
-    }
-
-    default_from = """
-        FROM ecofunds_entity_locations a
-        INNER JOIN ecofunds_entities b ON (a.entity_id = b.entity_id)
-        INNER JOIN ecofunds_investments c ON  c.recipient_entity_id = b.entity_id
-        INNER JOIN ecofunds_locations d ON d.id = a.location_id
-        inner join ecofunds_countries cou on cou.id = d.country_id
-    """
-
-    from_data = {
-        'investment': default_from,
-        'project': default_from,
-        'organization': 'FROM ecofunds_organization o INNER JOIN ecofunds_locations d '
-                        'on o.state_id = d.id INNER JOIN ecofunds_countries cou on '
-                        'cou.id = d.country_id '
-    }
-
-    default_where = 'WHERE b.validated = 1'
-
-    where_data = {
-        'investment': default_where,
-        'project': default_where,
-        'organization': 'WHERE desired_location_lat is not null and '
-                        'desired_location_lng is not null'
-    }
 
     if map_type == "concentration":
         sql_columns = "SELECT min(c.amount_usd), max(c.amount_usd) "
@@ -401,7 +617,7 @@ def geoapi_map(request, domain, map_type):
             lng = parse_centroid(centroid)[1]
 
         if domain == "organization":
-            name = location_id
+            name = location_id.encode('utf-8')
             entity_id = None
             int_amount = None
             str_amount = None
