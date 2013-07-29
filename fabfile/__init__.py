@@ -25,7 +25,7 @@ def stage():
     env.hosts = ['stage.ecofundsdatabase.org']
 
     env.settings = '%s.settings' % env.package
-    env.PROJECT = Project(user='ecofunds', basedir='/home/ecofunds', instance='production', project='ecofunds', package='ecofunds')
+    env.PROJECT = Project(user='ecofunds', basedir='/home/ecofunds', instance='stage', project='ecofunds', package='ecofunds')
 
 
 @task
