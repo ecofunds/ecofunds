@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 from unipath import Path
-from ..helpers import timestamp
+from ..helpers import timestamp, RunAsAdmin
 from fabric.api import run, env, put, sudo, get, task, puts
 from fabric.colors import yellow
 
 
-@task()
+@task(task_class=RunAsAdmin, user=env.local_user)
 def create(dbuser, dbname):
     """
     Create a Mysql Database and User: db.mysql.create:dbuser,dbname
@@ -16,8 +16,6 @@ def create(dbuser, dbname):
     *  Run once.
     ** This command must be executed by a sudoer.
     """
-    env.user = env.local_user #FIXME: Need to avoid this.
-
     password = run('makepasswd --chars 32')
     assert(len(password) == 32)  # Ouch!
 
@@ -38,7 +36,7 @@ def create(dbuser, dbname):
     return db_url
 
 
-@task()
+@task(task_class=RunAsAdmin, user=env.local_user)
 def drop(dbuser, dbname):
     """
     Drop a Mysql Database and User: db.mysql.drop:dbuser,dbname
@@ -48,22 +46,18 @@ def drop(dbuser, dbname):
     *  Run once.
     ** This command must be executed by a sudoer.
     """
-    env.user = env.local_user #FIXME: Need to avoid this.
-
     sudo("mysql --defaults-file=/root/.my.cnf -e \"DROP DATABASE %(dbname)s;\"" % locals())
     sudo("mysql --defaults-file=/root/.my.cnf -e \"DROP USER '%(dbuser)s'@'localhost';\"" % locals())
     sudo('rm %(share)s/.my.cnf' % env.PROJECT)
 
 
-@task
+@task(task_class=RunAsAdmin, user=env.local_user)
 def backup(dbname):
     '''
     Get dump from server MySQL database
 
     Usage: fab db.mysql.backup
     '''
-    env.user = env.local_user #FIXME: Need to avoid this.
-
     remote_dbfile = '%(tmp)s/db-%(instance)s-%(project)s-' % env.PROJECT + timestamp() +'.sql.bz2'
     sudo('mysqldump --defaults-extra-file=/root/.my.cnf --default-character-set=utf8 -R -c --lock-tables=FALSE %(dbname)s | bzip2 -c  > %(remote_dbfile)s' % locals())
     get(remote_dbfile, '.')
@@ -72,15 +66,13 @@ def backup(dbname):
     sudo('rm ' + remote_dbfile)
 
 
-@task
+@task(task_class=RunAsAdmin, user=env.local_user)
 def restore(dbname, local_file):
     '''
     Restore a MySQL dump into dbname.
 
     Usage: fab db.mysql.backup
     '''
-    env.user = env.local_user #FIXME: Need to avoid this.
-
     local_file = Path(local_file).absolute()
 
     remote_file = Path(put(local_file, env.PROJECT.tmp, use_sudo=True)[0])

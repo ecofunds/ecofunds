@@ -6,18 +6,17 @@ from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.tasks import Task
 from unipath import Path
-from ..helpers import ask
+from ..helpers import ask, RunAsAdmin
 from cuisine import *
 
 
-@task
+@task(task_class=RunAsAdmin, user='root')
 def server(hostname, fqdn, email):
     '''
     Setup a new server: server_setup:hostname,fqdn,email
 
     Example: server:palmas,palmas.dekode.com.br,admin@dekode.com.br
     '''
-    env.user = 'root'
 
     scripts = Path(__file__).parent.child('scripts')
 
@@ -48,7 +47,7 @@ def server(hostname, fqdn, email):
     run('~root/server_setup.sh %(hostname)s %(fqdn)s %(email)s' % locals())
 
 
-@task
+@task(task_class=RunAsAdmin, user=env.local_user)
 def application():
     """
     Setup application directories: fab stage setup.application
@@ -66,8 +65,6 @@ def application():
       +---- /logs
             +---- /stage.myproject.com.br (logs)
     """
-    require('PROJECT')
-
 
 
     if not user_check(env.PROJECT.user, need_passwd=False):
@@ -171,13 +168,11 @@ class CreateProjectUser(CreateUser):
 createprojectuser = CreateProjectUser()
 
 
-@task
+@task(task_class=RunAsAdmin, user=env.local_user)
 def remove_user(username):
     '''
         fab env remove_user
     '''
-    env.user = env.local_user
-
     commands = (
         'userdel {username}',
         'rm -rf /home/{username}',
