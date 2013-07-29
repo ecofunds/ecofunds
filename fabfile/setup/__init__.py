@@ -7,6 +7,7 @@ from fabric.contrib.files import exists
 from fabric.tasks import Task
 from unipath import Path
 from ..helpers import ask
+from cuisine import *
 
 
 @task
@@ -67,41 +68,36 @@ def application():
     """
     require('PROJECT')
 
-    app_user = env.user
 
-    with settings(user=env.local_user):
-        with hide('running', 'stdout', 'stderr'):
-            app_user_exists = run('getent passwd %s' % app_user, warn_only=True)
 
-        if not app_user_exists:
-            puts("Creating project user: %s" % app_user)
-            createprojectuser.run(username=app_user)
+    if not user_check(env.PROJECT.user, need_passwd=False):
+        puts("Creating project user: %(user)s" % env.PROJECT)
+        createprojectuser.run(username=env.PROJECT.user)
 
-    if exists(env.PROJECT.appdir):
+    if dir_exists(env.PROJECT.appdir):
         print(yellow('Application detected at: %(appdir)s' % env.PROJECT))
         if confirm(red('Rebuild application?'), default=False):
-            run('rm -rf %(appdir)s' % env.PROJECT)
+            dir_remove(env.PROJECT.appdir)
         else:
             abort('Application already exists.')
 
     # Create directory structure
     for directory in env.PROJECT.dirs.values():
-        run('mkdir -m 755 -p %s' % directory)
+        dir_ensure(directory, recursive=True, mode=755, owner=env.PROJECT.user, group='www-data')
 
     # Initialize environment settings file
-    run('touch %(settings)s' % env.PROJECT)
-    run('chmod 600 %(settings)s' % env.PROJECT)
-    run('echo "[settings]" > %(settings)s' % env.PROJECT)
+    file_ensure(env.PROJECT.settings, mode=600, owner=env.PROJECT.user, group='www-data')
+    file_append(env.PROJECT.settings, "[settings]\n")
 
     # Cria os symlinks configurando os serviços
-    with cd('/etc/nginx/conf.d/'):
-        sudo('ln -sf %(current)s/host/nginx.conf %(appname)s.conf' % env.PROJECT)
+    file_link('%(current)s/host/nginx.conf' % env.PROJECT,
+              '/etc/nginx/conf.d/%(appname)s.conf' % env.PROJECT)
 
-    with cd('/etc/nginx/sites-enabled/'):
-        sudo('ln -sf %(current)s/host/nginx.vhost %(appname)s.vhost' % env.PROJECT)
+    file_link('%(current)s/host/nginx.vhost' % env.PROJECT,
+              '/etc/nginx/sites-enabled/%(appname)s.vhost' % env.PROJECT)
 
-    with cd('/etc/supervisor/conf.d'):
-        sudo('ln -sf %(current)s/host/uwsgi.conf %(appname)s.conf' % env.PROJECT)
+    file_link('%(current)s/host/uwsgi.conf' % env.PROJECT,
+              '/etc/supervisor/conf.d/%(appname)s.conf' % env.PROJECT)
 
 
 @task

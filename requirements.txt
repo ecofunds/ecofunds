@@ -21,3 +21,4 @@ beautifulsoup==3.2.1
 Fabric==1.6.1
 sphinx
 django-reversion
+cuisine==0.6.4
