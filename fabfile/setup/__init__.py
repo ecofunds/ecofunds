@@ -183,3 +183,31 @@ def remove_user(username):
 
     for command in commands:
         sudo(command.format(**locals()))
+
+
+@task
+def full():
+    require('PROJECT')
+
+    from fabfile import db, config, deploy
+
+    revision = prompt('Code revision: ', default='HEAD')
+    initial_data = prompt('Path to all.js.bz2: ', default='tmp/all.json.bz2')
+    mail = prompt('Server email: ', default='admin@ecofundsdatabase.org')
+    fqdn = env.host
+    hostname = env.PROJECT.instance
+    dbname = env.PROJECT.project
+    dbuser = env.PROJECT.project
+
+    # root
+    server(hostname, fqdn, mail)
+
+    # sysadmin
+    application()
+    db_url = db.mysql.create(dbname, dbuser)
+
+    # appuser
+    config.set('DATABASE_URL', db_url)
+    deploy.rsync_media(upload=True)
+    deploy.deploy(revision)
+    db.django.loaddata(initial_data)
