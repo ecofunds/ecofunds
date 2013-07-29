@@ -18,9 +18,6 @@ TEMPLATE_DEBUG = DEBUG
 GOOGLE_KEY = config('GOOGLE_KEY')
 #GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     ('Administrator', 'administrator@ecofunds.org'),
 )
@@ -94,10 +91,10 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-MEDIA_ROOT = PROJECT_ROOT.parent.child('media')
+MEDIA_ROOT = PROJECT_ROOT.child('media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = PROJECT_ROOT.child('assets')
+STATIC_ROOT = PROJECT_ROOT.child('static')
 STATIC_URL = '/static/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
@@ -106,7 +103,7 @@ GEOIP_DATABASE = PROJECT_ROOT.child('geoip', 'GeoLiteCity.dat')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_ROOT.parent.child('static'),
+    PROJECT_ROOT.child('assets'),
 )
 
 # List of finder classes that know how to find static files in

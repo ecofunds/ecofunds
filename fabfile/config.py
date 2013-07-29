@@ -1,6 +1,6 @@
 # coding: utf-8
 from unipath import Path
-from fabric.api import task, run, env, require, settings, hide, fastprint, get, put
+from fabric.api import task, run, env, require, settings, hide, fastprint, get, put, prompt
 from fabric.contrib.files import append, sed
 
 
@@ -15,19 +15,24 @@ def list():
 
 
 @task
-def set(option, value):
+def set(option, value=None):
     """
     Update or create option line from remote settings.ini
-    """
-    option = option.lower()
 
-    before = '%s = .*' % option
+    fab production config.set:DEBUG,False
+
+    If value is omitted, a prompt will ask for it. This helps avoid
+    problems settings values with $ and alike.
+    """
+    if value is None:
+        value = prompt('Value: ')
+
+    option = option.upper()
+
     after = '%s = %s' % (option, value)
 
-    if contains(env.PROJECT.settings, before):
-        sed(env.PROJECT.settings, before, after, backup='')
-    else:
-        append(env.PROJECT.settings, after)
+    remove(option) # remove option if exists.
+    append(env.PROJECT.settings, after)
 
     # sanity check
     assert contains(env.PROJECT.settings, after), 'Config not found: "%s"' % after
@@ -40,11 +45,12 @@ def remove(option):
     """
     option = option.lower()
 
-    before = '%s = .*' % option
+    before = '%s\s+?=\s+?.*' % option
     after = ''
 
-    if contains(env.PROJECT.settings, before):
-        sed(env.PROJECT.settings, before, after, backup='')
+    if contains(env.PROJECT.settings, before, use_re=True):
+        sed(env.PROJECT.settings, before, after, backup='', flags='I')
+        run(r"tr -s '\n' < %(settings)s > %(settings)s.new && mv %(settings)s{.new,}" % env.PROJECT)
 
     # sanity check
     assert not contains(env.PROJECT.settings, '%s.*' % option), 'Config found: "%s"' % option
@@ -66,7 +72,11 @@ def upload(config_file):
     put(config_file, env.PROJECT.settings)
 
 
-def contains(filename, text):
+def contains(filename, text, use_re=False):
+    '''
+    Check if a line exists in a file.
+    '''
+    flag = '-E -i' if use_re else '-Fx'
     with settings(hide('everything'), warn_only=True):
-        cmd = 'egrep "^%s$" %s' % (text, filename)
+        cmd = "grep %s '%s' %s" % (flag, text, filename)
         return run(cmd).succeeded

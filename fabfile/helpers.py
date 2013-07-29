@@ -1,28 +1,35 @@
 # coding: utf-8
 from datetime import datetime
-from fabric.api import env
-
+from fabric.api import settings, require
+from fabric.tasks import Task
+from cuisine import MODE_SUDO
 
 class Project(dict):
     """
     Describes the remote directory structure for a project.
     """
-    def __init__(self, rootdir, appname, package):
-        appdir = '%s/%s' % (rootdir, appname)
+    def __init__(self, user, basedir, instance, project, package):
+        appname = '%s.%s' % (instance, project)
+        appdir = '%s/%s' % (basedir, appname)
 
-        super(Project, self).__init__(
-            appname  = appname,
+        self.dirs = dict(
             appdir   = appdir,
             releases = '%s/releases' % appdir,
             current  = '%s/releases/current' % appdir,
             share    = '%s/share' % appdir,
             media    = '%s/share/media' % appdir,
-            settings = '%s/share/settings.ini' % appdir,
             tmp      = '%s/tmp' % appdir,
-            logs     = '%s/log' % appdir,
-
-            package  = package,
+            logs     = '%s/logs' % appdir,
         )
+
+        super(Project, self).__init__(
+            user=user,
+            instance=instance,
+            project=project,
+            appname=appname,
+            package=package,
+            settings='%s/share/settings.ini' % appdir,
+            **self.dirs)
 
     def __getattr__(self, item):
         if item in self:
@@ -34,18 +41,6 @@ class Project(dict):
 
 def timestamp():
     return datetime.now().strftime("%Y-%m-%d-%Hh%Mm%Ss")
-
-
-def make_environment(name, domain, user=None):
-    """
-    Configure Fabric's environment according our conventions.
-    """
-    project = domain.partition('.')[0]
-    cname = '%s.%s' % (name, domain)
-    env.user = user or project
-    env.hosts = [cname]
-    env.settings = '%s.settings' % project
-    env.PROJECT = Project('~', cname, project)
 
 
 def ask(question, options):
@@ -60,3 +55,20 @@ def ask(question, options):
         selection = raw_input(question)
 
     return answers.get(selection)
+
+
+class RunAsAdmin(Task):
+    def __init__(self, func, user, *args, **kwargs):
+        super(RunAsAdmin, self).__init__(*args, **kwargs)
+        self.__doc__ = func.__doc__
+        self.func = func
+        self.user = user
+        self.mode = False if self.user == 'root' else True
+
+    def run(self, *args, **kwargs):
+        require('PROJECT')
+        with settings(user=self.user, **{MODE_SUDO: self.mode}):
+            return self.func(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        return self.run(*args, **kwargs)
