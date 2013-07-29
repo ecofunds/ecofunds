@@ -321,7 +321,7 @@ def geoapi_map(request, domain, map_type):
     #TODO concentration maybe should be another view
     if map_type != "concentration":
         group_by = {
-            'project': ' group by a.location_id ',
+            'project': '',
             'investment': ' group by a.location_id, a.entity_id ',
             'organization': 'group by o.name, o.desired_location_lat, o.desired_location_lat '
         }
