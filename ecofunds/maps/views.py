@@ -381,8 +381,8 @@ def geoapi_map(request, domain, map_type):
 
         def parse_centroid(centroid):
             latlng = centroid.split(',')
-            x = float(latlng[0])
-            y = float(latlng[1])
+            x = float(latlng[0].strip())
+            y = float(latlng[1].strip())
             return (x, y)
 
         lat = None
