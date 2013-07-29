@@ -189,14 +189,20 @@
 </section>
 
 <div id="info_text_labels" style="display: none;">
-    <p id="title_project">{% trans "Total Projects" %}</p>
+    <p id="no_url">{% trans "No url" %}</p>
+    <p id="title_project">{% trans "Project" %}</p>
     <p id="title_investment">{% trans "Total Investments" %}</p>
     <p id="title_organization">{% trans "Organization name" %}</p>
 </div>
 
 {% verbatim %}
 <div id="info_project" style="display: none;">
-    <p>{{ label }} - {{ value }}</p>
+    <h4>{{ label }} {{ name }}</h4>
+    <ul>
+        <li>{{#if url }}{{ url }}
+            {{else}}{{ no_url }}
+            {{/if}}</li>
+    </ul>
 </div>
 <div id="info_organization" style="display: none;">
     <p>{{ value }}</p>
