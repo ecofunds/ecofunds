@@ -60,6 +60,7 @@ def ask(question, options):
 class RunAsAdmin(Task):
     def __init__(self, func, user, *args, **kwargs):
         super(RunAsAdmin, self).__init__(*args, **kwargs)
+        self.__doc__ = func.__doc__
         self.func = func
         self.user = user
         self.mode = False if self.user == 'root' else True
