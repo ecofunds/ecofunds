@@ -133,29 +133,30 @@ class CreateUser(Task):
 
     def run(self, username=None, pubkey=None, as_root=False):
         if as_root:
-            env.user = 'root'
+            remote_user = 'root'
             execute = run
         else:
-            env.user = env.local_user
+            remote_user = env.local_user
             execute = sudo
 
-        keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
+        with settings(user=remote_user):
+            keyfile = Path(pubkey or Path('~', '.ssh', 'id_rsa.pub')).expand()
 
-        if not keyfile.exists():
-            abort('Public key file does not exist: %s' % keyfile)
+            if not keyfile.exists():
+                abort('Public key file does not exist: %s' % keyfile)
 
-        with open(keyfile, 'r') as f:
-            pubkey = f.read(65535)
+            with open(keyfile, 'r') as f:
+                pubkey = f.read(65535)
 
-        username = username or prompt('Username: ')
-        password = getpass("%s's password: " % username)
+            username = username or prompt('Username: ')
+            password = getpass("%s's password: " % username)
 
-        with hide('running', 'stdout', 'stderr'):
-            password = local('perl -e \'print crypt(\"%s\", \"password\")\'' % (password),
-                         capture=True)
+            with hide('running', 'stdout', 'stderr'):
+                password = local('perl -e \'print crypt(\"%s\", \"password\")\'' % (password),
+                             capture=True)
 
-        for command in self.commands:
-            execute(command.format(**locals()))
+            for command in self.commands:
+                execute(command.format(**locals()))
 
 createuser = CreateUser()
 
