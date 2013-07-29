@@ -162,10 +162,9 @@ def geoapi_map(request, domain, map_type):
         """,
         'project':
         """ SELECT
-            a.location_id,
 			a.entity_id,
-			count(b.entity_id),
-			d.centroid,
+            a.location_id,
+			b.centroid,
             b.title,
             b.website
         """,
@@ -371,13 +370,22 @@ def geoapi_map(request, domain, map_type):
     for item in cursor.fetchall():
         log.debug(item)
 
-        location_id = item[0] if len(item) > 0 else None
-        entity_id = item[1] if len(item) > 1 else None
-        int_amount = int(item[2]) if len(item) > 2 else None
-        str_amount = str(item[2]) if len(item) > 2 else None
-        centroid = item[3] if len(item) > 3 else None
-        acronym = item[4] if len(item) > 4 else None
-        url = item[5] if len(item) > 6 else None
+        if domain == 'project':
+            entity_id = item[0] if len(item) > 0 else None
+            location_id = item[1] if len(item) > 1 else None
+            centroid = item[2]
+            acronym = item[3]
+            url = item[4]
+            str_amount = '0'
+            int_amount = 0
+        else:
+            location_id = item[0] if len(item) > 0 else None
+            entity_id = item[1] if len(item) > 1 else None
+            int_amount = int(item[2]) if len(item) > 2 else None
+            str_amount = str(item[2]) if len(item) > 2 else None
+            centroid = item[3] if len(item) > 3 else None
+            acronym = item[4] if len(item) > 4 else None
+            url = item[5] if len(item) > 6 else None
 
         def parse_centroid(centroid):
             latlng = centroid.split(',')
