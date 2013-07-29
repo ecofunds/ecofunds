@@ -1,6 +1,5 @@
 # coding: utf-8
 from datetime import datetime
-from fabric.api import env
 
 
 class Project(dict):
@@ -40,18 +39,6 @@ class Project(dict):
 
 def timestamp():
     return datetime.now().strftime("%Y-%m-%d-%Hh%Mm%Ss")
-
-
-def make_environment(name, domain, user=None):
-    """
-    Configure Fabric's environment according our conventions.
-    """
-    project = domain.partition('.')[0]
-    cname = '%s.%s' % (name, domain)
-    env.user = user or project
-    env.hosts = [cname]
-    env.settings = '%s.settings' % project
-    env.PROJECT = Project('~', cname, project)
 
 
 def ask(question, options):
