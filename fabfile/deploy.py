@@ -88,7 +88,7 @@ def deploy(revision):
 
 
 @task
-def sync_media(upload=False, delete=False):
+def rsync_media(upload=False, delete=False):
     require('PROJECT')
 
     local_dir = add_slash(Path(env.PROJECT.package, 'media'))
