@@ -1,6 +1,8 @@
 # coding: utf-8
 from datetime import datetime
-
+from fabric.api import settings, require
+from fabric.tasks import Task
+from cuisine import MODE_SUDO
 
 class Project(dict):
     """
@@ -53,3 +55,19 @@ def ask(question, options):
         selection = raw_input(question)
 
     return answers.get(selection)
+
+
+class RunAsAdmin(Task):
+    def __init__(self, func, user, *args, **kwargs):
+        super(RunAsAdmin, self).__init__(*args, **kwargs)
+        self.func = func
+        self.user = user
+        self.mode = False if self.user == 'root' else True
+
+    def run(self, *args, **kwargs):
+        require('PROJECT')
+        with settings(user=self.user, **{MODE_SUDO: self.mode}):
+            return self.func(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        return self.run(*args, **kwargs)
