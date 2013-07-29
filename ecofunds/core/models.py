@@ -91,14 +91,18 @@ class Organization(models.Model):
     name = models.CharField(_('Name'), max_length=765)
     acronym = models.CharField(_('Acronym'), max_length=60, blank=True,null=True)
     mission = models.TextField(_('Description'), blank=True,null=True)
+    # TODO Obsolete field. Replaced by Organization.type
     grantmaker_type_id = models.BigIntegerField(null=True, blank=True)
+    # TODO Obsolete field
     contact_salutation = models.CharField(max_length=75, blank=True,null=True)
     contact_first_name = models.CharField(max_length=150, blank=True,null=True)
     contact_last_name = models.CharField(max_length=150, blank=True,null=True)
+    # TODO Obsolete field
     contact_title = models.CharField(max_length=150, blank=True,null=True)
     # TODO check ogrnaization with no locations
     country = models.ForeignKey(Country, null=True, blank=True)
     toolkit = models.CharField(max_length=140,null=True,blank=True)
+    # TODO Obsolete field. Used on first version of the system. Organization.country property may replace it.
     political_divition_id = models.BigIntegerField(null=True, blank=True)
     street1 = models.CharField(max_length=765, blank=True,null=True)
     street2 = models.CharField(max_length=765, blank=True,null=True)
@@ -107,6 +111,7 @@ class Organization(models.Model):
     # TODO check ogrnaization with no locations
     state = models.ForeignKey('Location', null=True, blank=True)
 
+    # TODO check if it worths to merge phone and fax fields, like 55-21-21235346 instead of 3 fields
     phone_country_prefix = models.CharField(max_length=3, blank=True,null=True)
     phone_local_prefix = models.CharField(max_length=30, blank=True,null=True)
     phone_number = models.CharField(max_length=30, blank=True,null=True)
@@ -120,11 +125,13 @@ class Organization(models.Model):
     userprofiles = models.ManyToManyField('user.UserProfile',through='user.UserProfileOrganization',blank=True,null=True)
     desired_location_lat = models.DecimalField(blank=True,null=True, max_digits=19, decimal_places=16)
     desired_location_lng = models.DecimalField(blank=True,null=True, max_digits=19, decimal_places=16)
+    # TODO Obsolete field.
     desired_location_text = models.CharField(max_length=765, blank=True,null=True)
     created_at = models.DateTimeField(_('Created at'), null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     creater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
     updater = models.ForeignKey('auth.User', null=True, blank=True, related_name='+')
+    # TODO check if validated and active have the same function (maybe 'active' is about deletions)
     validated = models.BooleanField(default=0)
     type = models.ForeignKey(OrganizationType, null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
@@ -196,7 +203,9 @@ class Project(models.Model):
     # TODO check effect of null True
     acronym = models.CharField(_('Acronym'), max_length=60, blank=True, null=True)
     resume = models.CharField(max_length=150)
+    # TODO Obsolete field. grant_from and grant_to can handle the year
     grant_year = models.IntegerField()
+    # TODO 'grant' is a non-expressive name. It is the project start and expected completion.
     grant_from = models.DateTimeField(null=True, blank=True)
     grant_to = models.DateTimeField(null=True, blank=True)
     # TODO check effect of null True
@@ -208,9 +217,12 @@ class Project(models.Model):
     validated = models.IntegerField(null=True, blank=True)
     is_project = models.IntegerField(null=True, blank=True)
     image = models.ImageField(_("Image"), upload_to=get_media_path,null=True,blank=True)
+    # TODO Obsolete field. Investments have currency, projects don't.
     currency = models.ForeignKey(Currency, null=True, blank=True)
+    # TODO Obsolete field, it won't be used (delete on project details views and template).
     budget = models.DecimalField(_('Budget'), null=False, max_digits=20, decimal_places=2, blank=False)
     organization = models.ManyToManyField(Organization,through=Organization.projects.through,related_name='organizations_set')
+    centroid = models.CharField(max_length=100)
     # TODO check no main_organization
     main_organization = models.ForeignKey(Organization,related_name="main_org", null=True, blank=True)
     # TODO check effect of null True
@@ -329,6 +341,7 @@ class Investment(models.Model):
     amount_usd = models.DecimalField(_('Amount (USD)'), null=True, max_digits=20, decimal_places=2, blank=True)
     created_at = models.DateTimeField(_('Created at'), null=True, blank=True)
     updated_at = models.DateTimeField(_('Updated at'), null=True, blank=True)
+    # TODO seems redundant with Investment.investment_flow
     source_inverstiment = models.ForeignKey('self', null=True, blank=True, related_name='+')
     date = models.DateField()
     estimated_completion = models.DateField()

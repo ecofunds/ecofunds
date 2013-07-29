@@ -3,6 +3,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
+    var no_url = $("#no_url").html();
+
     Region = Backbone.Model.extend({
         defaults: {
             name: "Region Name",
@@ -163,17 +165,14 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
         },
         render_marker: function() {
+            var map_elements = [];
             var _map = window.map_router.map;
 
-            var name = this.model.get('location_id');
+            var name = this.model.get('acronym');
             var lat = this.model.get('lat');
             var lng = this.model.get('lng');
+            var url = this.model.get('url');
             var myLatlng = new google.maps.LatLng(lat, lng);
-            var scale = this.model.get('scale');
-            var total = this.model.get('total_investment');
-            var total_str = this.model.get('total_investment_str');
-
-            var map_elements = [];
 
             var info_label = $("#title_" + default_domain).html();
             var info_text_source = $('#info_' + default_domain).html();
@@ -181,8 +180,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             var info_window = new google.maps.InfoWindow({
                 content: template({label: info_label,
-                                   projects: this.model.get('projects'),
-                                   value: total})
+                                   no_url: no_url,
+                                   name: name,
+                                   url: url})
             });
 
             var marker = new google.maps.Marker({
@@ -327,7 +327,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/geo_api/project/' + default_map_type;
+            this.places.url = '/api/geo/project/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
