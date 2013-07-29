@@ -33,7 +33,9 @@ def create(dbuser, dbname):
     sudo('chown %(user)s %(share)s/.my.cnf' % env.PROJECT)
     sudo('chgrp www-data %(share)s/.my.cnf' % env.PROJECT)
 
-    puts(yellow('DATABASE_URL => mysql://%(dbuser)s:%(password)s@localhost/%(dbname)s' % locals()))
+    db_url = 'mysql://%(dbuser)s:%(password)s@localhost/%(dbname)s' % locals()
+    puts(yellow('DATABASE_URL => ' + db_url))
+    return db_url
 
 
 @task()
