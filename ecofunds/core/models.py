@@ -211,6 +211,7 @@ class Project(models.Model):
     currency = models.ForeignKey(Currency, null=True, blank=True)
     budget = models.DecimalField(_('Budget'), null=False, max_digits=20, decimal_places=2, blank=False)
     organization = models.ManyToManyField(Organization,through=Organization.projects.through,related_name='organizations_set')
+    centroid = models.CharField(max_length=100)
     # TODO check no main_organization
     main_organization = models.ForeignKey(Organization,related_name="main_org", null=True, blank=True)
     # TODO check effect of null True

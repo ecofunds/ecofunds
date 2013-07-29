@@ -27,6 +27,7 @@ class ProjectJSONView(TestCase):
                                                       validated=True)
         project = m(Project, main_organization=organization,
                              locations=[],
+                             centroid="-27.2221329359,-50.0092212765",
                              validated=True)
         funding_proj = m(Project, main_organization=organization,
                                   locations=[])
