@@ -378,10 +378,7 @@ def project_api(request, map_type):
     gmap = {}
     gmap['items'] = points.values()
 
-    return http.HttpResponse(dumps(dict(map=gmap,
-                                            query=base_query,
-                                            params=query_params)),
-                                            content_type="application/json")
+    return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 
 def investment_api(request, map_type):
