@@ -22,3 +22,5 @@ Fabric==1.6.1
 sphinx
 django-reversion
 cuisine==0.6.4
+model-mommy==1.0
+
