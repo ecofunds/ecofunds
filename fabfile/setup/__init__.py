@@ -192,7 +192,7 @@ def full():
     from fabfile import db, config, deploy
 
     revision = prompt('Code revision: ', default='HEAD')
-    initial_data = prompt('Path to all.js.bz2: ', default='tmp/all.json.bz2')
+    initial_data = prompt('Path to dbdump.sql.bz2: ', default='tmp/ecofunds_with_centroid_290713.sql.bz2')
     mail = prompt('Server email: ', default='admin@ecofundsdatabase.org')
     fqdn = env.host
     hostname = env.PROJECT.instance
@@ -210,4 +210,4 @@ def full():
     config.set('DATABASE_URL', db_url)
     deploy.rsync_media(upload=True)
     deploy.deploy(revision)
-    db.django.loaddata(initial_data)
+    db.mysql.restore(env.PROJECT.project, initial_data)
