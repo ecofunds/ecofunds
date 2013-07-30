@@ -303,16 +303,14 @@ def parse_centroid(centroid):
     return (x, y)
 
 
-def project_api(request, map_type):
-    if map_type not in ("concentration", "heat", "density", "marker"):
-        return api_error(request, "Invalid Map Type")
-
+def _get_api_cursor(request, domain):
     if request.method == "POST":
         data = request.POST
     else:
         data = request.GET
 
-    base_query = get_base_query('project')
+    base_query = get_base_query(domain)
+    base_query = get_full_query(base_query, domain)
 
     query_params = []
     possible_filters = filters.keys()
@@ -336,6 +334,17 @@ def project_api(request, map_type):
 
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
+
+    log.debug(base_query)
+
+    return cursor
+
+
+def project_api(request, map_type):
+    if map_type not in ("concentration", "heat", "density", "marker"):
+        return api_error(request, "Invalid Map Type")
+
+    cursor = _get_api_cursor(request, 'project')
 
     points = {}
 
