@@ -290,3 +290,29 @@ class OrganizationJSONView(TestCase):
                                        args=['organization', 'density']),
                                        data)
             self.assertEqual(200, response.status_code)
+
+
+class InvestmentMapTest(MapFixture):
+    def test_get_investments_api(self):
+        response = self.client.get(reverse('investment_api', args=['density']))
+        self.assertEqual(200, response.status_code)
+
+        expected_items = [{
+            u'scale': 24,
+            u'location_id': 1,
+            u'lat': -22.5331067902,
+            u'lng': -43.2435698976,
+            u'total_investment': 1000000,
+            u'total_investment_str': "$ 1.000.000,00",
+            u'projects': [
+                {
+                    u'acronym': u"Projeto de Teste",
+                    u'url': None,
+                    u'entity_id': 1,
+                    u'amount': 1000000,
+                },
+            ],
+        }]
+
+        received_data = loads(response.content)
+        self.assertEqual(received_data['map']['items'], expected_items)
