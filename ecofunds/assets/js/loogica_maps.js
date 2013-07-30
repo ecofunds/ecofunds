@@ -384,6 +384,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var cluster = new MarkerClusterer(window.map_router.map, markers);
             cluster.setGridSize(30);
             cluster.setMaxZoom(14);
+            this.cluster = cluster;
 
         },
         clean_markers: function() {
@@ -393,6 +394,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
                         element.setMap(null);
                     });
                 });
+            }
+            if (this.cluster) {
+                this.cluster.clearMarkers();
             }
         }
     });
