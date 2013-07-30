@@ -154,6 +154,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 var places_view = new PlaceView({model: place});
                 if (default_map_type == "density/")
                     places_view.render_density();
+                if (default_domain == "organization") {
+                    places_view.render_cluster();
+                    return;
+                }
                 if (default_map_type == "marker/")
                     places_view.render_marker();
             });
@@ -251,6 +255,24 @@ define('loogica', ["domReady!", "jquery", "underscore",
             });
 
             this.model.set('map_elements', map_elements);
+        },
+        render_cluster: function() {
+            var map_elements = [];
+            var _map = window.map_router.map;
+
+            var name = this.model.get('name');
+            var lat = this.model.get('lat');
+            var lng = this.model.get('lng');
+            var url = "http://dummy";
+            var myLatlng = new google.maps.LatLng(lat, lng);
+
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: _map
+            });
+            map_elements.push(marker);
+
+            this.model.set('map_elements', map_elements);
         }
     });
 
@@ -345,11 +367,24 @@ define('loogica', ["domReady!", "jquery", "underscore",
             $("#filtro-organizacoes").show();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/geo_api/organization/' + default_map_type;
+            this.places.url = '/api/geo/organization/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch();
+            this.places.fetch({async: false});
+
+            var markers = [];
+            if (this.places) {
+                _.each(this.places.models, function(marker) {
+                    _.each(marker.get('map_elements'), function(element) {
+                        markers.push(element);
+                    });
+                });
+            }
+            var cluster = new MarkerClusterer(window.map_router.map, markers);
+            cluster.setGridSize(30);
+            cluster.setMaxZoom(14);
+
         },
         clean_markers: function() {
             if (this.places) {
