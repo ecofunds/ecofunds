@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
-
+from unittest import skip
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.utils.simplejson import dumps, loads
@@ -265,6 +265,7 @@ class OrganizationJSONView(TestCase):
         response = self.client.get(reverse('geoapi', args=['organization', 'density']))
         self.assertEqual(200, response.status_code)
 
+    @skip('Deprecated')
     def test_get_geoapi_organization_density_parameters(self):
 
         parameters = {
