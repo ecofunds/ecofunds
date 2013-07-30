@@ -1,4 +1,4 @@
-APPS=core project investment organization
+APPS=core project investment organization maps
 
 test:
 	python manage.py test $(APPS)
