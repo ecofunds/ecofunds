@@ -13,6 +13,7 @@ requirejs.config({
         loogica: 'loogica_maps',
         marker: 'markerwithlabel_packed',
         infobox: 'infobox_packed',
+        markerclusterer: 'markerclusterer_compiled',
     },
     shim: {
         gmaps: {
@@ -36,6 +37,10 @@ requirejs.config({
         loogica: {
             deps: ['backbone', 'gmaps', 'marker'],
             exports: 'loogica'
+        },
+        markerclusterer: {
+            deps: ['gmaps'],
+            exports: 'markerclusterer'
         }
     }
 });
@@ -44,7 +49,7 @@ require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
     $('#id_map').css('height', global_map_height);
     $('#chart-view').hide();
 
-    require(["marker"], function () {
+    require(["marker", "markerclusterer"], function () {
         window.map_router = new loogica.MapRouter();
         Backbone.history.start({pushState: false});
         window.map_router.navigate(default_domain, {trigger: true});
