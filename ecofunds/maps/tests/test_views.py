@@ -21,11 +21,9 @@ class MapFixture(TestCase):
                      centroid="-22.5331067902,-43.2435698976",
                      polygon=FIXTURE_PLOLYGON)
         funding_org = m(Organization, name="Funding Ord", country=country,
-                                                          state=location,
-                                                          validated=True)
+                        state=location, validated=True, desired_location_lat=-22.882778, desired_location_lng=-43.103889)
         organization = m(Organization, name="Funbio", country=country,
-                                                      state=location,
-                                                      validated=True)
+                         state=location, validated=True, desired_location_lat=-22.880766, desired_location_lng=-43.104335)
         project = m(Project, main_organization=organization,
                              title="Projeto de Teste",
                              acronym="Projeto de Teste",
@@ -312,6 +310,28 @@ class InvestmentMapTest(MapFixture):
                     u'amount': 1000000,
                 },
             ],
+        }]
+
+        received_data = loads(response.content)
+        self.assertEqual(received_data['map']['items'], expected_items)
+
+
+class OrganizationMapTest(MapFixture):
+    def test_get_organization_api(self):
+        response = self.client.get(reverse('organization_api', args=['marker']))
+        self.assertEqual(200, response.status_code)
+
+        expected_items = [{
+            u'entity_id': 1,
+            u'name': "Funding Ord",
+            u'lat': -22.882778,
+            u'lng': -43.103889,
+        },
+        {
+            u'entity_id': 2,
+            u'name': "Funbio",
+            u'lat': -22.880766,
+            u'lng': -43.104335,
         }]
 
         received_data = loads(response.content)

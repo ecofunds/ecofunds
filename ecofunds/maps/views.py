@@ -140,6 +140,7 @@ select_data = {
     """,
     'organization':
     """ SELECT
+        o.id,
         o.name,
         o.desired_location_lat,
         o.desired_location_lng
@@ -157,9 +158,7 @@ default_from = """
 from_data = {
     'investment': default_from,
     'project': default_from,
-    'organization': 'FROM ecofunds_organization o INNER JOIN ecofunds_locations d '
-                    'on o.state_id = d.id INNER JOIN ecofunds_countries cou on '
-                    'cou.id = d.country_id '
+    'organization': 'FROM ecofunds_organization o ',
 }
 
 default_where = 'WHERE b.validated = 1'
@@ -449,7 +448,32 @@ def investment_api(request, map_type):
 
 
 def organization_api(request, map_type):
-    pass
+    if map_type not in ("marker"):
+        return api_error(request, "Invalid Map Type")
+
+    cursor = _get_api_cursor(request, 'organization')
+
+    points = {}
+
+    for item in cursor.fetchall():
+        organization_id = item[0]
+        name = item[1].encode('utf-8')
+        lat = float(item[2])
+        lng = float(item[3])
+
+        marker = {
+            'entity_id': organization_id,
+            'name': name,
+            'lat': lat,
+            'lng': lng,
+        }
+
+        points[organization_id] = marker
+
+    gmap = {}
+    gmap['items'] = points.values()
+
+    return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 
 def geoapi_map(request, domain, map_type):
