@@ -353,7 +353,31 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch();
+
+            /* Protótipo do do filtro só pra fazer funcionar*/
+            var filter_params = {}
+
+            var el = $('form.projetos').find('[name="s_project_name"]');
+            if (el.val() != 'Enter the name of a project' && el.val().length > 0) {
+                filter_params.s_project_name = el.val()
+            }
+
+            var el = $('form.projetos').find('[name="s_country"]');
+            if (el.val() != 'Enter the name of a country' && el.val().length > 0) {
+                filter_params.s_country = el.val()
+            }
+
+            var el = $('form.projetos').find('[name="s_state"]');
+            if (el.val() != 'Enter the name of a state' && el.val().length > 0) {
+                filter_params.s_state = el.val()
+            }
+
+            var el = $('form.projetos').find('[name="s_organization"]');
+            if (el.val() != 'Enter the name of an organization' && el.val().length > 0) {
+                filter_params.s_organization = el.val()
+            }
+
+            this.places.fetch({data: $.param(filter_params)});
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
