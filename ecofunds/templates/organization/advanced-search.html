@@ -53,55 +53,6 @@
 
             </fieldset>
         </div>
-
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Investments focus" %} <span class="total">({{ count_project_activity_types }})</span></legend>
-                
-                {{ search_organization_form.s_investments_focus }}
-
-                <label for="id_s_all_investments_focus" class="check"> 
-                    {{ search_organization_form.s_all_investments_focus }}
-                    {{ search_organization_form.s_all_investments_focus.label }}
-                </label>
-
-            </fieldset>
-        </div>
-
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Last investment date" %} <span class="total">({{ count_organization_investments }})</span></legend>
-                
-                {{ search_organization_form.s_investment_date_from }}
-
-                <label class="emlinha" for="id_investment_date_to">{{ search_organization_form.s_investment_date_to.label }}</label>
-                {{ search_organization_form.s_investment_date_to }}
-
-                <label for="id_s_all_investment_date" class="check"> 
-                    {{ search_organization_form.s_all_investment_date }}
-                    {{ search_organization_form.s_all_investment_date.label }}
-                </label>
-
-            </fieldset>
-        </div>                       
-        
-        <div class="borda ultimo">
-            <fieldset>
-                <legend>{% trans "Estimated investments value" %} <span class="total">({{ count_recipient_organization }})</span></legend>
-                
-                <label for="id_s_estimated_investments_value_from">{{ search_organization_form.s_estimated_investments_value_from.label }}</label>
-                {{ search_organization_form.s_estimated_investments_value_from }}
-
-                <label class="emlinha" for="id_s_estimated_investments_value_to">{{ search_organization_form.s_estimated_investments_value_to.label }}</label>
-                {{ search_organization_form.s_estimated_investments_value_to }}
-
-                <label for="id_s_all_investments_received" class="check"> 
-                    {{ search_organization_form.s_all_investments_received }}
-                    {{ search_organization_form.s_all_investments_received.label }}
-                </label>
-
-            </fieldset>
-        </div> 
     </form>
     
     {% block extra_script %}

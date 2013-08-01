@@ -68,30 +68,6 @@
 
             </fieldset>
         </div>
-        
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Annual budget" %} <!--<span class="total">({{ count_investments }})</span>--></legend>
-                
-                <label for="id_s_investments_from">{{ search_project_form.s_investments_from.label }}</label>
-                {{ search_project_form.s_investments_from }}
-
-                <label class="emlinha" for="id_s_investments_to">{{ search_project_form.s_investments_to.label }}</label>
-                {{ search_project_form.s_investments_to }}
-            </fieldset>
-        </div>
-
-        <div class="borda ultimo">
-            <fieldset>
-                <legend>{% trans "Execution" %}</legend>
-                
-                <label for="id_s_date_from">{{ search_project_form.s_date_from.label }}</label>
-                {{ search_project_form.s_date_from }}
-
-                <label class="emlinha" for="id_s_date_to">{{ search_project_form.s_date_to.label }}</label>
-                {{ search_project_form.s_date_to }}
-            </fieldset>
-        </div>
     </form>
     
     {% block extra_script %}
