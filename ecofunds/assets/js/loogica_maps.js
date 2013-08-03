@@ -347,16 +347,33 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             this.places.fetch({async: async});
         },
+        toggleFilter: function(domain) {
+            /* Encapsula ativação e desativação de filtros.
+             * Com eventual refatoração do css, esse código pode ser simplificado
+             * usando toggle do Jquery, eliminando o else.
+             */
+            var options = [
+                {domain: 'investment', menu: 'a[href=#investment]', panel: "#filtro-investimentos" },
+                {domain: 'project', menu: 'a[href=#project]', panel: "#filtro-projetos" },
+                {domain: 'organization', menu: 'a[href=#organization]', panel: "#filtro-organizacoes" }
+            ]
+
+            _.each(options, function(o){
+                if(o.domain == domain){
+                    $(o.menu).parent().removeClass('inativa').addClass('ativa');
+                    $(o.panel).show();
+                }
+                else {
+                    $(o.menu).parent().removeClass('ativa').addClass('inativa');
+                    $(o.panel).hide();
+                }
+            }, this);
+        },
         fetch_investments: function() {
             default_map_type = 'density/';
             default_domain = 'investment';
-            $("a[href=#investment]").parent().removeClass('inativa').addClass('ativa');
-            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").show();
-            $("#filtro-investimentos").show();
-            $("#filtro-projetos").hide();
-            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/geo_api/investment/' + default_map_type;
@@ -368,13 +385,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
         fetch_projects: function() {
             default_map_type = 'marker/';
             default_domain = 'project';
-            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#project]").parent().removeClass('inativa').addClass('ativa');
-            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
-            $("#filtro-investimentos").hide();
-            $("#filtro-projetos").show();
-            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/api/geo/project/' + default_map_type;
@@ -387,13 +399,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
         fetch_organizations: function() {
             default_map_type = 'marker/';
             default_domain = 'organization';
-            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#organization]").parent().removeClass('inativa').addClass('ativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
-            $("#filtro-investimentos").hide();
-            $("#filtro-projetos").hide();
-            $("#filtro-organizacoes").show();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/api/geo/organization/' + default_map_type;
