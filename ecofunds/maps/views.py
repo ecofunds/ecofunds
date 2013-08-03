@@ -354,8 +354,6 @@ def project_api(request, map_type):
     points = {}
 
     for item in cursor.fetchall():
-        log.debug(item)
-
         entity_id = item[0]
         location_id = item[1]
         centroid = item[2]
@@ -378,7 +376,6 @@ def project_api(request, map_type):
             'url': url,
         }
         points[entity_id] = marker
-
 
     gmap = {}
     gmap['items'] = points.values()
