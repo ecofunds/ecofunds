@@ -19,7 +19,7 @@ import pygeoip
 from ecofunds import settings
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger('maps')
 
 class SourceView(BaseDetailView):
 
