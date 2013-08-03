@@ -340,16 +340,12 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var map = new Map(_map);
             map_view = new MapView({model:map});
             this.map = map_view.render();
+        },
+        fetchPlaces: function(domain, async) {
+            // Default value true
+            async = typeof async !== 'undefined' ? async : true;
 
-            /* Initialize filters */
-            this.projectFilterView = new FilterView({el: '#project-filter', model: new Filter});
-            this.listenTo(this.projectFilterView.model, 'change', this.fetch_projects);
-
-            this.organizationFilterView = new FilterView({el: '#organization-filter', model: new Filter});
-            this.listenTo(this.organizationFilterView.model, 'change', this.fetch_organizations);
-
-            this.investmentFilterView = new FilterView({el: '#investment-filter', model: new Filter});
-            this.listenTo(this.investmentFilterView.model, 'change', this.fetch_investments);
+            this.places.fetch({async: async});
         },
         fetch_investments: function() {
             default_map_type = 'density/';
@@ -367,9 +363,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch({
-                data: $.param(this.investmentFilterView.model.toQueryOptions())
-            });
+            this.fetchPlaces(default_domain);
         },
         fetch_projects: function() {
             default_map_type = 'marker/';
@@ -388,9 +382,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.places.fetch({
-                data: $.param(this.projectFilterView.model.toQueryOptions())
-            });
+            this.fetchPlaces(default_domain);
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
@@ -409,10 +401,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.places.fetch({
-                async: false,
-                data: $.param(this.organizationFilterView.model.toQueryOptions())
-            });
+            this.fetchPlaces(default_domain, false);
 
             var markers = [];
             if (this.places) {
@@ -442,6 +431,39 @@ define('loogica', ["domReady!", "jquery", "underscore",
         }
     });
 
+    MapRouterWithFilter = MapRouter.extend({
+        initialize: function() {
+            MapRouterWithFilter.__super__.initialize.apply(this, arguments);
+
+            /* Initialize filters */
+            this.projectFilterView = new FilterView({el: '#project-filter', model: new Filter});
+            this.listenTo(this.projectFilterView.model, 'change', this.fetch_projects);
+
+            this.organizationFilterView = new FilterView({el: '#organization-filter', model: new Filter});
+            this.listenTo(this.organizationFilterView.model, 'change', this.fetch_organizations);
+
+            this.investmentFilterView = new FilterView({el: '#investment-filter', model: new Filter});
+            this.listenTo(this.investmentFilterView.model, 'change', this.fetch_investments);
+        },
+      fetchPlaces: function(domain, async) {
+            // Default value true
+            async = typeof async !== 'undefined' ? async : true;
+
+            var views = {
+                investment: this.investmentFilterView,
+                project: this.projectFilterView,
+                organization: this.organizationFilterView
+            }
+
+            var view = views[domain];
+
+            this.places.fetch({
+                data: $.param(view.model.toQueryOptions()),
+                async: async
+            });
+        }
+    });
+
     return {
         Region: Region,
         RegioView: RegioView,
@@ -449,6 +471,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
         PlaceView: PlaceView,
         Map: Map,
         MapView: MapView,
-        MapRouter: MapRouter
+        MapRouter: MapRouter,
+        MapRouterWithFilter: MapRouterWithFilter
     };
 });
