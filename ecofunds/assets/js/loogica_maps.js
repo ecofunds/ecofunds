@@ -218,54 +218,45 @@ define('loogica', ["domReady!", "jquery", "underscore",
         render_density: function() {
             var _map = window.map_router.map;
 
-            var lat = this.model.get('lat');
-            var lng = this.model.get('lng');
-            var myLatlng = new google.maps.LatLng(lat, lng);
-            var scale = this.model.get('scale');
-            var total = this.model.get('total_investment');
-            var total_str = this.model.get('total_investment_str');
+            var latlng = new google.maps.LatLng(this.model.get('lat'),
+                                                  this.model.get('lng'));
 
-            var circle_options = {
+            var circle = new google.maps.Circle({
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
                 strokeWeight: 0,
                 fillOpacity: 0.8,
                 fillColor: '#8eb737',
                 map: _map,
-                center: myLatlng,
-                radius: (scale * 10000)
-            };
-            var circle = new google.maps.Circle(circle_options);
-
-            var map_elements = [];
-            map_elements.push(circle);
-
-            var info_label = $("#title_" + default_domain).html();
-            var info_text_source = $('#info_' + default_domain + '_density').html();
-            var template = Handlebars.compile(info_text_source);
-
-            var info_window = new google.maps.InfoWindow({
-                content: template({label: info_label,
-                                   projects: this.model.get('projects'),
-                                   value: total_str})
+                center: latlng,
+                radius: (this.model.get('scale') * 10000)
             });
 
             var marker = new MarkerWithLabel({
-                position: myLatlng,
+                position: latlng,
                 draggable: false,
                 map: _map,
-                labelContent: total_str,
+                labelContent: this.model.get('total_investment_str'),
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
                 icon: 'a.png'
             });
-            map_elements.push(marker);
+
             circle.bindTo('center', marker, 'position');
-            google.maps.event.addListener(marker, "click",
-                function() {
-                    info_window.open(_map, marker);
+
+            var source = $('#info_' + default_domain + '_density').html();
+            var template = Handlebars.compile(source);
+            var info_content = template(this.model.attributes);
+
+            google.maps.event.addListener(marker, "click", function(){
+                info_window.setContent(info_content);
+                info_window.open(_map, marker);
             });
+
+            var map_elements = [];
+            map_elements.push(circle);
+            map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
         },
