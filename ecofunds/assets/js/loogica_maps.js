@@ -191,36 +191,27 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
         },
         render_marker: function() {
-            var map_elements = [];
             var _map = window.map_router.map;
 
-            var name = this.model.get('acronym');
-            var lat = this.model.get('lat');
-            var lng = this.model.get('lng');
-            var url = this.model.get('url');
-            var myLatlng = new google.maps.LatLng(lat, lng);
-
-            var info_label = $("#title_" + default_domain).html();
-            var info_text_source = $('#info_' + default_domain).html();
-            var template = Handlebars.compile(info_text_source);
-
-            var info_window = new google.maps.InfoWindow({
-                content: template({label: info_label,
-                                   no_url: no_url,
-                                   name: name,
-                                   url: url})
-            });
+            var latlng = new google.maps.LatLng(this.model.get('lat'),
+                                                this.model.get('lng'));
 
             var marker = new google.maps.Marker({
-                position: myLatlng,
+                position: latlng,
                 map: _map
             });
-            map_elements.push(marker);
 
-            google.maps.event.addListener(marker, "click",
-                function() {
-                    info_window.open(_map, marker);
+            var source = $('#info_' + default_domain).html();
+            var template = Handlebars.compile(source);
+            var info_content = template(this.model.attributes);
+
+            google.maps.event.addListener(marker, "click", function(){
+                info_window.setContent(info_content);
+                info_window.open(_map, marker);
             });
+
+            var map_elements = [];
+            map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
         },
