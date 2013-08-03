@@ -272,6 +272,12 @@ def get_full_query(base_query, domain):
 def resolve(parameters, context):
     _return = []
     _stacked_function = None
+
+    # workaround bug on 1 string parameter
+    # ex: s_project_activity_type
+    if isinstance(parameters, str):
+        parameters = [parameters]
+
     for parameter in parameters:
         if isinstance(parameter, str):
             if _stacked_function:
