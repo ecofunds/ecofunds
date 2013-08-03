@@ -376,7 +376,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             $(".opcoes .tipo").show();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/geo_api/investment/' + default_map_type;
+            this.places.url = '/api/geo/investment/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
