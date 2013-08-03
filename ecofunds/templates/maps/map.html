@@ -192,30 +192,28 @@
     </div>
 </section>
 
-<div id="info_text_labels" style="display: none;">
-    <p id="no_url">{% trans "No url" %}</p>
-    <p id="title_project">{% trans "Project" %}</p>
-    <p id="title_investment">{% trans "Total Investments" %}</p>
-    <p id="title_organization">{% trans "Organization name" %}</p>
-</div>
-
 {% verbatim %}
 <div id="info_project" style="display: none;">
-    <h4>{{ label }} {{ name }}</h4>
+    <h4><a href="/projetos/ficha-projeto/?id={{ entity_id }}">{{ acronym }}</a></h4>
+    {{#if url }}
     <ul>
-        <li>{{#if url }}{{ url }}
-            {{else}}{{ no_url }}
-            {{/if}}</li>
+        <li><a href="{{ url }}">{{ url }}</a></li>
     </ul>
+    {{/if}}
 </div>
 <div id="info_organization" style="display: none;">
-    <p>{{ value }}</p>
+    <h4><a href="/organizacoes/ficha-organizacao/?id={{ entity_id }}">{{ name }}</a></h4>
+    {{#if url }}
+    <ul>
+        <li><a href="{{ url }}">{{ url }}</a></li>
+    </ul>
+    {{/if}}
 </div>
 <div id="info_investment_density" style="display: none;">
-    <p>{{ label }} - {{ value }}</p>
+    <h4><a href="/investimentos/ficha-investimento/?id={{ entity_id }}">Total: {{ total_investment_str }}</a></h4>
     <ul>
     {{#each projects}}
-        <li>{{ acronym }} - {{ amount }}</li>
+        <li><a href="/projetos/ficha-projeto/?id={{ entity_id }}">{{ acronym }}</a> - {{ amount }}</li>
     {{/each}}
     </ul>
 </div>

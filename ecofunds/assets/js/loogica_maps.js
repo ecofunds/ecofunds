@@ -3,7 +3,6 @@ define('loogica', ["domReady!", "jquery", "underscore",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
-    var no_url = $("#no_url").html();
 
     var Filter = Backbone.Model.extend({
         toQueryOptions: function() {
