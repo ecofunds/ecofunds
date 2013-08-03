@@ -340,6 +340,16 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var map = new Map(_map);
             map_view = new MapView({model:map});
             this.map = map_view.render();
+
+            /* Initialize filters */
+            this.projectFilterView = new FilterView({el: '#project-filter', model: new Filter});
+            this.listenTo(this.projectFilterView.model, 'change', this.fetch_projects);
+
+            this.organizationFilterView = new FilterView({el: '#organization-filter', model: new Filter});
+            this.listenTo(this.organizationFilterView.model, 'change', this.fetch_organizations);
+
+            this.investmentFilterView = new FilterView({el: '#investment-filter', model: new Filter});
+            this.listenTo(this.investmentFilterView.model, 'change', this.fetch_investments);
         },
         fetch_investments: function() {
             default_map_type = 'density/';
@@ -357,7 +367,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch();
+            this.places.fetch({
+                data: $.param(this.investmentFilterView.model.toQueryOptions())
+            });
         },
         fetch_projects: function() {
             default_map_type = 'marker/';
@@ -376,30 +388,9 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            /* Protótipo do do filtro só pra fazer funcionar*/
-            var filter_params = {}
-
-            var el = $('form.projetos').find('[name="s_project_name"]');
-            if (el.val() != 'Enter the name of a project' && el.val().length > 0) {
-                filter_params.s_project_name = el.val()
-            }
-
-            var el = $('form.projetos').find('[name="s_country"]');
-            if (el.val() != 'Enter the name of a country' && el.val().length > 0) {
-                filter_params.s_country = el.val()
-            }
-
-            var el = $('form.projetos').find('[name="s_state"]');
-            if (el.val() != 'Enter the name of a state' && el.val().length > 0) {
-                filter_params.s_state = el.val()
-            }
-
-            var el = $('form.projetos').find('[name="s_organization"]');
-            if (el.val() != 'Enter the name of an organization' && el.val().length > 0) {
-                filter_params.s_organization = el.val()
-            }
-
-            this.places.fetch({data: $.param(filter_params)});
+            this.places.fetch({
+                data: $.param(this.projectFilterView.model.toQueryOptions())
+            });
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
@@ -417,7 +408,11 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch({async: false});
+
+            this.places.fetch({
+                async: false,
+                data: $.param(this.organizationFilterView.model.toQueryOptions())
+            });
 
             var markers = [];
             if (this.places) {
