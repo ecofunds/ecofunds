@@ -5,6 +5,28 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
     var no_url = $("#no_url").html();
 
+    var Filter = Backbone.Model.extend({
+        toQueryOptions: function() {
+            /* Filters empty model attributes to avoid misleading the backend filter.
+            *  Ideally the backend should ignore invalid filter values/attributes.
+            *  This can be implemented with Forms
+            * */
+            var options = {};
+            _.each(this.attributes, function(v, k){
+                if(this.get(k))
+                    options[k] = v;
+            }, this);
+            return options;
+        }
+    });
+
+    FilterView = Backbone.View.extend({
+        initialize:function () {
+            this._modelBinder = new Backbone.ModelBinder();
+            this._modelBinder.bind(this.model, this.el);
+        }
+    });
+
     Region = Backbone.Model.extend({
         defaults: {
             name: "Region Name",
