@@ -3,6 +3,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
+    var info_window = new google.maps.InfoWindow;
 
     var Filter = Backbone.Model.extend({
         toQueryOptions: function() {
