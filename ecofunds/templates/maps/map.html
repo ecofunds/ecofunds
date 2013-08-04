@@ -100,17 +100,6 @@
 
             <div class="conteudo-abas-container">
                 {% if instance.show_search_projects %}
-                    {% addtoblock "js" %}
-                    <script type="text/javascript">
-                        jQuery(function ($) {
-                            //if(document.location.href.indexOf('#filtro-investimentos')>0)
-                              //  ecofundsMap.loadInvestments();
-                            //else
-                            //    ecofundsMap.loadProjects();
-                        });
-                    </script>
-                    {% endaddtoblock %}
-
                     <section id="filtro-projetos">
                         {% include "project/advanced-search.html" %}
                     </section>
