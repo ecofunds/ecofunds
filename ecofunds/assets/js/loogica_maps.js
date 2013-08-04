@@ -258,7 +258,26 @@ define('loogica', ["domReady!", "jquery", "underscore",
         }
     });
 
-    Map = Backbone.Model.extend({});
+    Map = Backbone.Model.extend({
+        defaults: {
+            zoom: 4,
+            center: new google.maps.LatLng(-22.9488441857552033,
+                                           -45.358066177368164),
+            mapTypeId: google.maps.MapTypeId.SATELLITE,
+            noClear: true,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            scaleControl: true,
+            scaleControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            panControl: false,
+            streetViewControl: false,
+            scrollwheel: false
+        }
+    });
     MapView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
@@ -279,26 +298,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'clean_markers': 'clean_markers'
         },
         initialize: function() {
-            var _map = {
-                zoom: 4,
-                center: new google.maps.LatLng(-22.9488441857552033,
-                                               -43.358066177368164),
-                mapTypeId: google.maps.MapTypeId.SATELLITE,
-                noClear: true,
-                zoomControl: true,
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_TOP
-                },
-                scaleControl: true,
-                scaleControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_TOP
-                },
-                panControl: false,
-                streetViewControl: false,
-                scrollwheel: false
-            };
-            var map = new Map(_map);
-            map_view = new MapView({model:map});
+            map_view = new MapView({model: new Map});
             this.map = map_view.render();
         },
         fetchPlaces: function(domain, async) {
