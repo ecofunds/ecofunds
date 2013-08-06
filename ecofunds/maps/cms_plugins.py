@@ -66,10 +66,12 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
             'count_project_regions': Project.objects.values('projects_locations__location__name').annotate(total=Count('projects_locations__location__name')).count,
             'count_organizations': Organization.objects.count,
             'count_investments': Investment.objects.values('recipient_entity').annotate(total=Count('recipient_entity')).count,
+            'count_investment_types': InvestmentType.objects.count(),
             'count_organization_types': OrganizationType.objects.count,
             'count_organization_regions': Organization.objects.values('state').annotate(total=Count('state')).count,
             'count_organization_investments': Investment.objects.values('funding_organization').annotate(total=Count('funding_organization')).count,
             'count_recipient_organization': Investment.objects.values('recipient_organization').annotate(total=Count('recipient_organization')).count,
+            'count_recipient_entity_investments': Investment.objects.values('recipient_entity').annotate(total=Count('recipient_entity')).count,
             'instance': instance,
             'placeholder': placeholder,
         })

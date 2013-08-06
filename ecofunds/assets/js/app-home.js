@@ -55,7 +55,7 @@ require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
     $('#chart-view').hide();
 
     require(["marker", "markerclusterer"], function () {
-        window.map_router = new loogica.MapRouterWithFilter();
+        window.map_router = new loogica.MapRouter({hasFilter: false});
         Backbone.history.start({pushState: false});
         window.map_router.navigate(default_domain, {trigger: true});
         $('.carregando.tela-mapa', '.mapa').hide();

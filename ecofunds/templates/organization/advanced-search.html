@@ -1,6 +1,6 @@
 {% load tags i18n %}
 <!-- Filtros de Busca por Organizações -->
-<section class="filtros organizacoes aberto">
+<section id="organization-filter" class="filtros organizacoes aberto">
     <header class="cabecalho">
         <h4>{% trans "Search organizations by" %}</h4>
         <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
@@ -17,7 +17,7 @@
             <fieldset>
                 <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
                 
-                {{ search_organization_form.s_organization }}
+                {{ search_organization_form.s_organization_name }}
 
                 <label for="id_s_all_organizations" class="check"> 
                     {{ search_organization_form.s_all_organizations }}
@@ -31,7 +31,7 @@
             <fieldset>
                 <legend>{% trans "Type" %} <span class="total">({{ count_organization_types }})</span></legend>
                 
-                {{ search_organization_form.s_organization_type }}
+                {{ search_organization_form.s_organization_type2 }}
 
                 <label for="id_s_all_type_organizations" class="check"> 
                     {{ search_organization_form.s_all_type_organizations }}
@@ -53,68 +53,19 @@
 
             </fieldset>
         </div>
-
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Investments focus" %} <span class="total">({{ count_project_activity_types }})</span></legend>
-                
-                {{ search_organization_form.s_investments_focus }}
-
-                <label for="id_s_all_investments_focus" class="check"> 
-                    {{ search_organization_form.s_all_investments_focus }}
-                    {{ search_organization_form.s_all_investments_focus.label }}
-                </label>
-
-            </fieldset>
-        </div>
-
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Last investment date" %} <span class="total">({{ count_organization_investments }})</span></legend>
-                
-                {{ search_organization_form.s_investment_date_from }}
-
-                <label class="emlinha" for="id_investment_date_to">{{ search_organization_form.s_investment_date_to.label }}</label>
-                {{ search_organization_form.s_investment_date_to }}
-
-                <label for="id_s_all_investment_date" class="check"> 
-                    {{ search_organization_form.s_all_investment_date }}
-                    {{ search_organization_form.s_all_investment_date.label }}
-                </label>
-
-            </fieldset>
-        </div>                       
-        
-        <div class="borda ultimo">
-            <fieldset>
-                <legend>{% trans "Estimated investments value" %} <span class="total">({{ count_recipient_organization }})</span></legend>
-                
-                <label for="id_s_estimated_investments_value_from">{{ search_organization_form.s_estimated_investments_value_from.label }}</label>
-                {{ search_organization_form.s_estimated_investments_value_from }}
-
-                <label class="emlinha" for="id_s_estimated_investments_value_to">{{ search_organization_form.s_estimated_investments_value_to.label }}</label>
-                {{ search_organization_form.s_estimated_investments_value_to }}
-
-                <label for="id_s_all_investments_received" class="check"> 
-                    {{ search_organization_form.s_all_investments_received }}
-                    {{ search_organization_form.s_all_investments_received.label }}
-                </label>
-
-            </fieldset>
-        </div> 
     </form>
     
     {% block extra_script %}
     <script type="text/javascript">
         jQuery(document).ready(function(){
             //Cria o estilo dos elementos combo.
-            createCombo();
+            //createCombo();
 
             //Chama o plugin de datepicker do jqueryUI.
-            jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+            //jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
 
             //Formatação do campo de valor. Classe específica = numero
-            jQuery('.numero').setMask('{{number_format}}');
+            //jQuery('.numero').setMask('{{number_format}}');
         });
     </script>
     {% endblock %}    
