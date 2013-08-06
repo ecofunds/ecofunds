@@ -1,7 +1,7 @@
 {% load tags i18n %}
 
 <!-- Filtros de Busca por Projetos -->
-<section class="filtros projetos aberto">
+<section id="project-filter" class="filtros projetos aberto">
     <header class="cabecalho">
         <h4>{% trans "Search projects by" %}</h4>
         <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
@@ -68,43 +68,19 @@
 
             </fieldset>
         </div>
-        
-        <div class="borda">
-            <fieldset>
-                <legend>{% trans "Annual budget" %} <!--<span class="total">({{ count_investments }})</span>--></legend>
-                
-                <label for="id_s_investments_from">{{ search_project_form.s_investments_from.label }}</label>
-                {{ search_project_form.s_investments_from }}
-
-                <label class="emlinha" for="id_s_investments_to">{{ search_project_form.s_investments_to.label }}</label>
-                {{ search_project_form.s_investments_to }}
-            </fieldset>
-        </div>
-
-        <div class="borda ultimo">
-            <fieldset>
-                <legend>{% trans "Execution" %}</legend>
-                
-                <label for="id_s_date_from">{{ search_project_form.s_date_from.label }}</label>
-                {{ search_project_form.s_date_from }}
-
-                <label class="emlinha" for="id_s_date_to">{{ search_project_form.s_date_to.label }}</label>
-                {{ search_project_form.s_date_to }}
-            </fieldset>
-        </div>
     </form>
     
     {% block extra_script %}
     <script type="text/javascript">
         jQuery(document).ready(function(){
             //Cria o estilo dos elementos combo.
-            createCombo();
+            //createCombo();
 
             //Chama o plugin de datepicker do jqueryUI.
-            jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
+            //jQuery('.data').datepicker({dateFormat:'{{date_format}}'});
 
             //Formatação do campo de valor. Classe específica = numero
-            jQuery('.numero').setMask('{{number_format}}');
+            //jQuery('.numero').setMask('{{number_format}}');
         });
     </script>
     {% endblock %}    

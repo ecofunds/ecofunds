@@ -19,7 +19,7 @@ import pygeoip
 from ecofunds import settings
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger('maps')
 
 class SourceView(BaseDetailView):
 
@@ -158,7 +158,10 @@ default_from = """
 from_data = {
     'investment': default_from,
     'project': default_from,
-    'organization': 'FROM ecofunds_organization o ',
+    'organization': 'FROM ecofunds_organization o '
+                    'LEFT JOIN ecofunds_locations d ON d.id = o.state_id '
+                    'LEFT join ecofunds_countries cou on cou.id = d.country_id '
+                    'LEFT JOIN ecofunds_organization_type t ON t.id = o.type_id ',
 }
 
 default_where = 'WHERE b.validated = 1'
@@ -175,6 +178,10 @@ filters = {
     's_project_name': {
         'where_data': ' and b.title like %s ',
         'parameter': (wrap_like, 's_project_name')
+    },
+    's_organization_name': {
+        'where_data': ' and o.name like %s ',
+        'parameter': (wrap_like, 's_organization_name')
     },
     's_project_activity_type': {
         'where_data': ' and exists (select 1 from ecofunds_entity_activities '
@@ -193,6 +200,10 @@ filters = {
                         'where f.id in (c.recipient_organization_id, '
                         'c.funding_organization_id) and f.type_id like %s) ',
         'parameter': (wrap_like, 's_organization_type')
+    },
+    's_organization_type2': {
+        'where_data': ' and o.type_id=%s',
+        'parameter': ('s_organization_type2')
     },
     's_investment_type': {
         'where_data': ' and c.type_id = %s ',
@@ -272,6 +283,12 @@ def get_full_query(base_query, domain):
 def resolve(parameters, context):
     _return = []
     _stacked_function = None
+
+    # workaround bug on 1 string parameter
+    # ex: s_project_activity_type
+    if isinstance(parameters, str):
+        parameters = [parameters]
+
     for parameter in parameters:
         if isinstance(parameter, str):
             if _stacked_function:
@@ -309,7 +326,6 @@ def _get_api_cursor(request, domain):
         data = request.GET
 
     base_query = get_base_query(domain)
-    base_query = get_full_query(base_query, domain)
 
     query_params = []
     possible_filters = filters.keys()
@@ -322,6 +338,7 @@ def _get_api_cursor(request, domain):
                                                     base_query,
                                                     query_params)
 
+    base_query = get_full_query(base_query, domain)
     possible_filters = having.keys()
 
     for filter_id in possible_filters:
@@ -331,10 +348,10 @@ def _get_api_cursor(request, domain):
                                                     base_query,
                                                     query_params)
 
+    log.debug(base_query)
+
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
-
-    log.debug(base_query)
 
     return cursor
 
@@ -348,8 +365,6 @@ def project_api(request, map_type):
     points = {}
 
     for item in cursor.fetchall():
-        log.debug(item)
-
         entity_id = item[0]
         location_id = item[1]
         centroid = item[2]
@@ -372,7 +387,6 @@ def project_api(request, map_type):
             'url': url,
         }
         points[entity_id] = marker
-
 
     gmap = {}
     gmap['items'] = points.values()

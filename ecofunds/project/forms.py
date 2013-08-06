@@ -32,10 +32,7 @@ class ProjectAdvancedSearchForm(AdvancedSearchForm):
     s_all_organizations = forms.BooleanField(label=_('All organizations'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
     s_country = forms.CharField(label=_('Country'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a country')}))
     s_state = forms.CharField(label=_('State'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a state')}))
-    s_investments_from = forms.CharField(label=_('Show investments from:'), widget=forms.TextInput(attrs={'class':'numero'}))
-    s_investments_to = forms.CharField(label=_('to'), widget=forms.TextInput(attrs={'class':'numero'}))
-    s_date_from = forms.DateTimeField(label=_('Execution period:'), widget=forms.TextInput(attrs={'class':'data'}))
-    s_date_to = forms.CharField(label=_('to'), widget=forms.TextInput(attrs={'class':'data'}))
+
 
     def _force_data(self):
         if not hasattr(self, 'cleaned_data'):

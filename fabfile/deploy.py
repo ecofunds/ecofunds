@@ -69,7 +69,7 @@ def restart():
     Restart all services.
     """
     sudo('service nginx restart', pty=False, shell=False)
-    sudo('supervisorctl reload', pty=False)
+    sudo('supervisorctl reload', pty=False, shell=False)
 
 
 @task(default=True)

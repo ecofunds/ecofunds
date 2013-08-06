@@ -162,7 +162,7 @@ class CreateProjectUser(CreateUser):
         super(CreateProjectUser, self).__init__()
         self.commands = self.commands + (
             'usermod -a -G www-data {username}',
-            'echo "{username} ALL=(root) NOPASSWD: /usr/bin/pip, /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers',
+            'echo "{username} ALL=(root) NOPASSWD: /usr/bin/crontab, /usr/sbin/service, /usr/bin/supervisorctl" >> /etc/sudoers',
             'echo "export PIP_DOWNLOAD_CACHE=~/.pip" >> ~{username}/.profile',
             'echo "export PIP_DOWNLOAD_CACHE=~/.pip" >> ~{username}/.bashrc',
         )

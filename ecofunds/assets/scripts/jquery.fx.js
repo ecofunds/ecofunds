@@ -8,20 +8,20 @@
                 .on('selectstart', false);
         };        
 
-        //Estiliza todos os select do site.
-        $('select').qxStylingForms({
-            sameWidth: true,
-            zIndex: "50"/*,
-            onClick: function(){
-                $('.qx-stylingForms-options-bound').css('overflow','hidden');
-                
-                $('.qx-stylingForms-options-bound').jScrollPane({
-                    showArrows: true,
-                    arrowScrollOnHover: true,
-                    verticalDragMinHeight: 20
-                });
-            } */    
-        });
+//        //Estiliza todos os select do site.
+//        $('select').qxStylingForms({
+//            sameWidth: true,
+//            zIndex: "50"/*,
+//            onClick: function(){
+//                $('.qx-stylingForms-options-bound').css('overflow','hidden');
+//
+//                $('.qx-stylingForms-options-bound').jScrollPane({
+//                    showArrows: true,
+//                    arrowScrollOnHover: true,
+//                    verticalDragMinHeight: 20
+//                });
+//            } */
+//        });
 
         //Estiliza todos os checkbox do site
         $('input[type="checkbox"]').qxStylingForms();

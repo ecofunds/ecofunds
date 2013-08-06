@@ -3,7 +3,36 @@ define('loogica', ["domReady!", "jquery", "underscore",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
-    var no_url = $("#no_url").html();
+    var info_window = new google.maps.InfoWindow;
+
+    var Filter = Backbone.Model.extend({
+        toQueryOptions: function() {
+            /* Filters empty model attributes to avoid misleading the backend filter.
+            *  Ideally the backend should ignore invalid filter values/attributes.
+            *  This can be implemented with Forms
+            * */
+            var options = {};
+            _.each(this.attributes, function(v, k){
+                if(this.get(k))
+                    options[k] = v;
+            }, this);
+            return options;
+        }
+    });
+
+    FilterView = Backbone.View.extend({
+        initialize:function () {
+            this._modelBinder = new Backbone.ModelBinder();
+            this._modelBinder.bind(this.model, this.el);
+
+            this.button = $('.ocultar-exibir-filtro', this.$el);
+            this.button.bind('click', {el: this.$el}, this.togglePanel);
+        },
+        togglePanel: function(e) {
+            el = e.data.el;
+            el.toggleClass('aberto fechado');
+        }
+    });
 
     Region = Backbone.Model.extend({
         defaults: {
@@ -154,11 +183,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 var places_view = new PlaceView({model: place});
                 if (default_map_type == "density/")
                     places_view.render_density();
-                if (default_domain == "organization") {
-                    places_view.render_cluster();
-                    return;
-                }
-                if (default_map_type == "marker/")
+                else //if (default_map_type == "marker/")
                     places_view.render_marker();
             });
         }
@@ -169,123 +194,118 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
         },
         render_marker: function() {
-            var map_elements = [];
             var _map = window.map_router.map;
 
-            var name = this.model.get('acronym');
-            var lat = this.model.get('lat');
-            var lng = this.model.get('lng');
-            var url = this.model.get('url');
-            var myLatlng = new google.maps.LatLng(lat, lng);
-
-            var info_label = $("#title_" + default_domain).html();
-            var info_text_source = $('#info_' + default_domain).html();
-            var template = Handlebars.compile(info_text_source);
-
-            var info_window = new google.maps.InfoWindow({
-                content: template({label: info_label,
-                                   no_url: no_url,
-                                   name: name,
-                                   url: url})
-            });
+            var latlng = new google.maps.LatLng(this.model.get('lat'),
+                                                this.model.get('lng'));
 
             var marker = new google.maps.Marker({
-                position: myLatlng,
+                position: latlng,
                 map: _map
             });
-            map_elements.push(marker);
 
-            google.maps.event.addListener(marker, "click",
-                function() {
-                    info_window.open(_map, marker);
+            var source = $('#info_' + default_domain).html();
+            var template = Handlebars.compile(source);
+            var info_content = template(this.model.attributes);
+
+            google.maps.event.addListener(marker, "click", function(){
+                info_window.setContent(info_content);
+                info_window.open(_map, marker);
             });
+
+            var map_elements = [];
+            map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
         },
         render_density: function() {
             var _map = window.map_router.map;
 
-            var lat = this.model.get('lat');
-            var lng = this.model.get('lng');
-            var myLatlng = new google.maps.LatLng(lat, lng);
-            var scale = this.model.get('scale');
-            var total = this.model.get('total_investment');
-            var total_str = this.model.get('total_investment_str');
+            var latlng = new google.maps.LatLng(this.model.get('lat'),
+                                                  this.model.get('lng'));
 
-            var circle_options = {
+            var circle = new google.maps.Circle({
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
                 strokeWeight: 0,
                 fillOpacity: 0.8,
                 fillColor: '#8eb737',
                 map: _map,
-                center: myLatlng,
-                radius: (scale * 10000)
-            };
-            var circle = new google.maps.Circle(circle_options);
-
-            var map_elements = [];
-            map_elements.push(circle);
-
-            var info_label = $("#title_" + default_domain).html();
-            var info_text_source = $('#info_' + default_domain + '_density').html();
-            var template = Handlebars.compile(info_text_source);
-
-            var info_window = new google.maps.InfoWindow({
-                content: template({label: info_label,
-                                   projects: this.model.get('projects'),
-                                   value: total_str})
+                center: latlng,
+                radius: (this.model.get('scale') * 10000)
             });
 
             var marker = new MarkerWithLabel({
-                position: myLatlng,
+                position: latlng,
                 draggable: false,
                 map: _map,
-                labelContent: total_str,
+                labelContent: this.model.get('total_investment_str'),
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
                 icon: 'a.png'
             });
-            map_elements.push(marker);
+
             circle.bindTo('center', marker, 'position');
-            google.maps.event.addListener(marker, "click",
-                function() {
-                    info_window.open(_map, marker);
+
+            var source = $('#info_' + default_domain + '_density').html();
+            var template = Handlebars.compile(source);
+            var info_content = template(this.model.attributes);
+
+            google.maps.event.addListener(marker, "click", function(){
+                info_window.setContent(info_content);
+                info_window.open(_map, marker);
             });
 
-            this.model.set('map_elements', map_elements);
-        },
-        render_cluster: function() {
             var map_elements = [];
-            var _map = window.map_router.map;
-
-            var name = this.model.get('name');
-            var lat = this.model.get('lat');
-            var lng = this.model.get('lng');
-            var url = "http://dummy";
-            var myLatlng = new google.maps.LatLng(lat, lng);
-
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: _map
-            });
+            map_elements.push(circle);
             map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
         }
     });
 
-    Map = Backbone.Model.extend({});
+    Map = Backbone.Model.extend({
+        defaults: {
+            zoom: 4,
+            center: new google.maps.LatLng(-22.9488441857552033,
+                                           -45.358066177368164),
+            mapTypeId: google.maps.MapTypeId.SATELLITE,
+            noClear: true,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            scaleControl: true,
+            scaleControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            panControl: false,
+            streetViewControl: false,
+            scrollwheel: false
+        }
+    });
     MapView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
             this.model.bind('change', this.render);
+            $('.zoom-in').click({model: this.model}, this.zoomIn);
+            $('.zoom-out').click({model: this.model}, this.zoomOut);
+
+            this.map = new google.maps.Map(document.getElementById('id_map'),
+                                          this.model.toJSON());
         },
         render: function() {
-            var map = new google.maps.Map(document.getElementById('id_map'),
-                                          this.model.toJSON());
-            return map;
+            this.map.setZoom(this.model.get('zoom'));
+            return this.map;
+        },
+        zoomIn: function(e){
+            var model = e.data.model;
+            model.set('zoom', model.get('zoom') + 1);
+        },
+        zoomOut: function(e) {
+            var model = e.data.model;
+            model.set('zoom', model.get('zoom') - 1);
         }
     });
 
@@ -297,81 +317,77 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'clean_markers': 'clean_markers'
         },
         initialize: function() {
-            var _map = {
-                zoom: 4,
-                center: new google.maps.LatLng(-22.9488441857552033,
-                                               -43.358066177368164),
-                mapTypeId: google.maps.MapTypeId.SATELLITE,
-                noClear: true,
-                zoomControl: true,
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_TOP
-                },
-                scaleControl: true,
-                scaleControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_TOP
-                },
-                panControl: false,
-                streetViewControl: false,
-                scrollwheel: false
-            };
-            var map = new Map(_map);
-            map_view = new MapView({model:map});
+            map_view = new MapView({model: new Map});
             this.map = map_view.render();
+        },
+        fetchPlaces: function(domain, async) {
+            // Default value true
+            async = typeof async !== 'undefined' ? async : true;
+
+            this.places.fetch({async: async});
+        },
+        toggleFilter: function(domain) {
+            /* Encapsula ativação e desativação de filtros.
+             * Com eventual refatoração do css, esse código pode ser simplificado
+             * usando toggle do Jquery, eliminando o else.
+             */
+            var options = [
+                {domain: 'investment', menu: 'a[href=#investment]', panel: "#filtro-investimentos" },
+                {domain: 'project', menu: 'a[href=#project]', panel: "#filtro-projetos" },
+                {domain: 'organization', menu: 'a[href=#organization]', panel: "#filtro-organizacoes" }
+            ]
+
+            _.each(options, function(o){
+                if(o.domain == domain){
+                    $(o.menu).parent().removeClass('inativa').addClass('ativa');
+                    $(o.panel).show();
+                }
+                else {
+                    $(o.menu).parent().removeClass('ativa').addClass('inativa');
+                    $(o.panel).hide();
+                }
+            }, this);
         },
         fetch_investments: function() {
             default_map_type = 'density/';
             default_domain = 'investment';
-            $("a[href=#investment]").parent().removeClass('inativa').addClass('ativa');
-            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").show();
-            $("#filtro-investimentos").show();
-            $("#filtro-projetos").hide();
-            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/geo_api/investment/' + default_map_type;
+            this.places.url = '/api/geo/investment/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch();
+            this.fetchPlaces(default_domain);
         },
         fetch_projects: function() {
             default_map_type = 'marker/';
             default_domain = 'project';
-            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#project]").parent().removeClass('inativa').addClass('ativa');
-            $("a[href=#organization]").parent().removeClass('ativa').addClass('inativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
-            $("#filtro-investimentos").hide();
-            $("#filtro-projetos").show();
-            $("#filtro-organizacoes").hide();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/api/geo/project/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch();
+
+            this.fetchPlaces(default_domain);
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
             default_domain = 'organization';
-            $("a[href=#investment]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#project]").parent().removeClass('ativa').addClass('inativa');
-            $("a[href=#organization]").parent().removeClass('inativa').addClass('ativa');
+            this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
-            $("#filtro-investimentos").hide();
-            $("#filtro-projetos").hide();
-            $("#filtro-organizacoes").show();
             this.clean_markers();
             this.places = new Places();
             this.places.url = '/api/geo/organization/' + default_map_type;
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.places.fetch({async: false});
+
+            this.fetchPlaces(default_domain, false);
 
             var markers = [];
             if (this.places) {
@@ -401,6 +417,39 @@ define('loogica', ["domReady!", "jquery", "underscore",
         }
     });
 
+    MapRouterWithFilter = MapRouter.extend({
+        initialize: function() {
+            MapRouterWithFilter.__super__.initialize.apply(this, arguments);
+
+            /* Initialize filters */
+            this.projectFilterView = new FilterView({el: '#project-filter', model: new Filter});
+            this.listenTo(this.projectFilterView.model, 'change', this.fetch_projects);
+
+            this.organizationFilterView = new FilterView({el: '#organization-filter', model: new Filter});
+            this.listenTo(this.organizationFilterView.model, 'change', this.fetch_organizations);
+
+            this.investmentFilterView = new FilterView({el: '#investment-filter', model: new Filter});
+            this.listenTo(this.investmentFilterView.model, 'change', this.fetch_investments);
+        },
+      fetchPlaces: function(domain, async) {
+            // Default value true
+            async = typeof async !== 'undefined' ? async : true;
+
+            var views = {
+                investment: this.investmentFilterView,
+                project: this.projectFilterView,
+                organization: this.organizationFilterView
+            }
+
+            var view = views[domain];
+
+            this.places.fetch({
+                data: $.param(view.model.toQueryOptions()),
+                async: async
+            });
+        }
+    });
+
     return {
         Region: Region,
         RegioView: RegioView,
@@ -408,6 +457,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
         PlaceView: PlaceView,
         Map: Map,
         MapView: MapView,
-        MapRouter: MapRouter
+        MapRouter: MapRouter,
+        MapRouterWithFilter: MapRouterWithFilter
     };
 });
