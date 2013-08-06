@@ -17,7 +17,7 @@
             <fieldset>
                 <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
                 
-                {{ search_organization_form.s_organization }}
+                {{ search_organization_form.s_organization_name }}
 
                 <label for="id_s_all_organizations" class="check"> 
                     {{ search_organization_form.s_all_organizations }}
@@ -31,7 +31,7 @@
             <fieldset>
                 <legend>{% trans "Type" %} <span class="total">({{ count_organization_types }})</span></legend>
                 
-                {{ search_organization_form.s_organization_type }}
+                {{ search_organization_form.s_organization_type2 }}
 
                 <label for="id_s_all_type_organizations" class="check"> 
                     {{ search_organization_form.s_all_type_organizations }}

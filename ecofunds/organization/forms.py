@@ -23,10 +23,10 @@ ORGANIZATIONTYPE_CHOICES = (('', 'Choose an organization type'),) + tuple(Organi
 ACTIVITY_CHOICES = (('', 'Choose an activity type'),) + tuple(Activity.objects.all().values_list('activity_id', 'name'))
 
 class OrganizationAdvancedSearchForm(AdvancedSearchForm):
-    s_organization_type = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
+    s_organization_type2 = forms.IntegerField(label=_('Organization type'), widget=forms.Select(choices=ORGANIZATIONTYPE_CHOICES, attrs={'class':''}))
     s_all_type_organizations = forms.BooleanField(label=_('All organization types'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
     s_organization_id = forms.IntegerField(widget=forms.HiddenInput())
-    s_organization = forms.CharField(label=_('Organization'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of an organization')}))
+    s_organization_name = forms.CharField(label=_('Organization'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of an organization')}))
     s_all_organizations = forms.BooleanField(label=_('All organizations'), widget=forms.CheckboxInput(attrs={'class':'check', 'value': 0}))
     s_country = forms.CharField(label=_('Country'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a country')}))
     s_state = forms.CharField(label=_('State'), widget=forms.TextInput(attrs={'class':'combo','autocomplete':'off','placeholder': _('Enter the name of a state')}))

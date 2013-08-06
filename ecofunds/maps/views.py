@@ -158,7 +158,10 @@ default_from = """
 from_data = {
     'investment': default_from,
     'project': default_from,
-    'organization': 'FROM ecofunds_organization o ',
+    'organization': 'FROM ecofunds_organization o '
+                    'LEFT JOIN ecofunds_locations d ON d.id = o.state_id '
+                    'LEFT join ecofunds_countries cou on cou.id = d.country_id '
+                    'LEFT JOIN ecofunds_organization_type t ON t.id = o.type_id ',
 }
 
 default_where = 'WHERE b.validated = 1'
@@ -175,6 +178,10 @@ filters = {
     's_project_name': {
         'where_data': ' and b.title like %s ',
         'parameter': (wrap_like, 's_project_name')
+    },
+    's_organization_name': {
+        'where_data': ' and o.name like %s ',
+        'parameter': (wrap_like, 's_organization_name')
     },
     's_project_activity_type': {
         'where_data': ' and exists (select 1 from ecofunds_entity_activities '
@@ -193,6 +200,10 @@ filters = {
                         'where f.id in (c.recipient_organization_id, '
                         'c.funding_organization_id) and f.type_id like %s) ',
         'parameter': (wrap_like, 's_organization_type')
+    },
+    's_organization_type2': {
+        'where_data': ' and o.type_id=%s',
+        'parameter': ('s_organization_type2')
     },
     's_investment_type': {
         'where_data': ' and c.type_id = %s ',
