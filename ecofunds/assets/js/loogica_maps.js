@@ -289,11 +289,23 @@ define('loogica', ["domReady!", "jquery", "underscore",
         initialize: function() {
             _.bindAll(this, 'render');
             this.model.bind('change', this.render);
+            $('.zoom-in').click({model: this.model}, this.zoomIn);
+            $('.zoom-out').click({model: this.model}, this.zoomOut);
+
+            this.map = new google.maps.Map(document.getElementById('id_map'),
+                                          this.model.toJSON());
         },
         render: function() {
-            var map = new google.maps.Map(document.getElementById('id_map'),
-                                          this.model.toJSON());
-            return map;
+            this.map.setZoom(this.model.get('zoom'));
+            return this.map;
+        },
+        zoomIn: function(e){
+            var model = e.data.model;
+            model.set('zoom', model.get('zoom') + 1);
+        },
+        zoomOut: function(e) {
+            var model = e.data.model;
+            model.set('zoom', model.get('zoom') - 1);
         }
     });
 
