@@ -348,7 +348,7 @@ def _get_api_cursor(request, domain):
                                                     base_query,
                                                     query_params)
 
-    log.debug(base_query % query_params)
+    log.debug(base_query)
 
     cursor = db.connection.cursor()
     cursor.execute(base_query, query_params)
