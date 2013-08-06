@@ -315,7 +315,6 @@ def _get_api_cursor(request, domain):
         data = request.GET
 
     base_query = get_base_query(domain)
-    base_query = get_full_query(base_query, domain)
 
     query_params = []
     possible_filters = filters.keys()
@@ -328,6 +327,7 @@ def _get_api_cursor(request, domain):
                                                     base_query,
                                                     query_params)
 
+    base_query = get_full_query(base_query, domain)
     possible_filters = having.keys()
 
     for filter_id in possible_filters:
