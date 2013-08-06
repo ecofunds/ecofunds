@@ -1,14 +1,14 @@
 {% load tags i18n %}
 
 <!-- Filtros de Busca por Projetos -->
-<section class="filtros projetos aberto">
+<section id="project-filter" class="filtros projetos aberto">
     <header class="cabecalho">
         <h4>{% trans "Search projects by" %}</h4>
         <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
         <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
     </header>
     
-    <form id="project-filter" class="form-filtros projetos" action="#" method="post">
+    <form class="form-filtros projetos" action="#" method="post">
         {{ search_project_form.page }}
         {{ search_project_form.limit }}
         {{ search_project_form.list_type }}

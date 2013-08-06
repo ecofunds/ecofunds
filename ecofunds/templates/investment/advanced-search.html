@@ -1,13 +1,13 @@
 {% load tags i18n %}
 <!-- Filtros de Busca por Investimentos -->
-<section class="filtros investimentos aberto">
+<section id="investment-filter" class="filtros investimentos aberto">
     <header class="cabecalho">
         <h4>{% trans "Search investiments by" %}</h4>
         <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
         <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>           
     </header>
 
-    <form id="investment-filter" class="form-filtros investimentos" action="#" method="post">
+    <form class="form-filtros investimentos" action="#" method="post">
         {{ search_investment_form.page }}
         {{ search_investment_form.limit }}
         {{ search_investment_form.list_type }}

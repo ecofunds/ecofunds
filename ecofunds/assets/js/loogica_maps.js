@@ -24,6 +24,13 @@ define('loogica', ["domReady!", "jquery", "underscore",
         initialize:function () {
             this._modelBinder = new Backbone.ModelBinder();
             this._modelBinder.bind(this.model, this.el);
+
+            this.button = $('.ocultar-exibir-filtro', this.$el);
+            this.button.bind('click', {el: this.$el}, this.togglePanel);
+        },
+        togglePanel: function(e) {
+            el = e.data.el;
+            el.toggleClass('aberto fechado');
         }
     });
 

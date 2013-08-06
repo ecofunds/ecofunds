@@ -1,13 +1,13 @@
 {% load tags i18n %}
 <!-- Filtros de Busca por Organizações -->
-<section class="filtros organizacoes aberto">
+<section id="organization-filter" class="filtros organizacoes aberto">
     <header class="cabecalho">
         <h4>{% trans "Search organizations by" %}</h4>
         <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
         <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
     </header>
 
-    <form id="organization-filter" class="form-filtros organizacoes" action="#" method="post">
+    <form class="form-filtros organizacoes" action="#" method="post">
         {{ search_organization_form.page }}
         {{ search_organization_form.limit }}
         {{ search_organization_form.list_type }}
