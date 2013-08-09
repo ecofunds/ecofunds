@@ -179,7 +179,6 @@ INSTALLED_APPS = (
     'babel',
     'xlwt',
     'ajax_select',
-    'rosetta',
     #'endless_pagination',
     'ecofunds.core',
     'ecofunds.user',
@@ -231,11 +230,6 @@ URLS_WITHOUT_LANGUAGE_REDIRECT = [
     'css',
     'js',
 ]
-
-#CONFIGURACOES ROSETTA
-ROSETTA_MESSAGES_PER_PAGE = 50
-ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
-ROSETTA_WSGI_AUTO_RELOAD = True
 
 
 #AUTHENTICATION_BACKENDS = (
