@@ -198,7 +198,6 @@ def trans_date(v):
     v = str(v)
     if len(v)==10:
         tup = v.split('/')
-        print int(tup[2])
         if int(tup[2]) < 1900:
             return ''
 
@@ -262,7 +261,6 @@ class InvestmentFlowSource(BaseDetailView):
 
             investments = InvestmentData.list(recipient_organization_id=funding.id).exclude(pk__in=self.before_investments, created_at__gt=investment.created_at).all().values('id', 'created_at', 'funding_entity', 'funding_organization').annotate(projects=Count('funding_entity'), organizations=Count('funding_organization'))
             #investments = funding.recipient_investments.all()
-            print(investments)
             obj = {'id': 'o_%d_%d' % (level, funding.id), 'name': funding.name, 'data': {'level': level, 'css': 'organization', 'count': len(investments)}, 'children': [] }
             childrens.append(obj)
 
