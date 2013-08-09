@@ -127,60 +127,6 @@
                 <!-- fim busca-principal -->
 
                 <!-- area-usuario -->
-                <div id="area-usuario">
-                    {% if not user.is_authenticated %}
-                        <div class="controles-usuario-deslogado">
-                            <a class="botao primario" href="{% page_url 'user-form' %}">{% trans "Sign up" %}</a>
-                            <a class="botao secundario" href="/user/login">{% trans "Log in" %}</a>
-                        </div>
-                    {% else %}
-                        <div class="controles-usuario-logado">
-                            <ul class="menu-logado tarefas">
-                                <li class="link principal"><span class="auxiliar">{% trans "New register" %}</span>
-
-                                    <ul class="submenu">
-                                        <li class="link link-projeto">
-                                            <a href="{% page_url 'project-form' %}"><span class="ico pequeno projeto-menor-branco"></span>{% trans "Project" %}</a>
-                                        </li>
-
-                                        <li class="link link-organizacao">
-                                            <a href="{% page_url 'organization-form' %}"><span class="ico pequeno organizacao-menor-branco"></span>{% trans "Organization" %}</a>
-                                        </li>
-
-                                        <li class="link link-investimento">
-                                            <a href="{% page_url 'investment-form' %}"><span class="ico pequeno investimento-menor-branco"></span>{% trans "Investment" %}</a>
-                                        </li>
-
-                                        <li class="link link-usuario">
-                                            <a href="{% page_url 'user-form' %}"><span class="ico pequeno usuario-menor-branco"></span>{% trans "User" %}</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <ul class="menu-logado usuario">
-                                    <li class="link principal"><span class="auxiliar nome-usuario" title="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</span>
-
-                                    <ul class="submenu">
-                                        <li class="link link-perfil">
-                                            <a href="{% page_url 'user-detail' %}?id={{user.id}}"><span class="ico pequeno usuario-menor-verde"></span>{% trans "Profile" %}</a>
-                                        </li>
-
-                                        <li class="link link-notificacoes">
-                                            <a href="{% page_url 'notifications' %}"><span class="ico pequeno notificacao-menor-verde"></span>{% trans "Notifications" %}</a>
-                                        </li>
-
-                                        <li class="link link-sair">
-                                            <a href="/user/logout"><span class="ico pequeno logout-padrao"></span>{% trans "Log out" %}</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    {%endif%}
-                </div>
-                <!-- fim de area-usuario -->
-
             </div>
             <!-- fim de ferramentas-usuario -->
 
