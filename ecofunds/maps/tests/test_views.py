@@ -309,6 +309,7 @@ class InvestmentMapTest(MapFixture):
                     u'url': None,
                     u'entity_id': 1,
                     u'amount': 1000000,
+                    u'amount_str': u'$ 1.000.000,00',
                 },
             ],
         }]
