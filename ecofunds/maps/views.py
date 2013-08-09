@@ -430,13 +430,14 @@ def investment_api(request, map_type):
                 'lat': lat,
                 'lng': lng,
                 'total_investment': int_amount,
-                'total_investment_str': str_amount,
+                'total_investment_str': format_currency(int_amount),
                 'scale': scale,
                 'projects': [{
                     'acronym': acronym,
                     'url': url,
                     'entity_id': entity_id,
-                    'amount': int_amount
+                    'amount': int_amount,
+                    'amount_str': format_currency(int_amount)
                 }]
             }
             points[location_id] = marker
@@ -449,6 +450,7 @@ def investment_api(request, map_type):
                 proj = {'entity_id': entity_id,
                         'url': url,
                         'amount': int_amount,
+                        'amount_str': format_currency(int_amount),
                         'acronym': acronym}
                 points[location_id]['projects'].append(proj)
                 points[location_id]['total_investment'] += int_amount
