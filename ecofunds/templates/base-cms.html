@@ -103,23 +103,15 @@
             <!-- menu-topo -->
             <div id="menu-topo">
                 <ul class="menu-topo-container">
-                    <li>{% page_link "projects" %}</li>
-                    <li>{% page_link "organizations" %}</li>
-                    <li>{% page_link "investments" %}</li>
-                    <li>{% page_link "map" %}</li>
+                    <li><a href="{% page_url "map" %}#project">Projects</a></li>
+                    <li><a href="{% page_url "map" %}#organization">Organizations</a></li>
+                    <li><a href="{% page_url "map" %}#investment">Investments</a></li>
                     {% if user.is_authenticated %}
                         <li>{% page_link "users" %}</li>
-                     {% endif %}
+                    {% endif %}
                 </ul>
             </div>
             <!-- fim de menu-topo -->
-
-            <!-- seletor-idiomas -->
-            <div id="seletor-idioma">
-                {% trans "Language" %}
-                {% language_chooser "language_chooser.html" %}
-            </div>
-            <!-- fim de seletor-idiomas -->
 
             <!-- ferramentas-usuario -->
             <div class="ferramentas-usuario">
