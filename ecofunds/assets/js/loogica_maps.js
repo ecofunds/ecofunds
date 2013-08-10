@@ -224,6 +224,14 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var latlng = new google.maps.LatLng(this.model.get('lat'),
                                                   this.model.get('lng'));
 
+            var computeRadius = function(v) {
+                var offsetradius = 150000;
+                var absmaxradius = 350000;
+                var maxamount = 100000000;
+                var amountpercent = ((v * 100) / maxamount)
+                return ((amountpercent * absmaxradius) / 100) + offsetradius;
+            }
+
             var circle = new google.maps.Circle({
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
@@ -232,7 +240,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 fillColor: '#8eb737',
                 map: _map,
                 center: latlng,
-                radius: (this.model.get('scale') * 10000)
+                radius: computeRadius(this.model.get('total_investment'))
             });
 
             var marker = new MarkerWithLabel({
