@@ -1,6 +1,6 @@
 {% load sekizai_tags cms_tags menu_tags tags static i18n %}
 <!DOCTYPE HTML>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html>
 <head>
     <meta charset="UTF-8" />
     <link rel="shortcut icon" href="{% get_static_prefix %}images/ecofunds.ico" />
@@ -113,13 +113,6 @@
                 </ul>
             </div>
             <!-- fim de menu-topo -->
-
-            <!-- seletor-idiomas -->
-            <div id="seletor-idioma">
-                {% trans "Language" %}
-                {% language_chooser "language_chooser.html" %}
-            </div>
-            <!-- fim de seletor-idiomas -->
 
             <!-- ferramentas-usuario -->
             <div class="ferramentas-usuario">

@@ -392,11 +392,6 @@ WHERE b.validated = 1
 
                 for key in points:
                     amount = points[key]['investment']
-                    #text = numbers.format_currency(
-                    #        float(amount),
-                    #        numbers.get_currency_symbol('USD', 'en_US'),
-                    #        u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_')
-                    #    )
 
                     text = "  " +  str(amount) + "  "
 

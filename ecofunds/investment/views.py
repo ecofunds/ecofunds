@@ -11,6 +11,7 @@ from django.core.cache import cache
 from django.db.models import Count
 from django.utils.simplejson import dumps, loads
 from django.views.generic.detail import BaseDetailView
+from django.conf import settings
 
 from ecofunds.business import ProjectData, OrganizationData, InvestmentData
 from ecofunds.core.views import DjangoJSONEncoder
@@ -592,7 +593,7 @@ WHERE b.validated = 1
                     text = numbers.format_currency(
                             float(amount),
                             numbers.get_currency_symbol('USD', 'en_US'),
-                            u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_')
+                            u'\xa4\xa4 #,##0.00', locale=settings.LANGUAGE_CODE.replace('-', '_')
                         )
                     scale = (len(text)+1) * 3
 
@@ -733,7 +734,7 @@ def ajax_density_view(request):
         text = numbers.format_currency(
                 float(amount),
                 numbers.get_currency_symbol('USD', 'en_US'),
-                u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_')
+                u'\xa4\xa4 #,##0.00', locale=settings.LANGUAGE_CODE.replace('-', '_')
             )
         scale = (len(text)+1) * 3
 

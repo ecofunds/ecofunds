@@ -1,11 +1,12 @@
 
 from django.utils.translation import get_language
-from ecofunds import settings
+from django.conf import settings
 
 def user(request):
     lang = get_language()
-    date_format = settings.LANGUAGES_DATEFORMAT[lang]
-    number_format = settings.LANGUAGES_NUMBERFORMAT[lang]
+    # FIXME: Learn the impact and remove the next 2 lines.
+    date_format = settings.DATE_FORMAT
+    number_format = 'decimal-us'
     
     if hasattr(request,'user'):
         try:

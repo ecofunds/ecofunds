@@ -60,27 +60,8 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'en-US'
 
-LANGUAGES = [
-    ('pt-br', 'Brazilian Portuguese'),
-    ('en', 'English'),
-    ('es', 'Espanol')
-]
-
-LANGUAGES_DATEFORMAT = {
-    'pt-br': 'dd/mm/yy',
-    'en': 'mm/dd/yy',
-    'es': 'dd/mm/yy',
-}
-
-LANGUAGES_NUMBERFORMAT = {
-    'pt-br': 'decimal',
-    'en': 'decimal-us',
-    'es': 'decimal',
-}
-
-DEFAULT_LANGUAGE = 0
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -140,8 +121,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'cms.middleware.multilingual.MultilingualURLMiddleware',
-    'ecofunds.middleware.multilingual.CustomMultilingualURLMiddleware',
     'ecofunds.middleware.forcedresponse.ForceResponseMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
@@ -200,22 +179,6 @@ CMS_TEMPLATES = (
     ('form-template.html', gettext('Form Template'))
 )
 
-CMS_LANGUAGE_CONF = {
-    'pt-br': ['en'],
-    'en': ['pt-br'],
-    'es': ['en'],
-}
-
-CMS_LANGUAGES = (
-    ('pt-br', gettext('Brazilian Portuguese')),
-    ('en', gettext('English')),
-    ('es', gettext('Espanol')),
-)
-CMS_SITE_LANGUAGES = {
-    1: ['pt-br', 'en', 'es'],
-}
-CMS_FRONTEND_LANGUAGES = ('pt-br', 'en', 'es')
-
 CMS_APPLICATIONS_URLS = (
     #('cmsplugin_news.urls', 'News'),
     ('ecofunds.opportunity.urls', 'Funding Oportunity'),
@@ -225,11 +188,6 @@ CMS_NAVIGATION_EXTENDERS = (
     ('ecofunds.opportunity.navigation.get_nodes',
      'Funding Oportunity Navigation'),
 )
-
-URLS_WITHOUT_LANGUAGE_REDIRECT = [
-    'css',
-    'js',
-]
 
 
 #AUTHENTICATION_BACKENDS = (
