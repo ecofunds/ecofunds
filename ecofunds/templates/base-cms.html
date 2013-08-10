@@ -107,7 +107,7 @@
                     <li><a href="{% page_url "map" %}#organization">Organizations</a></li>
                     <li><a href="{% page_url "map" %}#investment">Investments</a></li>
                     {% if user.is_authenticated %}
-                        <li>{% page_link "users" %}</li>
+                        <li><a href="{% url admin:index %}">Administration</a></li>
                     {% endif %}
                 </ul>
             </div>
