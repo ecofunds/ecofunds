@@ -161,7 +161,7 @@ def page_url(context, page_lookup, params=None, lang=None, site=None):
 
     page = get_page(request, page_lookup, lang, site)
     if page :
-        return "/%s%s%s" % (lang.lower(), page.get_absolute_url(language=lang), "?id="+ str(params) if params is not None else "")
+        return "%s%s" % (page.get_absolute_url(language=lang), "?id="+ str(params) if params is not None else "")
     return ""
 
 def get_page(request, page_lookup, lang, site=None):
