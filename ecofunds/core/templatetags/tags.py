@@ -83,7 +83,7 @@ def currency(context, value):
         return numbers.format_currency(
             float(value),
             numbers.get_currency_symbol('USD', 'en_US'),
-            u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_')
+            u'\xa4\xa4 #,##0.00', locale=settings.LANGUAGE_CODE.replace('-', '_')
         )
     return ''
 
@@ -131,12 +131,12 @@ def pagination(paginator, show_page_size=False):
 def page_link(context, page_lookup, lang=None, site=None, **kwargs):
     request = context.get('request', False)
     if lang is None:
-        lang=request.LANGUAGE_CODE
+        lang=settings.LANGUAGE_CODE
     lang = lang.lower()
 
     page = get_page(request, page_lookup, lang, site)
 
-    url = "/%s%s" % (lang, page.get_absolute_url(language=lang))
+    url = page.get_absolute_url(language=lang)
 
     result = {'page': page, 'url':url}
     result.update(kwargs)
@@ -157,7 +157,7 @@ def page_url(context, page_lookup, params=None, lang=None, site=None):
 
     request = context.get('request', False)
     if lang is None:
-        lang=request.LANGUAGE_CODE
+        lang=settings.LANGUAGE_CODE
 
     page = get_page(request, page_lookup, lang, site)
     if page :

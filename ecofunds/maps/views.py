@@ -6,8 +6,8 @@ from django import http
 from django.core.cache import cache
 from django.utils import simplejson as json
 from django.views.generic.detail import BaseDetailView
-from django.utils.html import escape
 from django.utils.simplejson import dumps, loads
+from django.conf import settings
 
 from babel import numbers
 
@@ -110,7 +110,7 @@ def trans_date(v):
 def localize_currency(number, request):
     return numbers.format_currency(number,
                numbers.get_currency_symbol('USD', 'en_US'),
-               u'\xa4\xa4 #,##0.00', locale=request.LANGUAGE_CODE.replace('-', '_'))
+               u'\xa4\xa4 #,##0.00', locale=settings.LANGUAGE_CODE.replace('-', '_'))
 
 
 def api_error(request, message):

@@ -3,7 +3,6 @@ django-decouple==1.1
 dj-database-url==0.2.1
 unipath==1.0
 django-gmapi==1.0.1
-django-rosetta==0.7.2
 django-ajax-selects==1.2.5
 xlwt==0.7.5
 Babel==0.9.6
