@@ -2453,7 +2453,7 @@ table th {
   background: url(../images/logos/logo-ecofunds.png) no-repeat center center;
   width: 148px;
   height: 60px;
-  margin: 8px 43px 0 0;
+  margin: 8px 43px 8px 0;
   display: block;
   float: left;
   text-indent: -9999px;
@@ -2468,6 +2468,8 @@ table th {
 /* line 25, src/_conteudo.sass */
 #menu-topo .menu-topo-container {
   list-style: none;
+  font-size: 16px;
+  margin-top: 27px;
 }
 /* line 28, src/_conteudo.sass */
 #menu-topo .menu-topo-container li {

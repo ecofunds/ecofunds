@@ -107,26 +107,12 @@
                     <li><a href="{% page_url "map" %}#organization">Organizations</a></li>
                     <li><a href="{% page_url "map" %}#investment">Investments</a></li>
                     {% if user.is_authenticated %}
-                        <li>{% page_link "users" %}</li>
+                        <li><a href="{% url admin:index %}">Administration</a></li>
                     {% endif %}
                 </ul>
             </div>
             <!-- fim de menu-topo -->
 
-            <!-- ferramentas-usuario -->
-            <div class="ferramentas-usuario">
-                <!-- busca-principal -->
-                <div id="busca-principal">
-                    <form id="busca-principal-form" action="{% page_url "global-search-result" %}" method="post">
-                        {% csrf_token %}
-                        <label class="label-busca-topo" for="query">{% trans "Search database" %}</label>
-                        <input class="texto-busca-topo" type="search" id="query" name="query" autocomplete="off" placeholder="{% trans 'Search by project, organization or region' %}" value="{{ request.POST.get.query }}" />
-                        <span class="auxiliar-imagem-background busca"><input class="botao-busca-topo" type="submit" value="Search" /></span>
-                    </form>
-                </div>
-                <!-- fim busca-principal -->
-
-                <!-- area-usuario -->
             </div>
             <!-- fim de ferramentas-usuario -->
 
