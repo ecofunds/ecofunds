@@ -1,5 +1,5 @@
 define('loogica', ["domReady!", "jquery", "underscore",
-         "backbone", "gmaps", "marker",
+         "backbone", "gmaps", "marker", "humanize",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
@@ -239,7 +239,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 position: latlng,
                 draggable: false,
                 map: _map,
-                labelContent: this.model.get('total_investment_str'),
+                labelContent: Humanize.compactInteger(this.model.get('total_investment')),
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},

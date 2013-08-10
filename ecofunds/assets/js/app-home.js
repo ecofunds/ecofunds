@@ -14,7 +14,8 @@ requirejs.config({
         marker: 'markerwithlabel_packed',
         infobox: 'infobox_packed',
         markerclusterer: 'markerclusterer_compiled',
-        modelbinder: 'Backbone.ModelBinder-min'
+        modelbinder: 'Backbone.ModelBinder-min',
+        humanize: 'humanize.min'
     },
     shim: {
         gmaps: {
@@ -36,7 +37,7 @@ requirejs.config({
             exports: 'infobox'
         },
         loogica: {
-            deps: ['backbone', 'gmaps', 'marker', 'modelbinder'],
+            deps: ['backbone', 'gmaps', 'marker', 'modelbinder', 'humanize'],
             exports: 'loogica'
         },
         markerclusterer: {
@@ -46,6 +47,9 @@ requirejs.config({
         modelbinder: {
             deps: ['backbone'],
             exports: 'modelbinder'
+        },
+        humanize: {
+            exports: 'humanize'
         }
     }
 });
