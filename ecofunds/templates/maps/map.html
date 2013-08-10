@@ -60,43 +60,6 @@
                 </ul>
             </div>
 
-            <div class="opcoes">
-                <!-- tipo -->
-                <div class="tipo" style="display: none;">
-                    <ul class="tipo-container" id="visualizacao-mapa">
-                        <li class="item"><label><input type="radio" name="view" value="density" checked="checked" />{% trans "Density" %}</label></li>
-                        <!--li class="item"><label><input type="radio" name="view" value="heat" />{% trans "Heat Map" %}</label></li-->
-                    </ul>
-                </div>
-                <!-- fim de tipo mapa -->
-
-                <!-- visualizacao -->
-                <div class="visualizacao">
-                    <p class="texto-lista">{% trans "View: " %}</p>
-                    <ul class="visualizacao-container">
-                        <li class="item ativo">
-                            <a href="#mapa" class="link ico ico-texto mapa-icone ativo">{% trans "Map" %}
-                            </a>
-                        </li>
-
-                        <li class="item inativo">
-                            <a href="#graficos" class="link ico ico-texto grafico-icone inativo">{% trans "Chart" %}
-                            </a>
-                        </li> <!-- Para cada um desses, existe um icone inativo -->
-                    </ul>
-                </div>
-                <!-- fim de visualizacao -->
-
-                <!-- menu-auxiliar-mapa -->
-                <div class="opcoes-adicionais">
-                    <ul class="opcoes-adicionais-container">
-                        <li class="item ico ico-texto relatorio"><a href="#">{% trans "Generate Report" %}</a></li>
-                        <li class="item ico ico-texto impressao"><a href="#">{% trans "Print" %}</a></li>
-                    </ul>
-                </div>
-                <!-- fim de operacoes-mapa -->
-            </div>
-
             <div class="conteudo-abas-container">
                 {% if instance.show_search_projects %}
                     <section id="filtro-projetos">
