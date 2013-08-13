@@ -181,8 +181,8 @@ filters = {
         'parameter': (wrap_like, 's_project_name')
     },
     's_organization_name': {
-        'where_data': ' and o.name like %s ',
-        'parameter': (wrap_like, 's_organization_name')
+        'where_data': ' and (o.name like %s or o.acronym like %s) ',
+        'parameter': (wrap_like, 's_organization_name', wrap_like, 's_organization_name')
     },
     's_project_activity_type': {
         'where_data': ' and exists (select 1 from ecofunds_entity_activities '
