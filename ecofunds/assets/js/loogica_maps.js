@@ -288,8 +288,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
     Map = Backbone.Model.extend({
         defaults: {
             zoom: 4,
-            center: new google.maps.LatLng(-22.9488441857552033,
-                                           -45.358066177368164),
+            center: new google.maps.LatLng(-11.297538592394982,
+                                           -67.24283180236819),
             mapTypeId: google.maps.MapTypeId.SATELLITE,
             noClear: true,
             zoomControl: true,
