@@ -279,7 +279,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             var radius = Math.max(stepCount - stepIgnore, stepMin) * stepValue + radiusOffset;
 
-            console.debug(stepValue, tens, ones, stepCount, v, radius);
+            // console.debug(stepValue, tens, ones, stepCount, value, radius);
 
             return radius;
         }
