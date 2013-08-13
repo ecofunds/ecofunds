@@ -1,7 +1,7 @@
 define('loogica', ["domReady!", "jquery", "underscore",
          "backbone", "gmaps", "marker", "humanize",
-         "infobox"], function(doc, $, _, Backbone, google,
-                              marker, infobox) {
+         "infobox", "jqueryui"], function(doc, $, _, Backbone, google,
+                              marker, infobox, ui) {
 
     var info_window = new google.maps.InfoWindow;
 
