@@ -8,7 +8,7 @@ requirejs.config({
     waitSeconds: 300,
     paths: {
         jquery: 'jquery',
-        jqueryui: 'jqueryui',
+        jqueryui: 'jquery-ui.min',
         backbone : 'backbone-min',
         underscore: 'underscore-min',
         loogica: 'loogica_maps',

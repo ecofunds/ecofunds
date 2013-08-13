@@ -124,38 +124,11 @@ var dispatchFilterEvents = function (getDataFunc, callbackEventFunc) {
 		};
 	}
 
-
-
-
-	bindSelectAll('#id_s_all_project_name', '#id_s_project_name')();
-	bindSelectAll('#id_s_all_organizations', '#id_s_organization')();
-	bindSelectAll('#id_s_all_investments', '#id_s_investment')();
-	bindSelectAll('#id_s_all_investments_focus', '#id_s_investments_focus')();
-
-	bindSelectAll("#id_s_all_type_investments", "#id_s_investment_type")();
-
-
-	//	$(':radio, :checkbox', contexto).bind('click', function (event) {
-	//		currentElement = $(this);
-	//		if (timeoutList != null) clearTimeout(timeoutList);
-	//		timeoutList = setTimeout(function () { postList(getDataFunc, callbackEventFunc); }, 1000);
-	//	});
 	$('select', '.form-filtros').change(function () {
 		currentElement = $(this);
 		this.form.page.value = '1';
 		postList(getDataFunc, callbackEventFunc);
 	});
-
-
-	bindSelectAll("#id_s_all_project_activity_type", "#id_s_project_activity_type")();
-	bindSelectAll('#id_s_all_type_organizations', '#id_s_organization_type')();
-	bindSelectAll('#id_s_all_investment_date', '#id_s_investment_date_from, #id_s_investment_date_to');
-
-
-	bindSelectAll('#id_s_all_investments_received', '#id_s_estimated_investments_value_from, #id_s_estimated_investments_value_to')();
-	bindSelectAll('#id_s_all_investments_value', '#id_s_investment_from, #id_s_investment_to')();
-	bindSelectAll('#id_s_all_investments_date', '#id_s_investment_date_from, #id_s_investment_date_to', 'date')();
-	bindSelectAll('#id_s_all_investment_date', '#id_s_investment_date_from, #id_s_investment_date_to', 'date')();
 
 
 	createProjectSuggest("#id_s_project_name", function () {
