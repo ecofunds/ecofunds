@@ -1,4 +1,4 @@
-define('gmaps', ['async!http://maps.googleapis.com/maps/api/js?key=AIzaSyBnFMm_tadKGcXD4tP93hKTI73HM2zsqFY&sensor=false'], function() {
+define('gmaps', ['async!http://maps.googleapis.com/maps/api/js?v=3.12&key=AIzaSyBnFMm_tadKGcXD4tP93hKTI73HM2zsqFY&sensor=false'], function() {
     return google;
 });
 
@@ -8,7 +8,7 @@ requirejs.config({
     waitSeconds: 300,
     paths: {
         jquery: 'jquery',
-        jqueryui: 'jqueryui',
+        jqueryui: 'jquery-ui.min',
         backbone : 'backbone-min',
         underscore: 'underscore-min',
         loogica: 'loogica_maps',

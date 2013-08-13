@@ -243,7 +243,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
-                icon: {}
+                icon: '/static/images/ico/ico-none.png'
             });
 
             circle.bindTo('center', marker, 'position');
@@ -279,7 +279,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             var radius = Math.max(stepCount - stepIgnore, stepMin) * stepValue + radiusOffset;
 
-            console.debug(stepValue, tens, ones, stepCount, v, radius);
+            // console.debug(stepValue, tens, ones, stepCount, value, radius);
 
             return radius;
         }
@@ -288,8 +288,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
     Map = Backbone.Model.extend({
         defaults: {
             zoom: 4,
-            center: new google.maps.LatLng(-22.9488441857552033,
-                                           -45.358066177368164),
+            center: new google.maps.LatLng(-11.297538592394982,
+                                           -67.24283180236819),
             mapTypeId: google.maps.MapTypeId.SATELLITE,
             noClear: true,
             zoomControl: true,
@@ -307,36 +307,28 @@ define('loogica', ["domReady!", "jquery", "underscore",
     });
     MapView = Backbone.View.extend({
         initialize: function() {
+            this.map = new google.maps.Map(document.getElementById('id_map'),
+                                          this.model.toJSON());
+
+            this.slider = $('.slider-control').slider({
+                orientation: "vertical",
+                range: "min",
+                min: 2,     // Determina o valor mínimo
+                max: 14,    // Determina o valor máximo
+                step: 1,    // Determina a quantidade de passos
+                value: 4   // Determina o valor inicial
+            });
+
             _.bindAll(this, 'render');
             this.model.bind('change', this.render);
             $('.zoom-in').click({model: this.model}, this.zoomIn);
             $('.zoom-out').click({model: this.model}, this.zoomOut);
-
-            this.map = new google.maps.Map(document.getElementById('id_map'),
-                                          this.model.toJSON());
-
-            var gmin = 2; //Determina o valor mínimo
-            var gmax = 14; //Determina o valor máximo
-            var gvalue = 4; //Determina o valor inicial
-            var gstep = 1; //Determina a quantidade de passos
-
-            slider = $('.slider-control').slider({
-                orientation: "vertical",
-                range: "min",
-                min: gmin,
-                max: gmax,
-                step: gstep,
-                value: gvalue,
-                stop: function (event, ui) {
-                    var val = ui.value;
-                    me.changeZoom(val);
-                }
-            });
+            this.slider.on('slidestop', {model: this.model}, this.zoom);
         },
         render: function() {
             var zoom = this.model.get('zoom');
             this.map.setZoom(zoom);
-            slider.slider('value', zoom);
+            this.slider.slider('value', zoom);
             return this.map;
         },
         zoomIn: function(e){
@@ -346,6 +338,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
         zoomOut: function(e) {
             var model = e.data.model;
             model.set('zoom', model.get('zoom') - 1);
+        },
+        zoom: function(e, ui) {
+            var model = e.data.model;
+            model.set('zoom', ui.value);
         }
     });
 
