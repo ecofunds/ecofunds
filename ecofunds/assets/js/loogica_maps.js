@@ -243,7 +243,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
-                icon: {}
+                icon: '/static/images/ico/ico-none.png'
             });
 
             circle.bindTo('center', marker, 'position');
