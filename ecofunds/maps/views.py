@@ -128,7 +128,8 @@ select_data = {
         sum(c.amount_usd) sum_ammount,
         d.centroid,
         b.title,
-        b.website
+        b.website,
+        c.id
     """,
     'project':
     """ SELECT
@@ -410,6 +411,7 @@ def investment_api(request, map_type):
         centroid = item[3]
         acronym = item[4]
         url = item[5]
+        id_ = item[6]
 
         lat = None
         lng = None
@@ -433,6 +435,7 @@ def investment_api(request, map_type):
                 'total_investment_str': format_currency(int_amount),
                 'scale': scale,
                 'projects': [{
+                    'id': id_,
                     'acronym': acronym,
                     'url': url,
                     'entity_id': entity_id,
@@ -447,7 +450,8 @@ def investment_api(request, map_type):
                 if entity['entity_id'] == entity_id:
                     check_same_entity = True
             if not check_same_entity:
-                proj = {'entity_id': entity_id,
+                proj = {'id': id_,
+                        'entity_id': entity_id,
                         'url': url,
                         'amount': int_amount,
                         'amount_str': format_currency(int_amount),

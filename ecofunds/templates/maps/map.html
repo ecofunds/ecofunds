@@ -145,10 +145,10 @@
     {{/if}}
 </div>
 <div id="info_investment_density" style="display: none;">
-    <h4><a href="/investimentos/ficha-investimento/?id={{ entity_id }}">Total: {{ total_investment_str }}</a></h4>
+    <h4>Total: {{ total_investment_str }}</h4>
     <ul>
     {{#each projects}}
-        <li><a href="/projetos/ficha-projeto/?id={{ entity_id }}">{{ acronym }}</a> - {{ amount_str }}</li>
+        <li><a href="/investimentos/ficha-investimento/?id={{ id }}">{{ acronym }}</a> - {{ amount_str }}</li>
     {{/each}}
     </ul>
 </div>
