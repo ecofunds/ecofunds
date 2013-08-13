@@ -315,22 +315,13 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
 
-            var gmin = 2; //Determina o valor mínimo
-            var gmax = 14; //Determina o valor máximo
-            var gvalue = 4; //Determina o valor inicial
-            var gstep = 1; //Determina a quantidade de passos
-
             slider = $('.slider-control').slider({
                 orientation: "vertical",
                 range: "min",
-                min: gmin,
-                max: gmax,
-                step: gstep,
-                value: gvalue,
-                stop: function (event, ui) {
-                    var val = ui.value;
-                    me.changeZoom(val);
-                }
+                min: 2,     // Determina o valor mínimo
+                max: 14,    // Determina o valor máximo
+                step: 1,    // Determina a quantidade de passos
+                value: 4   // Determina o valor inicial
             });
         },
         render: function() {
