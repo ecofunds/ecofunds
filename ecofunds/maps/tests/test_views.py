@@ -302,9 +302,10 @@ class InvestmentMapTest(MapFixture):
             u'lat': -22.5331067902,
             u'lng': -43.2435698976,
             u'total_investment': 1000000,
-            u'total_investment_str': "$ 1.000.000,00",
+            u'total_investment_str': u"$ 1.000.000,00",
             u'projects': [
                 {
+                    u'id': 1,
                     u'acronym': u"Projeto de Teste",
                     u'url': None,
                     u'entity_id': 1,
