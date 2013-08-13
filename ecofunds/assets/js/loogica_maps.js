@@ -310,7 +310,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
 
-            slider = $('.slider-control').slider({
+            this.slider = $('.slider-control').slider({
                 orientation: "vertical",
                 range: "min",
                 min: 2,     // Determina o valor mínimo
@@ -327,7 +327,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
         render: function() {
             var zoom = this.model.get('zoom');
             this.map.setZoom(zoom);
-            slider.slider('value', zoom);
+            this.slider.slider('value', zoom);
             return this.map;
         },
         zoomIn: function(e){
