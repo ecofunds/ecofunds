@@ -323,6 +323,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.bind('change', this.render);
             $('.zoom-in').click({model: this.model}, this.zoomIn);
             $('.zoom-out').click({model: this.model}, this.zoomOut);
+            this.slider.on('slidestop', {model: this.model}, this.zoom);
         },
         render: function() {
             var zoom = this.model.get('zoom');
@@ -337,6 +338,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
         zoomOut: function(e) {
             var model = e.data.model;
             model.set('zoom', model.get('zoom') - 1);
+        },
+        zoom: function(e, ui) {
+            var model = e.data.model;
+            model.set('zoom', ui.value);
         }
     });
 
