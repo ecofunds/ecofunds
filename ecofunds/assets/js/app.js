@@ -8,7 +8,7 @@ requirejs.config({
     waitSeconds: 300,
     paths: {
         jquery: 'jquery',
-        jqui: 'jquery-ui',
+        jqueryui: 'jqueryui',
         backbone : 'backbone-min',
         underscore: 'underscore-min',
         loogica: 'loogica_maps',
@@ -19,7 +19,7 @@ requirejs.config({
         humanize: 'humanize.min'
     },
     shim: {
-        jqui: {
+        jqueryui: {
             deps: ['jquery'],
             exports: 'ui'
         },
@@ -59,7 +59,7 @@ requirejs.config({
     }
 });
 
-require(["domReady!", "backbone", "loogica", "jqui"], function(doc, Backbone, loogica, ui) {
+require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica, ui) {
     $('#id_map').css('height', global_map_height);
     $('#chart-view').hide();
 

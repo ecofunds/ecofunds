@@ -8,6 +8,7 @@ requirejs.config({
     waitSeconds: 300,
     paths: {
         jquery: 'jquery',
+        jqueryui: 'jqueryui',
         backbone : 'backbone-min',
         underscore: 'underscore-min',
         loogica: 'loogica_maps',
@@ -18,6 +19,10 @@ requirejs.config({
         humanize: 'humanize.min'
     },
     shim: {
+        jqueryui: {
+            deps: ['jquery'],
+            exports: 'ui'
+        },
         gmaps: {
             exports: 'google'
         },
