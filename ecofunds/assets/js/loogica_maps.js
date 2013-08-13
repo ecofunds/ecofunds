@@ -224,14 +224,6 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var latlng = new google.maps.LatLng(this.model.get('lat'),
                                                   this.model.get('lng'));
 
-            var computeRadius = function(v) {
-                var offsetradius = 150000;
-                var absmaxradius = 350000;
-                var maxamount = 100000000;
-                var amountpercent = ((v * 100) / maxamount)
-                return ((amountpercent * absmaxradius) / 100) + offsetradius;
-            }
-
             var circle = new google.maps.Circle({
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
@@ -240,7 +232,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 fillColor: '#8eb737',
                 map: _map,
                 center: latlng,
-                radius: computeRadius(this.model.get('total_investment'))
+                radius: this.scaleAmountToRadius(this.model.get('total_investment'))
             });
 
             var marker = new MarkerWithLabel({
@@ -270,6 +262,26 @@ define('loogica', ["domReady!", "jquery", "underscore",
             map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
+        },
+        scaleAmountToRadius: function(value) {
+            var radiusOffset = 150000;
+            var radiusMax = 500000;
+            var radiusRange = radiusMax - radiusOffset;
+            var stepRange = 100;
+            var stepValue = radiusRange / stepRange;
+            var stepIgnore = 30;
+            var stepMin = 0;
+
+            var tens = Number(value).toString().length - 1;
+            var ones = Number(Number(value).toString()[0]);
+
+            var stepCount = (tens * 10) + ones;
+
+            var radius = Math.max(stepCount - stepIgnore, stepMin) * stepValue + radiusOffset;
+
+            console.debug(stepValue, tens, ones, stepCount, v, radius);
+
+            return radius;
         }
     });
 
