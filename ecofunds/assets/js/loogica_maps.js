@@ -243,7 +243,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
-                icon: 'a.png'
+                icon: {}
             });
 
             circle.bindTo('center', marker, 'position');
@@ -314,9 +314,29 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             this.map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
+
+            var gmin = 2; //Determina o valor mínimo
+            var gmax = 14; //Determina o valor máximo
+            var gvalue = 4; //Determina o valor inicial
+            var gstep = 1; //Determina a quantidade de passos
+
+            slider = $('.slider-control').slider({
+                orientation: "vertical",
+                range: "min",
+                min: gmin,
+                max: gmax,
+                step: gstep,
+                value: gvalue,
+                stop: function (event, ui) {
+                    var val = ui.value;
+                    me.changeZoom(val);
+                }
+            });
         },
         render: function() {
-            this.map.setZoom(this.model.get('zoom'));
+            var zoom = this.model.get('zoom');
+            this.map.setZoom(zoom);
+            slider.slider('value', zoom);
             return this.map;
         },
         zoomIn: function(e){
