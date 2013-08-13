@@ -307,11 +307,6 @@ define('loogica', ["domReady!", "jquery", "underscore",
     });
     MapView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, 'render');
-            this.model.bind('change', this.render);
-            $('.zoom-in').click({model: this.model}, this.zoomIn);
-            $('.zoom-out').click({model: this.model}, this.zoomOut);
-
             this.map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
 
@@ -323,6 +318,11 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 step: 1,    // Determina a quantidade de passos
                 value: 4   // Determina o valor inicial
             });
+
+            _.bindAll(this, 'render');
+            this.model.bind('change', this.render);
+            $('.zoom-in').click({model: this.model}, this.zoomIn);
+            $('.zoom-out').click({model: this.model}, this.zoomOut);
         },
         render: function() {
             var zoom = this.model.get('zoom');
