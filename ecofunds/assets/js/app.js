@@ -8,15 +8,21 @@ requirejs.config({
     waitSeconds: 300,
     paths: {
         jquery: 'jquery',
+        jqui: 'jquery-ui',
         backbone : 'backbone-min',
         underscore: 'underscore-min',
         loogica: 'loogica_maps',
         marker: 'markerwithlabel_packed',
         infobox: 'infobox_packed',
         markerclusterer: 'markerclusterer_compiled',
-        modelbinder: 'Backbone.ModelBinder-min'
+        modelbinder: 'Backbone.ModelBinder-min',
+        humanize: 'humanize.min'
     },
     shim: {
+        jqui: {
+            deps: ['jquery'],
+            exports: 'ui'
+        },
         gmaps: {
             exports: 'google'
         },
@@ -36,7 +42,7 @@ requirejs.config({
             exports: 'infobox'
         },
         loogica: {
-            deps: ['backbone', 'gmaps', 'marker', 'modelbinder'],
+            deps: ['backbone', 'gmaps', 'marker', 'modelbinder', 'humanize'],
             exports: 'loogica'
         },
         markerclusterer: {
@@ -46,11 +52,14 @@ requirejs.config({
         modelbinder: {
             deps: ['backbone'],
             exports: 'modelbinder'
+        },
+        humanize: {
+            exports: 'humanize'
         }
     }
 });
 
-require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica) {
+require(["domReady!", "backbone", "loogica", "jqui"], function(doc, Backbone, loogica, ui) {
     $('#id_map').css('height', global_map_height);
     $('#chart-view').hide();
 

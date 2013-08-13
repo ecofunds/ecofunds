@@ -1,5 +1,5 @@
 define('loogica', ["domReady!", "jquery", "underscore",
-         "backbone", "gmaps", "marker",
+         "backbone", "gmaps", "marker", "humanize",
          "infobox"], function(doc, $, _, Backbone, google,
                               marker, infobox) {
 
@@ -232,18 +232,18 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 fillColor: '#8eb737',
                 map: _map,
                 center: latlng,
-                radius: (this.model.get('scale') * 10000)
+                radius: this.scaleAmountToRadius(this.model.get('total_investment'))
             });
 
             var marker = new MarkerWithLabel({
                 position: latlng,
                 draggable: false,
                 map: _map,
-                labelContent: this.model.get('total_investment_str'),
+                labelContent: Humanize.compactInteger(this.model.get('total_investment')),
                 labelAnchor: new google.maps.Point(50, 10),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: {opacity: 0.75},
-                icon: 'a.png'
+                icon: {}
             });
 
             circle.bindTo('center', marker, 'position');
@@ -262,6 +262,26 @@ define('loogica', ["domReady!", "jquery", "underscore",
             map_elements.push(marker);
 
             this.model.set('map_elements', map_elements);
+        },
+        scaleAmountToRadius: function(value) {
+            var radiusOffset = 150000;
+            var radiusMax = 500000;
+            var radiusRange = radiusMax - radiusOffset;
+            var stepRange = 100;
+            var stepValue = radiusRange / stepRange;
+            var stepIgnore = 30;
+            var stepMin = 0;
+
+            var tens = Number(value).toString().length - 1;
+            var ones = Number(Number(value).toString()[0]);
+
+            var stepCount = (tens * 10) + ones;
+
+            var radius = Math.max(stepCount - stepIgnore, stepMin) * stepValue + radiusOffset;
+
+            console.debug(stepValue, tens, ones, stepCount, v, radius);
+
+            return radius;
         }
     });
 
@@ -294,9 +314,29 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             this.map = new google.maps.Map(document.getElementById('id_map'),
                                           this.model.toJSON());
+
+            var gmin = 2; //Determina o valor mínimo
+            var gmax = 14; //Determina o valor máximo
+            var gvalue = 4; //Determina o valor inicial
+            var gstep = 1; //Determina a quantidade de passos
+
+            slider = $('.slider-control').slider({
+                orientation: "vertical",
+                range: "min",
+                min: gmin,
+                max: gmax,
+                step: gstep,
+                value: gvalue,
+                stop: function (event, ui) {
+                    var val = ui.value;
+                    me.changeZoom(val);
+                }
+            });
         },
         render: function() {
-            this.map.setZoom(this.model.get('zoom'));
+            var zoom = this.model.get('zoom');
+            this.map.setZoom(zoom);
+            slider.slider('value', zoom);
             return this.map;
         },
         zoomIn: function(e){
