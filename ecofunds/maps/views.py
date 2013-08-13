@@ -161,7 +161,7 @@ from_data = {
     'project': default_from,
     'organization': 'FROM ecofunds_organization o '
                     'LEFT JOIN ecofunds_locations d ON d.id = o.state_id '
-                    'LEFT join ecofunds_countries cou on cou.id = d.country_id '
+                    'LEFT join ecofunds_countries cou on cou.id = o.country_id '
                     'LEFT JOIN ecofunds_organization_type t ON t.id = o.type_id ',
 }
 
