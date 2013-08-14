@@ -42,10 +42,6 @@ class MapFixture(TestCase):
                                               location=location)
 
 class ProjectJSONView(MapFixture):
-    def test_get_projects(self):
-        response = self.client.get(reverse('project_mapsource'))
-        self.assertEqual(200, response.status_code)
-
     def test_get_project_api(self):
         response = self.client.get(reverse('project_api', args=['marker']))
         self.assertEqual(200, response.status_code)
@@ -76,94 +72,6 @@ class ProjectJSONView(MapFixture):
             received_data = loads(response.content)
             self.assertEqual(len(received_data['map']['items']), 1)
 
-    def test_get_projects_concentration(self):
-        response = self.client.get(reverse('geoapi', args=['project', 'concentration']))
-        self.assertEqual(200, response.status_code)
-        expected_data = {'start': '$ 1.000.000,00', 'end': '$ 1.000.000,00'}
-        returned_data = loads(response.content)
-        for k, v in expected_data.items():
-            self.assertEqual(returned_data[k], v)
-
-    def test_get_geoapi_project_density(self):
-        response = self.client.get(reverse('geoapi', args=['project', 'density']))
-        self.assertEqual(200, response.status_code)
-
-    def test_get_geoapi_project_density_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
-
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('geoapi',
-                                       args=['project', 'density']),
-                                       data)
-            self.assertEqual(200, response.status_code)
-
-    def test_get_geoapi_project_heat(self):
-        response = self.client.get(reverse('geoapi', args=['project', 'heat']))
-        self.assertEqual(200, response.status_code)
-
-    def test_get_geoapi_project_heat_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
-
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('geoapi',
-                                       args=['project', 'heat']),
-                                       data)
-            self.assertEqual(200, response.status_code)
-
-    def test_get_geoapi_project_bubble(self):
-        response = self.client.get(reverse('geoapi', args=['project', 'bubble']))
-        self.assertEqual(200, response.status_code)
-
-    def test_get_geoapi_project_bubble_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
-
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('geoapi',
-                                       args=['project', 'bubble']),
-                                       data)
-            self.assertEqual(200, response.status_code)
 
 class InvestmentJSONView(TestCase):
     def setUp(self):
@@ -191,24 +99,11 @@ class InvestmentJSONView(TestCase):
         project_location = m(ProjectLocation, entity=project,
                                               location=location)
 
-    def test_get_investments(self):
-        response = self.client.get(reverse('investment_mapsource'))
-        self.assertEqual(200, response.status_code)
-
-    def test_get_investments_concentration(self):
-        response = self.client.get(reverse('geoapi', args=['investment', 'concentration']))
-        self.assertEqual(200, response.status_code)
-        expected_data = {'start': '$ 2.000.000,00', 'end': '$ 2.000.000,00'}
-        returned_data = loads(response.content)
-        for k, v in expected_data.items():
-            self.assertEqual(returned_data[k], v)
-
     def test_get_geoapi_investment_density(self):
-        response = self.client.get(reverse('geoapi', args=['investment', 'density']))
+        response = self.client.get(reverse('investment_api', args=['density']))
         self.assertEqual(200, response.status_code)
 
     def test_get_geoapi_investment_density_parameters(self):
-
         parameters = {
             #'s_investment_date_from': ,
             #'s_investment_date_to': ,
