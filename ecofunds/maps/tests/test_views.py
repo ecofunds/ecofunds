@@ -121,8 +121,8 @@ class InvestmentJSONView(TestCase):
 
         for parameter, value in parameters.items():
             data = {parameter: value}
-            response = self.client.get(reverse('geoapi',
-                                       args=['investment', 'density']),
+            response = self.client.get(reverse('investment_api',
+                                       args=['density']),
                                        data)
             self.assertEqual(200, response.status_code)
 
@@ -152,17 +152,11 @@ class OrganizationJSONView(TestCase):
                                    amount=Decimal("2000000"))
         project_location = m(ProjectLocation, entity=project,
                                               location=location)
-    def test_get_organization(self):
-        response = self.client.get(reverse('investment_mapsource'))
+    def test_get_geoapi_organization_marker(self):
+        response = self.client.get(reverse('organization_api', args=['marker']))
         self.assertEqual(200, response.status_code)
 
-    def test_get_geoapi_organization_density(self):
-        response = self.client.get(reverse('geoapi', args=['organization', 'density']))
-        self.assertEqual(200, response.status_code)
-
-    @skip('Deprecated')
     def test_get_geoapi_organization_density_parameters(self):
-
         parameters = {
             #'s_investment_date_from': ,
             #'s_investment_date_to': ,
@@ -180,8 +174,8 @@ class OrganizationJSONView(TestCase):
 
         for parameter, value in parameters.items():
             data = {parameter: value}
-            response = self.client.get(reverse('geoapi',
-                                       args=['organization', 'density']),
+            response = self.client.get(reverse('organization_api',
+                                       args=['marker']),
                                        data)
             self.assertEqual(200, response.status_code)
 
