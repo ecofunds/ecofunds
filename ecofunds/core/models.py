@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
+from managers import SearchManager
 
 
 def get_media_path(instance, filename):
@@ -156,6 +157,8 @@ class Organization(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    objects = SearchManager()
 
     class Meta:
         db_table = u'ecofunds_organization'
