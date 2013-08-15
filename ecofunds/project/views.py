@@ -23,7 +23,6 @@ from ecofunds.colors_RdYlGn import scale as color_scale
 
 import xlwt
 
-from gmapi import maps
 from babel import numbers
 from BeautifulSoup import BeautifulSoup
 from pygeoip import GeoIP
@@ -171,27 +170,6 @@ class ProjectListView(ListView):
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
-
-class ProjectChartSourceView(BaseDetailView):
-    def get(self, request, *args, **kwargs):
-
-        if request.method == "POST":
-            data = request.POST
-        else:
-            data = request.GET
-
-        result = [['Country', 'Projects']]
-
-        list = ProjectData.list(order_by='projects_locations__location__country__name', projects_locations__location__country_id__gt=0).values('projects_locations__location__country__name').annotate(total=Count('entity_id'))
-
-        for item in list:
-            result.append([item['projects_locations__location__country__name'], item['total']])
-
-        return http.HttpResponse(dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
-
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
-
 
 class CountriesSuggestListView(ListView):
     context_object_name = 'list'

@@ -9,5 +9,4 @@ urlpatterns = patterns('django.views.generic.list_detail',
     (r'^excel', ProjectFilteredListExcel.as_view()),
     (r'^resumes', ProjectListView.as_view(template_name='project/resumes.html')),
     (r'^geoip', GeoIpView.as_view()),
-    (r'^remove',remove_project),
 )

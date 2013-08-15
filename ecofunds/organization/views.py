@@ -18,7 +18,6 @@ from ecofunds.business import *
 from ecofunds.maps import *
 from ecofunds.maps.models import GoogleMapView
 
-from gmapi import maps
 from babel import numbers
 from BeautifulSoup import BeautifulSoup
 
@@ -54,16 +53,3 @@ class OrganizationSuggestListView(ListView):
             data['data'].append(p)
 
         return http.HttpResponse(dumps(data, cls=DjangoJSONEncoder), content_type='application/json')
-
-
-def remove_organization(request):
-    id = request.GET['id']
-    try:
-        org = Organization.objects.get(pk=id)
-    except Organization.DoesNotExist:
-        data = {'status':False}
-        return http.HttpResponse(dumps(data,cls=DjangoJSONEncoder),content_type='application/json')
-    org.active=False
-    org.save()
-    data = {'status':True}
-    return http.HttpResponse(dumps(data,cls=DjangoJSONEncoder),content_type='application/json')
