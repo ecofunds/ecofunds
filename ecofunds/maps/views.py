@@ -11,9 +11,6 @@ from django.conf import settings
 
 from babel import numbers
 
-from gmapi import maps
-from gmapi.maps import Geocoder
-
 import pygeoip
 
 from ecofunds import settings
@@ -65,35 +62,8 @@ def get_local_lat_lng(request):
         lng = -58.318725
         city = 'Amazonas, Brasil'
 
-    if not lat or not lng:
-        geocoder = Geocoder()
-        results, status_code = geocoder.geocode({'address': city })
-        if results:
-            for r in results:
-                lat, lng = r['geometry']['location']['arg']
-
     return lat, lng
 
-def get_map(request, center_lat_lng=None, zoom=4, mapTypeId=maps.MapTypeId.HYBRID):
-    if not center_lat_lng:
-        center_lat_lng = get_local_lat_lng(request)
-
-    return {
-        'map': {
-            'center': center_lat_lng,
-            'mapTypeId': mapTypeId,
-            'zoom': zoom,
-            'minZoom': 2,
-            'mapTypeControl': False,
-            'zoomControl': False,
-            'panControl':False,
-            'mapTypeControlOptions': {
-                'style': maps.MapTypeControlStyle.HORIZONTAL_BAR
-            },
-            'streetViewControl': False,
-        },
-        'items': []
-    }
 
 def trans_date(v):
     v = str(v)
