@@ -15,12 +15,13 @@ class OrganizationFilterTest(TestCase):
         l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ')
         l2 = m('Location', name='Caminito', iso_sub='CA')
 
-        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1, state=l1)
-        m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2, state=l2)
-        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2, state=l2)
+        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1, state=l1, desired_location_lat=1, desired_location_lng=1)
+        m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
+        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
+        m('Organization', name=u'Outro', acronym='OT', type=t2, country=c2, state=l2, desired_location_lat=None, desired_location_lng=None)
 
     def test_all(self):
-        '''No filter, return all.'''
+        '''No filter, return all Organizations with desired lat and lng.'''
         qs = Organization.objects.search()
         self.assertPKs(qs, [1, 2, 3])
 

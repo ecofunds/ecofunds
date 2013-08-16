@@ -4,7 +4,7 @@ from django.db.models import Manager, Q
 
 class SearchManager(Manager):
     def search(self, **fields):
-        qs = self.get_query_set()
+        qs = self.exclude(Q(desired_location_lat=None)|Q(desired_location_lng=None))
 
         name = fields.get('name')
         if name:
