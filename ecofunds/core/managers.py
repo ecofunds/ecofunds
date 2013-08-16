@@ -14,4 +14,8 @@ class SearchManager(Manager):
         if type_:
             qs = qs.filter(type=type_)
 
+        country = fields.get('country')
+        if country:
+            qs = qs.filter(country__name__icontains=country)
+
         return qs

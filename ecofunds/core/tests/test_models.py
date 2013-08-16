@@ -9,9 +9,12 @@ class OrganizationFilterTest(TestCase):
         t1 = m('OrganizationType', pk=1, name='Fundo Ambiental')
         t2 = m('OrganizationType', pk=2, name='Non-profit')
 
-        m('Organization', name=u'Fundação', acronym='Funbio', type=t1)
-        m('Organization', name=u'Associacao', acronym='Funbio', type=t1)
-        m('Organization', name=u'Fundação', acronym='FIFA', type=t2)
+        c1 = m('Country', name='Brazil')
+        c2 = m('Country', name='Argentina')
+
+        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1)
+        m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2)
+        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2)
 
     def test_all(self):
         qs = Organization.objects.search()
@@ -33,6 +36,10 @@ class OrganizationFilterTest(TestCase):
     def test_type(self):
         qs = Organization.objects.search(type=1)
         self.assertPKs(qs, [1, 2])
+
+    def test_country(self):
+        qs = Organization.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
