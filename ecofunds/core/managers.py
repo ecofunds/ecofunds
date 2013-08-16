@@ -18,4 +18,8 @@ class SearchManager(Manager):
         if country:
             qs = qs.filter(country__name__icontains=country)
 
+        state = fields.get('state')
+        if state:
+            qs = qs.filter(Q(state__iso_sub__icontains=state)|Q(state__name__icontains=state))
+
         return qs

@@ -12,9 +12,12 @@ class OrganizationFilterTest(TestCase):
         c1 = m('Country', name='Brazil')
         c2 = m('Country', name='Argentina')
 
-        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1)
-        m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2)
-        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2)
+        l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ')
+        l2 = m('Location', name='Caminito', iso_sub='CA')
+
+        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1, state=l1)
+        m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2, state=l2)
+        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2, state=l2)
 
     def test_all(self):
         qs = Organization.objects.search()
@@ -39,6 +42,13 @@ class OrganizationFilterTest(TestCase):
 
     def test_country(self):
         qs = Organization.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1])
+
+    def test_state(self):
+        qs = Organization.objects.search(state='RJ')
+        self.assertPKs(qs, [1])
+
+        qs = Organization.objects.search(state='Jan')
         self.assertPKs(qs, [1])
 
     def assertPKs(self, qs, values):
