@@ -10,4 +10,8 @@ class SearchManager(Manager):
         if name:
             qs = qs.filter(Q(name__icontains=name)|Q(acronym__icontains=name))
 
+        type_ = fields.get('type')
+        if type_:
+            qs = qs.filter(type=type_)
+
         return qs
