@@ -20,10 +20,12 @@ class OrganizationFilterTest(TestCase):
         m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2, state=l2)
 
     def test_all(self):
+        '''No filter, return all.'''
         qs = Organization.objects.search()
         self.assertPKs(qs, [1, 2, 3])
 
     def test_name(self):
+        '''Filter by name or acronym.'''
         qs = Organization.objects.search(name='fund')
         self.assertPKs(qs, [1, 3])
 
@@ -37,14 +39,17 @@ class OrganizationFilterTest(TestCase):
         self.assertPKs(qs, [3])
 
     def test_type(self):
+        '''Filter by type.'''
         qs = Organization.objects.search(type=1)
         self.assertPKs(qs, [1, 2])
 
     def test_country(self):
+        '''Filter by country.'''
         qs = Organization.objects.search(country='azi') #Brazil
         self.assertPKs(qs, [1])
 
     def test_state(self):
+        '''Filter by state.'''
         qs = Organization.objects.search(state='RJ')
         self.assertPKs(qs, [1])
 
