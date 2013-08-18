@@ -9,6 +9,7 @@ from django.views.generic.detail import BaseDetailView
 from django.utils.simplejson import dumps, loads
 from django.conf import settings
 
+import tablib
 from babel import numbers
 
 import pygeoip
@@ -439,3 +440,16 @@ def organization_api(request, map_type):
     gmap['items'] = points.values()
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+def organization_csv(request):
+    from ecofunds.core.models import Organization
+
+    #TODO this code will manipulate organization manager
+    qs = Organization.objects.all()
+
+    data = tablib.Dataset()
+    for item in qs:
+        data.append([item.id, item.name, item.desired_location_lat, item.desired_location_lng])
+
+    return http.HttpResponse(data.csv, content_type="text/csv")
+
