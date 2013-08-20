@@ -49,6 +49,6 @@ class ProjectLocationSearchManager(Manager):
 
         org = fields.get('organization')
         if org:
-            qs = qs.filter(Q(organization__name__icontains=org)|Q(organization__acronym__icontains=org))
+            qs = qs.filter(Q(entity__organization__name__icontains=org)|Q(entity__organization__acronym__icontains=org))
 
         return qs

@@ -137,11 +137,11 @@ class ProjectLocationSearchTest(TestCase):
 
     def test_organization(self):
         '''Filter by organization name or acronym'''
-        qs = Project.objects.search(organization='Fed')
-        self.assertPKs(qs, [2])
+        qs = ProjectLocation.objects.search(organization='Fed')
+        self.assertEntityLocations(qs, [(2,1)])
 
-        qs = Project.objects.search(organization='Funb')
-        self.assertPKs(qs, [1, 3])
+        qs = ProjectLocation.objects.search(organization='Funb')
+        self.assertEntityLocations(qs, [(1,1), (1,3), (1,4), (3,2)])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.location.pk)
