@@ -41,4 +41,8 @@ class ProjectSearchManager(Manager):
         if country:
             qs = qs.filter(location__country__name__icontains=country)
 
+        state = fields.get('state')
+        if state:
+            qs = qs.filter(Q(location__iso_sub__icontains=state)|Q(location__name__icontains=state))
+
         return qs

@@ -115,6 +115,13 @@ class ProjectSearchTest(TestCase):
         qs = Project.objects.search(country='azi') #Brazil
         self.assertPKs(qs, [1, 2])
 
+    def test_state(self):
+        '''Filter by state.'''
+        qs = Project.objects.search(state='RJ')
+        self.assertPKs(qs, [1, 2])
+
+        qs = Project.objects.search(state='Jan')
+        self.assertPKs(qs, [1, 2])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
