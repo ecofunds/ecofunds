@@ -4,6 +4,7 @@ import types
 from django import db
 from django import http
 from django.core.cache import cache
+from django.http import HttpResponseBadRequest
 from django.utils import simplejson as json
 from django.views.generic.detail import BaseDetailView
 from django.utils.simplejson import dumps, loads
@@ -13,7 +14,8 @@ from babel import numbers
 
 import pygeoip
 
-from ecofunds import settings
+from ecofunds.core.models import Organization
+from ecofunds.maps.forms import MapFilterForm
 
 
 log = logging.getLogger('maps')
@@ -413,27 +415,27 @@ def investment_api(request, map_type):
 
 
 def organization_api(request, map_type):
-    if map_type not in ("marker"):
-        return api_error(request, "Invalid Map Type")
+    if map_type not in ("marker",):
+        return HttpResponseBadRequest()
 
-    cursor = _get_api_cursor(request, 'organization')
+    form = MapFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
+
+    qs = Organization.objects.search(**form.cleaned_data)
+    qs = qs.only('pk', 'name', 'desired_location_lat', 'desired_location_lng')
 
     points = {}
 
-    for item in cursor.fetchall():
-        organization_id = item[0]
-        name = item[1].encode('utf-8')
-        lat = float(item[2])
-        lng = float(item[3])
-
+    for obj in qs:
         marker = {
-            'entity_id': organization_id,
-            'name': name,
-            'lat': lat,
-            'lng': lng,
+            'entity_id': obj.pk,
+            'name': obj.name.encode('utf-8'),
+            'lat': float(str(obj.desired_location_lat)),
+            'lng': float(str(obj.desired_location_lng)),
         }
 
-        points[organization_id] = marker
+        points[obj.pk] = marker
 
     gmap = {}
     gmap['items'] = points.values()
