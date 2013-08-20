@@ -129,11 +129,11 @@ class ProjectLocationSearchTest(TestCase):
 
     def test_state(self):
         '''Filter by state.'''
-        qs = Project.objects.search(state='RJ')
-        self.assertPKs(qs, [1, 2])
+        qs = ProjectLocation.objects.search(state='RJ')
+        self.assertEntityLocations(qs, [(1,1), (2,1)])
 
-        qs = Project.objects.search(state='Jan')
-        self.assertPKs(qs, [1, 2])
+        qs = ProjectLocation.objects.search(state='Jan')
+        self.assertEntityLocations(qs, [(1,1), (2,1)])
 
     def test_organization(self):
         '''Filter by organization name or acronym'''
