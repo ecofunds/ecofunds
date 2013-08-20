@@ -27,7 +27,9 @@ class SearchManager(Manager):
 
 class ProjectLocationSearchManager(Manager):
     def search(self, **fields):
-        qs = self.select_related('location').filter(entity__validated=1)
+        qs = self.select_related('entity', 'location')
+        qs = qs.only('entity__entity_id', 'location__id', 'entity__title', 'entity__website', 'entity__centroid')
+        qs = qs.filter(entity__validated=1)
 
         name = fields.get('name')
         if name:
@@ -35,7 +37,7 @@ class ProjectLocationSearchManager(Manager):
 
         activity = fields.get('activity')
         if activity:
-            qs = qs.filter(activities=activity)
+            qs = qs.filter(entity__activities=activity)
 
         country = fields.get('country')
         if country:

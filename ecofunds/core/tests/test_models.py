@@ -116,11 +116,11 @@ class ProjectLocationSearchTest(TestCase):
 
     def test_activity(self):
         '''Filter by activity.'''
-        qs = Project.objects.search(activity=1)
-        self.assertPKs(qs, [1])
+        qs = ProjectLocation.objects.search(activity=1)
+        self.assertEntityLocations(qs, [(1,1), (1,3), (1,4)])
 
-        qs = Project.objects.search(activity=2)
-        self.assertPKs(qs, [2, 3])
+        qs = ProjectLocation.objects.search(activity=2)
+        self.assertEntityLocations(qs, [(2,1), (3,2)])
 
     def test_country(self):
         '''Filter by country.'''
