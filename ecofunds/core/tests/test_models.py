@@ -63,10 +63,18 @@ class OrganizationFilterTest(TestCase):
 
 class ProjectSearchTest(TestCase):
     def setUp(self):
-        m('Project', title=u'ProjectA', acronym='PA', validated=1)
-        m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
-        m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
-        m('Project', title=u'ProjectC', acronym='PC')
+        t1 = m('Activity', pk=1)
+        t2 = m('Activity', pk=2)
+
+        p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
+        p2 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
+        p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
+        p4 = m('Project', title=u'ProjectC', acronym='PC')
+
+        # Nota: entity é PK, logo, não é possível um Projeto ter + de 1 activity no banco atual.
+        m('ProjectActivity', entity=p1, activity=t1)
+        m('ProjectActivity', entity=p2, activity=t2)
+        m('ProjectActivity', entity=p3, activity=t2)
 
     def test_all(self):
         qs = Project.objects.search()
@@ -85,6 +93,14 @@ class ProjectSearchTest(TestCase):
 
         qs = Project.objects.search(name='PB2')
         self.assertPKs(qs, [3])
+
+    def test_activity(self):
+        '''Filter by activity.'''
+        qs = Project.objects.search(activity=1)
+        self.assertPKs(qs, [1])
+
+        qs = Project.objects.search(activity=2)
+        self.assertPKs(qs, [2, 3])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
