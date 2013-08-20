@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.test import TestCase
 from model_mommy.mommy import make as m
-from ecofunds.core.models import Organization
+from ecofunds.core.models import Organization, Project
 
 
 class OrganizationFilterTest(TestCase):
@@ -56,6 +56,20 @@ class OrganizationFilterTest(TestCase):
 
         qs = Organization.objects.search(state='Jan')
         self.assertPKs(qs, [1])
+
+    def assertPKs(self, qs, values):
+        return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
+
+
+class ProjectSearchTest(TestCase):
+    def setUp(self):
+        m('Project', title=u'Project1', acronym='PRJ1', validated=1)
+        m('Project', title=u'Project2', acronym='PRJ2', validated=1)
+        m('Project', title=u'Project3', acronym='PRJ3')
+
+    def test_all(self):
+        qs = Project.objects.search()
+        self.assertPKs(qs, [1, 2])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)

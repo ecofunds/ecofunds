@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
-from managers import SearchManager
+from managers import SearchManager, ProjectSearchManager
 
 
 def get_media_path(instance, filename):
@@ -260,6 +260,8 @@ class Project(models.Model):
 
     def is_completed(self):
         return self.grant_to >= datetime.now()
+
+    objects = ProjectSearchManager()
 
     class Meta:
         db_table = u'ecofunds_entities'

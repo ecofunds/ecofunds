@@ -23,3 +23,10 @@ class SearchManager(Manager):
             qs = qs.filter(Q(state__iso_sub__icontains=state)|Q(state__name__icontains=state))
 
         return qs
+
+
+class ProjectSearchManager(Manager):
+    def search(self, **fields):
+        qs = self.filter(validated=1)
+
+        return qs
