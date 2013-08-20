@@ -63,13 +63,28 @@ class OrganizationFilterTest(TestCase):
 
 class ProjectSearchTest(TestCase):
     def setUp(self):
-        m('Project', title=u'Project1', acronym='PRJ1', validated=1)
-        m('Project', title=u'Project2', acronym='PRJ2', validated=1)
-        m('Project', title=u'Project3', acronym='PRJ3')
+        m('Project', title=u'ProjectA', acronym='PA', validated=1)
+        m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
+        m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
+        m('Project', title=u'ProjectC', acronym='PC')
 
     def test_all(self):
         qs = Project.objects.search()
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 2, 3])
+
+    def test_name(self):
+        '''Filter by name or acronym.'''
+        qs = Project.objects.search(name='ectB')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Project.objects.search(name='PB')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Project.objects.search(name='ectA')
+        self.assertPKs(qs, [1])
+
+        qs = Project.objects.search(name='PB2')
+        self.assertPKs(qs, [3])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)

@@ -29,4 +29,8 @@ class ProjectSearchManager(Manager):
     def search(self, **fields):
         qs = self.filter(validated=1)
 
+        name = fields.get('name')
+        if name:
+            qs = qs.filter(Q(title__icontains=name)|Q(acronym__icontains=name))
+
         return qs
