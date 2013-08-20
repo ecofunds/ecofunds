@@ -69,6 +69,9 @@ class ProjectSearchTest(TestCase):
         l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
         l2 = m('Location', name='Caminito', iso_sub='CA', country__name='Argentina')
 
+        o1 = m('Organization', name=u'Fundação', acronym='Funbio')
+        o2 = m('Organization', name=u'Federação', acronym='FIFA')
+
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
         p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
@@ -83,6 +86,11 @@ class ProjectSearchTest(TestCase):
         m('ProjectLocation', entity=p2, location=l1)
         m('ProjectLocation', entity=p3, location=l2)
         m('ProjectLocation', entity=p4, location=l2)
+
+        m('ProjectOrganization', entity=p1, organization=o1)
+        m('ProjectOrganization', entity=p2, organization=o2)
+        m('ProjectOrganization', entity=p3, organization=o1)
+        m('ProjectOrganization', entity=p4, organization=o2)
 
     def test_all(self):
         qs = Project.objects.search()
@@ -122,6 +130,14 @@ class ProjectSearchTest(TestCase):
 
         qs = Project.objects.search(state='Jan')
         self.assertPKs(qs, [1, 2])
+
+    def test_organization(self):
+        '''Filter by organization name or acronym'''
+        qs = Project.objects.search(organization='Fed')
+        self.assertPKs(qs, [2])
+
+        qs = Project.objects.search(organization='Funb')
+        self.assertPKs(qs, [1, 3])
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)

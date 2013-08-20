@@ -45,4 +45,8 @@ class ProjectSearchManager(Manager):
         if state:
             qs = qs.filter(Q(location__iso_sub__icontains=state)|Q(location__name__icontains=state))
 
+        org = fields.get('organization')
+        if org:
+            qs = qs.filter(Q(organization__name__icontains=org)|Q(organization__acronym__icontains=org))
+
         return qs
