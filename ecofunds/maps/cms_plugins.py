@@ -1,7 +1,6 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from django.template import loader, Context
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count
 
@@ -12,6 +11,8 @@ from ecofunds.project.forms import ProjectAdvancedSearchForm
 from ecofunds.organization.forms import OrganizationAdvancedSearchForm
 from ecofunds.investment.forms import InvestmentAdvancedSearchForm
 from ecofunds.core.models import *
+from ecofunds.maps.forms import MapFilterForm
+
 
 class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
     name = _('Google Map')
@@ -33,9 +34,9 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
 
         if instance.show_search_organizations:
             if request.method == "POST":
-                search_organization_form = OrganizationAdvancedSearchForm(request.POST)
+                search_organization_form = MapFilterForm(request.POST)
             else:
-                search_organization_form = OrganizationAdvancedSearchForm()
+                search_organization_form = MapFilterForm()
         else:
             search_organization_form = None
 
@@ -57,7 +58,7 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
                 'height_pixels':instance.height_pixels
             }),
             'search_project_form': search_project_form,
-            'search_organization_form': search_organization_form,
+            'form': search_organization_form,
             'search_investment_form': search_investment_form,
 
 
