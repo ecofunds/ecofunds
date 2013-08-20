@@ -66,6 +66,9 @@ class ProjectSearchTest(TestCase):
         t1 = m('Activity', pk=1)
         t2 = m('Activity', pk=2)
 
+        l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
+        l2 = m('Location', name='Caminito', iso_sub='CA', country__name='Argentina')
+
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
         p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
@@ -75,6 +78,11 @@ class ProjectSearchTest(TestCase):
         m('ProjectActivity', entity=p1, activity=t1)
         m('ProjectActivity', entity=p2, activity=t2)
         m('ProjectActivity', entity=p3, activity=t2)
+
+        m('ProjectLocation', entity=p1, location=l1)
+        m('ProjectLocation', entity=p2, location=l1)
+        m('ProjectLocation', entity=p3, location=l2)
+        m('ProjectLocation', entity=p4, location=l2)
 
     def test_all(self):
         qs = Project.objects.search()
@@ -101,6 +109,12 @@ class ProjectSearchTest(TestCase):
 
         qs = Project.objects.search(activity=2)
         self.assertPKs(qs, [2, 3])
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = Project.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1, 2])
+
 
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
