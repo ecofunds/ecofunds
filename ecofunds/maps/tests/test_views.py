@@ -228,3 +228,15 @@ class OrganizationMapTest(MapFixture):
 
         received_data = loads(response.content)
         self.assertEqual(received_data['map']['items'], expected_items)
+
+class OrganizationCSVTest(MapFixture):
+    def test_get_organization_csv_api(self):
+        response = self.client.get(reverse('organization_csv'))
+        self.assertEqual(200, response.status_code)
+
+        excpected_line1 = '1,Funding Ord,-22.882778,-43.103889'
+        excpected_line2 = '2,Funbio,-22.880766,-43.104335'
+
+        self.assertTrue(excpected_line1 in response.content)
+        self.assertTrue(excpected_line2 in response.content)
+
