@@ -1,5 +1,7 @@
+# coding: utf-8
 from django import forms
 from ecofunds.maps.forms.widgets import GoogleMap
+
 
 class MapForm(forms.Form):
 
@@ -24,3 +26,11 @@ class MapForm(forms.Form):
                         self.fields['map'].widget.attrs[key] = value
                     else:
                         self.fields['map'].widget.attrs.update({key:value})
+
+
+class MapFilterForm(forms.Form):
+    name = forms.CharField(required=False)
+    kind = forms.IntegerField(required=False)
+    country = forms.CharField(required=False)
+    state = forms.CharField(required=False)
+
