@@ -16,7 +16,7 @@ from babel import numbers
 import pygeoip
 
 from ecofunds.core.models import Organization, ProjectLocation
-from ecofunds.maps.forms import MapFilterForm, ProjectFilterForm
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
 
 
 log = logging.getLogger('maps')
@@ -416,7 +416,7 @@ def organization_api(request, map_type):
     if map_type not in ("marker",):
         return HttpResponseBadRequest()
 
-    form = MapFilterForm(request.GET)
+    form = OrganizationFilterForm(request.GET)
     if not form.is_valid():
         return HttpResponseBadRequest()
 

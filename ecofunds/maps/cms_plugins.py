@@ -11,7 +11,7 @@ from ecofunds.project.forms import ProjectAdvancedSearchForm
 from ecofunds.organization.forms import OrganizationAdvancedSearchForm
 from ecofunds.investment.forms import InvestmentAdvancedSearchForm
 from ecofunds.core.models import *
-from ecofunds.maps.forms import MapFilterForm, ProjectFilterForm
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
 
 
 class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
@@ -34,9 +34,9 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
 
         if instance.show_search_organizations:
             if request.method == "POST":
-                search_organization_form = MapFilterForm(request.POST)
+                search_organization_form = OrganizationFilterForm(request.POST)
             else:
-                search_organization_form = MapFilterForm()
+                search_organization_form = OrganizationFilterForm()
         else:
             search_organization_form = None
 
@@ -58,7 +58,7 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
                 'height_pixels':instance.height_pixels
             }),
             'search_project_form': search_project_form,
-            'form': search_organization_form,
+            'search_organization_form': search_organization_form,
             'search_investment_form': search_investment_form,
 
 

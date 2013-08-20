@@ -30,7 +30,7 @@ class MapForm(forms.Form):
                         self.fields['map'].widget.attrs.update({key:value})
 
 
-class MapFilterForm(forms.Form):
+class OrganizationFilterForm(forms.Form):
     name = forms.CharField(required=False)
     kind = forms.ModelChoiceField(queryset=OrganizationType.objects.all(), required=False, empty_label=_('Choose an organization type'))
     country = forms.CharField(required=False)
