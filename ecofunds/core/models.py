@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
-from managers import SearchManager, ProjectSearchManager
+from managers import SearchManager, ProjectLocationSearchManager
 
 
 def get_media_path(instance, filename):
@@ -261,8 +261,6 @@ class Project(models.Model):
     def is_completed(self):
         return self.grant_to >= datetime.now()
 
-    objects = ProjectSearchManager()
-
     class Meta:
         db_table = u'ecofunds_entities'
 
@@ -294,6 +292,8 @@ class ProjectAttachment(models.Model):
 class ProjectLocation(models.Model):
     entity = models.ForeignKey(Project, related_name='projects_locations')
     location = models.ForeignKey(Location)
+
+    objects = ProjectLocationSearchManager()
 
     class Meta:
         db_table = u'ecofunds_entity_locations'

@@ -25,13 +25,13 @@ class SearchManager(Manager):
         return qs
 
 
-class ProjectSearchManager(Manager):
+class ProjectLocationSearchManager(Manager):
     def search(self, **fields):
-        qs = self.filter(validated=1)
+        qs = self.select_related('location').filter(entity__validated=1)
 
         name = fields.get('name')
         if name:
-            qs = qs.filter(Q(title__icontains=name)|Q(acronym__icontains=name))
+            qs = qs.filter(Q(entity__title__icontains=name)|Q(entity__acronym__icontains=name))
 
         activity = fields.get('activity')
         if activity:

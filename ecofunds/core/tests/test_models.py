@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.test import TestCase
 from model_mommy.mommy import make as m
-from ecofunds.core.models import Organization, Project
+from ecofunds.core.models import Organization, ProjectLocation
 
 
 class OrganizationFilterTest(TestCase):
@@ -61,13 +61,15 @@ class OrganizationFilterTest(TestCase):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
 
 
-class ProjectSearchTest(TestCase):
+class ProjectLocationSearchTest(TestCase):
     def setUp(self):
         t1 = m('Activity', pk=1)
         t2 = m('Activity', pk=2)
 
-        l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
-        l2 = m('Location', name='Caminito', iso_sub='CA', country__name='Argentina')
+        l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
+        l2 = m('Location', pk=2, name='Caminito', iso_sub='CA', country__name='Argentina')
+        l3 = m('Location', pk=3, name='Mato Grosso', iso_sub='MT', country__name='Brazil')
+        l4 = m('Location', pk=4, name='Fortaleza', iso_sub='CE', country__name='Brazil')
 
         o1 = m('Organization', name=u'Fundação', acronym='Funbio')
         o2 = m('Organization', name=u'Federação', acronym='FIFA')
@@ -83,6 +85,8 @@ class ProjectSearchTest(TestCase):
         m('ProjectActivity', entity=p3, activity=t2)
 
         m('ProjectLocation', entity=p1, location=l1)
+        m('ProjectLocation', entity=p1, location=l3)
+        m('ProjectLocation', entity=p1, location=l4)
         m('ProjectLocation', entity=p2, location=l1)
         m('ProjectLocation', entity=p3, location=l2)
         m('ProjectLocation', entity=p4, location=l2)
@@ -93,22 +97,22 @@ class ProjectSearchTest(TestCase):
         m('ProjectOrganization', entity=p4, organization=o2)
 
     def test_all(self):
-        qs = Project.objects.search()
-        self.assertPKs(qs, [1, 2, 3])
+        qs = ProjectLocation.objects.search()
+        self.assertLocationPKs(qs, [1, 3, 4, 1, 2])
 
     def test_name(self):
         '''Filter by name or acronym.'''
-        qs = Project.objects.search(name='ectB')
-        self.assertPKs(qs, [2, 3])
+        qs = ProjectLocation.objects.search(name='ectB')
+        self.assertEntityLocations(qs, [(2, 1), (3, 2)])
 
-        qs = Project.objects.search(name='PB')
-        self.assertPKs(qs, [2, 3])
+        qs = ProjectLocation.objects.search(name='PB')
+        self.assertEntityLocations(qs, [(2, 1), (3, 2)])
 
-        qs = Project.objects.search(name='ectA')
-        self.assertPKs(qs, [1])
+        qs = ProjectLocation.objects.search(name='ectA')
+        self.assertEntityLocations(qs, [(1, 1), (1, 3), (1,4)])
 
-        qs = Project.objects.search(name='PB2')
-        self.assertPKs(qs, [3])
+        qs = ProjectLocation.objects.search(name='PB2')
+        self.assertEntityLocations(qs, [(3, 2)])
 
     def test_activity(self):
         '''Filter by activity.'''
@@ -140,4 +144,10 @@ class ProjectSearchTest(TestCase):
         self.assertPKs(qs, [1, 3])
 
     def assertPKs(self, qs, values):
-        return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
+        return self.assertQuerysetEqual(qs, values, transform=lambda o: o.location.pk)
+
+    def assertLocationPKs(self, qs, values):
+        return self.assertQuerysetEqual(qs, values, lambda o: o.location.pk)
+
+    def assertEntityLocations(self, qs, values):
+        return self.assertQuerysetEqual(qs, values, lambda o: (o.entity.pk, o.location.pk))
