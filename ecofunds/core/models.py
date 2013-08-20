@@ -1,9 +1,7 @@
 import os
-from datetime import datetime, date
+from datetime import datetime
 
 from django.db import models
-from django.db.models import Max
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
