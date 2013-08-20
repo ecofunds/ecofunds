@@ -124,8 +124,8 @@ class ProjectLocationSearchTest(TestCase):
 
     def test_country(self):
         '''Filter by country.'''
-        qs = Project.objects.search(country='azi') #Brazil
-        self.assertPKs(qs, [1, 2])
+        qs = ProjectLocation.objects.search(country='azi') #Brazil
+        self.assertEntityLocations(qs, [(1,1), (1,3), (1,4), (2,1)])
 
     def test_state(self):
         '''Filter by state.'''
