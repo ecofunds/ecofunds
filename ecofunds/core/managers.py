@@ -10,9 +10,9 @@ class SearchManager(Manager):
         if name:
             qs = qs.filter(Q(name__icontains=name)|Q(acronym__icontains=name))
 
-        type_ = fields.get('type')
-        if type_:
-            qs = qs.filter(type=type_)
+        kind = fields.get('kind')
+        if kind:
+            qs = qs.filter(type=kind)  # Fixme: Rename model field to "kind".
 
         country = fields.get('country')
         if country:

@@ -39,9 +39,9 @@ class OrganizationFilterTest(TestCase):
         qs = Organization.objects.search(name='if')
         self.assertPKs(qs, [3])
 
-    def test_type(self):
+    def test_kind(self):
         '''Filter by type.'''
-        qs = Organization.objects.search(type=1)
+        qs = Organization.objects.search(kind=1)
         self.assertPKs(qs, [1, 2])
 
     def test_country(self):
