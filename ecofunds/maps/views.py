@@ -15,8 +15,8 @@ from babel import numbers
 
 import pygeoip
 
-from ecofunds.core.models import Organization
-from ecofunds.maps.forms import MapFilterForm
+from ecofunds.core.models import Organization, ProjectLocation
+from ecofunds.maps.forms import MapFilterForm, ProjectFilterForm
 
 
 log = logging.getLogger('maps')
@@ -306,36 +306,33 @@ def _get_api_cursor(request, domain):
 
 
 def project_api(request, map_type):
-    if map_type not in ("marker"):
-        return api_error(request, "Invalid Map Type")
+    if map_type not in ("marker",):
+        return HttpResponseBadRequest()
 
-    cursor = _get_api_cursor(request, 'project')
+    form = ProjectFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
+
+    qs = ProjectLocation.objects.search(**form.cleaned_data)
+    qs = qs.only('entity__entity_id', 'location__id', 'entity__title', 'entity__website', 'entity__centroid')
 
     points = {}
 
-    for item in cursor.fetchall():
-        entity_id = item[0]
-        location_id = item[1]
-        centroid = item[2]
-        acronym = item[3]
-        url = item[4]
-
-        lat = None
-        lng = None
-
-        if centroid:
-            lat = parse_centroid(centroid)[0]
-            lng = parse_centroid(centroid)[1]
+    for obj in qs:
+        if obj.entity.centroid:
+            lat, lng = parse_centroid(obj.entity.centroid)
+        else:
+            lat, lng = None, None
 
         marker = {
-            'entity_id': entity_id,
-            'location_id': location_id,
+            'entity_id': obj.entity.pk,
+            'location_id': obj.location.pk,
             'lat': lat,
             'lng': lng,
-            'acronym': acronym,
-            'url': url,
+            'acronym': obj.entity.title,
+            'url': obj.entity.website,
         }
-        points[entity_id] = marker
+        points[obj.entity.pk] = marker
 
     gmap = {}
     gmap['items'] = points.values()

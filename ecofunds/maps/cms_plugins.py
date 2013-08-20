@@ -11,7 +11,7 @@ from ecofunds.project.forms import ProjectAdvancedSearchForm
 from ecofunds.organization.forms import OrganizationAdvancedSearchForm
 from ecofunds.investment.forms import InvestmentAdvancedSearchForm
 from ecofunds.core.models import *
-from ecofunds.maps.forms import MapFilterForm
+from ecofunds.maps.forms import MapFilterForm, ProjectFilterForm
 
 
 class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
@@ -26,9 +26,9 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
 
         if instance.show_search_projects:
             if request.method == "POST":
-                search_project_form = ProjectAdvancedSearchForm(request.POST)
+                search_project_form = ProjectFilterForm(request.POST)
             else:
-                search_project_form = ProjectAdvancedSearchForm(request.GET)
+                search_project_form = ProjectFilterForm(request.GET)
         else:
             search_project_form = None
 
