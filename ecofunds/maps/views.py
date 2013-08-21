@@ -413,7 +413,7 @@ def investment_api(request, map_type):
 
 
 def organization_api(request, map_type):
-    if map_type not in ("marker",):
+    if map_type not in ("marker", "csv"):
         return HttpResponseBadRequest()
 
     form = OrganizationFilterForm(request.GET)
@@ -423,6 +423,13 @@ def organization_api(request, map_type):
     qs = Organization.objects.search(**form.cleaned_data)
     qs = qs.only('pk', 'name', 'desired_location_lat', 'desired_location_lng')
 
+    if map_type == "csv":
+        return output_organization_csv(qs)
+    else:
+        return output_organization_json(qs)
+
+
+def output_organization_json(qs):
     points = {}
 
     for obj in qs:
@@ -440,15 +447,10 @@ def organization_api(request, map_type):
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
-def organization_csv(request):
-    from ecofunds.core.models import Organization
 
-    #TODO this code will manipulate organization manager
-    qs = Organization.objects.all()
-
+def output_organization_csv(qs):
     data = tablib.Dataset()
     for item in qs:
         data.append([item.id, item.name, item.desired_location_lat, item.desired_location_lng])
 
     return http.HttpResponse(data.csv, content_type="text/csv")
-
