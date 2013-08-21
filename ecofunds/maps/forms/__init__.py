@@ -1,5 +1,9 @@
+# coding: utf-8
 from django import forms
+from django.utils.translation import gettext as _
+from ecofunds.core.models import OrganizationType, Activity
 from ecofunds.maps.forms.widgets import GoogleMap
+
 
 class MapForm(forms.Form):
 
@@ -24,3 +28,18 @@ class MapForm(forms.Form):
                         self.fields['map'].widget.attrs[key] = value
                     else:
                         self.fields['map'].widget.attrs.update({key:value})
+
+
+class OrganizationFilterForm(forms.Form):
+    name = forms.CharField(required=False)
+    kind = forms.ModelChoiceField(queryset=OrganizationType.objects.all(), required=False, empty_label=_('Choose an organization type'))
+    country = forms.CharField(required=False)
+    state = forms.CharField(required=False)
+
+
+class ProjectFilterForm(forms.Form):
+    name = forms.CharField(required=False)
+    activity = forms.ModelChoiceField(queryset=Activity.objects.all(), required=False, empty_label=_('Choose an activity'))
+    country = forms.CharField(required=False)
+    state = forms.CharField(required=False)
+    organization = forms.CharField(required=False)

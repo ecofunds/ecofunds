@@ -4,16 +4,19 @@ import types
 from django import db
 from django import http
 from django.core.cache import cache
+from django.http import HttpResponseBadRequest
 from django.utils import simplejson as json
 from django.views.generic.detail import BaseDetailView
 from django.utils.simplejson import dumps, loads
 from django.conf import settings
 
+import tablib
 from babel import numbers
 
 import pygeoip
 
-from ecofunds import settings
+from ecofunds.core.models import Organization, ProjectLocation
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
 
 
 log = logging.getLogger('maps')
@@ -303,36 +306,33 @@ def _get_api_cursor(request, domain):
 
 
 def project_api(request, map_type):
-    if map_type not in ("marker"):
-        return api_error(request, "Invalid Map Type")
+    if map_type not in ("marker",):
+        return HttpResponseBadRequest()
 
-    cursor = _get_api_cursor(request, 'project')
+    form = ProjectFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
+
+    qs = ProjectLocation.objects.search(**form.cleaned_data)
+    qs = qs.only('entity__entity_id', 'location__id', 'entity__title', 'entity__website', 'entity__centroid')
 
     points = {}
 
-    for item in cursor.fetchall():
-        entity_id = item[0]
-        location_id = item[1]
-        centroid = item[2]
-        acronym = item[3]
-        url = item[4]
-
-        lat = None
-        lng = None
-
-        if centroid:
-            lat = parse_centroid(centroid)[0]
-            lng = parse_centroid(centroid)[1]
+    for obj in qs:
+        if obj.entity.centroid:
+            lat, lng = parse_centroid(obj.entity.centroid)
+        else:
+            lat, lng = None, None
 
         marker = {
-            'entity_id': entity_id,
-            'location_id': location_id,
+            'entity_id': obj.entity.pk,
+            'location_id': obj.location.pk,
             'lat': lat,
             'lng': lng,
-            'acronym': acronym,
-            'url': url,
+            'acronym': obj.entity.title,
+            'url': obj.entity.website,
         }
-        points[entity_id] = marker
+        points[obj.entity.pk] = marker
 
     gmap = {}
     gmap['items'] = points.values()
@@ -413,29 +413,46 @@ def investment_api(request, map_type):
 
 
 def organization_api(request, map_type):
-    if map_type not in ("marker"):
-        return api_error(request, "Invalid Map Type")
+    if map_type not in ("marker", "csv"):
+        return HttpResponseBadRequest()
 
-    cursor = _get_api_cursor(request, 'organization')
+    form = OrganizationFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
 
+    qs = Organization.objects.search(**form.cleaned_data)
+    qs = qs.only('pk', 'name', 'desired_location_lat', 'desired_location_lng')
+
+    if map_type == "csv":
+        return output_organization_csv(qs)
+    else:
+        return output_organization_json(qs)
+
+
+def output_organization_json(qs):
     points = {}
 
-    for item in cursor.fetchall():
-        organization_id = item[0]
-        name = item[1].encode('utf-8')
-        lat = float(item[2])
-        lng = float(item[3])
-
+    for obj in qs:
         marker = {
-            'entity_id': organization_id,
-            'name': name,
-            'lat': lat,
-            'lng': lng,
+            'entity_id': obj.pk,
+            'name': obj.name.encode('utf-8'),
+            'lat': float(str(obj.desired_location_lat)),
+            'lng': float(str(obj.desired_location_lng)),
         }
 
-        points[organization_id] = marker
+        points[obj.pk] = marker
 
     gmap = {}
     gmap['items'] = points.values()
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+
+def output_organization_csv(qs):
+    data = tablib.Dataset(['NAME', 'LAT', 'LNG'])
+    for item in qs:
+        data.append([item.name, item.desired_location_lat, item.desired_location_lng])
+
+    response = http.HttpResponse(data.csv, content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
+    return response

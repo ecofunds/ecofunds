@@ -1,0 +1,37 @@
+{% load tags i18n %}
+<!-- Filtros de Busca por Organizações -->
+<section id="organization-filter" class="filtros organizacoes aberto">
+    <header class="cabecalho">
+        <h4>{% trans "Search organizations by" %}</h4>
+        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
+        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
+    </header>
+
+    <form class="form-filtros organizacoes" action="#" method="post">
+        <div class="borda primeiro">
+            <fieldset>
+                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
+                {{ search_organization_form.name }}
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Type" %} <span class="total">({{ count_organization_types }})</span></legend>
+                {{ search_organization_form.kind }}
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Supported location" %} <span class="total">({{ count_organization_regions }})</span></legend>
+
+                <label for="id_country">{{ search_organization_form.country.label }}</label>
+                {{ search_organization_form.country }}
+
+                <label for="id_state">{{ search_organization_form.state.label }}</label>
+                {{ search_organization_form.state }}
+            </fieldset>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,43 @@
+{% load tags i18n %}
+
+<!-- Filtros de Busca por Projetos -->
+<section id="project-filter" class="filtros projetos aberto">
+    <header class="cabecalho">
+        <h4>{% trans "Search projects by" %}</h4>
+        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
+        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
+    </header>
+
+    <form class="form-filtros projetos" action="#" method="post">
+        <div class="borda primeiro">
+            <fieldset>
+                <legend>{% trans "Name" %} <span class="total">({{ count_projects }})</span></legend>
+                {{ search_project_form.name }}
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Activity Type" %} <span class="total">({{ count_project_activity_types }})</span></legend>
+                {{ search_project_form.activity }}
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Region" %} <span class="total">({{ count_project_regions }})</span></legend>
+                <label for="id_country">{{ search_project_form.country.label }}</label>
+                {{ search_project_form.country }}
+                <label for="id_state">{{ search_project_form.state.label }}</label>
+                {{ search_project_form.state }}
+            </fieldset>
+        </div>
+
+        <div class="borda">
+            <fieldset>
+                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
+                {{ search_project_form.organization }}
+            </fieldset>
+        </div>
+    </form>
+</section>

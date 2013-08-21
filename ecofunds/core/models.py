@@ -1,12 +1,11 @@
 import os
-from datetime import datetime, date
+from datetime import datetime
 
 from django.db import models
-from django.db.models import Max
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
+from managers import SearchManager, ProjectLocationSearchManager
 
 
 def get_media_path(instance, filename):
@@ -157,6 +156,8 @@ class Organization(models.Model):
     def __unicode__(self):
         return self.name
 
+    objects = SearchManager()
+
     class Meta:
         db_table = u'ecofunds_organization'
 
@@ -291,6 +292,8 @@ class ProjectAttachment(models.Model):
 class ProjectLocation(models.Model):
     entity = models.ForeignKey(Project, related_name='projects_locations')
     location = models.ForeignKey(Location)
+
+    objects = ProjectLocationSearchManager()
 
     class Meta:
         db_table = u'ecofunds_entity_locations'
