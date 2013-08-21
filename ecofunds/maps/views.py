@@ -449,9 +449,9 @@ def output_organization_json(qs):
 
 
 def output_organization_csv(qs):
-    data = tablib.Dataset()
+    data = tablib.Dataset(['NAME', 'LAT', 'LNG'])
     for item in qs:
-        data.append([item.id, item.name, item.desired_location_lat, item.desired_location_lng])
+        data.append([item.name, item.desired_location_lat, item.desired_location_lng])
 
     response = http.HttpResponse(data.csv, content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="organizations.csv"'

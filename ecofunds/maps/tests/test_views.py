@@ -235,9 +235,12 @@ class OrganizationCSVTest(MapFixture):
         self.assertEqual(200, response.status_code)
         self.assertEqual(response.get('Content-Disposition'),
                          'attachment; filename="organizations.csv"')
-        excpected_line1 = '1,Funding Ord,-22.882778,-43.103889'
-        excpected_line2 = '2,Funbio,-22.880766,-43.104335'
 
+        expected_header = 'NAME,LAT,LNG'
+        excpected_line1 = 'Funding Ord,-22.882778,-43.103889'
+        excpected_line2 = 'Funbio,-22.880766,-43.104335'
+
+        self.assertTrue(expected_header in response.content)
         self.assertTrue(excpected_line1 in response.content)
         self.assertTrue(excpected_line2 in response.content)
 
