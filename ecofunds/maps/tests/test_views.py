@@ -233,7 +233,8 @@ class OrganizationCSVTest(MapFixture):
     def test_get_organization_csv_api(self):
         response = self.client.get(reverse('organization_api', args=['csv']))
         self.assertEqual(200, response.status_code)
-
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="organizations.csv"')
         excpected_line1 = '1,Funding Ord,-22.882778,-43.103889'
         excpected_line2 = '2,Funbio,-22.880766,-43.104335'
 

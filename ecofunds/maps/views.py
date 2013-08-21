@@ -453,4 +453,6 @@ def output_organization_csv(qs):
     for item in qs:
         data.append([item.id, item.name, item.desired_location_lat, item.desired_location_lng])
 
-    return http.HttpResponse(data.csv, content_type="text/csv")
+    response = http.HttpResponse(data.csv, content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
+    return response
