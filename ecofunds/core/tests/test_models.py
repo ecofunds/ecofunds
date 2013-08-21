@@ -15,9 +15,9 @@ class OrganizationFilterTest(TestCase):
         l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ')
         l2 = m('Location', name='Caminito', iso_sub='CA')
 
-        m('Organization', name=u'Fundação', acronym='Funbio', type=t1, country=c1, state=l1, desired_location_lat=1, desired_location_lng=1)
+        m('Organization', name=u'Fundo', acronym='Funbio', type=t1, country=c1, state=l1, desired_location_lat=1, desired_location_lng=1)
         m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
-        m('Organization', name=u'Fundação', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
+        m('Organization', name=u'Federação', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
         m('Organization', name=u'Outro', acronym='OT', type=t2, country=c2, state=l2, desired_location_lat=None, desired_location_lng=None)
 
     def test_all(self):
@@ -71,7 +71,7 @@ class ProjectLocationSearchTest(TestCase):
         l3 = m('Location', pk=3, name='Mato Grosso', iso_sub='MT', country__name='Brazil')
         l4 = m('Location', pk=4, name='Fortaleza', iso_sub='CE', country__name='Brazil')
 
-        o1 = m('Organization', name=u'Fundação', acronym='Funbio')
+        o1 = m('Organization', name=u'Fundo', acronym='Funbio')
         o2 = m('Organization', name=u'Federação', acronym='FIFA')
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
