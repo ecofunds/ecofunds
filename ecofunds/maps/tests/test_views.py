@@ -244,3 +244,9 @@ class OrganizationCSVTest(MapFixture):
         self.assertTrue(excpected_line1 in response.content)
         self.assertTrue(excpected_line2 in response.content)
 
+class OrganizationXLSTest(MapFixture):
+    def test_get_organization_xls_api(self):
+        response = self.client.get(reverse('organization_api', args=['xls']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="organizations.xls"')

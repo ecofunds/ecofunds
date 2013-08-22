@@ -413,7 +413,7 @@ def investment_api(request, map_type):
 
 
 def organization_api(request, map_type):
-    if map_type not in ("marker", "csv"):
+    if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
 
     form = OrganizationFilterForm(request.GET)
@@ -425,6 +425,8 @@ def organization_api(request, map_type):
 
     if map_type == "csv":
         return output_organization_csv(qs)
+    elif map_type == "xls":
+        return output_organization_excel(qs)
     else:
         return output_organization_json(qs)
 
@@ -455,4 +457,24 @@ def output_organization_csv(qs):
 
     response = http.HttpResponse(data.csv, content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
+    return response
+
+def output_organization_excel(qs):
+    import xlwt
+    response = http.HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="organizations.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Organizations')
+
+    for i, header in enumerate(['NAME', 'LAT', 'LNG']):
+        ws.write(0, i, header)
+
+    for i, item in enumerate(qs):
+        ws.write(i+1, 0, item.name)
+        ws.write(i+1, 1, item.desired_location_lat)
+        ws.write(i+1, 2, item.desired_location_lng)
+
+    wb.save(response)
+
     return response
