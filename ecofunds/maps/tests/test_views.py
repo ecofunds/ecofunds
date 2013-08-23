@@ -127,31 +127,7 @@ class InvestmentJSONView(TestCase):
             self.assertEqual(200, response.status_code)
 
 
-class OrganizationJSONView(TestCase):
-    def setUp(self):
-        country = m(Country, name="Brasil")
-        location = m(Location, country=country, name="Rio de Janeiro",
-                     centroid="-22.5331067902,-43.2435698976",
-                     polygon=FIXTURE_PLOLYGON)
-        funding_org = m(Organization, name="Funding Ord", country=country,
-                                                          state=location,
-                                                          validated=True)
-        organization = m(Organization, name="Funbio", country=country,
-                                                      state=location,
-                                                      validated=True)
-        project = m(Project, main_organization=organization,
-                             locations=[],
-                             validated=True)
-        funding_proj = m(Project, main_organization=organization,
-                                  locations=[])
-        investment = m(Investment, recipient_organization=organization,
-                                   funding_organization=funding_org,
-                                   funding_entity=funding_proj,
-                                   recipient_entity=project,
-                                   amount_usd=Decimal("2000000"),
-                                   amount=Decimal("2000000"))
-        project_location = m(ProjectLocation, entity=project,
-                                              location=location)
+class OrganizationJSONView(MapFixture):
     def test_get_geoapi_organization_marker(self):
         response = self.client.get(reverse('organization_api', args=['marker']))
         self.assertEqual(200, response.status_code)
@@ -236,9 +212,10 @@ class OrganizationCSVTest(MapFixture):
         self.assertEqual(response.get('Content-Disposition'),
                          'attachment; filename="organizations.csv"')
 
-        expected_header = 'NAME,LAT,LNG'
-        excpected_line1 = 'Funding Ord,-22.882778,-43.103889'
-        excpected_line2 = 'Funbio,-22.880766,-43.104335'
+        expected_header = 'NAME,DESCRIPTION,ORG. TYPE,ADDRESS,ZIPCODE,EMAIL,' \
+                          'URL,PHONE,LOCATION,LAT,LNG'
+        excpected_line1 = 'Funding Ord,None,,None,None,None,None,None None None,Rio de Janeiro,-22.882778,-43.103889'
+        excpected_line2 = 'Funbio,None,,None,None,None,None,None None None,Rio de Janeiro,-22.880766,-43.104335'
 
         self.assertTrue(expected_header in response.content)
         self.assertTrue(excpected_line1 in response.content)

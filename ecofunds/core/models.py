@@ -139,6 +139,24 @@ class Organization(models.Model):
     projects = models.ManyToManyField('Project', through='ProjectOrganization',
             related_name='projects_by_org',blank=True,null=True)
 
+    @property
+    def formated_phone_number(self):
+        return "{0} {1} {2}".format(self.phone_country_prefix,
+                                    self.phone_local_prefix,
+                                    self.phone_number)
+
+    @property
+    def kind(self):
+        if not self.type:
+            return ""
+        return self.type.name
+
+    @property
+    def location_name(self):
+        if not self.state:
+            return ""
+        return self.state.name
+
     def funding_investments():
         return Investment.all_objects.filter(Q(funding_organization=self.id))
 
