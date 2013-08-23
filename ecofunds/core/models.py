@@ -147,15 +147,15 @@ class Organization(models.Model):
 
     @property
     def kind(self):
-        if self.type:
-            return self.type.name
-        return ""
+        if not self.type:
+            return ""
+        return self.type.name
 
     @property
     def location_name(self):
-        if self.state:
-            return self.state.name
-        return ""
+        if not self.state:
+            return ""
+        return self.state.name
 
     def funding_investments():
         return Investment.all_objects.filter(Q(funding_organization=self.id))
