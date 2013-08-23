@@ -20,6 +20,27 @@ class OrganizationFilterTest(TestCase):
         m('Organization', name=u'Federação', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
         m('Organization', name=u'Outro', acronym='OT', type=t2, country=c2, state=l2, desired_location_lat=None, desired_location_lng=None)
 
+    def test_formated_phone_number_property(self):
+        org = m ('Organization', name=u'', phone_country_prefix='55',
+                                           phone_local_prefix='21',
+                                           phone_number='22222222')
+
+        self.assertEqual('55 21 22222222', org.formated_phone_number)
+
+    def test_kind_property(self):
+        t1 = m('OrganizationType', pk=1, name='Fundo Ambiental')
+        org = m('Organization', name=u'Fundo', acronym='Funbio', type=t1)
+
+        self.assertEqual('Fundo Ambiental', org.kind)
+
+    def test_location_name_property(self):
+        c1 = m('Country', name='Brazil')
+        l1 = m('Location', name='Rio de Janeiro', iso_sub='RJ')
+        org = m('Organization', name=u'Fundo', acronym='Funbio', country=c1,
+                                                                 state=l1)
+
+        self.assertEqual('Rio de Janeiro', org.location_name)
+
     def test_all(self):
         '''No filter, return all Organizations with desired lat and lng.'''
         qs = Organization.objects.search()
