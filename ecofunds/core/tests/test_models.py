@@ -33,7 +33,7 @@ class OrganizationFilterTest(TestCase):
 
         m('Organization', name=u'Fundo', acronym='Funbio', type=t1, country=c1, state=l1, desired_location_lat=1, desired_location_lng=1)
         m('Organization', name=u'Associacao', acronym='Funbar', type=t1, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
-        m('Organization', name=u'Federação', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
+        m('Organization', name=u'Fundao', acronym='FIFA', type=t2, country=c2, state=l2, desired_location_lat=2, desired_location_lng=2)
         m('Organization', name=u'Outro', acronym='OT', type=t2, country=c2, state=l2, desired_location_lat=None, desired_location_lng=None)
 
     def test_all(self):
