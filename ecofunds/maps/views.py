@@ -420,8 +420,7 @@ def organization_api(request, map_type):
     if not form.is_valid():
         return HttpResponseBadRequest()
 
-    qs = Organization.objects.search(**form.cleaned_data)
-    qs = qs.only('pk', 'name', 'desired_location_lat', 'desired_location_lng')
+    qs = Organization.objects.search(**form.cleaned_data).select_related('type', 'location')
 
     if map_type == "csv":
         return output_organization_csv(qs)
@@ -450,10 +449,29 @@ def output_organization_json(qs):
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 
+ORGANIZATION_EXPORT_COLUMNS = {
+    'NAME': 'name',
+    'DESCRIPTION': 'mission',
+    'ORG. TYPE': 'kind',
+    'ADDRESS': 'street1',
+    'ZIPCODE': 'zip',
+    'EMAIL': 'email',
+    'URL':  'url',
+    'PHONE': 'formated_phone_number',
+    'LOCATION': 'location_name',
+    'LAT': 'desired_location_lat',
+    'LNG': 'desired_location_lng',
+}
+ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
+                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
+
 def output_organization_csv(qs):
-    data = tablib.Dataset(['NAME', 'LAT', 'LNG'])
+    data = tablib.Dataset(ORGANIZATION_HEADERS)
     for item in qs:
-        data.append([item.name, item.desired_location_lat, item.desired_location_lng])
+        row = []
+        for key in ORGANIZATION_HEADERS:
+            row.append(getattr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
+        data.append(row)
 
     response = http.HttpResponse(data.csv, content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
@@ -467,13 +485,13 @@ def output_organization_excel(qs):
     wb = xlwt.Workbook()
     ws = wb.add_sheet('Organizations')
 
-    for i, header in enumerate(['NAME', 'LAT', 'LNG']):
+    for i, header in enumerate(ORGANIZATION_HEADERS):
         ws.write(0, i, header)
 
     for i, item in enumerate(qs):
-        ws.write(i+1, 0, item.name)
-        ws.write(i+1, 1, item.desired_location_lat)
-        ws.write(i+1, 2, item.desired_location_lng)
+        row = []
+        for j, key in enumerate(ORGANIZATION_HEADERS):
+            ws.write(i+1, j, getattr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
 
     wb.save(response)
 
