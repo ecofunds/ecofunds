@@ -313,16 +313,11 @@ def project_api(request, map_type):
     points = {}
 
     for obj in qs:
-        if obj.entity.centroid:
-            lat, lng = parse_centroid(obj.entity.centroid)
-        else:
-            lat, lng = None, None
-
         marker = {
             'entity_id': obj.entity.pk,
             'location_id': obj.location.pk,
-            'lat': lat,
-            'lng': lng,
+            'lat': obj.entity.lat,
+            'lng': obj.entity.lng,
             'acronym': obj.entity.title,
             'url': obj.entity.website,
         }
