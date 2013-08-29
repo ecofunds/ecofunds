@@ -17,6 +17,7 @@ import pygeoip
 
 from ecofunds.core.models import Organization, ProjectLocation
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
+from ecofunds.maps.utils import parse_centroid
 
 
 log = logging.getLogger('maps')
@@ -268,13 +269,6 @@ def apply_filter(filter_id, filters, context, query, params):
 
 def has_filter(data, filter_id):
     return data.has_key(filter_id) and data[filter_id] != ''
-
-
-def parse_centroid(centroid):
-    latlng = centroid.split(',')
-    x = float(latlng[0].strip())
-    y = float(latlng[1].strip())
-    return (x, y)
 
 
 def _get_api_cursor(request, domain):
