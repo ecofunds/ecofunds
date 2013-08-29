@@ -72,6 +72,20 @@ class ProjectJSONView(MapFixture):
             received_data = loads(response.content)
             self.assertEqual(len(received_data['map']['items']), 1)
 
+class ProjectCSVViewTest(MapFixture):
+    def test_get_project_csv_api(self):
+        response = self.client.get(reverse('project_api', args=['csv']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="projects.csv"')
+
+        expected_header = 'NAME,ACRONYM,ACTIVITY_TYPE,DESCRIPTION,'\
+                          'URL,EMAIL,PHONE,LAT,LNG'
+        expected_line1 = 'Projeto de Teste,Projeto de Teste,None,None,None,None,None None None,-27.2221329359,-50.0092212765'
+
+        self.assertTrue(expected_header in response.content)
+        self.assertTrue(expected_line1 in response.content)
+
 
 class InvestmentJSONView(TestCase):
     def setUp(self):

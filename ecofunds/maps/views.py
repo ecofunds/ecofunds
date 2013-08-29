@@ -298,9 +298,31 @@ def _get_api_cursor(request, domain):
 
     return cursor
 
+PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
+                   'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
+
+PROJECT_EXPORT_COLUMNS = {
+    'NAME': 'title',
+    'ACRONYM': 'acronym',
+    'ACTIVITY_TYPE': 'activity_description',
+    'DESCRIPTION': 'description',
+    'URL': 'website',
+    'EMAIL': 'email',
+    'PHONE': 'formated_phone_number',
+    'LAT': 'lat',
+    'LNG': 'lng'
+}
+
+#TODO missing attributes
+#'ACTIVITIES': 'activities',
+#"start_date",
+#"end_date",
+#"address",
+#"zipcode"
+
 
 def project_api(request, map_type):
-    if map_type not in ("marker",):
+    if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
 
     form = ProjectFilterForm(request.GET)
@@ -308,10 +330,20 @@ def project_api(request, map_type):
         return HttpResponseBadRequest()
 
     qs = ProjectLocation.objects.search(**form.cleaned_data)
-    qs = qs.only('entity__entity_id', 'location__id', 'entity__title', 'entity__website', 'entity__centroid')
+    qs = qs.only('entity__entity_id', 'location__id', 'entity__title',
+                 'entity__website', 'entity__centroid')
 
+
+    if map_type == "csv":
+        return output_project_csv(qs)
+    elif map_type == "xls":
+        pass
+    else:
+        return output_project_json(qs)
+
+
+def output_project_json(qs):
     points = {}
-
     for obj in qs:
         marker = {
             'entity_id': obj.entity.pk,
@@ -327,6 +359,23 @@ def project_api(request, map_type):
     gmap['items'] = points.values()
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+
+def output_project_csv(qs):
+    data = tablib.Dataset(PROJECT_HEADERS)
+    for item in qs:
+        row = []
+        for key in PROJECT_HEADERS:
+            row.append(getattr(item.entity, PROJECT_EXPORT_COLUMNS[key]))
+        data.append(row)
+
+    response = http.HttpResponse(data.csv, content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="projects.csv"'
+    return response
+
+
+def output_project_excel(qs):
+    pass
 
 
 def investment_api(request, map_type):

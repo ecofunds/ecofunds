@@ -274,6 +274,12 @@ class Project(models.Model):
     def get_firstlocation(self):
         return self.locations.all()[:1].get() if self.locations.count() > 0 else None
 
+    @property
+    def formated_phone_number(self):
+        return "{0} {1} {2}".format(self.phone_country_prefix_01,
+                                    self.phone_local_prefix_01,
+                                    self.phone_number_01)
+
     def __unicode__(self):
         return self.title
 
