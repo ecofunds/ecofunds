@@ -17,6 +17,7 @@ import pygeoip
 
 from ecofunds.core.models import Organization, ProjectLocation
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
+from ecofunds.maps.utils import parse_centroid
 
 
 log = logging.getLogger('maps')
@@ -270,13 +271,6 @@ def has_filter(data, filter_id):
     return data.has_key(filter_id) and data[filter_id] != ''
 
 
-def parse_centroid(centroid):
-    latlng = centroid.split(',')
-    x = float(latlng[0].strip())
-    y = float(latlng[1].strip())
-    return (x, y)
-
-
 def _get_api_cursor(request, domain):
     if request.method == "POST":
         data = request.POST
@@ -304,9 +298,31 @@ def _get_api_cursor(request, domain):
 
     return cursor
 
+PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
+                   'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
+
+PROJECT_EXPORT_COLUMNS = {
+    'NAME': 'title',
+    'ACRONYM': 'acronym',
+    'ACTIVITY_TYPE': 'activity_description',
+    'DESCRIPTION': 'description',
+    'URL': 'website',
+    'EMAIL': 'email',
+    'PHONE': 'formated_phone_number',
+    'LAT': 'lat',
+    'LNG': 'lng'
+}
+
+#TODO missing attributes
+#'ACTIVITIES': 'activities',
+#"start_date",
+#"end_date",
+#"address",
+#"zipcode"
+
 
 def project_api(request, map_type):
-    if map_type not in ("marker",):
+    if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
 
     form = ProjectFilterForm(request.GET)
@@ -314,21 +330,23 @@ def project_api(request, map_type):
         return HttpResponseBadRequest()
 
     qs = ProjectLocation.objects.search(**form.cleaned_data)
-    qs = qs.only('entity__entity_id', 'location__id', 'entity__title', 'entity__website', 'entity__centroid')
 
+    if map_type == "csv":
+        return output_project_csv(qs)
+    elif map_type == "xls":
+        return output_project_excel(qs)
+    else:
+        return output_project_json(qs)
+
+
+def output_project_json(qs):
     points = {}
-
     for obj in qs:
-        if obj.entity.centroid:
-            lat, lng = parse_centroid(obj.entity.centroid)
-        else:
-            lat, lng = None, None
-
         marker = {
             'entity_id': obj.entity.pk,
             'location_id': obj.location.pk,
-            'lat': lat,
-            'lng': lng,
+            'lat': obj.entity.lat,
+            'lng': obj.entity.lng,
             'acronym': obj.entity.title,
             'url': obj.entity.website,
         }
@@ -338,6 +356,46 @@ def project_api(request, map_type):
     gmap['items'] = points.values()
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+
+def output_project_csv(qs):
+    data = tablib.Dataset(PROJECT_HEADERS)
+    for item in qs:
+        row = []
+        for key in PROJECT_HEADERS:
+            row.append(getattr(item.entity, PROJECT_EXPORT_COLUMNS[key]))
+        data.append(row)
+
+    response = http.HttpResponse(data.csv, content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="projects.csv"'
+    return response
+
+
+def output_project_excel(qs):
+    import xlwt
+    response = http.HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="projects.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Projects')
+
+    for i, header in enumerate(PROJECT_HEADERS):
+        ws.write(0, i, header)
+
+    for i, item in enumerate(qs):
+        row = []
+        for j, key in enumerate(PROJECT_HEADERS):
+            data = getattr(item.entity, PROJECT_EXPORT_COLUMNS[key])
+            if data and isinstance(data, unicode) and len(data) > 3000:
+                data = data[:3000]
+            ws.write(i+1, j, data)
+
+    wb.save(response)
+
+    from django.db import connection
+    print connection.queries
+
+    return response
 
 
 def investment_api(request, map_type):
@@ -412,6 +470,25 @@ def investment_api(request, map_type):
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 
+ORGANIZATION_EXPORT_COLUMNS = {
+    'NAME': 'name',
+    'DESCRIPTION': 'mission',
+    'ORG. TYPE': 'kind',
+    'ADDRESS': 'street1',
+    'ZIPCODE': 'zip',
+    'EMAIL': 'email',
+    'URL':  'url',
+    'PHONE': 'formated_phone_number',
+    'LOCATION': 'location_name',
+    'LAT': 'desired_location_lat',
+    'LNG': 'desired_location_lng',
+}
+
+
+ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
+                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
+
+
 def organization_api(request, map_type):
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
@@ -448,22 +525,6 @@ def output_organization_json(qs):
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
-
-ORGANIZATION_EXPORT_COLUMNS = {
-    'NAME': 'name',
-    'DESCRIPTION': 'mission',
-    'ORG. TYPE': 'kind',
-    'ADDRESS': 'street1',
-    'ZIPCODE': 'zip',
-    'EMAIL': 'email',
-    'URL':  'url',
-    'PHONE': 'formated_phone_number',
-    'LOCATION': 'location_name',
-    'LAT': 'desired_location_lat',
-    'LNG': 'desired_location_lng',
-}
-ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
-                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
 
 def output_organization_csv(qs):
     data = tablib.Dataset(ORGANIZATION_HEADERS)

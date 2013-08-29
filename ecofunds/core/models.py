@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from cms.models import CMSPlugin, Page
 from managers import SearchManager, ProjectLocationSearchManager
 
+from ecofunds.maps.utils import parse_centroid
 
 def get_media_path(instance, filename):
     today = datetime.now()
@@ -273,11 +274,30 @@ class Project(models.Model):
     def get_firstlocation(self):
         return self.locations.all()[:1].get() if self.locations.count() > 0 else None
 
+    @property
+    def formated_phone_number(self):
+        return "{0} {1} {2}".format(self.phone_country_prefix_01,
+                                    self.phone_local_prefix_01,
+                                    self.phone_number_01)
+
     def __unicode__(self):
         return self.title
 
     def is_completed(self):
         return self.grant_to >= datetime.now()
+
+    @property
+    def lat(self):
+        if self.centroid:
+            return parse_centroid(self.centroid)[0]
+        return None
+
+    @property
+    def lng(self):
+        if self.centroid:
+            return parse_centroid(self.centroid)[1]
+        return None
+
 
     class Meta:
         db_table = u'ecofunds_entities'
