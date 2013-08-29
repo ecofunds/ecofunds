@@ -1,7 +1,9 @@
 # coding: utf-8
 from django.test import TestCase
 from model_mommy.mommy import make as m
-from ecofunds.core.models import Organization, ProjectLocation
+from ecofunds.core.models import (Organization, ProjectLocation, Country,
+                                  Location, Project)
+
 
 
 class OrganizationModelTest(TestCase):
@@ -76,6 +78,29 @@ class OrganizationFilterTest(TestCase):
     def assertPKs(self, qs, values):
         return self.assertQuerysetEqual(qs, values, transform=lambda o: o.pk)
 
+
+class ProjectModelTest(TestCase):
+    def setUp(self):
+        country = m(Country, name="Brasil")
+        location = m(Location, id=1, country=country, name="Rio de Janeiro",
+                     centroid="-22.5331067902,-43.2435698976",
+                     polygon="")
+        funding_org = m(Organization, name="Funding Ord", country=country,
+                        state=location, validated=True, desired_location_lat=-22.882778, desired_location_lng=-43.103889)
+        organization = m(Organization, name="Funbio", country=country,
+                         state=location, validated=True, desired_location_lat=-22.880766, desired_location_lng=-43.104335)
+        self.project = m(Project, main_organization=organization,
+                                  title="Projeto de Teste",
+                                  acronym="Projeto de Teste",
+                                  locations=[],
+                                  centroid="-27.2221329359,-50.0092212765",
+                                  validated=True)
+
+    def test_project_lat_property(self):
+        self.assertEqual(-27.2221329359, self.project.lat)
+
+    def test_project_lng_property(self):
+        self.assertEqual(-50.0092212765, self.project.lng)
 
 class ProjectLocationSearchTest(TestCase):
     def setUp(self):
