@@ -87,6 +87,14 @@ class ProjectCSVViewTest(MapFixture):
         self.assertTrue(expected_line1 in response.content)
 
 
+class ProjectXLSTest(MapFixture):
+    def test_get_organization_xls_api(self):
+        response = self.client.get(reverse('project_api', args=['xls']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="projects.xls"')
+
+
 class InvestmentJSONView(TestCase):
     def setUp(self):
         country = m(Country, name="Brasil")

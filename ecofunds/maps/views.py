@@ -330,14 +330,11 @@ def project_api(request, map_type):
         return HttpResponseBadRequest()
 
     qs = ProjectLocation.objects.search(**form.cleaned_data)
-    qs = qs.only('entity__entity_id', 'location__id', 'entity__title',
-                 'entity__website', 'entity__centroid')
-
 
     if map_type == "csv":
         return output_project_csv(qs)
     elif map_type == "xls":
-        pass
+        return output_project_excel(qs)
     else:
         return output_project_json(qs)
 
@@ -375,7 +372,30 @@ def output_project_csv(qs):
 
 
 def output_project_excel(qs):
-    pass
+    import xlwt
+    response = http.HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="projects.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Projects')
+
+    for i, header in enumerate(PROJECT_HEADERS):
+        ws.write(0, i, header)
+
+    for i, item in enumerate(qs):
+        row = []
+        for j, key in enumerate(PROJECT_HEADERS):
+            data = getattr(item.entity, PROJECT_EXPORT_COLUMNS[key])
+            if data and isinstance(data, unicode) and len(data) > 3000:
+                data = data[:3000]
+            ws.write(i+1, j, data)
+
+    wb.save(response)
+
+    from django.db import connection
+    print connection.queries
+
+    return response
 
 
 def investment_api(request, map_type):
