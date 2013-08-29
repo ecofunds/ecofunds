@@ -406,6 +406,25 @@ def investment_api(request, map_type):
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 
+ORGANIZATION_EXPORT_COLUMNS = {
+    'NAME': 'name',
+    'DESCRIPTION': 'mission',
+    'ORG. TYPE': 'kind',
+    'ADDRESS': 'street1',
+    'ZIPCODE': 'zip',
+    'EMAIL': 'email',
+    'URL':  'url',
+    'PHONE': 'formated_phone_number',
+    'LOCATION': 'location_name',
+    'LAT': 'desired_location_lat',
+    'LNG': 'desired_location_lng',
+}
+
+
+ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
+                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
+
+
 def organization_api(request, map_type):
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
@@ -442,22 +461,6 @@ def output_organization_json(qs):
 
     return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
-
-ORGANIZATION_EXPORT_COLUMNS = {
-    'NAME': 'name',
-    'DESCRIPTION': 'mission',
-    'ORG. TYPE': 'kind',
-    'ADDRESS': 'street1',
-    'ZIPCODE': 'zip',
-    'EMAIL': 'email',
-    'URL':  'url',
-    'PHONE': 'formated_phone_number',
-    'LOCATION': 'location_name',
-    'LAT': 'desired_location_lat',
-    'LNG': 'desired_location_lng',
-}
-ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
-                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
 
 def output_organization_csv(qs):
     data = tablib.Dataset(ORGANIZATION_HEADERS)
