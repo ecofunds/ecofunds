@@ -57,7 +57,6 @@ class ProjectLocationSearchManager(Manager):
     def search_investment(self, **fields):
         qs = self.select_related('entity', 'location', 'country')
         qs = qs.filter(entity__validated=1)
-        qs = qs.only('location__centroid', 'entity__title', 'entity__website')
 
         project = fields.get('project')
         if project:
