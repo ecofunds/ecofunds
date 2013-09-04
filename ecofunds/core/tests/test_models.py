@@ -202,17 +202,20 @@ class InvestmentSearchTest(TestCase):
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectC', acronym='PC')
         p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
+        p4 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
 
         m('ProjectLocation', entity=p1, location=l1)
         m('ProjectLocation', entity=p2, location=l1)
         m('ProjectLocation', entity=p3, location=l1)
+        m('ProjectLocation', entity=p4, location=l1)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
+        m('Investment', recipient_entity=p4, amount_usd=1)
+        m('Investment', recipient_entity=p4, amount_usd=2)
 
     def test_all(self):
         qs = ProjectLocation.objects.search_investment()
-        expected = [
-            (1, 1, 1)
-        ]
+        expected = [(1, 1, 1), (1, 4, 3)]
+
         self.assertQuerysetEqual(qs, expected,
             lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
