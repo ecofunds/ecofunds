@@ -1,15 +1,8 @@
 import logging
-import math
-import time
 
-from django import db
 from django import http
-from django.core.cache import cache
 from django.core.context_processors import csrf
-from django.utils.simplejson import dumps, loads
-from django.db import models
-from django.db.models import Count
-from django.utils.functional import curry
+from django.utils.simplejson import dumps
 from django.views.generic.list import ListView
 from django.views.generic.detail import BaseDetailView
 from django.utils.translation import ugettext_lazy as _
@@ -17,14 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from ecofunds.core.models import Project
 from ecofunds.core.views import DjangoJSONEncoder
 from ecofunds.business import *
-from ecofunds.maps import *
-from ecofunds.maps.models import GoogleMapView
-from ecofunds.colors_RdYlGn import scale as color_scale
-
 import xlwt
 
-from babel import numbers
-from BeautifulSoup import BeautifulSoup
 from pygeoip import GeoIP
 
 log = logging.getLogger(__name__)

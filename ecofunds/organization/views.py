@@ -1,28 +1,12 @@
 import logging
 
-from django import db
 from django import http
-from django.core.cache import cache
 from django.core.context_processors import csrf
 from django.utils.simplejson import dumps
-from django.db import models
-from django.db.models import Count
-from django.template import loader, Context
-from django.utils.functional import curry
 from django.views.generic.list import ListView
-from django.views.generic.detail import BaseDetailView
 
 from ecofunds.core.models import Organization
 from ecofunds.core.views import DjangoJSONEncoder
-from ecofunds.business import *
-from ecofunds.maps import *
-from ecofunds.maps.models import GoogleMapView
-
-from babel import numbers
-from BeautifulSoup import BeautifulSoup
-
-import colorsys
-import math
 
 
 log = logging.getLogger(__name__)
