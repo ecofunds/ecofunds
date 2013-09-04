@@ -16,7 +16,7 @@ from babel import numbers
 import pygeoip
 
 from ecofunds.core.models import Organization, ProjectLocation
-from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
 
@@ -398,7 +398,7 @@ def output_project_excel(qs):
     return response
 
 
-def investment_api(request, map_type):
+def investment_api2(request, map_type):
     if map_type not in ("density"):
         return api_error(request, "Invalid Map Type")
 
@@ -463,6 +463,58 @@ def investment_api(request, map_type):
                 points[location_id]['total_investment'] += int_amount
                 points[location_id]['total_investment_str'] = \
                     localize_currency(points[location_id]['total_investment'], request)
+
+    gmap = {}
+    gmap['items'] = points.values()
+
+    return http.HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+
+def investment_api(request, map_type):
+    if map_type not in ("density"):
+        return HttpResponseBadRequest()
+
+    form = InvestmentFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
+
+    qs = ProjectLocation.objects.search_investment(**form.cleaned_data)
+    qs = qs.only('location__centroid', 'entity__title', 'entity__website')
+
+    points = {}
+
+    for obj in qs:
+        lat, lng = parse_centroid(obj.location.centroid)
+
+        if not obj.location.pk in points:
+            marker = {
+                'location_id': obj.location.pk,
+                'lat': lat,
+                'lng': lng,
+                'total_investment': float(obj.entity_amount),
+                'total_investment_str': format_currency(obj.entity_amount),
+                'projects': [{
+                    'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                    'acronym': obj.entity.title,
+                    'url': obj.entity.website,
+                    'entity_id': obj.entity.pk,
+                    'amount': float(obj.entity_amount),
+                    'amount_str': format_currency(obj.entity_amount)
+                }]
+            }
+            points[obj.location.pk] = marker
+        else:
+            project = {
+                'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                'acronym': obj.entity.title,
+                'url': obj.entity.website,
+                'entity_id': obj.entity.pk,
+                'amount': float(obj.entity_amount),
+                'amount_str': format_currency(obj.entity_amount)
+            }
+            points[obj.location.pk]['projects'].append(project)
+            points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
+            points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
 
     gmap = {}
     gmap['items'] = points.values()

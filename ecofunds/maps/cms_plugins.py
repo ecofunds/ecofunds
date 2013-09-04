@@ -7,11 +7,8 @@ from django.db.models import Count
 from ecofunds.maps.forms import MapForm
 from ecofunds.maps.models import GoogleMapView, GoogleMapPlugin
 
-from ecofunds.project.forms import ProjectAdvancedSearchForm
-from ecofunds.organization.forms import OrganizationAdvancedSearchForm
-from ecofunds.investment.forms import InvestmentAdvancedSearchForm
 from ecofunds.core.models import *
-from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 
 
 class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
@@ -42,10 +39,10 @@ class CMSGoogleMapPlugin(GoogleMapView, CMSPluginBase):
 
         if instance.show_search_investments:
             if request.method == "POST":
-                search_investment_form = InvestmentAdvancedSearchForm(request.POST)
+                search_investment_form = InvestmentFilterForm(request.POST)
             else:
                 pass
-                search_investment_form = InvestmentAdvancedSearchForm()
+                search_investment_form = InvestmentFilterForm()
         else:
             search_investment_form = None
 
