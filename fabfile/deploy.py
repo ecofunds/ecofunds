@@ -43,12 +43,12 @@ def build(release_dir):
         release_media = Path(release_dir, env.PROJECT.package, 'media')
         release_settings = Path(release_dir, env.PROJECT.package, 'settings.ini')
 
-        run('ln -s %s %s' % (env.PROJECT.settings, release_settings))
-        run('ln -s %s %s' % (env.PROJECT.media, release_media))
+        run('ln -sf %s %s' % (env.PROJECT.settings, release_settings))
+        run('ln -sf %s %s' % (env.PROJECT.media, release_media))
 
-        run("python bootstrap")
-
+        run("virtualenv .")
         with prefix('source bin/activate'):
+            run("pip install -r requirements.txt")
             run("python manage.py syncdb --noinput")
             run("python manage.py collectstatic --noinput")
 
