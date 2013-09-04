@@ -219,11 +219,13 @@ class InvestmentSearchTest(TestCase):
         qs = ProjectLocation.objects.search_investment()
         expected = [(1, 1, 1), (1, 4, 3)]
 
-        self.assertQuerysetEqual(qs, expected,
-            lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
+        self.assertResult(qs, expected)
 
     def test_kind(self):
         qs = ProjectLocation.objects.search_investment(kind=1)
         expected = [(1, 4, 1)]
-        self.assertQuerysetEqual(qs, expected,
+        self.assertResult(qs, expected)
+
+    def assertResult(self, qs, expected):
+        return self.assertQuerysetEqual(qs, expected,
             lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
