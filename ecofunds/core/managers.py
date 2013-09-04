@@ -1,5 +1,6 @@
 # coding: utf-8
-from django.db.models import Manager, Q, Sum
+from django.db.models import Manager, Q
+from aggregate_if import Sum
 
 
 class SearchManager(Manager):
@@ -56,6 +57,13 @@ class ProjectLocationSearchManager(Manager):
     def search_investment(self, **fields):
         qs = self.select_related('entity', 'location', 'country')
         qs = qs.filter(entity__validated=1)
-        qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd')).exclude(entity_amount=None)
+
+        condition = None
+
+        kind = fields.get('kind')
+        if kind:
+            condition = Q(entity__recipient_investments__type__pk=kind)
+
+        qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
         return qs

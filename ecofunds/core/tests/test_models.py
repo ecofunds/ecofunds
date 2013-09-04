@@ -197,6 +197,8 @@ class ProjectLocationSearchTest(TestCase):
 
 class InvestmentSearchTest(TestCase):
     def setUp(self):
+        t1 = m('InvestmentType', pk=1)
+
         l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
@@ -210,12 +212,18 @@ class InvestmentSearchTest(TestCase):
         m('ProjectLocation', entity=p4, location=l1)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
-        m('Investment', recipient_entity=p4, amount_usd=1)
+        m('Investment', recipient_entity=p4, amount_usd=1, type=t1)
         m('Investment', recipient_entity=p4, amount_usd=2)
 
     def test_all(self):
         qs = ProjectLocation.objects.search_investment()
         expected = [(1, 1, 1), (1, 4, 3)]
 
+        self.assertQuerysetEqual(qs, expected,
+            lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
+
+    def test_kind(self):
+        qs = ProjectLocation.objects.search_investment(kind=1)
+        expected = [(1, 4, 1)]
         self.assertQuerysetEqual(qs, expected,
             lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
