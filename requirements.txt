@@ -23,3 +23,5 @@ django-reversion
 cuisine==0.6.4
 model-mommy==1.0
 tablib==0.9.11
+Pygments==1.6
+sqlparse==0.1.8

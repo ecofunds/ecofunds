@@ -215,11 +215,16 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
-        'console':{
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'sqlhandler': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'sql'
+        }
     },
     'formatters': {
         'verbose': {
@@ -228,12 +233,20 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'sql': {
+            '()': 'ecofunds.sqlformatter.SqlFormatter',
+            'format': '%(levelname)s %(message)s',
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['sqlhandler'],
+            'level': 'DEBUG',
         },
         'maps': {
             'handlers': ['console'],
