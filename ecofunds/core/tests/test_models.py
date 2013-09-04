@@ -222,6 +222,7 @@ class InvestmentSearchTest(TestCase):
         self.assertResult(qs, expected)
 
     def test_kind(self):
+        '''Filter by investment type'''
         qs = ProjectLocation.objects.search_investment(kind=1)
         expected = [(1, 4, 1)]
         self.assertResult(qs, expected)
