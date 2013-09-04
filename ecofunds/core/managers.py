@@ -73,7 +73,7 @@ class ProjectLocationSearchManager(Manager):
         condition = None
         kind = fields.get('kind')
         if kind:
-            condition = Q(entity__recipient_investments__type__pk=kind)
+            condition = Q(entity__recipient_investments__type=kind)
 
         qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
