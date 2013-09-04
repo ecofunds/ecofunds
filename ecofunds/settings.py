@@ -168,7 +168,7 @@ INSTALLED_APPS = (
     'ecofunds.investment',
 )
 
-CMS_MEDIA_ROOT = PROJECT_ROOT.parent.child('static', 'cms')
+CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')
 CMS_MEDIA_URL = '/static/cms'
 
 CMS_TEMPLATES = (
