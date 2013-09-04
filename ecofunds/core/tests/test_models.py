@@ -201,9 +201,11 @@ class InvestmentSearchTest(TestCase):
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectC', acronym='PC')
+        p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
 
         m('ProjectLocation', entity=p1, location=l1)
         m('ProjectLocation', entity=p2, location=l1)
+        m('ProjectLocation', entity=p3, location=l1)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
 

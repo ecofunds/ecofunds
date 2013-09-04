@@ -56,6 +56,6 @@ class ProjectLocationSearchManager(Manager):
     def search_investment(self, **fields):
         qs = self.select_related('entity', 'location', 'country')
         qs = qs.filter(entity__validated=1)
-        qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd'))
+        qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd')).exclude(entity_amount=None)
 
         return qs
