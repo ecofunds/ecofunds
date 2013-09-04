@@ -57,12 +57,7 @@ class ProjectLocationSearchManager(Manager):
     def search_investment(self, **fields):
         qs = self.select_related('entity', 'location', 'country')
         qs = qs.filter(entity__validated=1)
-
-        condition = None
-
-        kind = fields.get('kind')
-        if kind:
-            condition = Q(entity__recipient_investments__type__pk=kind)
+        qs = qs.only('location__centroid', 'entity__title', 'entity__website')
 
         project = fields.get('project')
         if project:
@@ -75,6 +70,11 @@ class ProjectLocationSearchManager(Manager):
         state = fields.get('state')
         if state:
             qs = qs.filter(Q(location__iso_sub__icontains=state)|Q(location__name__icontains=state))
+
+        condition = None
+        kind = fields.get('kind')
+        if kind:
+            condition = Q(entity__recipient_investments__type__pk=kind)
 
         qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
