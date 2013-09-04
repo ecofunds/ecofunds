@@ -200,8 +200,10 @@ class InvestmentSearchTest(TestCase):
         l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
+        p2 = m('Project', title=u'ProjectC', acronym='PC')
 
         m('ProjectLocation', entity=p1, location=l1)
+        m('ProjectLocation', entity=p2, location=l1)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
 
