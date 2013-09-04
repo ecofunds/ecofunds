@@ -1,5 +1,5 @@
 # coding: utf-8
-from django.db.models import Manager, Q
+from django.db.models import Manager, Q, Sum
 
 
 class SearchManager(Manager):
@@ -50,5 +50,11 @@ class ProjectLocationSearchManager(Manager):
         org = fields.get('organization')
         if org:
             qs = qs.filter(Q(entity__organization__name__icontains=org)|Q(entity__organization__acronym__icontains=org))
+
+        return qs
+
+    def search_investment(self, **fields):
+        qs = self.select_related('entity', 'location', 'country')
+        qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd'))
 
         return qs

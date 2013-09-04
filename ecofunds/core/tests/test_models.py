@@ -102,6 +102,7 @@ class ProjectModelTest(TestCase):
     def test_project_lng_property(self):
         self.assertEqual(-50.0092212765, self.project.lng)
 
+
 class ProjectLocationSearchTest(TestCase):
     def setUp(self):
         t1 = m('Activity', pk=1)
@@ -192,3 +193,22 @@ class ProjectLocationSearchTest(TestCase):
 
     def assertEntityLocations(self, qs, values):
         return self.assertQuerysetEqual(qs, values, lambda o: (o.entity.pk, o.location.pk))
+
+
+class InvestmentSearchTest(TestCase):
+    def setUp(self):
+        l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
+
+        p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
+
+        m('ProjectLocation', entity=p1, location=l1)
+
+        m('Investment', recipient_entity=p1, amount_usd=1)
+
+    def test_all(self):
+        qs = ProjectLocation.objects.search_investment()
+        expected = [
+            (1, 1, 1)
+        ]
+        self.assertQuerysetEqual(qs, expected,
+            lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
