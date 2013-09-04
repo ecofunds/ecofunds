@@ -202,6 +202,8 @@ class InvestmentSearchTest(TestCase):
         l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
         l2 = m('Location', pk=2, name='Caminito', iso_sub='CA', country__name='Argentina')
 
+        o1 = m('Organization', name=u'Fundo', acronym='Funbio')
+
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectC', acronym='PC') # invalid
         p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1) # without investment
@@ -215,9 +217,9 @@ class InvestmentSearchTest(TestCase):
         m('ProjectLocation', entity=p5, location=l2)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
-        m('Investment', recipient_entity=p4, amount_usd=1, type=t1)
+        m('Investment', recipient_entity=p4, amount_usd=1, type=t1, funding_organization=o1)
         m('Investment', recipient_entity=p4, amount_usd=2)
-        m('Investment', recipient_entity=p5, amount_usd=4)
+        m('Investment', recipient_entity=p5, amount_usd=4, recipient_organization=o1)
 
     def test_all(self):
         qs = ProjectLocation.objects.search_investment()
@@ -251,6 +253,14 @@ class InvestmentSearchTest(TestCase):
 
         qs = ProjectLocation.objects.search_investment(state='Jan')
         self.assertResult(qs, [(1, 1, 1), (1, 4, 3)])
+
+    def test_organization(self):
+        '''Filter by organization name or acronym'''
+        qs = ProjectLocation.objects.search_investment(organization='Fund')
+        self.assertResult(qs, [(1, 4, 1), (2, 5, 4)])
+
+        qs = ProjectLocation.objects.search_investment(organization='Funb')
+        self.assertResult(qs, [(1, 4, 1), (2, 5, 4)])
 
     def assertResult(self, qs, expected):
         return self.assertQuerysetEqual(qs, expected,

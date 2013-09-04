@@ -70,6 +70,13 @@ class ProjectLocationSearchManager(Manager):
         if state:
             qs = qs.filter(Q(location__iso_sub__icontains=state)|Q(location__name__icontains=state))
 
+        org = fields.get('organization')
+        if org:
+            param = '%' + org + '%'
+            qs = qs.extra(where=['EXISTS (SELECT 1 from `ecofunds_organization` o '
+                                 'WHERE o.id IN (`ecofunds_investments`.`recipient_organization_id`, `ecofunds_investments`.`funding_organization_id`) '
+                                 'AND (o.name LIKE %s OR o.acronym LIKE %s))'], params=[param, param])
+
         condition = None
         kind = fields.get('kind')
         if kind:
