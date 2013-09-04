@@ -200,24 +200,28 @@ class InvestmentSearchTest(TestCase):
         t1 = m('InvestmentType', pk=1)
 
         l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
+        l2 = m('Location', pk=2, name='Caminito', iso_sub='CA', country__name='Argentina')
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
         p2 = m('Project', title=u'ProjectC', acronym='PC') # invalid
         p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1) # without investment
         p4 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
+        p5 = m('Project', title=u'ProjectD', acronym='PD', validated=1)
 
         m('ProjectLocation', entity=p1, location=l1)
         m('ProjectLocation', entity=p2, location=l1)
         m('ProjectLocation', entity=p3, location=l1)
         m('ProjectLocation', entity=p4, location=l1)
+        m('ProjectLocation', entity=p5, location=l2)
 
         m('Investment', recipient_entity=p1, amount_usd=1)
         m('Investment', recipient_entity=p4, amount_usd=1, type=t1)
         m('Investment', recipient_entity=p4, amount_usd=2)
+        m('Investment', recipient_entity=p5, amount_usd=4)
 
     def test_all(self):
         qs = ProjectLocation.objects.search_investment()
-        expected = [(1, 1, 1), (1, 4, 3)]
+        expected = [(1, 1, 1), (1, 4, 3), (2, 5, 4)]
 
         self.assertResult(qs, expected)
 
@@ -234,6 +238,11 @@ class InvestmentSearchTest(TestCase):
 
         qs = ProjectLocation.objects.search_investment(project='PB')
         self.assertResult(qs, [(1, 4, 3)])
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = ProjectLocation.objects.search_investment(country='azi') #Brazil
+        self.assertResult(qs, [(1, 1, 1), (1, 4, 3)])
 
     def assertResult(self, qs, expected):
         return self.assertQuerysetEqual(qs, expected,

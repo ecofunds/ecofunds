@@ -68,6 +68,10 @@ class ProjectLocationSearchManager(Manager):
         if project:
             qs = qs.filter(Q(entity__title__icontains=project)|Q(entity__acronym__icontains=project))
 
+        country = fields.get('country')
+        if country:
+            qs = qs.filter(location__country__name__icontains=country)
+
         qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
         return qs
