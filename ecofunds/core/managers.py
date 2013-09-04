@@ -64,6 +64,10 @@ class ProjectLocationSearchManager(Manager):
         if kind:
             condition = Q(entity__recipient_investments__type__pk=kind)
 
+        project = fields.get('project')
+        if project:
+            qs = qs.filter(Q(entity__title__icontains=project)|Q(entity__acronym__icontains=project))
+
         qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
         return qs

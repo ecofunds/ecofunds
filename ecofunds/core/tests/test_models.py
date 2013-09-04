@@ -227,6 +227,14 @@ class InvestmentSearchTest(TestCase):
         expected = [(1, 4, 1)]
         self.assertResult(qs, expected)
 
+    def test_project(self):
+        '''Filter by project name or acronym'''
+        qs = ProjectLocation.objects.search_investment(project='ectB')
+        self.assertResult(qs, [(1, 4, 3)])
+
+        qs = ProjectLocation.objects.search_investment(project='PB')
+        self.assertResult(qs, [(1, 4, 3)])
+
     def assertResult(self, qs, expected):
         return self.assertQuerysetEqual(qs, expected,
             lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
