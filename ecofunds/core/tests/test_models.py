@@ -200,8 +200,8 @@ class InvestmentSearchTest(TestCase):
         l1 = m('Location', pk=1, name='Rio de Janeiro', iso_sub='RJ', country__name='Brazil')
 
         p1 = m('Project', title=u'ProjectA', acronym='PA', validated=1)
-        p2 = m('Project', title=u'ProjectC', acronym='PC')
-        p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1)
+        p2 = m('Project', title=u'ProjectC', acronym='PC') # invalid
+        p3 = m('Project', title=u'ProjectB2', acronym='PB2', validated=1) # without investment
         p4 = m('Project', title=u'ProjectB1', acronym='PB1', validated=1)
 
         m('ProjectLocation', entity=p1, location=l1)
