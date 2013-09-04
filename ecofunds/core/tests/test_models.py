@@ -244,6 +244,14 @@ class InvestmentSearchTest(TestCase):
         qs = ProjectLocation.objects.search_investment(country='azi') #Brazil
         self.assertResult(qs, [(1, 1, 1), (1, 4, 3)])
 
+    def test_state(self):
+        '''Filter by state.'''
+        qs = ProjectLocation.objects.search_investment(state='RJ')
+        self.assertResult(qs, [(1, 1, 1), (1, 4, 3)])
+
+        qs = ProjectLocation.objects.search_investment(state='Jan')
+        self.assertResult(qs, [(1, 1, 1), (1, 4, 3)])
+
     def assertResult(self, qs, expected):
         return self.assertQuerysetEqual(qs, expected,
             lambda o: (o.location.pk, o.entity.pk, o.entity_amount))
