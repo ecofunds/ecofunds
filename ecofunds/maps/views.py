@@ -484,34 +484,27 @@ def investment_api(request, map_type):
     points = {}
 
     for obj in qs:
-        lat, lng = parse_centroid(obj.location.centroid)
+        project = {
+            'id': obj.entity.pk, # Should be investment ID, but it's not possible
+            'acronym': obj.entity.title,
+            'url': obj.entity.website,
+            'entity_id': obj.entity.pk,
+            'amount': float(obj.entity_amount),
+            'amount_str': format_currency(obj.entity_amount)
+        }
 
         if not obj.location.pk in points:
-            marker = {
+            lat, lng = parse_centroid(obj.location.centroid)
+
+            points[obj.location.pk] = {
                 'location_id': obj.location.pk,
                 'lat': lat,
                 'lng': lng,
                 'total_investment': float(obj.entity_amount),
                 'total_investment_str': format_currency(obj.entity_amount),
-                'projects': [{
-                    'id': obj.entity.pk, # Should be investment ID, but it's not possible
-                    'acronym': obj.entity.title,
-                    'url': obj.entity.website,
-                    'entity_id': obj.entity.pk,
-                    'amount': float(obj.entity_amount),
-                    'amount_str': format_currency(obj.entity_amount)
-                }]
+                'projects': [project]
             }
-            points[obj.location.pk] = marker
         else:
-            project = {
-                'id': obj.entity.pk, # Should be investment ID, but it's not possible
-                'acronym': obj.entity.title,
-                'url': obj.entity.website,
-                'entity_id': obj.entity.pk,
-                'amount': float(obj.entity_amount),
-                'amount_str': format_currency(obj.entity_amount)
-            }
             points[obj.location.pk]['projects'].append(project)
             points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
             points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
