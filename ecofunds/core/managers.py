@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.db.models import Manager, Q
-from aggregate_if import Sum
+from aggregate_if import Sum, Count
 
 
 class SearchManager(Manager):
@@ -85,3 +85,12 @@ class ProjectLocationSearchManager(Manager):
         qs = qs.annotate(entity_amount=Sum('entity__recipient_investments__amount_usd', only=condition)).exclude(entity_amount=None)
 
         return qs
+
+
+class ProjectManager(Manager):
+    def stats(self):
+        return self.aggregate(
+            count_projects=Count('pk', distinct=True),
+            count_project_activity_types=Count('activities', distinct=True),
+            count_project_regions=Count('locations', distinct=True),
+        )

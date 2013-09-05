@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
-from managers import SearchManager, ProjectLocationSearchManager
+from managers import SearchManager, ProjectLocationSearchManager, ProjectManager
 
 from ecofunds.maps.utils import parse_centroid
 
@@ -298,6 +298,7 @@ class Project(models.Model):
             return parse_centroid(self.centroid)[1]
         return None
 
+    objects = ProjectManager()
 
     class Meta:
         db_table = u'ecofunds_entities'
