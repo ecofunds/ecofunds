@@ -1,5 +1,9 @@
+{% extends "base.html" %}
 {% load tags cms_tags sekizai_tags static i18n %}
-{%block head%}
+
+{% block page_id %}map{% endblock %}
+
+{% block head %}
     {% addtoblock "css" %}
         <link type="text/css" rel="stylesheet" href="{% get_static_prefix %}css/ui-custom-theme/jquery-ui-1.9.2.custom.css" />
         <style type="text/css">
@@ -20,23 +24,16 @@
     {% endaddtoblock %}
 
     {% addtoblock "js" %}
-        <script type="text/javascript"
-            src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'pt'}]}">
-        </script>
         <script type="text/javascript">
             var default_domain = 'investment';
             var default_map_type = 'density/';
         </script>
         <script src="{% get_static_prefix %}js/handlebars.1.0.0.beta.3.js"></script>
-        {% if instance.show_search_projects and instance.show_search_organizations and instance.show_search_investments %}
-            <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
-        {% else %}
-            <script data-main="{% get_static_prefix %}js/app-home.js" src="{% get_static_prefix %}js/require.js"></script>
-        {% endif %}
+        <script data-main="{% get_static_prefix %}js/app.js" src="{% get_static_prefix %}js/require.js"></script>
     {% endaddtoblock %}
 {% endblock %}
 
-{% if instance.show_search_projects or instance.show_search_organizations or instance.show_search_investments %}
+{% block base_content %}
     <script type="text/javascript">
         var global_map_height = 583;
         var default_domain = 'project';
@@ -54,102 +51,64 @@
         <div class="area-filtros-mapa">
             <div class="menu-abas">
                 <ul class="menu-abas-container">
-                    {% if instance.show_search_projects %}<li class="item aba"><a class="link-aba" href="#project">{% trans "Projects" %}</a></li>{% endif %}
-                    {% if instance.show_search_organizations %}<li class="item aba"><a class="link-aba" href="#organization">{% trans "Organizations" %}</a></li>{% endif %}
-                    {% if instance.show_search_investments %}<li class="item aba"><a class="link-aba" href="#investment">{% trans "Investments" %}</a></li>{% endif %}
+                    <li class="item aba"><a class="link-aba" href="#project">{% trans "Projects" %}</a></li>
+                    <li class="item aba"><a class="link-aba" href="#organization">{% trans "Organizations" %}</a></li>
+                    <li class="item aba"><a class="link-aba" href="#investment">{% trans "Investments" %}</a></li>
                 </ul>
             </div>
 
             <div class="conteudo-abas-container">
-                {% if instance.show_search_projects %}
                     <section id="filtro-projetos">
                         {% include "maps/search-project.html" %}
                     </section>
-                {% endif %}
-
-                {% if instance.show_search_organizations %}
                     <section id="filtro-organizacoes">
                         {% include "maps/search-organization.html" %}
                     </section>
-                {% endif %}
-
-                {% if instance.show_search_investments %}
                     <section id="filtro-investimentos">
                         {% include "maps/search-investment.html" %}
                     </section>
-                {% endif %}
             </div>
         </div>
     </div>
-{% endif %}
 
-<section id="map-view" class="mapa">
-    <div class="carregando tela-mapa" style="position:absolute;width:100%;"></div>
-    <div style="position:relative;width:100%;height:400px;" class="gmap mapa" id="id_map">
-        <div style="position:absolute;width:100%;height:100%"></div>
-        <div class="container">
-            <div class="slider-control-container">
-                <div class="zoom-in"></div>
-                <div class="slider-control"></div>
-                <div class="zoom-out"></div>
+    <section id="map-view" class="mapa">
+        <div class="carregando tela-mapa" style="position:absolute;width:100%;"></div>
+        <div style="position:relative;width:100%;height:400px;" class="gmap mapa" id="id_map">
+            <div style="position:absolute;width:100%;height:100%"></div>
+            <div class="container">
+                <div class="slider-control-container">
+                    <div class="zoom-in"></div>
+                    <div class="slider-control"></div>
+                    <div class="zoom-out"></div>
+                </div>
             </div>
         </div>
+    </section>
+
+    {% verbatim %}
+    <div id="info_project" style="display: none;">
+        <h4><a href="/projetos/ficha-projeto/?id={{ entity_id }}">{{ acronym }}</a></h4>
+        {{#if url }}
+        <ul>
+            <li><a href="{{ url }}">{{ url }}</a></li>
+        </ul>
+        {{/if}}
     </div>
-</section>
-
-<section id="chart-view" class="graficos">
-    <div class="container">
-        <div class="botoes-container">
-            <a href="javascript:;" class="botao secundario btn-regiao">{% trans "Location" %}</a>
-            <a href="javascript:;" class="botao secundario btn-tipo-atividades">{% trans "Activity type" %}</a>
-            <a href="javascript:;" class="botao secundario btn-investimentos selecionado">{% trans "Investments" %}</a>
-        </div>
-
-        <!-- visualizacao tipo de graficos -->
-        <div class="visualizacao">
-            <p class="texto-lista">{% trans "Chart type: " %}</p>
-            <ul class="visualizacao-container">
-                <li class="item ativo">
-                    <a href="#bars" class="link ico ico-texto grafico-barra-icone ativo">{% trans "Bars" %}
-                    </a>
-                </li>
-
-                <li class="item inativo">
-                    <a href="#pie" class="link ico ico-texto grafico-pizza-icone inativo">{% trans "Pie" %}
-                    </a>
-                </li> <!-- Para cada um desses, existe um icone inativo -->
-            </ul>
-        </div>
-        <!-- fim de visualizacao tipo de graficos-->
-
-        <!-- O grafico é gerado aqui -->
-        <div id="chart-content" class="grafico-container"></div>
+    <div id="info_organization" style="display: none;">
+        <h4><a href="/organizacoes/ficha-organizacao/?id={{ entity_id }}">{{ name }}</a></h4>
+        {{#if url }}
+        <ul>
+            <li><a href="{{ url }}">{{ url }}</a></li>
+        </ul>
+        {{/if}}
     </div>
-</section>
-
-{% verbatim %}
-<div id="info_project" style="display: none;">
-    <h4><a href="/projetos/ficha-projeto/?id={{ entity_id }}">{{ acronym }}</a></h4>
-    {{#if url }}
-    <ul>
-        <li><a href="{{ url }}">{{ url }}</a></li>
-    </ul>
-    {{/if}}
-</div>
-<div id="info_organization" style="display: none;">
-    <h4><a href="/organizacoes/ficha-organizacao/?id={{ entity_id }}">{{ name }}</a></h4>
-    {{#if url }}
-    <ul>
-        <li><a href="{{ url }}">{{ url }}</a></li>
-    </ul>
-    {{/if}}
-</div>
-<div id="info_investment_density" style="display: none;">
-    <h4>Total: {{ total_investment_str }}</h4>
-    <ul>
-    {{#each projects}}
-        <li><a href="/investimentos/ficha-investimento/?id={{ id }}">{{ acronym }}</a> - {{ amount_str }}</li>
-    {{/each}}
-    </ul>
-</div>
-{% endverbatim %}
+    <div id="info_investment_density" style="display: none;">
+        <h4>Total: {{ total_investment_str }}</h4>
+        <ul>
+        {{#each projects}}
+            <li><a href="/investimentos/ficha-investimento/?id={{ id }}">{{ acronym }}</a> - {{ amount_str }}</li>
+        {{/each}}
+        </ul>
+    </div>
+    {% endverbatim %}
+{%  endblock %}
