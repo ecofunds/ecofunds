@@ -1,9 +1,11 @@
 from django.http import HttpResponseBadRequest, HttpResponse
+from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
+from aggregate_if import Count
 
-from ecofunds.core.models import Organization, ProjectLocation
+from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
@@ -247,3 +249,16 @@ def output_organization_excel(qs):
     wb.save(response)
 
     return response
+
+
+def map_view(request):
+    context = {
+        'search_project_form': ProjectFilterForm(request.GET),
+        'search_organization_form': OrganizationFilterForm(request.GET),
+        'search_investment_form': InvestmentFilterForm(request.GET),
+    }
+    context.update(Project.objects.stats())
+    context.update(Organization.objects.stats())
+    context.update(Investment.objects.stats())
+
+    return render(request, "maps/map.html", context)
