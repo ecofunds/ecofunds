@@ -80,8 +80,6 @@ STATIC_URL = '/static/'
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-GEOIP_DATABASE = PROJECT_ROOT.child('geoip', 'GeoLiteCity.dat')
-
 # Additional locations of static files
 STATICFILES_DIRS = (
     PROJECT_ROOT.child('assets'),
