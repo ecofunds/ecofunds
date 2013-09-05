@@ -103,9 +103,9 @@
             <!-- menu-topo -->
             <div id="menu-topo">
                 <ul class="menu-topo-container">
-                    <li><a href="{% page_url "map" %}#project">Projects</a></li>
-                    <li><a href="{% page_url "map" %}#organization">Organizations</a></li>
-                    <li><a href="{% page_url "map" %}#investment">Investments</a></li>
+                    <li><a href="{% url map %}#project">Projects</a></li>
+                    <li><a href="{% url map %}#organization">Organizations</a></li>
+                    <li><a href="{% url map %}#investment">Investments</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url admin:index %}">Administration</a></li>
                     {% endif %}
@@ -137,10 +137,9 @@
                     <dt>{% trans "Explore" %}</dt>
                     <dd>
                         <ul>
-                            <li>{% page_link "projects" %}</li>
-                            <li>{% page_link "organizations" %}</li>
-                            <li>{% page_link "investments" %}</li>
-                            <li>{% page_link "map" %}</li>
+                            <li><a href="{% url map %}#project">Projects</a></li>
+                            <li><a href="{% url map %}#organization">Organizations</a></li>
+                            <li><a href="{% url map %}#investment">Investments</a></li>
                             <li>{% page_link "opportunities" %}</li>
                             {% if user.is_authenticated %}
                                 <li>{% page_link "users" %}</li>
