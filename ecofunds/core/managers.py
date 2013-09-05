@@ -26,6 +26,13 @@ class SearchManager(Manager):
 
         return qs
 
+    def stats(self):
+        return self.aggregate(
+            count_organizations=Count('pk', distinct=True),
+            count_organization_types=Count('type', distinct=True),
+            count_organization_regions=Count('state', distinct=True),
+        )
+
 
 class ProjectLocationSearchManager(Manager):
     def search(self, **fields):
