@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
-from aggregate_if import Count
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
