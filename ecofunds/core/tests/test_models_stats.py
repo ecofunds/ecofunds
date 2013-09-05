@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.test import TestCase
 from model_mommy.mommy import make as m
-from ecofunds.core.models import Project, Organization
+from ecofunds.core.models import Project, Organization, Investment
 
 
 class ProjectStatsTest(TestCase):
@@ -52,3 +52,31 @@ class OrganizationStatsTest(TestCase):
             'count_organization_regions': 3,
         }
         self.assertDictEqual(expected, Organization.objects.stats())
+
+
+class InvestmentStatsTest(TestCase):
+    def setUp(self):
+        t1 = m('InvestmentType', name='T1')
+        t2 = m('InvestmentType', name='T1')
+
+        p1 = m('Project', title='P1')
+        p2 = m('Project', title='P2')
+        p3 = m('Project', title='P3')
+
+        o1 = m('Organization', name='O1')
+        o2 = m('Organization', name='O2')
+        o3 = m('Organization', name='O3')
+
+        i1 = m('Investment', type=t1, recipient_entity=p1, recipient_organization=o1, funding_organization=o2)
+        i2 = m('Investment', type=t1, recipient_entity=p2, recipient_organization=o1, funding_organization=o2)
+        i3 = m('Investment', type=t2, recipient_entity=p2, recipient_organization=o2, funding_organization=o1)
+
+    def test_stats(self):
+        expected = {
+            'count_investments': 3,
+            'count_organization_investments': 2,
+            'count_investment_types': 2,
+            'count_recipient_organization': 2,
+            'count_recipient_entity_investments': 2,
+        }
+        self.assertDictEqual(expected, Investment.objects.stats())

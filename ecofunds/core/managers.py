@@ -101,3 +101,14 @@ class ProjectManager(Manager):
             count_project_activity_types=Count('activities', distinct=True),
             count_project_regions=Count('locations', distinct=True),
         )
+
+
+class InvestmentManager(Manager):
+    def stats(self):
+        return self.aggregate(
+            count_investments=Count('pk', distinct=True),
+            count_organization_investments=Count('funding_organization', distinct=True),
+            count_investment_types=Count('type', distinct=True),
+            count_recipient_organization=Count('recipient_organization', distinct=True),
+            count_recipient_entity_investments=Count('recipient_entity', distinct=True)
+        )
