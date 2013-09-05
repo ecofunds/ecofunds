@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.views.generic.list import ListView
 from django.views.generic.detail import BaseDetailView
-from django.views.generic import CreateView,DeleteView
+from django.views.generic import CreateView, DeleteView, RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
@@ -215,3 +215,10 @@ def uploadify_upload(request):
         response = HttpResponse()
         response.write("%s\r\n"%upload.name)
         return response
+
+
+class Home(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, **kwargs):
+        return reverse('map') + '#investment'

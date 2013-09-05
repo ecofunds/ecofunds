@@ -9,6 +9,7 @@ from ajax_select import urls as ajax_select_urls
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^$', Home.as_view(), name='home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ajax/lookups',include(ajax_select_urls)),
     url(r'^ajax/project/', include('ecofunds.project.urls')),
