@@ -59,7 +59,7 @@
 			    <!-- opcoes-adicionais da ficha -->
 			    <div class="opcoes-adicionais">
 			        <ul class="opcoes-adicionais-container">
-		        	<li class="item ico ico-texto localizacao-menor-verde"><a href="{%page_url "map"%}?s_organization={{investment.recipient_organization.name}}#filtro-organizacoes">{% trans "Recepient location" %}</a></li>
+		        	<li class="item ico ico-texto localizacao-menor-verde"><a href="{% url map %}?s_organization={{investment.recipient_organization.name}}#filtro-organizacoes">{% trans "Recepient location" %}</a></li>
 		        	<li class="item ico ico-texto impressao"><a href="#">{% trans "Print" %}</a></li>     
 			        </ul>
 		    	</div>
@@ -258,8 +258,6 @@
 			</ul>		
 		</section>
 		{% endif %}
-
-		{% include "./map-link.html" %}
     </div>
     <!-- fim de barra lateral -->
 </div>

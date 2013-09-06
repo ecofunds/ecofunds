@@ -87,7 +87,7 @@
 			        <ul class="opcoes-adicionais-container">
 		        		<li class="item ico ico-texto projeto-menor-verde"><a href="{% page_url "projects" %}?s_organization_name={{ organization.name }}" id="bt-projects">{% trans "Projects" %}</a></li>
 		        		<li class="item ico ico-texto investimento-menor-verde"><a href="{% page_url "investments" %}?s_organization_name={{organization.name}}" id="bt-investments">{% trans "Investments" %}</a></li>
-		        		<li class="item ico ico-texto localizacao-menor-verde"><a href="{% page_url "map"%}?s_organization={{organization.name}}" id="bt-location">{% trans "Project location map" %}</a></li>
+		        		<li class="item ico ico-texto localizacao-menor-verde"><a href="{% url map %}#organization?name={{organization.name}}" id="bt-location">{% trans "Project location map" %}</a></li>
 		        		<li class="item ico ico-texto impressao"><a href="#" id="bt-print">{% trans "Print" %}</a></li>     
 			        </ul>
 		    	</div>
@@ -388,8 +388,6 @@
 		</section>
 		<!-- fim de Tipo de atividades --> 
 		{% endif %}
-
-		{% include "./map-link.html" %}
     </div>
     <!-- fim de barra lateral -->
 </div>

@@ -22,7 +22,6 @@
         <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/estilos-ie.css" media="all" />
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/ajax_select.css" media="all" />
     <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/fancybox/jquery.fancybox.css" media="all" />
 
     {% render_block "css" %}
@@ -97,15 +96,15 @@
         <!-- container -->
         <div class="container">
             <!-- logotipo -->
-            <h1>{% page_link "home" css="logo" title="Ecofunds Database: back to home" text="Ecofunds Database" %}</h1>
+            <h1><a href="/" class="logo">Ecofunds Database</a></h1>
             <!-- logotipo -->
 
             <!-- menu-topo -->
             <div id="menu-topo">
                 <ul class="menu-topo-container">
-                    <li><a href="{% page_url "map" %}#project">Projects</a></li>
-                    <li><a href="{% page_url "map" %}#organization">Organizations</a></li>
-                    <li><a href="{% page_url "map" %}#investment">Investments</a></li>
+                    <li><a href="{% url map %}#project">Projects</a></li>
+                    <li><a href="{% url map %}#organization">Organizations</a></li>
+                    <li><a href="{% url map %}#investment">Investments</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url admin:index %}">Administration</a></li>
                     {% endif %}
@@ -137,10 +136,9 @@
                     <dt>{% trans "Explore" %}</dt>
                     <dd>
                         <ul>
-                            <li>{% page_link "projects" %}</li>
-                            <li>{% page_link "organizations" %}</li>
-                            <li>{% page_link "investments" %}</li>
-                            <li>{% page_link "map" %}</li>
+                            <li><a href="{% url map %}#project">Projects</a></li>
+                            <li><a href="{% url map %}#organization">Organizations</a></li>
+                            <li><a href="{% url map %}#investment">Investments</a></li>
                             <li>{% page_link "opportunities" %}</li>
                             {% if user.is_authenticated %}
                                 <li>{% page_link "users" %}</li>
@@ -184,7 +182,7 @@
                         <p><a href="http://ecofunds.redlac.org">http://ecofunds.redlac.org</a> | <a href="mailto:ecofunds@redlac.org">ecofunds@redlac.org</a></p>
 
                         <p>
-                            <a href="{% page_url 'home' %}" title="{% trans "Go to: home"%}"><img src="{% get_static_prefix %}images/logos/logo-ecofunds-menor.png" alt="" /></a>
+                            <a href="/" title="{% trans "Go to: home"%}"><img src="{% get_static_prefix %}images/logos/logo-ecofunds-menor.png" alt="" /></a>
                             <a href="http://redlac.org/" title="{% trans "Go to: Redlac.org"%}"><img src="{% get_static_prefix %}images/logos/logo-redlac-menor.png" alt="" /></a>
                         </p>
                     </dd>

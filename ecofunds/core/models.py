@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin, Page
-from managers import SearchManager, ProjectLocationSearchManager
+from managers import SearchManager, ProjectLocationSearchManager, ProjectManager, InvestmentManager
 
 from ecofunds.maps.utils import parse_centroid
 
@@ -298,6 +298,7 @@ class Project(models.Model):
             return parse_centroid(self.centroid)[1]
         return None
 
+    objects = ProjectManager()
 
     class Meta:
         db_table = u'ecofunds_entities'
@@ -390,6 +391,8 @@ class Investment(models.Model):
     code = models.CharField(max_length=20)
     active = models.BooleanField(default=1)
     investment_flow = models.ManyToManyField('Investment',null=True,blank=True,through='InvestmentFlow')
+
+    objects = InvestmentManager()
 
     class Meta:
         db_table = u'ecofunds_investments'

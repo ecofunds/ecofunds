@@ -184,11 +184,10 @@ class InvestmentMapTest(MapFixture):
         self.assertEqual(200, response.status_code)
 
         expected_items = [{
-            u'scale': 24,
             u'location_id': 1,
             u'lat': -22.5331067902,
             u'lng': -43.2435698976,
-            u'total_investment': 1000000,
+            u'total_investment': 1000000.0,
             u'total_investment_str': u"$ 1.000.000,00",
             u'projects': [
                 {
@@ -196,7 +195,7 @@ class InvestmentMapTest(MapFixture):
                     u'acronym': u"Projeto de Teste",
                     u'url': None,
                     u'entity_id': 1,
-                    u'amount': 1000000,
+                    u'amount': 1000000.0,
                     u'amount_str': u'$ 1.000.000,00',
                 },
             ],

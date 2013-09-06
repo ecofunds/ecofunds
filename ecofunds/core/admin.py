@@ -1,11 +1,14 @@
 from django.contrib import admin
-from cms.admin.placeholderadmin import PlaceholderAdmin
-from ecofunds.core.models import *
-from ecofunds.opportunity.models import *
 from ecofunds import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from ecofunds.user.models import UserProfile,UserType
+from ecofunds.user.models import UserProfile, UserType
+from ecofunds.core.models import (Organization, Project, Investment, Image, Location, ProjectLocation, Country,
+                                  Attachment, Activity, Currency, OrganizationType, OrganizationAttachment,
+                                  ProjectXProject, ProjectAttachment, ProjectActivity, ProjectOrganization,
+                                  InvestmentType, InvestmentAttachment, ListImagePlugin, NotificationType, Notification,
+                                  InvestmentFlow, NotificationReader, AttachmentType, AttachmentPlugin)
+
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -51,7 +54,6 @@ class UserTypeAdmin(admin.ModelAdmin):
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Investment, InvestmentAdmin)
-admin.site.register(FundingOpportunity)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Location,LocationAdmin)
 admin.site.unregister(User)

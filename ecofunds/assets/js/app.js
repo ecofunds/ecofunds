@@ -61,7 +61,6 @@ requirejs.config({
 
 require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica, ui) {
     $('#id_map').css('height', global_map_height);
-    $('#chart-view').hide();
 
     require(["marker", "markerclusterer"], function () {
         window.map_router = new loogica.MapRouterWithFilter();
