@@ -126,6 +126,21 @@ class InvestmentJSONView(TestCase):
         self.assertEqual(200, response.status_code)
 
 
+class InvestmentCSVTest(MapFixture):
+    def test_get_geoapi_investment_density(self):
+        response = self.client.get(reverse('investment_api', args=['csv']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="investment.csv"')
+
+class InvestmentXLSTest(MapFixture):
+    def test_get_geoapi_investment_density(self):
+        response = self.client.get(reverse('investment_api', args=['xls']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="investment.xls"')
+
+
 class OrganizationJSONView(MapFixture):
     def test_get_geoapi_organization_marker(self):
         response = self.client.get(reverse('organization_api', args=['marker']))
