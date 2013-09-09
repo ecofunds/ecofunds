@@ -116,8 +116,18 @@ def output_project_excel(qs):
     return response
 
 
+INVESTMENT_EXPORT_COLUMNS = {
+    'ACRONYM': 'acronym',
+    'LOCATION': 'location',
+    'LAT': 'lat',
+    'LNG': 'lng',
+    'AMOUNT': 'amount_str',
+}
+
+INVESTMENT_HEADERS = ['ACRONYM', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
+
 def investment_api(request, map_type):
-    if map_type not in ("density"):
+    if map_type not in ("density", "csv", "xls"):
         return HttpResponseBadRequest()
 
     form = InvestmentFilterForm(request.GET)
@@ -126,39 +136,105 @@ def investment_api(request, map_type):
 
     qs = ProjectLocation.objects.search_investment(**form.cleaned_data)
     qs = qs.only('location__centroid', 'entity__title', 'entity__website')
+    qs = qs.order_by('location__country__name', 'location__name')
 
     points = {}
 
-    for obj in qs:
-        project = {
-            'id': obj.entity.pk, # Should be investment ID, but it's not possible
-            'acronym': obj.entity.title,
-            'url': obj.entity.website,
-            'entity_id': obj.entity.pk,
-            'amount': float(obj.entity_amount),
-            'amount_str': format_currency(obj.entity_amount)
-        }
+    items = None
+    if map_type == "density":
+        for obj in qs:
+            project = {
+                'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                'acronym': obj.entity.title,
+                'url': obj.entity.website,
+                'entity_id': obj.entity.pk,
+                'amount': float(obj.entity_amount),
+                'amount_str': format_currency(obj.entity_amount)
+            }
 
-        if not obj.location.pk in points:
+            if not obj.location.pk in points:
+                lat, lng = parse_centroid(obj.location.centroid)
+
+                points[obj.location.pk] = {
+                    'location': obj.location.name,
+                    'location_id': obj.location.pk,
+                    'lat': lat,
+                    'lng': lng,
+                    'total_investment': float(obj.entity_amount),
+                    'total_investment_str': format_currency(obj.entity_amount),
+                    'projects': [project]
+                }
+            else:
+                points[obj.location.pk]['projects'].append(project)
+                points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
+                points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
+
+        items =  points.values()
+    else:
+        items = []
+        for obj in qs:
             lat, lng = parse_centroid(obj.location.centroid)
-
-            points[obj.location.pk] = {
+            project = {
+                'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                'acronym': obj.entity.title,
+                'url': obj.entity.website,
+                'entity_id': obj.entity.pk,
+                'amount_str': format_currency(obj.entity_amount),
+                'location': obj.location.name,
                 'location_id': obj.location.pk,
                 'lat': lat,
                 'lng': lng,
-                'total_investment': float(obj.entity_amount),
-                'total_investment_str': format_currency(obj.entity_amount),
-                'projects': [project]
             }
-        else:
-            points[obj.location.pk]['projects'].append(project)
-            points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
-            points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
+            items.append(project)
 
+    if map_type == "csv":
+        return output_investment_csv(items)
+    elif map_type == "xls":
+        return output_investment_excel(items)
+    else:
+        return output_investment_json(items)
+
+
+def output_investment_json(items):
     gmap = {}
-    gmap['items'] = points.values()
+    gmap['items'] = items
 
     return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
+
+
+def output_investment_csv(items):
+    data = tablib.Dataset(INVESTMENT_HEADERS)
+    for item in items:
+        row = []
+        for key in INVESTMENT_HEADERS:
+            row.append(item[INVESTMENT_EXPORT_COLUMNS[key]])
+        data.append(row)
+
+    response = HttpResponse(data.csv, content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="investment.csv"'
+    return response
+
+
+def output_investment_excel(items):
+    import xlwt
+    response = HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="investment.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Investments')
+
+    for i, header in enumerate(INVESTMENT_HEADERS):
+        ws.write(0, i, header)
+
+    for i, item in enumerate(items):
+        row = []
+        for j, key in enumerate(INVESTMENT_HEADERS):
+            data = item[INVESTMENT_EXPORT_COLUMNS[key]]
+            ws.write(i+1, j, data)
+
+    wb.save(response)
+
+    return response
 
 
 ORGANIZATION_EXPORT_COLUMNS = {

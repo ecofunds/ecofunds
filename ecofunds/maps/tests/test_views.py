@@ -125,28 +125,20 @@ class InvestmentJSONView(TestCase):
         response = self.client.get(reverse('investment_api', args=['density']))
         self.assertEqual(200, response.status_code)
 
-    def test_get_geoapi_investment_density_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
 
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('investment_api',
-                                       args=['density']),
-                                       data)
-            self.assertEqual(200, response.status_code)
+class InvestmentCSVTest(MapFixture):
+    def test_get_geoapi_investment_density(self):
+        response = self.client.get(reverse('investment_api', args=['csv']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="investment.csv"')
+
+class InvestmentXLSTest(MapFixture):
+    def test_get_geoapi_investment_density(self):
+        response = self.client.get(reverse('investment_api', args=['xls']))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.get('Content-Disposition'),
+                         'attachment; filename="investment.xls"')
 
 
 class OrganizationJSONView(MapFixture):
@@ -184,6 +176,7 @@ class InvestmentMapTest(MapFixture):
         self.assertEqual(200, response.status_code)
 
         expected_items = [{
+            u'location': 'Rio de Janeiro',
             u'location_id': 1,
             u'lat': -22.5331067902,
             u'lng': -43.2435698976,
