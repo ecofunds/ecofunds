@@ -117,14 +117,14 @@ def output_project_excel(qs):
 
 
 INVESTMENT_EXPORT_COLUMNS = {
+    'ACRONYM': 'acronym',
     'LOCATION': 'location',
     'LAT': 'lat',
     'LNG': 'lng',
-    'TOTAL_INVESTMENT': 'total_investment',
-    'PROJECTS': 'projects'
+    'AMOUNT': 'amount_str',
 }
 
-INVESTMENT_HEADERS = ['LOCATION', 'LAT', 'LNG', 'TOTAL_INVESTMENT' ,'PROJECTS']
+INVESTMENT_HEADERS = ['ACRONYM', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
 
 def investment_api(request, map_type):
     if map_type not in ("density", "csv", "xls"):
@@ -136,37 +136,56 @@ def investment_api(request, map_type):
 
     qs = ProjectLocation.objects.search_investment(**form.cleaned_data)
     qs = qs.only('location__centroid', 'entity__title', 'entity__website')
+    qs = qs.order_by('location__country__name', 'location__name')
 
     points = {}
 
-    for obj in qs:
-        project = {
-            'id': obj.entity.pk, # Should be investment ID, but it's not possible
-            'acronym': obj.entity.title,
-            'url': obj.entity.website,
-            'entity_id': obj.entity.pk,
-            'amount': float(obj.entity_amount),
-            'amount_str': format_currency(obj.entity_amount)
-        }
+    items = None
+    if map_type == "density":
+        for obj in qs:
+            project = {
+                'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                'acronym': obj.entity.title,
+                'url': obj.entity.website,
+                'entity_id': obj.entity.pk,
+                'amount': float(obj.entity_amount),
+                'amount_str': format_currency(obj.entity_amount)
+            }
 
-        if not obj.location.pk in points:
+            if not obj.location.pk in points:
+                lat, lng = parse_centroid(obj.location.centroid)
+
+                points[obj.location.pk] = {
+                    'location': obj.location.name,
+                    'location_id': obj.location.pk,
+                    'lat': lat,
+                    'lng': lng,
+                    'total_investment': float(obj.entity_amount),
+                    'total_investment_str': format_currency(obj.entity_amount),
+                    'projects': [project]
+                }
+            else:
+                points[obj.location.pk]['projects'].append(project)
+                points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
+                points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
+
+        items =  points.values()
+    else:
+        items = []
+        for obj in qs:
             lat, lng = parse_centroid(obj.location.centroid)
-
-            points[obj.location.pk] = {
+            project = {
+                'id': obj.entity.pk, # Should be investment ID, but it's not possible
+                'acronym': obj.entity.title,
+                'url': obj.entity.website,
+                'entity_id': obj.entity.pk,
+                'amount_str': format_currency(obj.entity_amount),
                 'location': obj.location.name,
                 'location_id': obj.location.pk,
                 'lat': lat,
                 'lng': lng,
-                'total_investment': float(obj.entity_amount),
-                'total_investment_str': format_currency(obj.entity_amount),
-                'projects': [project]
             }
-        else:
-            points[obj.location.pk]['projects'].append(project)
-            points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
-            points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
-
-    items =  points.values()
+            items.append(project)
 
     if map_type == "csv":
         return output_investment_csv(items)
@@ -211,8 +230,6 @@ def output_investment_excel(items):
         row = []
         for j, key in enumerate(INVESTMENT_HEADERS):
             data = item[INVESTMENT_EXPORT_COLUMNS[key]]
-            if isinstance(data, list):
-                data = " - ".join([project['acronym'] for project in data])
             ws.write(i+1, j, data)
 
     wb.save(response)
