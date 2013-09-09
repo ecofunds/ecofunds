@@ -125,29 +125,6 @@ class InvestmentJSONView(TestCase):
         response = self.client.get(reverse('investment_api', args=['density']))
         self.assertEqual(200, response.status_code)
 
-    def test_get_geoapi_investment_density_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
-
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('investment_api',
-                                       args=['density']),
-                                       data)
-            self.assertEqual(200, response.status_code)
-
 
 class OrganizationJSONView(MapFixture):
     def test_get_geoapi_organization_marker(self):
