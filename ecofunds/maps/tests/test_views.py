@@ -161,6 +161,7 @@ class InvestmentMapTest(MapFixture):
         self.assertEqual(200, response.status_code)
 
         expected_items = [{
+            u'location': 'Rio de Janeiro',
             u'location_id': 1,
             u'lat': -22.5331067902,
             u'lng': -43.2435698976,
