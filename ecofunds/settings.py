@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'ecofunds.project',
     'ecofunds.organization',
     'ecofunds.investment',
+    'ecofunds.crud',
 )
 
 CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')
