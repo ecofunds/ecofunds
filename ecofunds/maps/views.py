@@ -122,7 +122,7 @@ INVESTMENT_EXPORT_COLUMNS = {
     'COUNTRY': 'country',
     'LAT': 'lat',
     'LNG': 'lng',
-    'AMOUNT': 'amount_str',
+    'AMOUNT': 'amount',
 }
 
 INVESTMENT_HEADERS = ['ACRONYM', 'COUNTRY', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
@@ -180,7 +180,7 @@ def investment_api(request, map_type):
                 'acronym': obj.entity.title,
                 'url': obj.entity.website,
                 'entity_id': obj.entity.pk,
-                'amount_str': format_currency(obj.entity_amount),
+                'amount': float(obj.entity_amount),
                 'location': obj.location.name,
                 'country': obj.location.country.name,
                 'location_id': obj.location.pk,
@@ -225,6 +225,9 @@ def output_investment_excel(items):
     wb = xlwt.Workbook()
     ws = wb.add_sheet('Investments')
 
+    currency_style = xlwt.XFStyle()
+    currency_style.num_format_str = "[$$-409]#,##0.00;-[$$-409]#,##0.00"
+
     for i, header in enumerate(INVESTMENT_HEADERS):
         ws.write(0, i, header)
 
@@ -232,7 +235,10 @@ def output_investment_excel(items):
         row = []
         for j, key in enumerate(INVESTMENT_HEADERS):
             data = item[INVESTMENT_EXPORT_COLUMNS[key]]
-            ws.write(i+1, j, data)
+            if key == "AMOUNT":
+                ws.write(i+1, j, data, style=currency_style)
+            else:
+                ws.write(i+1, j, data)
 
     wb.save(response)
 
