@@ -23,3 +23,4 @@ tablib==0.9.11
 Pygments==1.6
 sqlparse==0.1.8
 django-aggregate-if==0.3.1
+django-suit==0.2.4
