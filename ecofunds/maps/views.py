@@ -119,12 +119,13 @@ def output_project_excel(qs):
 INVESTMENT_EXPORT_COLUMNS = {
     'ACRONYM': 'acronym',
     'LOCATION': 'location',
+    'COUNTRY': 'country',
     'LAT': 'lat',
     'LNG': 'lng',
     'AMOUNT': 'amount_str',
 }
 
-INVESTMENT_HEADERS = ['ACRONYM', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
+INVESTMENT_HEADERS = ['ACRONYM', 'COUNTRY', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
 
 def investment_api(request, map_type):
     if map_type not in ("density", "csv", "xls"):
@@ -181,6 +182,7 @@ def investment_api(request, map_type):
                 'entity_id': obj.entity.pk,
                 'amount_str': format_currency(obj.entity_amount),
                 'location': obj.location.name,
+                'country': obj.location.country.name,
                 'location_id': obj.location.pk,
                 'lat': lat,
                 'lng': lng,
