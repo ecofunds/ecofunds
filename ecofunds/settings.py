@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'ecofunds.organization',
     'ecofunds.investment',
     'ecofunds.crud',
+    'ecofunds.geonames',
 )
 
 CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')
