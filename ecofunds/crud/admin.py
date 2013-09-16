@@ -1,7 +1,12 @@
 # coding: utf-8
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from models import Project, Organization, Investment, Activity
+from django import forms
+
+from models import *
+
+from ecofunds.geonames.models import Geoname
+from django_select2 import AutoModelSelect2Field, AutoHeavySelect2Widget
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -27,13 +32,24 @@ class OrganizationAdmin(admin.ModelAdmin):
     )
 
 
+class CountryChoices(AutoModelSelect2Field):
+    queryset = Geoname.objects
+
+class ProjectForm(forms.ModelForm):
+    country = CountryChoices(widget=AutoHeavySelect2Widget())
+    class Meta:
+        model = Project2
+
 class ProjectAdmin(admin.ModelAdmin):
+    form = ProjectForm
     list_display = ('name', 'acronym', 'kind', 'start_at')
     list_filter = ('start_at', 'kind')
     search_fields = ('name', 'acronym')
     fieldsets = (
             (None, {
-                'fields': ('name', 'acronym', 'kind', 'organization', 'description', 'start_at', 'end_at', 'goal', 'activities', 'geofocus')
+                'fields': ('name', 'acronym', 'kind', 'organization', 'description',
+                           'start_at', 'end_at', 'goal', 'activities', 'geofocus',
+                           'location')
             }),
             (_(u'Contact'), {
                 'classes': ('wide',),
@@ -56,7 +72,7 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_filter = ('amount', 'contributed_at')
 
 
-admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(Investment, InvestmentAdmin)
-admin.site.register(Activity)
+admin.site.register(Organization2, OrganizationAdmin)
+admin.site.register(Project2, ProjectAdmin)
+admin.site.register(Investment2, InvestmentAdmin)
+admin.site.register(Activity2)

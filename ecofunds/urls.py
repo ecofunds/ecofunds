@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^map/', include('ecofunds.maps.urls')),
     url(r'^user/',include('ecofunds.user.urls')),
     url(r'^', include('cms.urls')),
+    url(r"^select2/", include("django_select2.urls")),
 )
 
 if settings.DEBUG:

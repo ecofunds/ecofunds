@@ -154,7 +154,9 @@ INSTALLED_APPS = (
     'tinymce',
     'babel',
     'xlwt',
+    'django_select2',
     #'endless_pagination',
+    'ecofunds.geonames',
     'ecofunds.core',
     'ecofunds.user',
     'ecofunds.maps',
@@ -162,7 +164,6 @@ INSTALLED_APPS = (
     'ecofunds.organization',
     'ecofunds.investment',
     'ecofunds.crud',
-    'ecofunds.geonames',
 )
 
 CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')
