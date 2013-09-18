@@ -24,3 +24,4 @@ Pygments==1.6
 sqlparse==0.1.8
 django-aggregate-if==0.3.1
 django-suit==0.2.4
+django_select2==4.2.0

@@ -2,6 +2,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from ecofunds.geonames.models import Geoname
+
 
 class Contact(models.Model):
     url = models.URLField(blank=True, null=True)
@@ -24,11 +26,13 @@ class Place(models.Model):
     lat = models.FloatField(blank=True, null=True)
     lng = models.FloatField(blank=True, null=True)
 
+    location = models.ForeignKey(Geoname, null=False)
+
     class Meta:
         abstract = True
 
 
-class Organization(Place, Contact):
+class Organization2(Place, Contact):
     KINDS = (
         (1, u'Non-profit'),
         (2, u'Private Company'),
@@ -50,23 +54,25 @@ class Organization(Place, Contact):
     class Meta:
         verbose_name = _(u'organization')
         verbose_name_plural = _(u'organizations')
+        db_table = 'crud_organization'
 
     def __unicode__(self):
         return self.name
 
 
-class Activity(models.Model):
+class Activity2(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
         verbose_name = _('activity')
         verbose_name_plural = _('activities')
+        db_table = 'crud_activity'
 
     def __unicode__(self):
         return self.name
 
 
-class Project(Place, Contact):
+class Project2(Place, Contact):
     KINDS = (
         (1, u'Projeto'),
         (2, u'Programa'),
@@ -80,27 +86,28 @@ class Project(Place, Contact):
     end_at = models.DateField(null=True)
     goal = models.TextField(blank=True, null=True)
 
-    organization = models.ForeignKey(Organization)
-    activities = models.ManyToManyField(Activity)
+    organization = models.ForeignKey(Organization2)
+    activities = models.ManyToManyField(Activity2)
     geofocus = models.TextField(blank=True)
 
     class Meta:
         verbose_name = _(u'project')
         verbose_name_plural = _(u'projects')
+        db_table = 'crud_project'
 
     def __unicode__(self):
         return self.name
 
 
-class Investment(models.Model):
+class Investment2(models.Model):
     KINDS = (
         (1, _('Donation')),
     )
 
-    funding_organization = models.ForeignKey(Organization, related_name='investment_funding')
-    funding_project = models.ForeignKey(Project, related_name='investment_funding', null=True, blank=True)
-    recipient_organization = models.ForeignKey(Organization, related_name='investment_recipient')
-    recipient_project = models.ForeignKey(Project, related_name='investment_recipient', null=True, blank=True)
+    funding_organization = models.ForeignKey(Organization2, related_name='investment_funding')
+    funding_project = models.ForeignKey(Project2, related_name='investment_funding', null=True, blank=True)
+    recipient_organization = models.ForeignKey(Organization2, related_name='investment_recipient')
+    recipient_project = models.ForeignKey(Project2, related_name='investment_recipient', null=True, blank=True)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
     contributed_at = models.DateField(blank=True, null=True)
     completed_at = models.DateField(blank=True, null=True)
@@ -109,3 +116,4 @@ class Investment(models.Model):
     class Meta:
         verbose_name = _('investment')
         verbose_name_plural = _('investments')
+        db_table = 'crud_investment'
