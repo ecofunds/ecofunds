@@ -34,9 +34,10 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 class CountryChoices(AutoModelSelect2Field):
     queryset = Geoname.objects
+    search_fields = ['name__istartswith', ]
 
 class ProjectForm(forms.ModelForm):
-    country = CountryChoices(widget=AutoHeavySelect2Widget())
+    location = CountryChoices(widget=AutoHeavySelect2Widget)
     class Meta:
         model = Project2
 
