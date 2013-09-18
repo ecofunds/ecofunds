@@ -54,6 +54,7 @@ class Organization2(Place, Contact):
     class Meta:
         verbose_name = _(u'organization')
         verbose_name_plural = _(u'organizations')
+        tb_table = 'crud_organization'
 
     def __unicode__(self):
         return self.name
@@ -65,6 +66,7 @@ class Activity2(models.Model):
     class Meta:
         verbose_name = _('activity')
         verbose_name_plural = _('activities')
+        db_table = 'crud_activity'
 
     def __unicode__(self):
         return self.name
@@ -91,6 +93,7 @@ class Project2(Place, Contact):
     class Meta:
         verbose_name = _(u'project')
         verbose_name_plural = _(u'projects')
+        db_table = 'crud_project'
 
     def __unicode__(self):
         return self.name
@@ -113,3 +116,4 @@ class Investment2(models.Model):
     class Meta:
         verbose_name = _('investment')
         verbose_name_plural = _('investments')
+        db_table = 'crud_investment'
