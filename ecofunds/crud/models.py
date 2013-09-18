@@ -54,7 +54,7 @@ class Organization2(Place, Contact):
     class Meta:
         verbose_name = _(u'organization')
         verbose_name_plural = _(u'organizations')
-        tb_table = 'crud_organization'
+        db_table = 'crud_organization'
 
     def __unicode__(self):
         return self.name
