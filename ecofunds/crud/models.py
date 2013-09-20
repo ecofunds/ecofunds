@@ -23,8 +23,8 @@ class Place(models.Model):
     state = models.CharField(max_length=2, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
 
-    lat = models.FloatField(blank=True, null=True)
-    lng = models.FloatField(blank=True, null=True)
+    lat = models.FloatField('latitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
+    lng = models.FloatField('longitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
 
     location = models.ForeignKey(Geoname, null=False)
 
@@ -64,6 +64,7 @@ class Activity2(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
+        ordering = ['name']
         verbose_name = _('activity')
         verbose_name_plural = _('activities')
         db_table = 'crud_activity'
