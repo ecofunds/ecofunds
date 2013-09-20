@@ -14,8 +14,8 @@ if 'south' in settings.INSTALLED_APPS:
 
 
 class Admin1Code(models.Model):
-    code = models.CharField(max_length=6)
-    name = models.CharField(max_length=58)
+    code = models.CharField(max_length=6, db_index=True)
+    name = models.CharField(max_length=58, db_index=True)
 
     def __unicode__(self):
         return self.name
@@ -43,7 +43,7 @@ class GeonameManager(models.Manager):
 class Geoname(models.Model):
     geonameid = models.PositiveIntegerField(primary_key=True, unique=True)
     name = models.CharField(max_length=200, db_index=True)
-    alternates = models.TextField(blank=True)
+    alternates = models.TextField(blank=True, db_index=True)
     fclass = models.CharField(max_length=1, db_index=True)
     fcode = models.CharField(max_length=10, db_index=True)
     country = models.CharField(max_length=2, blank=True, db_index=True)

@@ -45,9 +45,9 @@ class Organization2(AbstractPlace, AbstractContact):
         (9, u'Other'),
     )
 
-    name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=255, blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS)
+    name = models.CharField(max_length=255, db_index=True)
+    acronym = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    kind = models.IntegerField(choices=KINDS, db_index=True)
     description = models.TextField(blank=True, null=True)
     director = models.CharField(max_length=255, blank=True, null=True)
 
@@ -61,7 +61,7 @@ class Organization2(AbstractPlace, AbstractContact):
 
 
 class Activity2(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
 
     class Meta:
         ordering = ['name']
@@ -79,9 +79,9 @@ class Project2(AbstractPlace, AbstractContact):
         (2, u'Programa'),
     )
 
-    name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=255, blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS, default=1)
+    name = models.CharField(max_length=255, db_index=True)
+    acronym = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    kind = models.IntegerField(choices=KINDS, default=1, db_index=True)
     description = models.TextField(blank=True)
     start_at = models.DateField(null=True)
     end_at = models.DateField(null=True)
@@ -112,7 +112,7 @@ class Investment2(models.Model):
     amount = models.DecimalField(max_digits=20, decimal_places=2)
     contributed_at = models.DateField(blank=True, null=True)
     completed_at = models.DateField(blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS)
+    kind = models.IntegerField(choices=KINDS, db_index=True)
 
     class Meta:
         verbose_name = _('investment')
