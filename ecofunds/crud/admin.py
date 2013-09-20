@@ -10,6 +10,10 @@ from ecofunds.geonames.models import Geoname
 from django_select2 import AutoModelSelect2Field, AutoHeavySelect2Widget
 
 
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
 # Organization Admin
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -90,4 +94,4 @@ class InvestmentAdmin(admin.ModelAdmin):
 admin.site.register(Organization2, OrganizationAdmin)
 admin.site.register(Project2, ProjectAdmin)
 admin.site.register(Investment2, InvestmentAdmin)
-admin.site.register(Activity2)
+admin.site.register(Activity2, ActivityAdmin)
