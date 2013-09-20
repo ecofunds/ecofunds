@@ -26,7 +26,7 @@ class AbstractPlace(models.Model):
     lat = models.FloatField('latitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
     lng = models.FloatField('longitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
 
-    location = models.ForeignKey(Geoname, null=False)
+    location = models.ForeignKey(Geoname, null=True)
 
     class Meta:
         abstract = True
