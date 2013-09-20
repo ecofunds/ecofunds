@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecofunds.geonames.models import Geoname
 
 
-class Contact(models.Model):
+class AbstractContact(models.Model):
     url = models.URLField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
@@ -15,7 +15,7 @@ class Contact(models.Model):
         abstract = True
 
 
-class Place(models.Model):
+class AbstractPlace(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     zipcode = models.CharField(max_length=255, blank=True, null=True)
 
@@ -23,16 +23,16 @@ class Place(models.Model):
     state = models.CharField(max_length=2, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
 
-    lat = models.FloatField(blank=True, null=True)
-    lng = models.FloatField(blank=True, null=True)
+    lat = models.FloatField('latitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
+    lng = models.FloatField('longitude', blank=True, null=True, help_text='Number on the form 44.3456 or -21.9876')
 
-    location = models.ForeignKey(Geoname, null=False)
+    location = models.ForeignKey(Geoname, null=True)
 
     class Meta:
         abstract = True
 
 
-class Organization2(Place, Contact):
+class Organization2(AbstractPlace, AbstractContact):
     KINDS = (
         (1, u'Non-profit'),
         (2, u'Private Company'),
@@ -45,9 +45,9 @@ class Organization2(Place, Contact):
         (9, u'Other'),
     )
 
-    name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=255, blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS)
+    name = models.CharField(max_length=255, db_index=True)
+    acronym = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    kind = models.IntegerField(choices=KINDS, db_index=True)
     description = models.TextField(blank=True, null=True)
     director = models.CharField(max_length=255, blank=True, null=True)
 
@@ -61,9 +61,10 @@ class Organization2(Place, Contact):
 
 
 class Activity2(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = _('activity')
         verbose_name_plural = _('activities')
         db_table = 'crud_activity'
@@ -72,15 +73,15 @@ class Activity2(models.Model):
         return self.name
 
 
-class Project2(Place, Contact):
+class Project2(AbstractPlace, AbstractContact):
     KINDS = (
         (1, u'Projeto'),
         (2, u'Programa'),
     )
 
-    name = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=255, blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS, default=1)
+    name = models.CharField(max_length=255, db_index=True)
+    acronym = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    kind = models.IntegerField(choices=KINDS, default=1, db_index=True)
     description = models.TextField(blank=True)
     start_at = models.DateField(null=True)
     end_at = models.DateField(null=True)
@@ -111,7 +112,7 @@ class Investment2(models.Model):
     amount = models.DecimalField(max_digits=20, decimal_places=2)
     contributed_at = models.DateField(blank=True, null=True)
     completed_at = models.DateField(blank=True, null=True)
-    kind = models.IntegerField(choices=KINDS)
+    kind = models.IntegerField(choices=KINDS, db_index=True)
 
     class Meta:
         verbose_name = _('investment')

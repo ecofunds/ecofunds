@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django import forms
+from suit.widgets import AutosizedTextarea
 
 from models import *
 
@@ -40,6 +41,11 @@ class ProjectForm(forms.ModelForm):
     location = CountryChoices(widget=AutoHeavySelect2Widget)
     class Meta:
         model = Project2
+        widgets = {
+            'description': AutosizedTextarea(attrs={'class': 'vLargeTextField', 'rows': 4}),
+            'goal': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
+            'geofocus': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
+        }
 
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm

@@ -1,0 +1,17 @@
+.vLargeTextField {
+    width: 98%;
+}
+
+.vDateField, .vTimeField {
+    width: 5.5em;
+    vertical-align: top;
+}
+
+.vTextField, .vURLField {
+    width: 98%;
+}
+
+#id_activities { /* select */
+    height: 11em;
+}
+
