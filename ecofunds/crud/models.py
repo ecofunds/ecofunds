@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecofunds.geonames.models import Geoname
 
 
-class Contact(models.Model):
+class AbstractContact(models.Model):
     url = models.URLField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
@@ -15,7 +15,7 @@ class Contact(models.Model):
         abstract = True
 
 
-class Place(models.Model):
+class AbstractPlace(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     zipcode = models.CharField(max_length=255, blank=True, null=True)
 
@@ -32,7 +32,7 @@ class Place(models.Model):
         abstract = True
 
 
-class Organization2(Place, Contact):
+class Organization2(AbstractPlace, AbstractContact):
     KINDS = (
         (1, u'Non-profit'),
         (2, u'Private Company'),
@@ -73,7 +73,7 @@ class Activity2(models.Model):
         return self.name
 
 
-class Project2(Place, Contact):
+class Project2(AbstractPlace, AbstractContact):
     KINDS = (
         (1, u'Projeto'),
         (2, u'Programa'),
