@@ -10,6 +10,8 @@ from ecofunds.geonames.models import Geoname
 from django_select2 import AutoModelSelect2Field, AutoHeavySelect2Widget
 
 
+# Organization Admin
+
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'acronym', 'kind',)
     search_fields = ('name', 'acronym', 'kind',)
@@ -33,9 +35,12 @@ class OrganizationAdmin(admin.ModelAdmin):
     )
 
 
+# Project Admin
+
 class CountryChoices(AutoModelSelect2Field):
     queryset = Geoname.objects
     search_fields = ['name__istartswith', ]
+
 
 class ProjectForm(forms.ModelForm):
     location = CountryChoices(widget=AutoHeavySelect2Widget)
@@ -46,6 +51,7 @@ class ProjectForm(forms.ModelForm):
             'goal': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
             'geofocus': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
         }
+
 
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
@@ -72,6 +78,8 @@ class ProjectAdmin(admin.ModelAdmin):
             }),
         )
 
+
+# Investment Admin
 
 class InvestmentAdmin(admin.ModelAdmin):
     list_display = ('funding_organization', 'funding_project', 'amount', 'contributed_at',
