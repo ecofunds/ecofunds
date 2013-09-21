@@ -52,6 +52,7 @@ class Organization2(AbstractPlace, AbstractContact):
     director = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = _(u'organization')
         verbose_name_plural = _(u'organizations')
         db_table = 'crud_organization'
@@ -92,6 +93,7 @@ class Project2(AbstractPlace, AbstractContact):
     geofocus = models.TextField(blank=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = _(u'project')
         verbose_name_plural = _(u'projects')
         db_table = 'crud_project'

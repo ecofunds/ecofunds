@@ -84,8 +84,28 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 # Investment Admin
+class ProjectChoices(AutoModelSelect2Field):
+    queryset = Project2.objects.all()
+    search_fields = ['name__icontains', 'acronym__icontains']
+
+
+class OrganizationChoices(AutoModelSelect2Field):
+    queryset = Organization2.objects.all()
+    search_fields = ['name__icontains', 'acronym__icontains']
+
+
+class InvestmentForm(forms.ModelForm):
+    funding_organization = OrganizationChoices()
+    funding_project = ProjectChoices()
+    recipient_organization = OrganizationChoices()
+    recipient_project = ProjectChoices()
+
+    class Meta:
+        model = Investment2
+
 
 class InvestmentAdmin(admin.ModelAdmin):
+    form = InvestmentForm
     list_display = ('funding_organization', 'funding_project', 'amount', 'contributed_at',
                     'recipient_organization', 'recipient_project')
     list_filter = ('amount', 'contributed_at')
