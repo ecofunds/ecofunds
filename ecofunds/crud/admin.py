@@ -10,6 +10,12 @@ from ecofunds.geonames.models import Geoname
 from django_select2 import AutoModelSelect2Field, AutoHeavySelect2Widget
 
 
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+# Organization Admin
+
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'acronym', 'kind',)
     search_fields = ('name', 'acronym', 'kind',)
@@ -33,9 +39,12 @@ class OrganizationAdmin(admin.ModelAdmin):
     )
 
 
+# Project Admin
+
 class CountryChoices(AutoModelSelect2Field):
     queryset = Geoname.objects
     search_fields = ['name__istartswith', ]
+
 
 class ProjectForm(forms.ModelForm):
     location = CountryChoices(widget=AutoHeavySelect2Widget)
@@ -46,6 +55,7 @@ class ProjectForm(forms.ModelForm):
             'goal': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
             'geofocus': AutosizedTextarea(attrs={'class': 'vLargeTextField'}),
         }
+
 
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
@@ -73,7 +83,29 @@ class ProjectAdmin(admin.ModelAdmin):
         )
 
 
+# Investment Admin
+class ProjectChoices(AutoModelSelect2Field):
+    queryset = Project2.objects.all()
+    search_fields = ['name__icontains', 'acronym__icontains']
+
+
+class OrganizationChoices(AutoModelSelect2Field):
+    queryset = Organization2.objects.all()
+    search_fields = ['name__icontains', 'acronym__icontains']
+
+
+class InvestmentForm(forms.ModelForm):
+    funding_organization = OrganizationChoices()
+    funding_project = ProjectChoices()
+    recipient_organization = OrganizationChoices()
+    recipient_project = ProjectChoices()
+
+    class Meta:
+        model = Investment2
+
+
 class InvestmentAdmin(admin.ModelAdmin):
+    form = InvestmentForm
     list_display = ('funding_organization', 'funding_project', 'amount', 'contributed_at',
                     'recipient_organization', 'recipient_project')
     list_filter = ('amount', 'contributed_at')
@@ -82,4 +114,4 @@ class InvestmentAdmin(admin.ModelAdmin):
 admin.site.register(Organization2, OrganizationAdmin)
 admin.site.register(Project2, ProjectAdmin)
 admin.site.register(Investment2, InvestmentAdmin)
-admin.site.register(Activity2)
+admin.site.register(Activity2, ActivityAdmin)
