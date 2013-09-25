@@ -43,7 +43,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 class CountryChoices(AutoModelSelect2Field):
     queryset = Geoname.objects
-    search_fields = ['name__istartswith', ]
+    search_fields = ['name__icontains', 'alternates__icontains']
 
 
 class ProjectForm(forms.ModelForm):
