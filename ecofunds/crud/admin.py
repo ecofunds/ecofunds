@@ -45,6 +45,15 @@ class CountryChoices(AutoModelSelect2Field):
     queryset = Geoname.objects
     search_fields = ['name__icontains', ]
 
+    def get_results(self, request, term, page, context):
+        try:
+            data = Geoname.objects.filter(name__icontains=term).order_by('country')
+            data = map(lambda x: (x.geonameid, unicode(x)), data)
+            return ('nil', False, data)
+        except Exception as e:
+            #TODO LOG
+            return (e, false, [])
+
 
 class ProjectForm(forms.ModelForm):
     location = CountryChoices(widget=AutoHeavySelect2Widget)
