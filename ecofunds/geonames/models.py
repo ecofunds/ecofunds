@@ -65,6 +65,8 @@ class Geoname(models.Model):
     objects = GeonameManager()
 
     def __unicode__(self):
+        if self.country:
+            return "%s - %s" % (self.country, self.name)
         return self.name
 
     def is_country(self):
