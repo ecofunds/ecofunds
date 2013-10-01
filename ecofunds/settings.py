@@ -97,8 +97,8 @@ SECRET_KEY = config('SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.filesystem.Loader',
     #'django.template.loaders.eggs.Loader',
 )
 
@@ -138,6 +138,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ecofunds.mysuit',
+    'suit',
     'django.contrib.admin',
     #'south',
     'cms',
@@ -153,13 +155,16 @@ INSTALLED_APPS = (
     'tinymce',
     'babel',
     'xlwt',
+    'django_select2',
     #'endless_pagination',
+    'ecofunds.geonames',
     'ecofunds.core',
     'ecofunds.user',
     'ecofunds.maps',
     'ecofunds.project',
     'ecofunds.organization',
     'ecofunds.investment',
+    'ecofunds.crud',
 )
 
 CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')

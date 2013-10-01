@@ -186,13 +186,16 @@ class ProjectLocationSearchTest(TestCase):
         self.assertEntityLocations(qs, [(1,1), (1,3), (1,4), (3,2)])
 
     def assertPKs(self, qs, values):
-        return self.assertQuerysetEqual(qs, values, transform=lambda o: o.location.pk)
+        data = map(lambda o: o.location.pk, qs)
+        self.assertEqual(set(data), values)
 
     def assertLocationPKs(self, qs, values):
-        return self.assertQuerysetEqual(qs, values, lambda o: o.location.pk)
+        data = map(lambda o: o.location.pk, qs)
+        self.assertEqual(set(data), set(values))
 
     def assertEntityLocations(self, qs, values):
-        return self.assertQuerysetEqual(qs, values, lambda o: (o.entity.pk, o.location.pk))
+        data = map(lambda o: (o.entity.pk, o.location.pk), qs)
+        self.assertEqual(set(data), set(values))
 
 
 class InvestmentSearchTest(TestCase):
