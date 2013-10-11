@@ -11,4 +11,5 @@ def investment_detail(request, investment_id):
     pass
 
 def organization_detail(request, organization_id):
-    pass
+    model = get_object_or_404(Organization2, id=organization_id)
+    return render(request, "organization/new_detail.html", {'organization':model})
