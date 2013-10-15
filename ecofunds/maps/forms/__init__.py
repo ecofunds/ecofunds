@@ -9,6 +9,7 @@ class OrganizationFilterForm(forms.Form):
     kind = forms.ModelChoiceField(queryset=OrganizationType.objects.all(), required=False, empty_label=_('Choose an organization type'))
     country = forms.CharField(required=False)
     state = forms.CharField(required=False)
+    city = forms.CharField(required=False)
 
 
 class ProjectFilterForm(forms.Form):
