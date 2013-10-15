@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load sekizai_tags tags i18n static %}
+
+{%block head%}
+	{% addtoblock "meta" %}
+		<!-- Facebook Meta Tags -->
+<!-- 	    <meta property="og:title" content="{{ organization.name }}" />
+<meta property="og:type" content="company" />
+<meta property="og:url" content="" />
+<meta property="og:image" content="{% if organization.image %}{% get_static_prefix %}{% get_static_prefix %}{{ organization.image.url }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" />
+<meta property="og:site_name" content="http://ecofundsdatabase.org"/>
+<meta property="og:description" content="{{ organization.mission }}" /> -->
+		<!-- End of Facebook Meta Tags -->
+	{% endaddtoblock %}
+
+    {% addtoblock "js" %}
+        <!-- Funções gerais de cadastro -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/global/detail.js"></script>
+
+        <!-- Funções específicas dessa página -->
+        <script type="text/javascript" src="{% get_static_prefix %}scripts/organization/detail.js"></script>
+
+		<!-- Utilizado pelo Facebook -->
+		<script>
+		    (function(d, s, id) {
+		        var js, fjs = d.getElementsByTagName(s)[0];
+		        if (d.getElementById(id)) return;
+		        js = d.createElement(s); js.id = id;
+		        js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=277399048946696";
+		        fjs.parentNode.insertBefore(js, fjs);
+		    }
+		    (document, 'script', 'facebook-jssdk'));
+		</script>
+		<!-- fim Utilizado pelo Facebook -->
+
+		<!-- Utilizado pelo Twitter -->
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<!-- fim Utilizado pelo Twitter -->
+    {% endaddtoblock %}
+{% endblock %}
+
+{% block base_content %}
+<!-- Utilizado pelo Facebook -->
+<div id="fb-root"></div>
+<!-- fim Utilizado pelo Facebook -->
+
+<!-- area-site -->
+<div class="area-site">
+    <div class="container">
+        <h2 class="ico ico-texto organizacao-maior-branco">{% trans "Organizations" %}</h2>
+    </div>
+</div>
+<!-- fim area-site -->
+
+<div class="container">
+    <!-- conteudo principal -->
+    <div class="conteudo">
+    	<div class="ficha organizacao {%if perm%}pode-editar{%endif%}" data-index="{{ organization.pk }}">
+            <input type="hidden" name="id" value="{{ organization.id }}" />
+    		<h2 class="titulo-ficha">{{ organization.name }}</h2>
+
+    		<div class="opcoes">
+	    		<!-- menu com abas da ficha -->
+	    		<div class="menu-abas">
+			        <ul class="menu-abas-container">
+		        		<li class="item aba"><a class="link-aba" href="#informacoes">{% trans "Organization Record" %}</a></li>
+			        </ul>
+			    </div>
+			    <!-- fim de menu com abas da ficha -->
+
+			    <!-- opcoes-adicionais da ficha -->
+			    <div class="opcoes-adicionais">
+
+			        <ul class="opcoes-adicionais-container">
+		        		<li class="item ico ico-texto investimento-menor-verde"><a href="#TODO?s_organization_name={{organization.name}}" id="bt-investments">{% trans "Investments" %}</a></li>
+		        		<li class="item ico ico-texto localizacao-menor-verde"><a href="{% url map %}#organization?name={{organization.name}}" id="bt-location">{% trans "Project location map" %}</a></li>
+			        </ul>
+		    	</div>
+		  		<!-- fim de opcoes-adicionais da ficha -->
+	  		</div>
+
+	  		<div class="conteudo-abas-container">
+		        <!-- Informacoes da ficha -->
+		        <section id="informacoes">
+					<!-- Informações Básicas -->
+					<div class="info basica">
+						<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
+
+						<div class="img-profile-container">
+							<img id="picture" src="{% if organization.image %}{{ organization.image.url }}{% else %}{% get_static_prefix %}images/organizacao-sem-foto.jpg{% endif %}" data-default="{% 	get_static_prefix %}images/organizacao-sem-foto.jpg" width="185" height="130" alt="Image: {{ organization.name }}">
+						</div>
+
+
+						<h3>{% trans "Organization Description" %}</h3>
+						<div class="descricao">
+							<p>
+								{% autoescape off %}{{ organization.description }}{% endautoescape %}
+							</p>
+						</div>
+
+						<!-- tabela de informacoes basicas -->
+						<table class="tabela horizontal" caption="Basic information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Acronym" %}</th>
+									<td class="conteudo-registro">{%if organization.acronym %}{{ organization.acronym }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Organization type" %}</th>
+									<td class="conteudo-registro">{%if organization.kind %}{{ organization.get_kind_display }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "CEO/President/Director" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.director %}
+											{{ organization.director }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<!--tr>
+									<th class="titulo-registro" scope="row">{% trans "Toolkit profile web address" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.toolkit%}
+											<a href="{{ organization.toolkit }}" title="{{ organization.toolkit }}">{{ organization.toolkit }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr-->
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Executed projects" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.project2_set.all %}
+											<ul class="lista-etiquetas">
+		                                        {% for po in organization.project2_set.all %}
+                                                <li><a class="etiqueta" href="{% url project_detail po.id %}" title="Search: {{ po.name }}">{{ po.name }}</a></li>
+		                                        {% endfor %}
+		                                    </ul>
+	                                    {%else%}
+	                                    	-
+	                                    {%endif%}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes basicas -->
+					</div>
+					<!-- fim de Informações Básicas -->
+
+					<!-- Informações de endereco -->
+					<div class="info endereco">
+						<h2 class="titulo-tabela">{% trans "Address" %}</h2>
+
+						<!-- tabela de informacoes de endereco -->
+						<table class="tabela horizontal" caption="Address" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Address" %}</th>
+									<td class="conteudo-registro">{%if organization.address%}{{ organization.address }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "ZIP" %}</th>
+									<td class="conteudo-registro">{%if organization.zipcode %}{{ organization.zipcode }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Country" %}</th>
+									<td class="conteudo-registro">{%if organization.country %}{{ organization.country }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "State/Province/Region" %}</th>
+									<td class="conteudo-registro">{%if organization.state %}{{ organization.state }}{%else%}-{%endif%}</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "City" %}</th>
+									<td class="conteudo-registro">{%if organization.city %}{{ organization.city }}{%else%}-{%endif%}</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de endereco -->
+					</div>
+					<!-- Fim de Informações de endereco -->
+
+					<!-- Informações de Contato -->
+					<div class="info contato">
+						<h2 class="titulo-tabela">{% trans "Contact information" %}</h2>
+
+						<!-- tabela de informacoes de contato -->
+						<table class="tabela horizontal" caption="Contact information" summary="">
+							<tbody>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Email" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.email%}
+											<a href="mailto: {{ organization.email }}" title="{{ organization.email }}">{{ organization.email }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Phone numbers" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.phone %}
+											{{ organization.phone }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "FAX" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.fax %}
+											{{ organization.fax }}
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Website" %}</th>
+									<td class="conteudo-registro">
+										{%if organization.url %}
+											<a href="{{ organization.url }}" title="{{ organization.url }}">{{ organization.url }}</a>
+										{%else%}
+											-
+										{%endif%}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- fim de tabela de informacoes de contato -->
+					</div>
+					<!-- Fim de Informações de Contato -->
+		        </section>
+		        <!-- fim de Informacoes da ficha -->
+		    </div>
+    	</div>
+
+    </div>
+    <!-- fim de conteudo -->
+
+    <!-- barra lateral -->
+    <div class="barra-lateral">
+
+    </div>
+    <!-- fim de barra lateral -->
+</div>
+{% endblock %}
