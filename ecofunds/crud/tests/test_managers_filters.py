@@ -141,4 +141,10 @@ class ProjectFilterTest(BaseTestCase):
         qs = Project2.objects.search(organization='Fed')
         self.assertPKs(qs, [2])
 
+"""
+    def test_state(self):
+        '''Filter by state.'''
 
+    def test_city(self):
+        '''Filter by city.'''
+"""
