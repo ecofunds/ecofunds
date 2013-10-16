@@ -1,0 +1,80 @@
+# coding: utf-8
+from django.test import TestCase
+from model_mommy.mommy import make as m
+from ecofunds.crud.models import Organization2
+
+
+class BaseTestCase(TestCase):
+    def assertPKs(self, qs, values):
+        data = map(lambda o: o.pk, qs)
+        return self.assertSetEqual(set(data), set(values))
+
+
+class OrganizationFilterTest(BaseTestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+        n2 = m('Geoname', name=u'Argentine', alternates='Argentina', country='AR', fcode='PCLI')
+
+        #s1 = m('Location', name=u'Rio de Janeiro', alternates='RJ', country='BR', fcode='ADM1')
+        #s2 = m('Location', name=u'Buenos Aires', alternates='BA', country='AR', fcode='ADM1')
+
+        #c1 = m('Location', name=u'Niteroi', alternates='Nictheroy', country='BR', fcode='ADM2')
+        #c2 = m('Location', name=u'Caminito', alternates='Caminito', country='AR', fcode='ADM2')
+
+        m('Organization2', name=u'Fundo', acronym='Funbio', kind=1, location=n1)
+        m('Organization2', name=u'Associacao', acronym='Funbar', kind=1, location=n2)
+        m('Organization2', name=u'Fundao', acronym='FIFA', kind=2, location=n2)
+        m('Organization2', name=u'Hidden', acronym='HD')
+
+    def test_all(self):
+        '''No filter, return all Organizations with desired lat and lng.'''
+        qs = Organization2.objects.search()
+        self.assertPKs(qs, [1, 2, 3])
+
+    def test_name(self):
+        '''Filter by name or acronym.'''
+        qs = Organization2.objects.search(name='fund')
+        self.assertPKs(qs, [1, 3])
+
+        qs = Organization2.objects.search(name='funb')
+        self.assertPKs(qs, [1, 2])
+
+        qs = Organization2.objects.search(name='ssoc')
+        self.assertPKs(qs, [2])
+
+        qs = Organization2.objects.search(name='if')
+        self.assertPKs(qs, [3])
+
+    def test_kind(self):
+        '''Filter by type.'''
+        qs = Organization2.objects.search(kind=1)
+        self.assertPKs(qs, [1, 2])
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = Organization2.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1])
+
+        qs = Organization2.objects.search(country='asi') #Brasil
+        self.assertPKs(qs, [1])
+
+        qs = Organization2.objects.search(country='br') #BR
+        self.assertPKs(qs, [1])
+
+"""
+    def test_state(self):
+        '''Filter by state.'''
+        qs = Organization2.objects.search(state='RJ')
+        self.assertPKs(qs, [1])
+
+        qs = Organization2.objects.search(state='Jan')
+        self.assertPKs(qs, [1])
+
+    def test_city(self):
+        '''Filter by city.'''
+        qs = Organization2.objects.search(city='iter') #Niteroi
+        self.assertPKs(qs, [1])
+
+        qs = Organization2.objects.search(city='ther') #Nictheroy
+        self.assertPKs(qs, [1])
+"""
