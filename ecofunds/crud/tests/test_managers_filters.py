@@ -84,8 +84,25 @@ class OrganizationFilterTest(BaseTestCase):
 class ProjectFilterTest(BaseTestCase):
     def setUp(self):
         p1 = m('Project2', name='ProjectA', acronym='PA')
+        p2 = m('Project2', name='ProjectB1', acronym='PB1')
+        p3 = m('Project2', name='ProjectB2', acronym='PB2')
 
     def test_all(self):
         qs = Project2.objects.search()
+        self.assertPKs(qs, [1, 2 ,3])
+
+    def test_name(self):
+        '''Filter by name or acronym.'''
+        qs = Project2.objects.search(name='ectB')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Project2.objects.search(name='PB')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Project2.objects.search(name='ectA')
         self.assertPKs(qs, [1])
+
+        qs = Project2.objects.search(name='PB2')
+        self.assertPKs(qs, [3])
+
 

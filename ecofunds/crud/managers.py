@@ -26,4 +26,10 @@ class OrganizationSearchManager(Manager):
 
 class ProjectSearchManager(Manager):
     def search(self, **fields):
-        return self.all()
+        qs = self.all()
+
+        name = fields.get('name')
+        if name:
+            qs = qs.filter(Q(name__icontains=name)|Q(acronym__icontains=name))
+
+        return qs
