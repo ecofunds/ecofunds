@@ -26,7 +26,8 @@ class OrganizationSearchManager(Manager):
 
 class ProjectSearchManager(Manager):
     def search(self, **fields):
-        qs = self.all()
+        qs = self.exclude(location=None)
+        qs = qs.select_related('location')
 
         name = fields.get('name')
         if name:

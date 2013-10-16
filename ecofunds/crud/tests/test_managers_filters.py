@@ -95,6 +95,7 @@ class ProjectFilterTest(BaseTestCase):
         p1 = m('Project2', name='ProjectA', acronym='PA', activities=[a1], location=n1, organization=o1)
         p2 = m('Project2', name='ProjectB1', acronym='PB1', activities=[a2], location=n1, organization=o2)
         p3 = m('Project2', name='ProjectB2', acronym='PB2', activities=[a2], location=n2)
+        p4 = m('Project2', name='ProjectC', acronym='PC')
 
     def test_all(self):
         qs = Project2.objects.search()
