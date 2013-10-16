@@ -36,6 +36,10 @@ class ProjectSearchManager(Manager):
         if activity:
             qs = qs.filter(activities__in=[activity])
 
+        org = fields.get('organization')
+        if org:
+            qs = qs.filter(Q(organization__name__icontains=org)|Q(organization__acronym__icontains=org))
+
         country = fields.get('country')
         if country:
             qs = qs.filter(

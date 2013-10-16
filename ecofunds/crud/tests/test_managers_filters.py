@@ -89,8 +89,11 @@ class ProjectFilterTest(BaseTestCase):
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
         n2 = m('Geoname', name=u'Argentine', alternates='Argentina', country='AR', fcode='PCLI')
 
-        p1 = m('Project2', name='ProjectA', acronym='PA', activities=[a1], location=n1)
-        p2 = m('Project2', name='ProjectB1', acronym='PB1', activities=[a2], location=n1)
+        o1 = m('Organization2', name=u'Fundo', acronym='Funbio')
+        o2 = m('Organization2', name=u'Federação', acronym='FIFA')
+
+        p1 = m('Project2', name='ProjectA', acronym='PA', activities=[a1], location=n1, organization=o1)
+        p2 = m('Project2', name='ProjectB1', acronym='PB1', activities=[a2], location=n1, organization=o2)
         p3 = m('Project2', name='ProjectB2', acronym='PB2', activities=[a2], location=n2)
 
     def test_all(self):
@@ -129,5 +132,13 @@ class ProjectFilterTest(BaseTestCase):
 
         qs = Project2.objects.search(country='asi') #Brasil
         self.assertPKs(qs, [1, 2])
+
+    def test_organization(self):
+        '''Filter by organization name or acronym'''
+        qs = Project2.objects.search(organization='Funb')
+        self.assertPKs(qs, [1])
+
+        qs = Project2.objects.search(organization='Fed')
+        self.assertPKs(qs, [2])
 
 
