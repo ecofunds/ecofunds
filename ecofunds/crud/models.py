@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from ecofunds.crud.managers import OrganizationSearchManager
+from ecofunds.crud.managers import OrganizationSearchManager, ProjectSearchManager
 
 from ecofunds.geonames.models import Geoname
 
@@ -94,6 +94,8 @@ class Project2(AbstractPlace, AbstractContact):
     organization = models.ForeignKey(Organization2, db_index=True)
     activities = models.ManyToManyField(Activity2)
     geofocus = models.TextField(blank=True)
+
+    objects = ProjectSearchManager()
 
     class Meta:
         ordering = ['name']

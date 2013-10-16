@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.test import TestCase
 from model_mommy.mommy import make as m
-from ecofunds.crud.models import Organization2
+from ecofunds.crud.models import Organization2, Project2
 
 
 class BaseTestCase(TestCase):
@@ -79,3 +79,13 @@ class OrganizationFilterTest(BaseTestCase):
         qs = Organization2.objects.search(city='ther') #Nictheroy
         self.assertPKs(qs, [1])
 """
+
+
+class ProjectFilterTest(BaseTestCase):
+    def setUp(self):
+        p1 = m('Project2', name='ProjectA', acronym='PA')
+
+    def test_all(self):
+        qs = Project2.objects.search()
+        self.assertPKs(qs, [1])
+

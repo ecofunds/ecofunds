@@ -22,3 +22,8 @@ class OrganizationSearchManager(Manager):
             )
 
         return qs
+
+
+class ProjectSearchManager(Manager):
+    def search(self, **fields):
+        return self.all()
