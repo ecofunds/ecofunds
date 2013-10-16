@@ -4,8 +4,8 @@ from django.db.models import Manager, Q
 
 class OrganizationSearchManager(Manager):
     def search(self, **fields):
-        qs = self.exclude(country=None, state=None, city=None)
-        qs = qs.select_related('country', 'state', 'city')
+        qs = self.exclude(location=None, state=None, city=None)
+        qs = qs.select_related('location')
 
         name = fields.get('name')
         if name:

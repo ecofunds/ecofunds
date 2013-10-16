@@ -26,6 +26,7 @@ class OrganizationFilterTest(BaseTestCase):
         m('Organization2', name=u'Fundao', acronym='FIFA', kind=2, location=n2)
         m('Organization2', name=u'Hidden', acronym='HD')
 
+
     def test_all(self):
         '''No filter, return all Organizations with desired lat and lng.'''
         qs = Organization2.objects.search()
