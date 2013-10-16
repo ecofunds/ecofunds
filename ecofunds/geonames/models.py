@@ -10,7 +10,7 @@ class BigIntegerField(models.PositiveIntegerField):
 
 if 'south' in settings.INSTALLED_APPS:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^geonames\.models\.BigIntegerField"])
+    add_introspection_rules([], ["^ecofunds\.geonames\.models\.BigIntegerField"])
 
 
 class Admin1Code(models.Model):
@@ -54,7 +54,7 @@ class Geoname(models.Model):
     admin2 = models.CharField(max_length=80, blank=True, db_index=True)
     admin3 = models.CharField(max_length=20, blank=True, db_index=True)
     admin4 = models.CharField(max_length=20, blank=True, db_index=True)
-    population = BigIntegerField(db_index=True)
+    population = BigIntegerField(db_index=True, default=0)
     elevation = models.IntegerField(db_index=True)
     topo = models.IntegerField(db_index=True)
     timezone = models.CharField(max_length=30, blank=True)
