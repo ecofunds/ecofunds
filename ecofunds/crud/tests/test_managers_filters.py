@@ -86,9 +86,12 @@ class ProjectFilterTest(BaseTestCase):
         a1 = m('Activity2', pk=1)
         a2 = m('Activity2', pk=2)
 
-        p1 = m('Project2', name='ProjectA', acronym='PA', activities=[a1])
-        p2 = m('Project2', name='ProjectB1', acronym='PB1', activities=[a2])
-        p3 = m('Project2', name='ProjectB2', acronym='PB2', activities=[a2])
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+        n2 = m('Geoname', name=u'Argentine', alternates='Argentina', country='AR', fcode='PCLI')
+
+        p1 = m('Project2', name='ProjectA', acronym='PA', activities=[a1], location=n1)
+        p2 = m('Project2', name='ProjectB1', acronym='PB1', activities=[a2], location=n1)
+        p3 = m('Project2', name='ProjectB2', acronym='PB2', activities=[a2], location=n2)
 
     def test_all(self):
         qs = Project2.objects.search()
@@ -115,5 +118,16 @@ class ProjectFilterTest(BaseTestCase):
 
         qs = Project2.objects.search(activity=2)
         self.assertPKs(qs, [2, 3])
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = Project2.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1, 2])
+
+        qs = Project2.objects.search(country='BR') #Brazil
+        self.assertPKs(qs, [1, 2])
+
+        qs = Project2.objects.search(country='asi') #Brasil
+        self.assertPKs(qs, [1, 2])
 
 
