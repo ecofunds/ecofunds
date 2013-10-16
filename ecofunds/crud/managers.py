@@ -32,4 +32,9 @@ class ProjectSearchManager(Manager):
         if name:
             qs = qs.filter(Q(name__icontains=name)|Q(acronym__icontains=name))
 
+        activity = fields.get('activity')
+        if activity:
+            qs = qs.filter(activities__in=[activity])
+
+
         return qs
