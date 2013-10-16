@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from ecofunds.crud.managers import OrganizationSearchManager, ProjectSearchManager
+from ecofunds.crud.managers import OrganizationSearchManager, ProjectSearchManager, InvestmentSearchManager
 
 from ecofunds.geonames.models import Geoname
 
@@ -120,6 +120,8 @@ class Investment2(models.Model):
     contributed_at = models.DateField(blank=True, null=True)
     completed_at = models.DateField(blank=True, null=True)
     kind = models.IntegerField(choices=KINDS, db_index=True)
+
+    objects = InvestmentSearchManager()
 
     class Meta:
         verbose_name = _('investment')

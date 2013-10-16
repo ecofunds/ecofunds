@@ -48,3 +48,9 @@ class ProjectSearchManager(Manager):
             )
 
         return qs
+
+
+class InvestmentSearchManager(Manager):
+    def search(self, **fields):
+        return self.all()
+
