@@ -88,7 +88,7 @@ class Project2(AbstractPlace, AbstractContact):
     end_at = models.DateField(null=True)
     goal = models.TextField(blank=True, null=True)
 
-    organization = models.ForeignKey(Organization2)
+    organization = models.ForeignKey(Organization2, db_index=True)
     activities = models.ManyToManyField(Activity2)
     geofocus = models.TextField(blank=True)
 
