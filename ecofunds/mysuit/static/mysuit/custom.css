@@ -20,3 +20,14 @@
     overflow: hidden;
     width: 30em;
 }
+
+
+/* it makes 'x' avaliable to delete projects*/
+
+#s2id_id_funding_project abbr {
+    display: inline-block;
+}
+
+#s2id_id_recipient_project abbr {
+    display: inline-block;
+}
