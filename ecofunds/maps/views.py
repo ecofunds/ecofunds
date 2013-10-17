@@ -5,6 +5,7 @@ import tablib
 from babel import numbers
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
+from ecofunds.crud.models import Project2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
@@ -47,7 +48,7 @@ def project_api(request, map_type):
     if not form.is_valid():
         return HttpResponseBadRequest()
 
-    qs = ProjectLocation.objects.search(**form.cleaned_data)
+    qs = Project2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
         return output_project_csv(qs)
@@ -61,14 +62,13 @@ def output_project_json(qs):
     points = {}
     for obj in qs:
         marker = {
-            'entity_id': obj.entity.pk,
-            'location_id': obj.location.pk,
-            'lat': obj.entity.lat,
-            'lng': obj.entity.lng,
-            'acronym': obj.entity.title,
-            'url': obj.entity.website,
+            'entity_id': obj.pk,
+            'lat': obj.location.latitude,
+            'lng': obj.location.longitude,
+            'acronym': obj.name,
+            'url': obj.url,
         }
-        points[obj.entity.pk] = marker
+        points[obj.pk] = marker
 
     gmap = {}
     gmap['items'] = points.values()

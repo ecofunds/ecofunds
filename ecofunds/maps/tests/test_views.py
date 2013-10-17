@@ -41,36 +41,22 @@ class MapFixture(TestCase):
         project_location = m(ProjectLocation, entity=project,
                                               location=location)
 
-class ProjectJSONView(MapFixture):
-    def test_get_project_api(self):
-        response = self.client.get(reverse('project_api', args=['marker']))
-        self.assertEqual(200, response.status_code)
 
-        expected_items = [{
-            u'entity_id': 1,
-            u'location_id': 1,
-            u'lat': -27.2221329359,
-            u'lng': -50.0092212765,
-            u'acronym': u"Projeto de Teste",
-            u'url': None
-        }]
+class ProjectJsonTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
 
-        received_data = loads(response.content)
-        self.assertEqual(received_data['map']['items'], expected_items)
+        p1 = m('Project2', name='ProjectA', acronym='PA', location=n1)
 
-    def test_get_project_api_marker_parameters(self):
-        parameters = {
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
+        self.resp = self.client.get(reverse('project_api', args=['marker']))
 
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('project_api', args=['marker']),
-                                       data)
-            self.assertEqual(200, response.status_code)
-            received_data = loads(response.content)
-            self.assertEqual(len(received_data['map']['items']), 1)
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_all(self):
+        expected = [dict(entity_id=1, lat=-27.2221329359, lng=-50.0092212765, acronym="ProjectA", url=None)]
+        data = loads(self.resp.content)
+        self.assertEqual(data['map']['items'], expected)
 
 class ProjectCSVViewTest(MapFixture):
     def test_get_project_csv_api(self):
