@@ -5,7 +5,7 @@ import tablib
 from babel import numbers
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
-from ecofunds.crud.models import Project2
+from ecofunds.crud.models import Project2, Organization2, Investment2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
@@ -58,17 +58,19 @@ def project_api(request, map_type):
         return output_project_json(qs)
 
 
+def project_marker(obj):
+    return {
+        'entity_id': obj.pk,
+        'lat': obj.location.latitude,
+        'lng': obj.location.longitude,
+        'acronym': obj.name,
+        'url': obj.url
+    }
+
 def output_project_json(qs):
     points = {}
     for obj in qs:
-        marker = {
-            'entity_id': obj.pk,
-            'lat': obj.location.latitude,
-            'lng': obj.location.longitude,
-            'acronym': obj.name,
-            'url': obj.url,
-        }
-        points[obj.pk] = marker
+        points[obj.pk] = project_marker(obj)
 
     gmap = {}
     gmap['items'] = points.values()
@@ -135,9 +137,9 @@ def investment_api(request, map_type):
     if not form.is_valid():
         return HttpResponseBadRequest()
 
-    qs = ProjectLocation.objects.search_investment(**form.cleaned_data)
-    qs = qs.only('location__centroid', 'entity__title', 'entity__website')
-    qs = qs.order_by('location__country__name', 'location__name')
+    qs = Investment2.objects.search(**form.cleaned_data)
+    #qs = qs.only('location__centroid', 'entity__title', 'entity__website')
+    #qs = qs.order_by('location__country__name', 'location__name')
 
     points = {}
 
@@ -145,30 +147,34 @@ def investment_api(request, map_type):
     if map_type == "density":
         for obj in qs:
             project = {
-                'id': obj.entity.pk, # Should be investment ID, but it's not possible
-                'acronym': obj.entity.title,
-                'url': obj.entity.website,
-                'entity_id': obj.entity.pk,
-                'amount': float(obj.entity_amount),
-                'amount_str': format_currency(obj.entity_amount)
+                'id': obj.pk, # Should be investment ID, but it's not possible
+                'amount': float(obj.amount),
+                'amount_str': format_currency(obj.amount)
             }
 
-            if not obj.location.pk in points:
-                lat, lng = parse_centroid(obj.location.centroid)
+            if not obj.recipient_project:
+                continue
 
-                points[obj.location.pk] = {
-                    'location': obj.location.name,
-                    'location_id': obj.location.pk,
-                    'lat': lat,
-                    'lng': lng,
-                    'total_investment': float(obj.entity_amount),
-                    'total_investment_str': format_currency(obj.entity_amount),
+            if obj.recipient_project:
+                project['recipient_project_id'] = project_marker(obj.recipient_project)
+
+            if obj.funding_project:
+                project['funding_project_id'] = project_marker(obj.funding_project)
+
+            if not obj.recipient_project.location.pk in points:
+                points[obj.recipient_project.location.pk] = {
+                    'location': obj.recipient_project.location.name,
+                    'location_id': obj.recipient_project.location.pk,
+                    'lat': obj.recipient_project.location.latitude,
+                    'lng': obj.recipient_project.location.longitude,
+                    'total_investment': float(obj.amount),
+                    'total_investment_str': format_currency(obj.amount),
                     'projects': [project]
                 }
             else:
-                points[obj.location.pk]['projects'].append(project)
-                points[obj.location.pk]['total_investment'] += float(obj.entity_amount)
-                points[obj.location.pk]['total_investment_str'] = format_currency(points[obj.location.pk]['total_investment'])
+                points[obj.recipient_project.location.pk]['projects'].append(project)
+                points[obj.recipient_project.location.pk]['total_investment'] += float(obj.amount)
+                points[obj.recipient_project.location.pk]['total_investment_str'] = format_currency(points[obj.recipient_project.location.pk]['total_investment'])
 
         items =  points.values()
     else:
@@ -272,7 +278,7 @@ def organization_api(request, map_type):
     if not form.is_valid():
         return HttpResponseBadRequest()
 
-    qs = Organization.objects.search(**form.cleaned_data).select_related('type', 'location')
+    qs = Organization2.objects.search(**form.cleaned_data).select_related('type', 'location')
 
     if map_type == "csv":
         return output_organization_csv(qs)
@@ -288,9 +294,9 @@ def output_organization_json(qs):
     for obj in qs:
         marker = {
             'entity_id': obj.pk,
-            'name': obj.name.encode('utf-8'),
-            'lat': float(str(obj.desired_location_lat)),
-            'lng': float(str(obj.desired_location_lng)),
+            'name': obj.name,
+            'lat': float(str(obj.lat)),
+            'lng': float(str(obj.lng)),
         }
 
         points[obj.pk] = marker
