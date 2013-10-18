@@ -441,8 +441,6 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
         },
         fetch_single: function(domain, id) {
-            alert(domain);
-            alert(id);
             this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
