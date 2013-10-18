@@ -1,10 +1,8 @@
-{% load tags i18n %}
+{% load static tags i18n %}
 <!-- Filtros de Busca por Organizações -->
 <section id="organization-filter" class="filtros organizacoes aberto">
     <header class="cabecalho">
         <h4>{% trans "Search organizations by" %}</h4>
-        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
-        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
     </header>
 
     <form class="form-filtros organizacoes" action="#" method="post">
@@ -32,6 +30,10 @@
                 <label for="id_state">{{ search_organization_form.state.label }}</label>
                 {{ search_organization_form.state }}
             </fieldset>
+        </div>
+        <div class="borda">
+          <p><img src="{% get_static_prefix %}images/ico/ico-projeto2.png">{% trans "Download as CSV" %}</p>
+          <p><img src="{% get_static_prefix %}images/ico/ico-xls.png">{% trans "Download as XLS" %}</p>
         </div>
     </form>
 </section>

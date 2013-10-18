@@ -63,9 +63,10 @@ require(["domReady!", "backbone", "loogica"], function(doc, Backbone, loogica, u
     $('#id_map').css('height', global_map_height);
 
     require(["marker", "markerclusterer"], function () {
+        $('.conteudo-abas-container').show();
         window.map_router = new loogica.MapRouterWithFilter();
         Backbone.history.start({pushState: false});
-        window.map_router.navigate(default_domain, {trigger: true});
+        //window.map_router.navigate(default_domain, {trigger: true});
         $('.carregando.tela-mapa', '.mapa').hide();
     });
 });
