@@ -396,7 +396,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.fetchPlaces(default_domain);
+            this.fetchPlaces(default_domain, false);
         },
         fetch_projects: function() {
             default_map_type = 'marker/';
@@ -410,7 +410,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.fetchPlaces(default_domain);
+            this.fetchPlaces(default_domain, false);
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
