@@ -105,9 +105,9 @@ class OrganizationChoices(AutoModelSelect2Field):
 
 class InvestmentForm(forms.ModelForm):
     funding_organization = OrganizationChoices()
-    funding_project = ProjectChoices()
+    funding_project = ProjectChoices(required=False)
     recipient_organization = OrganizationChoices()
-    recipient_project = ProjectChoices()
+    recipient_project = ProjectChoices(required=False)
 
     class Meta:
         model = Investment2

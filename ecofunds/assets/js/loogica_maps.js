@@ -350,7 +350,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'investment' : 'fetch_investments',
             'project' : 'fetch_projects',
             'organization' : 'fetch_organizations',
-            'clean_markers': 'clean_markers'
+            'clean_markers': 'clean_markers',
+            'filter/:domain/:id': 'fetch_single'
         },
         initialize: function() {
             map_view = new MapView({model: new Map});
@@ -438,6 +439,18 @@ define('loogica', ["domReady!", "jquery", "underscore",
             cluster.setMaxZoom(14);
             this.cluster = cluster;
 
+        },
+        fetch_single: function(domain, id) {
+            this.toggleFilter(default_domain);
+            $(".opcoes .tipo").hide();
+            this.clean_markers();
+            this.places = new Places();
+            this.places.url = '/detail/api/' + domain + '/' + id;
+            this.places_view = new PlacesView({
+                collection: this.places
+            });
+
+            this.fetchPlaces(default_domain);
         },
         clean_markers: function() {
             if (this.places) {
