@@ -58,6 +58,7 @@ class ProjectJsonTest(TestCase):
         data = loads(self.resp.content)
         self.assertEqual(data['map']['items'], expected)
 
+
 class ProjectCsvTest(TestCase):
     def setUp(self):
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
@@ -133,6 +134,7 @@ class InvestmentCSVTest(MapFixture):
         self.assertEqual(200, response.status_code)
         self.assertEqual(response.get('Content-Disposition'),
                          'attachment; filename="investment.csv"')
+
 
 class InvestmentXLSTest(MapFixture):
     def test_get_geoapi_investment_density(self):
