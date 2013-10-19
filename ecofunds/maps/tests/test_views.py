@@ -58,19 +58,27 @@ class ProjectJsonTest(TestCase):
         data = loads(self.resp.content)
         self.assertEqual(data['map']['items'], expected)
 
-class ProjectCSVViewTest(MapFixture):
-    def test_get_project_csv_api(self):
-        response = self.client.get(reverse('project_api', args=['csv']))
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(response.get('Content-Disposition'),
-                         'attachment; filename="projects.csv"')
+class ProjectCsvTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
 
-        expected_header = 'NAME,ACRONYM,ACTIVITY_TYPE,DESCRIPTION,'\
-                          'URL,EMAIL,PHONE,LAT,LNG'
-        expected_line1 = 'Projeto de Teste,Projeto de Teste,None,None,None,None,None None None,-27.2221329359,-50.0092212765'
+        p1 = m('Project2', name='ProjectA', acronym='PA', location=n1)
 
-        self.assertTrue(expected_header in response.content)
-        self.assertTrue(expected_line1 in response.content)
+        self.resp = self.client.get(reverse('project_api', args=['csv']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_header(self):
+        self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="projects.csv"')
+
+    def test_csv_header(self):
+        expected = 'NAME,ACRONYM,ACTIVITY_TYPE,DESCRIPTION,URL,EMAIL,PHONE,LAT,LNG'
+        self.assertIn(expected, self.resp.content)
+
+    def test_csv_data(self):
+        expected = 'ProjectA,PA,None,None,None,None,None,-27.2221329359,-50.0092212765'
+        self.assertIn(expected, self.resp.content)
 
 
 class ProjectXLSTest(MapFixture):

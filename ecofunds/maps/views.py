@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
+from ecofunds.crud.models import Organization2
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2
@@ -21,15 +22,15 @@ PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
                    'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
 
 PROJECT_EXPORT_COLUMNS = {
-    'NAME': 'title',
+    'NAME': 'name',
     'ACRONYM': 'acronym',
-    'ACTIVITY_TYPE': 'activity_description',
+    'ACTIVITY_TYPE': 'activities_names',
     'DESCRIPTION': 'description',
-    'URL': 'website',
+    'URL': 'url',
     'EMAIL': 'email',
-    'PHONE': 'formated_phone_number',
-    'LAT': 'lat',
-    'LNG': 'lng'
+    'PHONE': 'phone',
+    'LAT': 'location__latitude',
+    'LNG': 'location__longitude'
 }
 
 #TODO missing attributes
@@ -75,13 +76,22 @@ def output_project_json(qs):
 
     return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
+def lookup_attr(obj, lookup):
+    attr, sep, tail_lookup = lookup.partition('__')
+
+    value = getattr(obj, attr)
+    if tail_lookup:
+        return lookup_attr(value, tail_lookup)
+    else:
+        return value
+
 
 def output_project_csv(qs):
     data = tablib.Dataset(PROJECT_HEADERS)
     for item in qs:
         row = []
         for key in PROJECT_HEADERS:
-            row.append(getattr(item.entity, PROJECT_EXPORT_COLUMNS[key]))
+            row.append(lookup_attr(item, PROJECT_EXPORT_COLUMNS[key]) or 'None')
         data.append(row)
 
     response = HttpResponse(data.csv, content_type="text/csv")

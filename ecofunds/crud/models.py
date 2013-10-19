@@ -106,6 +106,10 @@ class Project2(AbstractPlace, AbstractContact):
     def __unicode__(self):
         return self.name
 
+    @property
+    def activities_names(self):
+        return ', '.join(self.activities.all())
+
 
 class Investment2(models.Model):
     KINDS = (
