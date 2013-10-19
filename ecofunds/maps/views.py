@@ -282,7 +282,7 @@ def organization_api(request, map_type):
     if not form.is_valid():
         return HttpResponseBadRequest()
 
-    qs = Organization.objects.search(**form.cleaned_data).select_related('type', 'location')
+    qs = Organization2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
         return output_organization_csv(qs)
