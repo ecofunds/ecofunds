@@ -122,9 +122,6 @@ def output_project_excel(qs):
 
     wb.save(response)
 
-    from django.db import connection
-    print connection.queries
-
     return response
 
 
