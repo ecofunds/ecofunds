@@ -81,12 +81,19 @@ class ProjectCsvTest(TestCase):
         self.assertIn(expected, self.resp.content)
 
 
-class ProjectXLSTest(MapFixture):
-    def test_get_organization_xls_api(self):
-        response = self.client.get(reverse('project_api', args=['xls']))
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(response.get('Content-Disposition'),
-                         'attachment; filename="projects.xls"')
+class ProjectXlsTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
+
+        p1 = m('Project2', name='ProjectA', acronym='PA', location=n1)
+
+        self.resp = self.client.get(reverse('project_api', args=['xls']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_header(self):
+        self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="projects.xls"')
 
 
 class InvestmentJSONView(TestCase):

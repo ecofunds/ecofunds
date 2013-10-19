@@ -115,7 +115,7 @@ def output_project_excel(qs):
     for i, item in enumerate(qs):
         row = []
         for j, key in enumerate(PROJECT_HEADERS):
-            data = getattr(item.entity, PROJECT_EXPORT_COLUMNS[key])
+            data = lookup_attr(item.entity, PROJECT_EXPORT_COLUMNS[key])
             if data and isinstance(data, unicode) and len(data) > 3000:
                 data = data[:3000]
             ws.write(i+1, j, data)
