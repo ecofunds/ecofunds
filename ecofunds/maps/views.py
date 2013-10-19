@@ -345,7 +345,7 @@ def output_organization_excel(qs):
     for i, item in enumerate(qs):
         row = []
         for j, key in enumerate(ORGANIZATION_HEADERS):
-            ws.write(i+1, j, getattr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
+            ws.write(i+1, j, lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
 
     wb.save(response)
 
