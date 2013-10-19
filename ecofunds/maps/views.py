@@ -305,8 +305,8 @@ def output_organization_json(qs):
         marker = {
             'entity_id': obj.pk,
             'name': obj.name,
-            'lat': float(str(obj.lat)),
-            'lng': float(str(obj.lng)),
+            'lat': obj.location.latitude,
+            'lng': obj.location.longitude,
         }
 
         points[obj.pk] = marker

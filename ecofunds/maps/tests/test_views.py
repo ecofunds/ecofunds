@@ -144,33 +144,26 @@ class InvestmentXLSTest(MapFixture):
                          'attachment; filename="investment.xls"')
 
 
-class OrganizationJSONView(MapFixture):
-    def test_get_geoapi_organization_marker(self):
-        response = self.client.get(reverse('organization_api', args=['marker']))
-        self.assertEqual(200, response.status_code)
+class OrganizationJsonTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
 
-    def test_get_geoapi_organization_density_parameters(self):
-        parameters = {
-            #'s_investment_date_from': ,
-            #'s_investment_date_to': ,
-            #'s_investment_type': ,
-            #'s_investments_from': ,
-            #'s_date_to': ,
-            #'s_date_from': ,
-            #'s_organization': ,
-            #'s_organization_type': ,
-            #'s_project_name:
-            #'s_project_activity_type': ,
-            's_state': 'Rio de Janeiro',
-            's_country': 'Brasil',
-        }
+        m('Organization2', name=u'Fundo', acronym='Funbio', kind=1, location=n1)
+        m('Organization2', name=u'Associacao', acronym='Funbar', kind=1, location=n1)
 
-        for parameter, value in parameters.items():
-            data = {parameter: value}
-            response = self.client.get(reverse('organization_api',
-                                       args=['marker']),
-                                       data)
-            self.assertEqual(200, response.status_code)
+        self.resp = self.client.get(reverse('organization_api', args=['marker']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_content(self):
+        expected = [
+            dict(entity_id=1, name="Fundo", lat=-27.2221329359, lng=-50.0092212765),
+            dict(entity_id=2, name="Associacao", lat=-27.2221329359, lng=-50.0092212765),
+        ]
+
+        data = loads(self.resp.content)
+        self.assertEqual(data['map']['items'], expected)
 
 
 class InvestmentMapTest(MapFixture):
