@@ -90,27 +90,12 @@
                             <li><a href="{% url map %}#project">Projects</a></li>
                             <li><a href="{% url map %}#organization">Organizations</a></li>
                             <li><a href="{% url map %}#investment">Investments</a></li>
-                            <li>{% page_link "opportunities" %}</li>
-                            {% if user.is_authenticated %}
-                                <li>{% page_link "users" %}</li>
-                            {% endif %}
                         </ul>
                     </dd>
                 </dl>
 
                 <dl class="menu-rodape-ecofunds">
                     <dt>{% trans "Ecofunds" %}</dt>
-                    <dd>
-                        <ul>
-                            <li>{% page_link "why-register" %}</li>
-                            <li>{% page_link "how-to-start" %}</li>
-                            <li>{% page_link "about-ecofunds" %}</li>
-                            <li>{% page_link "about-redlac" %}</li>
-                            <li>{% page_link "faq" %}</li>
-                            <li>{% page_link "terms" %}</li>
-                            <li>{% page_link "contact" %}</li>
-                        </ul>
-                    </dd>
                 </dl>
 
                 <dl class="menu-rodape-redes">
