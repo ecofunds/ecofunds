@@ -263,21 +263,23 @@ def output_investment_excel(items):
 
 ORGANIZATION_EXPORT_COLUMNS = {
     'NAME': 'name',
-    'DESCRIPTION': 'mission',
+    'DESCRIPTION': 'description',
     'ORG. TYPE': 'kind',
-    'ADDRESS': 'street1',
-    'ZIPCODE': 'zip',
+    'ADDRESS': 'address',
+    'ZIPCODE': 'zipcode',
+    'COUNTRY': 'country',
+    'STATE': 'state',
+    'CITY': 'city',
     'EMAIL': 'email',
     'URL':  'url',
-    'PHONE': 'formated_phone_number',
-    'LOCATION': 'location_name',
-    'LAT': 'desired_location_lat',
-    'LNG': 'desired_location_lng',
+    'PHONE': 'phone',
+    'LAT': 'location__latitude',
+    'LNG': 'location__longitude',
 }
 
 
-ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE',
-                        'EMAIL', 'URL' , 'PHONE',  'LOCATION' , 'LAT', 'LNG']
+ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE', 'COUNTRY', 'STATE', 'CITY',
+                        'EMAIL', 'URL' , 'PHONE', 'LAT', 'LNG']
 
 
 def organization_api(request, map_type):
@@ -322,7 +324,7 @@ def output_organization_csv(qs):
     for item in qs:
         row = []
         for key in ORGANIZATION_HEADERS:
-            row.append(getattr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
+            row.append(lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]) or 'None')
         data.append(row)
 
     response = HttpResponse(data.csv, content_type="text/csv")

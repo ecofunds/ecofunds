@@ -194,42 +194,32 @@ class InvestmentMapTest(MapFixture):
         self.assertEqual(received_data['map']['items'], expected_items)
 
 
-class OrganizationMapTest(MapFixture):
-    def test_get_organization_api(self):
-        response = self.client.get(reverse('organization_api', args=['marker']))
-        self.assertEqual(200, response.status_code)
+class OrganizationCsvTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
 
-        expected_items = [{
-            u'entity_id': 1,
-            u'name': "Funding Ord",
-            u'lat': -22.882778,
-            u'lng': -43.103889,
-        },
-        {
-            u'entity_id': 2,
-            u'name': "Funbio",
-            u'lat': -22.880766,
-            u'lng': -43.104335,
-        }]
+        m('Organization2', name=u'Fundo', acronym='Funbio', kind=1, location=n1)
+        m('Organization2', name=u'Associacao', acronym='Funbar', kind=1, location=n1)
 
-        received_data = loads(response.content)
-        self.assertEqual(received_data['map']['items'], expected_items)
+        self.resp = self.client.get(reverse('organization_api', args=['csv']))
 
-class OrganizationCSVTest(MapFixture):
-    def test_get_organization_csv_api(self):
-        response = self.client.get(reverse('organization_api', args=['csv']))
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(response.get('Content-Disposition'),
-                         'attachment; filename="organizations.csv"')
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
 
-        expected_header = 'NAME,DESCRIPTION,ORG. TYPE,ADDRESS,ZIPCODE,EMAIL,' \
-                          'URL,PHONE,LOCATION,LAT,LNG'
-        excpected_line1 = 'Funding Ord,None,,None,None,None,None,None None None,Rio de Janeiro,-22.882778,-43.103889'
-        excpected_line2 = 'Funbio,None,,None,None,None,None,None None None,Rio de Janeiro,-22.880766,-43.104335'
+    def test_header(self):
+        self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="organizations.csv"')
 
-        self.assertTrue(expected_header in response.content)
-        self.assertTrue(excpected_line1 in response.content)
-        self.assertTrue(excpected_line2 in response.content)
+    def test_csv_header(self):
+        expected = 'NAME,DESCRIPTION,ORG. TYPE,ADDRESS,ZIPCODE,COUNTRY,STATE,CITY,EMAIL,URL,PHONE,LAT,LNG'
+        self.assertIn(expected, self.resp.content)
+
+    def test_csv_content(self):
+        l1 = 'Fundo,None,1,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
+        l2 = 'Associacao,None,1,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
+
+        self.assertIn(l1, self.resp.content)
+        self.assertIn(l2, self.resp.content)
+
 
 class OrganizationXLSTest(MapFixture):
     def test_get_organization_xls_api(self):
