@@ -108,7 +108,7 @@ class Project2(AbstractPlace, AbstractContact):
 
     @property
     def activities_names(self):
-        return ', '.join(self.activities.all())
+        return ', '.join([ac.name for ac in self.activities.all()])
 
 
 class Investment2(models.Model):
