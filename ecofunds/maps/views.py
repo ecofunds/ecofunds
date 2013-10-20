@@ -7,7 +7,7 @@ from ecofunds.crud.models import Organization2
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2, Organization2, Investment2
-from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
+from ecofunds.crud.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
 
@@ -304,6 +304,7 @@ def output_organization_json(qs):
         marker = {
             'entity_id': obj.pk,
             'name': obj.name,
+            'acronym': obj.acronym,
             'lat': obj.location.latitude,
             'lng': obj.location.longitude,
         }
