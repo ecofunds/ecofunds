@@ -100,7 +100,7 @@
         <h4>Total: {{ total_investment_str }}</h4>
         <ul>
         {{#each projects}}
-            <li>Website: <a href="/detail/investment/{{ id }}">{{ acronym }}</a> - {{ amount_str }}</li>
+            <li>Website: <a href="/detail/investment/{{ id }}">{{ recipient_project.name }}</a> - {{ amount_str }}</li>
         {{/each}}
         </ul>
     </div>
