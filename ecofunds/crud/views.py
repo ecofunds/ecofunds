@@ -25,8 +25,8 @@ def output_project_json(qs):
         marker = {
             'entity_id': obj.pk,
             'location_id': obj.location.geonameid,
-            'lat': obj.lat,
-            'lng': obj.lng,
+            'lat': obj.location.latitude,
+            'lng': obj.location.longitude,
             'acronym': obj.acronym,
             'name': obj.name,
             'url': obj.url,
