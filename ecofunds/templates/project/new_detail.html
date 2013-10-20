@@ -177,7 +177,7 @@
 									<th class="titulo-registro" scope="row">{% trans "Location" %}</th>
                                     <td class="conteudo-registro">
 										{% if project.location %}
-											<a href="mailto: {{ project.location.name }}" title="{{ project.location.name }}">{{project.location.name }}</a>
+											{{project.location.name }}
 										{% else %}
 											-
 										{% endif %}
