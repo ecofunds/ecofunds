@@ -16,13 +16,23 @@ class ActivityAdmin(admin.ModelAdmin):
 
 # Organization Admin
 
+class CountryChoices(AutoModelSelect2Field):
+    queryset = Geoname.objects
+    search_fields = ['name__icontains', 'alternates__icontains']
+
+class OrganizationAdminForm(forms.ModelForm):
+    location = CountryChoices(widget=AutoHeavySelect2Widget)
+    class Meta:
+        model = Organization2
+
 class OrganizationAdmin(admin.ModelAdmin):
+    form = OrganizationAdminForm
     list_display = ('name', 'acronym', 'kind',)
     search_fields = ('name', 'acronym', 'kind',)
     list_filter = ('kind',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'acronym', 'kind', 'description', 'director',)
+            'fields': ('name', 'acronym', 'kind', 'description', 'director', 'location')
         }),
         (_(u'Contact'), {
             'classes': ('wide',),
@@ -40,20 +50,6 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 # Project Admin
-
-class CountryChoices(AutoModelSelect2Field):
-    queryset = Geoname.objects
-    search_fields = ['name__icontains', 'alternates__icontains']
-
-    def get_results(self, request, term, page, context):
-        try:
-            data = Geoname.objects.filter(name__icontains=term).order_by('country')
-            data = map(lambda x: (x.geonameid, unicode(x)), data)
-            return ('nil', False, data)
-        except Exception as e:
-            #TODO LOG
-            return (e, false, [])
-
 
 class ProjectForm(forms.ModelForm):
     location = CountryChoices(widget=AutoHeavySelect2Widget)
