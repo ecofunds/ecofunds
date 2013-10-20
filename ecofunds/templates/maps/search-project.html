@@ -1,11 +1,9 @@
-{% load tags i18n %}
+{% load static tags i18n %}
 
 <!-- Filtros de Busca por Projetos -->
 <section id="project-filter" class="filtros projetos aberto">
     <header class="cabecalho">
         <h4>{% trans "Search projects by" %}</h4>
-        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
-        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
     </header>
 
     <form class="form-filtros projetos" action="#" method="post">
@@ -38,6 +36,10 @@
                 <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
                 {{ search_project_form.organization }}
             </fieldset>
+        </div>
+        <div class="borda">
+          <p><img src="{% get_static_prefix %}images/ico/ico-projeto2.png">{% trans "Download as CSV" %}</p>
+          <p><img src="{% get_static_prefix %}images/ico/ico-xls.png">{% trans "Download as XLS" %}</p>
         </div>
     </form>
 </section>

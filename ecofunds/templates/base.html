@@ -53,12 +53,9 @@
             <!-- menu-topo -->
             <div id="menu-topo">
                 <ul class="menu-topo-container">
-                    <li><a href="{% url map %}#project">Projects</a></li>
-                    <li><a href="{% url map %}#organization">Organizations</a></li>
                     <li><a href="{% url map %}#investment">Investments</a></li>
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url admin:index %}">Administration</a></li>
-                    {% endif %}
+                    <li><a href="{% url map %}#organization">Organizations</a></li>
+                    <li><a href="{% url map %}#project">Projects</a></li>
                 </ul>
             </div>
             <!-- fim de menu-topo -->

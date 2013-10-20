@@ -288,8 +288,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
     Map = Backbone.Model.extend({
         defaults: {
             zoom: 4,
-            center: new google.maps.LatLng(-11.297538592394982,
-                                           -67.24283180236819),
+            center: new google.maps.LatLng(-13.297538592394982,
+                                           -54.24283180236819),
             mapTypeId: google.maps.MapTypeId.SATELLITE,
             noClear: true,
             zoomControl: true,
@@ -369,18 +369,18 @@ define('loogica', ["domReady!", "jquery", "underscore",
              * usando toggle do Jquery, eliminando o else.
              */
             var options = [
-                {domain: 'investment', menu: 'a[href=#investment]', panel: "#filtro-investimentos" },
-                {domain: 'project', menu: 'a[href=#project]', panel: "#filtro-projetos" },
-                {domain: 'organization', menu: 'a[href=#organization]', panel: "#filtro-organizacoes" }
+                {domain: 'investment', menu: 'a[href$=#investment]', panel: "#filtro-investimentos" },
+                {domain: 'project', menu: 'a[href$=#project]', panel: "#filtro-projetos" },
+                {domain: 'organization', menu: 'a[href$=#organization]', panel: "#filtro-organizacoes" }
             ]
 
             _.each(options, function(o){
                 if(o.domain == domain){
-                    $(o.menu).parent().removeClass('inativa').addClass('ativa');
+                    $(o.menu).removeClass('inativo').addClass('ativo');
                     $(o.panel).show();
                 }
                 else {
-                    $(o.menu).parent().removeClass('ativa').addClass('inativa');
+                    $(o.menu).removeClass('ativo').addClass('inativo');
                     $(o.panel).hide();
                 }
             }, this);
@@ -396,7 +396,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.places_view = new PlacesView({
                 collection: this.places
             });
-            this.fetchPlaces(default_domain);
+            this.fetchPlaces(default_domain, false);
         },
         fetch_projects: function() {
             default_map_type = 'marker/';
@@ -410,7 +410,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.fetchPlaces(default_domain);
+            this.fetchPlaces(default_domain, false);
         },
         fetch_organizations: function() {
             default_map_type = 'marker/';
@@ -441,7 +441,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
         },
         fetch_single: function(domain, id) {
-            this.toggleFilter(default_domain);
+            this.toggleFilter(domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
@@ -450,7 +450,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.fetchPlaces(default_domain);
+            this.fetchPlaces(domain);
         },
         clean_markers: function() {
             if (this.places) {

@@ -1,11 +1,9 @@
-{% load tags i18n %}
+{% load static tags i18n %}
 
 <!-- Filtros de Busca por Investimentos -->
 <section id="investment-filter" class="filtros investimentos aberto">
     <header class="cabecalho">
         <h4>{% trans "Search investiments by" %}</h4>
-        <p><span class="seta cima cinza"></span>{% trans "Combine filters to improve your search" %}</p>
-        <a class="botao primario ocultar-exibir-filtro" href="#" title=""><span class="ico pequeno seta"></span></a>
     </header>
 
     <form class="form-filtros investimentos" action="#" method="post">
@@ -38,6 +36,10 @@
                 <label for="id_state">{{ search_investment_form.state.label }}</label>
                 {{ search_investment_form.state }}
             </fieldset>
+        </div>
+        <div class="borda">
+          <p><img src="{% get_static_prefix %}images/ico/ico-projeto2.png">{% trans "Download as CSV" %}</p>
+          <p><img src="{% get_static_prefix %}images/ico/ico-xls.png">{% trans "Download as XLS" %}</p>
         </div>
     </form>
 </section>
