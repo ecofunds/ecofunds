@@ -106,7 +106,7 @@
 									<th class="titulo-registro" scope="row">{% trans "Executor organizations" %}</th>
 									<td class="conteudo-registro">
 										<ul class="lista-etiquetas">
-                                            <li><a class="etiqueta" href="{{ project.organization.id }}" title="Search: {{ po.organization.name }}">{{ project.organization.name }}</a></li>
+                                            <li><a class="etiqueta" href="{% url organization_detail project.organization.id %}" title="{{ po.organization.name }}">{{ project.organization.name }}</a></li>
 	                                    </ul>
 									</td>
 								</tr>
@@ -207,7 +207,7 @@
 									    <td class="conteudo-registro" colspan="2">
 										    <ul class="lista-etiquetas">
 	                                            {% for ac in project.activities.all %}
-											        <li><a class="etiqueta" href="#TODO?s_project_activity_type={{ac.pk}}" title="Search: {{ ac.name }}">{{ ac.name}}</a></li>
+											        <li class="etiqueta" >{{ ac.name }}</li>
 											    {% endfor %}
 										    </ul>								
 									    </td>
