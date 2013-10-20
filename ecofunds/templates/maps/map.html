@@ -79,7 +79,9 @@
 
     {% verbatim %}
     <div id="info_project" style="display: none;">
-        <h4><a href="/detail/project/{{ entity_id }}">{{ acronym }}</a></h4>
+        <h4><a href="/detail/project/{{ entity_id }}">
+                {{#if acronym }}{{ acronym }}{{else}}{{ name }}{{/if}}
+            </a></h4>
         {{#if url }}
         <ul>
             <li>Website: <a href="{{ url }}">{{ url }}</a></li>

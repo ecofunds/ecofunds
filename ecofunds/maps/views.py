@@ -64,7 +64,8 @@ def project_marker(obj):
         'entity_id': obj.pk,
         'lat': obj.location.latitude,
         'lng': obj.location.longitude,
-        'acronym': obj.name,
+        'name': obj.name,
+        'acronym': obj.acronym,
         'url': obj.url
     }
 
@@ -163,10 +164,12 @@ def investment_api(request, map_type):
                 continue
 
             if obj.recipient_project:
-                project['recipient_project_id'] = project_marker(obj.recipient_project)
+                project['recipient_project_id'] = obj.recipient_project.pk
+                project['recipient_project'] = project_marker(obj.recipient_project)
 
             if obj.funding_project:
-                project['funding_project_id'] = project_marker(obj.funding_project)
+                project['funding_project_id'] = obj.funding_project.pk
+                project['funding_project'] = project_marker(obj.funding_project)
 
             if not obj.recipient_project.location.pk in points:
                 points[obj.recipient_project.location.pk] = {
