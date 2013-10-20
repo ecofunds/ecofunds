@@ -342,6 +342,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
         zoom: function(e, ui) {
             var model = e.data.model;
             model.set('zoom', ui.value);
+        },
+        center: function(lat, lng) {
+            var center = new google.maps.LatLng(lat, lng);
+            this.map.setCenter(center);
         }
     });
 
@@ -354,8 +358,8 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'filter/:domain/:id': 'fetch_single'
         },
         initialize: function() {
-            map_view = new MapView({model: new Map});
-            this.map = map_view.render();
+            this.map_view = map_view = new MapView({model: new Map});
+            this.map = this.map_view.render();
         },
         fetchPlaces: function(domain, async) {
             // Default value true
@@ -450,7 +454,10 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 collection: this.places
             });
 
-            this.fetchPlaces(domain);
+            this.fetchPlaces(domain, false);
+            var lat = this.places.models[0].get('lat');
+            var lng = this.places.models[0].get('lng');
+            this.map_view.center(lat, lng);
         },
         clean_markers: function() {
             if (this.places) {
