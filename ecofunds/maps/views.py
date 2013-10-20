@@ -79,7 +79,7 @@ def output_project_json(qs):
     return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 def lookup_attr(obj, lookup):
-    attr, sep, tail_lookup = lookup.partition('__')
+    (attr, sep, tail_lookup) = lookup.partition('__')
 
     value = getattr(obj, attr)
     if tail_lookup:
@@ -115,7 +115,7 @@ def output_project_excel(qs):
     for i, item in enumerate(qs):
         row = []
         for j, key in enumerate(PROJECT_HEADERS):
-            data = lookup_attr(item.entity, PROJECT_EXPORT_COLUMNS[key])
+            data = lookup_attr(item, PROJECT_EXPORT_COLUMNS[key])
             if data and isinstance(data, unicode) and len(data) > 3000:
                 data = data[:3000]
             ws.write(i+1, j, data)
