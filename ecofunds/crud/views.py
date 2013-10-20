@@ -45,9 +45,10 @@ def output_organization_json(qs):
         try:
             marker = {
                 'entity_id': obj.pk,
-                'name': obj.name.encode('utf-8'),
-                'lat': float(str(obj.lat)),
-                'lng': float(str(obj.lng)),
+                'name': obj.name,
+                'acronym': obj.acronym,
+                'lat': obj.location.latitude,
+                'lng': obj.location.longitude,
             }
             points[obj.pk] = marker
         except Exception as e:
