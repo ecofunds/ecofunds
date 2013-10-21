@@ -55,20 +55,19 @@
 							<tbody>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investor  organization" %}</th>
-                                    <td class="conteudo-registro"><a href="{{ investment.funding_organization.id }}" title="{% trans "Search" %}: {{ investment.funding_organization.name }}">{{ investment.funding_organization.name }}</a></td>
+                                    <td class="conteudo-registro">{%if investment.funding_organization %}<a href="{% url organization_detail investment.funding_organization.id %}" title="{{ investment.funding_organization.name }}">{{ investment.funding_organization.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investor project" %}</th>
-                                    <td class="conteudo-registro">{%if investment.funding_project %}<a href="{{ investment.funding_project.id }}" title="{% trans "Search" %}: {{ investment.funding_project.name }}">{{ investment.funding_project.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.funding_project %}<a href="{% url project_detail investment.funding_project.id %}" title="{{ investment.funding_project.name }}">{{ investment.funding_project.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
-
 	                            <tr>
 									<th class="titulo-registro" scope="row">{% trans "Recipient  organization" %}</th>
-                                    <td class="conteudo-registro"><a href="{{ investment.recipient_organization.id }}" title="{% trans "Search" %}: {{ investment.recipient_organization.name }}">{{ investment.recipient_organization.name }}</a></td>
+                                    <td class="conteudo-registro"><a href="{% url organization_detail investment.recipient_organization.id %}" title="{{ investment.recipient_organization.name }}">{{ investment.recipient_organization.name }}</a></td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Recipient project" %}</th>
-                                    <td class="conteudo-registro">{%if investment.recipient_project %}<a href="{{ investment.recipient_project.id }}" title="{% trans "Search" %}: {{ investment.recipient_project.name }}">{{ investment.recipient_project.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.recipient_project %}<a href="{% url project_detail investment.recipient_project.id %}" title="{% trans "Search" %}: {{ investment.recipient_project.name }}">{{ investment.recipient_project.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investment type" %}</th>
