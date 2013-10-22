@@ -7,7 +7,7 @@ from ecofunds.crud.models import Organization2
 
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2, Organization2, Investment2
-from ecofunds.crud.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
+from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
 
 
