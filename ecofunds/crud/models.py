@@ -114,6 +114,7 @@ class Project2(AbstractPlace, AbstractContact):
 class Investment2(models.Model):
     KINDS = (
         (1, _('Donation')),
+        (2, _('Match Donation')),
     )
 
     funding_organization = models.ForeignKey(Organization2, related_name='investment_funding')

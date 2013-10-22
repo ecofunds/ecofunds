@@ -52,5 +52,11 @@ class ProjectSearchManager(Manager):
 
 class InvestmentSearchManager(Manager):
     def search(self, **fields):
-        return self.all()
+        qs = self.all()
+
+        kind = fields.get('kind')
+        if kind:
+            qs = qs.filter(kind=kind)
+
+        return qs
 

@@ -153,9 +153,15 @@ class ProjectFilterTest(BaseTestCase):
 
 class InvestmentFilterTest(BaseTestCase):
     def setUp(self):
-        m('Investment2')
+        m('Investment2', kind=1)
+        m('Investment2', kind=2)
 
     def test_all(self):
         qs = Investment2.objects.search()
+        self.assertPKs(qs, [1, 2])
+
+    def test_kind(self):
+        '''Filter by investment type'''
+        qs = Investment2.objects.search(kind=1)
         self.assertPKs(qs, [1])
 
