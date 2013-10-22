@@ -153,15 +153,26 @@ class ProjectFilterTest(BaseTestCase):
 
 class InvestmentFilterTest(BaseTestCase):
     def setUp(self):
-        m('Investment2', kind=1)
+        p1 = m('Project2', name='ProjectA', acronym='PA')
+
+        m('Investment2', kind=1, funding_project=p1)
+        m('Investment2', kind=2, recipient_project=p1)
         m('Investment2', kind=2)
 
     def test_all(self):
         qs = Investment2.objects.search()
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 2, 3])
 
     def test_kind(self):
         '''Filter by investment type'''
         qs = Investment2.objects.search(kind=1)
         self.assertPKs(qs, [1])
+
+    def test_project(self):
+        '''Filter by project name or acronym'''
+        qs = Investment2.objects.search(project='ectA')
+        self.assertPKs(qs, [1, 2])
+
+        qs = Investment2.objects.search(project='PA')
+        self.assertPKs(qs, [1, 2])
 

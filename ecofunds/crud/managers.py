@@ -58,5 +58,10 @@ class InvestmentSearchManager(Manager):
         if kind:
             qs = qs.filter(kind=kind)
 
+        project = fields.get('project')
+        if project:
+            qs = qs.filter(Q(funding_project__name__icontains=project)|Q(funding_project__acronym__icontains=project)|
+                           Q(recipient_project__name__icontains=project)|Q(recipient_project__acronym__icontains=project))
+
         return qs
 
