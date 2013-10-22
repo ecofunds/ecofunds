@@ -155,8 +155,12 @@ class InvestmentFilterTest(BaseTestCase):
     def setUp(self):
         p1 = m('Project2', name='ProjectA', acronym='PA')
 
-        m('Investment2', kind=1, funding_project=p1)
-        m('Investment2', kind=2, recipient_project=p1)
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+
+        o1 = m('Organization2', name=u'Fundo', acronym='Funbio', location=n1)
+
+        m('Investment2', kind=1, funding_project=p1, funding_organization=o1)
+        m('Investment2', kind=2, recipient_project=p1, recipient_organization=o1)
         m('Investment2', kind=2)
 
     def test_all(self):
@@ -175,4 +179,23 @@ class InvestmentFilterTest(BaseTestCase):
 
         qs = Investment2.objects.search(project='PA')
         self.assertPKs(qs, [1, 2])
+
+    def test_organization(self):
+        '''Filter by organization name or acronym'''
+        qs = Investment2.objects.search(organization='Fund')
+        self.assertPKs(qs, [1, 2])
+
+        qs = Investment2.objects.search(organization='Funb')
+        self.assertPKs(qs, [1, 2])
+
+    def test_country(self):
+        '''Filter by recipient organization's country.'''
+        qs = Investment2.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [2])
+
+        qs = Investment2.objects.search(country='BR') #Brazil
+        self.assertPKs(qs, [2])
+
+        qs = Investment2.objects.search(country='asi') #Brasil
+        self.assertPKs(qs, [2])
 
