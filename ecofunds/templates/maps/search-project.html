@@ -23,20 +23,23 @@
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Region" %} <span class="total">({{ count_project_regions }})</span></legend>
-                <label for="id_country">{{ search_project_form.country.label }}</label>
-                {{ search_project_form.country }}
-                <label for="id_state">{{ search_project_form.state.label }}</label>
-                {{ search_project_form.state }}
+                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
+                {{ search_project_form.organization }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
-                {{ search_project_form.organization }}
+                <legend>{% trans "Region" %} <span class="total">({{ count_project_regions }})</span></legend>
+                <label for="id_country">{{ search_project_form.country.label }}</label>
+                {{ search_project_form.country }}
+                <label for="id_state">{{ search_project_form.state.label }}</label>
+                {{ search_project_form.state }}
+                <label for="id_state">{{ search_project_form.city.label }}</label>
+                {{ search_project_form.city }}
             </fieldset>
         </div>
+
         <div class="borda">
           <p><a href="{% url project_api "csv" %}">
           <img src="{% get_static_prefix %}images/ico/ico-projeto2.png">
