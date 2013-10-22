@@ -93,7 +93,7 @@ class InvestmentSearchManager(Manager):
             cs = Geoname.objects.countries(Q(name__icontains=country) | Q(alternates__icontains=country) | Q(country__icontains=country))
             cs = cs.values_list('country')
 
-            qs = qs.filter(Q(recipient_organization__location__country__in=cs))
+            qs = qs.filter(Q(recipient_project__location__country__in=cs))
 
         state = fields.get('state')
         if state:
@@ -103,13 +103,13 @@ class InvestmentSearchManager(Manager):
             ors = Q()
             for pair in cs:
                 c, a = pair
-                ors |= Q(recipient_organization__location__country=c, recipient_organization__location__admin1=a)
+                ors |= Q(recipient_project__location__country=c, recipient_project__location__admin1=a)
             qs = qs.filter(ors)
 
         city = fields.get('city')
         if city:
-            qs = qs.filter(Q(recipient_organization__location__fcode='ADM2') & (
-                Q(recipient_organization__location__name__icontains=city) | Q(recipient_organization__location__alternates__icontains=city)))
+            qs = qs.filter(Q(recipient_project__location__fcode='ADM2') & (
+                Q(recipient_project__location__name__icontains=city) | Q(recipient_project__location__alternates__icontains=city)))
 
         return qs
 

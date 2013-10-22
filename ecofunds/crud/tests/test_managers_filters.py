@@ -225,17 +225,6 @@ class InvestmentFilterTest(BaseTestCase):
         qs = Investment2.objects.search(organization='Funb')
         self.assertPKs(qs, [1, 2])
 
-    def test_country(self):
-        '''Filter by recipient organization's country.'''
-        qs = Investment2.objects.search(country='azi') #Brazil
-        self.assertPKs(qs, [2])
-
-        qs = Investment2.objects.search(country='BR') #Brazil
-        self.assertPKs(qs, [2])
-
-        qs = Investment2.objects.search(country='asi') #Brasil
-        self.assertPKs(qs, [2])
-
 
 class InvestmentLocationFilterTest(BaseTestCase):
     def setUp(self):
@@ -248,16 +237,16 @@ class InvestmentLocationFilterTest(BaseTestCase):
         c1 = m('Geoname', name=u'Niteroi', alternates='Nictheroy', country='BR', fcode='ADM2', admin1='21')
         c2 = m('Geoname', name=u'Caminito', alternates='Caminito', country='AR', fcode='ADM2', admin2='22')
 
-        o1 = m('Organization2', name=u'OrgA', acronym='OA', location=n1)
-        o2 = m('Organization2', name=u'OrgB', acronym='OB', location=s1)
-        o3 = m('Organization2', name=u'OrgC', acronym='OC', location=c1)
-        o4 = m('Organization2', name=u'OrgD', acronym='OD', location=n2)
-        o5 = m('Organization2', name=u'OrgE', acronym='OE', location=s2)
-        o6 = m('Organization2', name=u'OrgF', acronym='OF', location=c2)
+        p1 = m('Project2', name=u'ProjectA', acronym='PA', location=n1)
+        p2 = m('Project2', name=u'ProjectB', acronym='PB', location=s1)
+        p3 = m('Project2', name=u'ProjectC', acronym='PC', location=c1)
+        p4 = m('Project2', name=u'ProjectD', acronym='PD', location=n2)
+        p5 = m('Project2', name=u'ProjectE', acronym='PE', location=s2)
+        p6 = m('Project2', name=u'ProjectF', acronym='PF', location=c2)
 
-        m('Investment2', kind=1, recipient_organization=o1)
-        m('Investment2', kind=2, recipient_organization=o2)
-        m('Investment2', kind=2, recipient_organization=o3)
+        m('Investment2', kind=1, recipient_project=p1)
+        m('Investment2', kind=2, recipient_project=p2)
+        m('Investment2', kind=2, recipient_project=p3)
         m('Investment2', kind=2)
 
     def test_country(self):
