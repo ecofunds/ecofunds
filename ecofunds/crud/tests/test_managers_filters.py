@@ -236,3 +236,53 @@ class InvestmentFilterTest(BaseTestCase):
         qs = Investment2.objects.search(country='asi') #Brasil
         self.assertPKs(qs, [2])
 
+
+class InvestmentLocationFilterTest(BaseTestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+        n2 = m('Geoname', name=u'Argentine', alternates='Argentina', country='AR', fcode='PCLI')
+
+        s1 = m('Geoname', name=u'Rio de Janeiro', alternates='RJ', country='BR', fcode='ADM1', admin1='21')
+        s2 = m('Geoname', name=u'Buenos Aires', alternates='BA', country='AR', fcode='ADM1', admin1='22')
+
+        c1 = m('Geoname', name=u'Niteroi', alternates='Nictheroy', country='BR', fcode='ADM2', admin1='21')
+        c2 = m('Geoname', name=u'Caminito', alternates='Caminito', country='AR', fcode='ADM2', admin2='22')
+
+        o1 = m('Organization2', name=u'OrgA', acronym='OA', location=n1)
+        o2 = m('Organization2', name=u'OrgB', acronym='OB', location=s1)
+        o3 = m('Organization2', name=u'OrgC', acronym='OC', location=c1)
+        o4 = m('Organization2', name=u'OrgD', acronym='OD', location=n2)
+        o5 = m('Organization2', name=u'OrgE', acronym='OE', location=s2)
+        o6 = m('Organization2', name=u'OrgF', acronym='OF', location=c2)
+
+        m('Investment2', kind=1, recipient_organization=o1)
+        m('Investment2', kind=2, recipient_organization=o2)
+        m('Investment2', kind=2, recipient_organization=o3)
+        m('Investment2', kind=2)
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = Investment2.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1, 2, 3])
+
+        qs = Investment2.objects.search(country='asi') #Brasil
+        self.assertPKs(qs, [1, 2, 3])
+
+        qs = Investment2.objects.search(country='br') #BR
+        self.assertPKs(qs, [1, 2, 3])
+
+    def test_state(self):
+        '''Filter by state'''
+        qs = Investment2.objects.search(state='RJ')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Investment2.objects.search(state='Jan')
+        self.assertPKs(qs, [2, 3])
+
+    def test_city(self):
+        '''Filter by city.'''
+        qs = Investment2.objects.search(city='iter') #Niteroi
+        self.assertPKs(qs, [3])
+
+        qs = Investment2.objects.search(city='ther') #Nictheroy
+        self.assertPKs(qs, [3])
