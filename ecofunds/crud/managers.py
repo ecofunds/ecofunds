@@ -48,8 +48,7 @@ class OrganizationSearchManager(PlaceSearchManager):
 
         return qs
 
-
-class ProjectSearchManager(Manager):
+class ProjectSearchManager(PlaceSearchManager):
     def search(self, **fields):
         qs = self.exclude(location=None)
         qs = qs.select_related('location')
@@ -66,11 +65,7 @@ class ProjectSearchManager(Manager):
         if org:
             qs = qs.filter(Q(organization__name__icontains=org)|Q(organization__acronym__icontains=org))
 
-        country = fields.get('country')
-        if country:
-            qs = qs.filter(
-                Q(location__name__icontains=country) | Q(location__alternates__icontains=country) | Q(location__country__icontains=country)
-            )
+        qs = self.filter_place(qs, **fields)
 
         return qs
 

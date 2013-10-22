@@ -133,32 +133,59 @@ class ProjectFilterTest(BaseTestCase):
         qs = Project2.objects.search(activity=2)
         self.assertPKs(qs, [2, 3])
 
-    def test_country(self):
-        '''Filter by country.'''
-        qs = Project2.objects.search(country='azi') #Brazil
-        self.assertPKs(qs, [1, 2])
-
-        qs = Project2.objects.search(country='BR') #Brazil
-        self.assertPKs(qs, [1, 2])
-
-        qs = Project2.objects.search(country='asi') #Brasil
-        self.assertPKs(qs, [1, 2])
-
     def test_organization(self):
         '''Filter by organization name or acronym'''
         qs = Project2.objects.search(organization='Funb')
         self.assertPKs(qs, [1])
 
-        qs = Project2.objects.search(organization='Fed')
-        self.assertPKs(qs, [2])
+        qs = Project2.objects.search(organization='Fund')
+        self.assertPKs(qs, [1])
 
-"""
+
+class ProjectLocationFilterTest(BaseTestCase):
+    def setUp(self):
+        n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+        n2 = m('Geoname', name=u'Argentine', alternates='Argentina', country='AR', fcode='PCLI')
+
+        s1 = m('Geoname', name=u'Rio de Janeiro', alternates='RJ', country='BR', fcode='ADM1', admin1='21')
+        s2 = m('Geoname', name=u'Buenos Aires', alternates='BA', country='AR', fcode='ADM1', admin1='22')
+
+        c1 = m('Geoname', name=u'Niteroi', alternates='Nictheroy', country='BR', fcode='ADM2', admin1='21')
+        c2 = m('Geoname', name=u'Caminito', alternates='Caminito', country='AR', fcode='ADM2', admin2='22')
+
+        m('Project2', name=u'OrgA', acronym='OA', location=n1)
+        m('Project2', name=u'OrgB', acronym='OB', location=s1)
+        m('Project2', name=u'OrgC', acronym='OC', location=c1)
+        m('Project2', name=u'OrgD', acronym='OD', location=n2)
+        m('Project2', name=u'OrgE', acronym='OE', location=s2)
+        m('Project2', name=u'OrgF', acronym='OF', location=c2)
+
+    def test_country(self):
+        '''Filter by country.'''
+        qs = Project2.objects.search(country='azi') #Brazil
+        self.assertPKs(qs, [1, 2, 3])
+
+        qs = Project2.objects.search(country='asi') #Brasil
+        self.assertPKs(qs, [1, 2, 3])
+
+        qs = Project2.objects.search(country='br') #BR
+        self.assertPKs(qs, [1, 2, 3])
+
     def test_state(self):
-        '''Filter by state.'''
+        '''Filter by state'''
+        qs = Project2.objects.search(state='RJ')
+        self.assertPKs(qs, [2, 3])
+
+        qs = Project2.objects.search(state='Jan')
+        self.assertPKs(qs, [2, 3])
 
     def test_city(self):
         '''Filter by city.'''
-"""
+        qs = Project2.objects.search(city='iter') #Niteroi
+        self.assertPKs(qs, [3])
+
+        qs = Project2.objects.search(city='ther') #Nictheroy
+        self.assertPKs(qs, [3])
 
 
 class InvestmentFilterTest(BaseTestCase):
