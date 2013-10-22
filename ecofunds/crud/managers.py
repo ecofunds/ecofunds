@@ -1,8 +1,37 @@
 # coding: utf-8
 from django.db.models import Manager, Q
+from ecofunds.geonames.models import Geoname
 
 
-class OrganizationSearchManager(Manager):
+class PlaceSearchManager(Manager):
+    def filter_place(self, qs, **fields):
+
+        country = fields.get('country')
+        if country:
+            cs = Geoname.objects.countries(Q(name__icontains=country) | Q(alternates__icontains=country) | Q(country__icontains=country))
+            cs = cs.values_list('country')
+
+            qs = qs.filter(Q(location__country__in=cs))
+
+        state = fields.get('state')
+        if state:
+            cs = Geoname.objects.states(Q(name__icontains=state) | Q(alternates__icontains=state))
+            cs = cs.values_list('country', 'admin1')
+
+            ors = Q()
+            for pair in cs:
+                c, a = pair
+                ors |= Q(location__country=c, location__admin1=a)
+            qs = qs.filter(ors)
+
+        city = fields.get('city')
+        if city:
+            qs = qs.filter(Q(location__fcode='ADM2') & (Q(location__name__icontains=city) | Q(location__alternates__icontains=city)))
+
+        return qs
+
+
+class OrganizationSearchManager(PlaceSearchManager):
     def search(self, **fields):
         qs = self.exclude(location=None)
         qs = qs.select_related('location')
@@ -15,11 +44,7 @@ class OrganizationSearchManager(Manager):
         if kind:
             qs = qs.filter(kind=kind)
 
-        country = fields.get('country')
-        if country:
-            qs = qs.filter(
-                Q(location__name__icontains=country) | Q(location__alternates__icontains=country) | Q(location__country__icontains=country)
-            )
+        qs = self.filter_place(qs, **fields)
 
         return qs
 
