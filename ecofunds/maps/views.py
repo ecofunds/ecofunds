@@ -146,8 +146,7 @@ def investment_api(request, map_type):
         return HttpResponseBadRequest()
 
     qs = Investment2.objects.search(**form.cleaned_data)
-    #qs = qs.only('location__centroid', 'entity__title', 'entity__website')
-    #qs = qs.order_by('location__country__name', 'location__name')
+    qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
     points = {}
 
