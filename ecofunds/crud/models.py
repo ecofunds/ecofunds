@@ -35,15 +35,15 @@ class AbstractPlace(models.Model):
 
 class Organization2(AbstractPlace, AbstractContact):
     KINDS = (
-        (1, u'Non-profit'),
-        (2, u'Private Company'),
-        (3, u'Governamental Agency'),
-        (4, u'Bilateral Agency'),
-        (5, u'Multilateral Agency'),
-        (6, u'South-South Cooperation'),
-        (7, u'Network'),
-        (8, u'Academic/Research Institute'),
-        (9, u'Other'),
+        (1, _(u'Non-profit')),
+        (2, _(u'Private Company')),
+        (3, _(u'Governamental Agency')),
+        (4, _(u'Bilateral Agency')),
+        (5, _(u'Multilateral Agency')),
+        (6, _(u'South-South Cooperation')),
+        (7, _(u'Network')),
+        (8, _(u'Academic/Research Institute')),
+        (9, _(u'Other')),
     )
 
     name = models.CharField(max_length=255, db_index=True)
@@ -79,8 +79,8 @@ class Activity2(models.Model):
 
 class Project2(AbstractPlace, AbstractContact):
     KINDS = (
-        (1, u'Project'),
-        (2, u'Program'),
+        (1, _(u'Project')),
+        (2, _(u'Program')),
     )
 
     name = models.CharField(max_length=255, db_index=True)
