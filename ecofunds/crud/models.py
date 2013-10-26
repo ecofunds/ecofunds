@@ -133,3 +133,10 @@ class Investment2(models.Model):
         verbose_name = _('investment')
         verbose_name_plural = _('investments')
         db_table = 'crud_investment'
+
+    def __unicode__(self):
+        if self.recipient_project and self.funding_project:
+            return "From project %s --> %s" % (self.funding_project.name,
+                                               self.recipient_project.name)
+        elif self.recipient_project:
+            return "Recp Project %s" % (self.recipient_project.name)
