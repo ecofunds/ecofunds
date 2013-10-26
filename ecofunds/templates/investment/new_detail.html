@@ -85,7 +85,33 @@
 						</table>
 						<!-- fim de tabela de informacoes basicas -->
 					</div>
-					<!-- fim de Informações Básicas -->
+
+					<!-- Fim de Informações "Parentesco" -->
+                    {% if investment.parent or investment.investment2_set.all %}
+					<!-- Informações Básicas -->
+					<div class="info basica">
+						<h2 class="titulo-tabela">{% trans "Investment Relations" %}</h2>
+						<table class="tabela horizontal" caption="Basic information" summary="">
+							<tbody>
+                                {% if investment.parent %}
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Parent Investment" %}</th>
+                                    <td class="conteudo-registro">{%if investment.parent %}<a href="{% url investment_detail investment.parent.id %}" title="{{ investment.paren.funding_organization.name }}">{{ investment.parent.funding_organization.name }}</a>{%else%}-{%endif%}</td>
+								</tr>
+                                {% endif %}
+                                {% if investment.investment2_set.all %}
+                                {% for child in investment.investment2_set.all %}
+								<tr>
+									<th class="titulo-registro" scope="row">{% trans "Children Investment" %}</th>
+                                    <td class="conteudo-registro"><a href="{% url investment_detail child.id %}" title="{{ child.funding_organization.name }}">{{ child.funding_organization.name }}</a></td>
+								</tr>
+                                {% endfor %}
+                                {% endif %}
+							</tbody>
+						</table>
+					</div>
+                    {% endif %}
+					<!-- fim de Informações "Parentesco" -->
 		        </section>
 		        <!-- fim de Informacoes da ficha -->
 	    	</div>
