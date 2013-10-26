@@ -125,6 +125,7 @@ class Investment2(models.Model):
     contributed_at = models.DateField(blank=True, null=True)
     completed_at = models.DateField(blank=True, null=True)
     kind = models.IntegerField(choices=KINDS, db_index=True)
+    parent = models.ForeignKey('Investment2', blank=True, null=True)
 
     objects = InvestmentSearchManager()
 

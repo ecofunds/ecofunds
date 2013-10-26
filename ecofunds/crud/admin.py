@@ -112,7 +112,7 @@ class InvestmentForm(forms.ModelForm):
 class InvestmentAdmin(admin.ModelAdmin):
     form = InvestmentForm
     list_display = ('funding_organization', 'funding_project', 'amount', 'contributed_at',
-                    'recipient_organization', 'recipient_project')
+                    'recipient_organization', 'recipient_project', 'parent')
     list_filter = ('amount', 'contributed_at')
 
 
