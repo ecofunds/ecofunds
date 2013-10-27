@@ -82,12 +82,16 @@ def output_project_json(qs):
 def lookup_attr(obj, lookup):
     (attr, sep, tail_lookup) = lookup.partition('__')
 
-    value = getattr(obj, attr)
-    if tail_lookup:
-        return lookup_attr(value, tail_lookup)
-    else:
-        return value
-
+    try:
+        value = getattr(obj, attr)
+        if hasattr(value, '__call__'):
+            return value()
+        if tail_lookup:
+            return lookup_attr(value, tail_lookup)
+        else:
+            return value
+    except Exception as e:
+        return ''
 
 def output_project_csv(qs):
     data = tablib.Dataset(PROJECT_HEADERS)
@@ -127,15 +131,48 @@ def output_project_excel(qs):
 
 
 INVESTMENT_EXPORT_COLUMNS = {
-    'ACRONYM': 'acronym',
-    'LOCATION': 'location',
-    'COUNTRY': 'country',
-    'LAT': 'lat',
-    'LNG': 'lng',
+    'KIND': 'get_kind_display',
     'AMOUNT': 'amount',
+    'RECP ORG NAME': 'recipient_organization__name',
+    'RECP PROJECT ACRONYM': 'recipient_project__acronym',
+    'RECP PROJECT NAME': 'recipient_project__name',
+    'RECP PROJECT DESC': 'recipient_project__desc',
+    'RECP PROJECT ACTIVITIES': 'recipient_project__activities_names',
+    'RECP PROJECT GEOFOCUS': 'recipient_project__geofocus',
+    'FUNDING ORG NAME': 'funding_organization__name',
+    'FUNDING PROJ NAME': 'funding_project__name',
+    'FUNDING PROJ ACRONYM': 'funding_project__acronym',
+    'CONTRIBUTED AT': 'contributed_at',
+    'COMPLETED AT': 'completed_at'
+   # 'LOCATION': 'recipient_project__location__name',
+   # 'COUNTRY': 'recipient_project__country',
+   # 'LAT': 'recipient_project__location__latitude',
+   # 'LNG': 'recipient_project__location__longitude',
 }
 
-INVESTMENT_HEADERS = ['ACRONYM', 'COUNTRY', 'LOCATION', 'LAT', 'LNG', 'AMOUNT']
+'''
+    kind
+    amount
+#recipient_project.kind
+    recipient_organization.name
+    recipient_project.acronym
+    recipient_project.name
+    recipient_project.description
+    recipient_project.activities
+    recipient_project.geofocus
+    funding_organization.name
+    funding_project.name
+    funding_project.acronym
+    contributed_at
+    completed_at
+'''
+
+INVESTMENT_HEADERS = ['KIND', 'AMOUNT', 'RECP ORG NAME' ,'RECP PROJECT NAME',
+                      'RECP PROJECT ACRONYM', 'RECP PROJECT DESC',
+                      'RECP PROJECT ACTIVITIES', 'RECP PROJECT GEOFOCUS',
+                      'FUNDING ORG NAME', 'FUNDING PROJ NAME',
+                      'FUNDING PROJ ACRONYM', 'CONTRIBUTED AT',
+                      'COMPLETED AT']
 
 def investment_api(request, map_type):
     if map_type not in ("density", "csv", "xls"):
@@ -189,20 +226,7 @@ def investment_api(request, map_type):
     else:
         items = []
         for obj in qs:
-            lat, lng = parse_centroid(obj.location.centroid)
-            project = {
-                'id': obj.entity.pk, # Should be investment ID, but it's not possible
-                'acronym': obj.entity.title,
-                'url': obj.entity.website,
-                'entity_id': obj.entity.pk,
-                'amount': float(obj.entity_amount),
-                'location': obj.location.name,
-                'country': obj.location.country.name,
-                'location_id': obj.location.pk,
-                'lat': lat,
-                'lng': lng,
-            }
-            items.append(project)
+            items.append(obj)
 
     if map_type == "csv":
         return output_investment_csv(items)
@@ -224,7 +248,8 @@ def output_investment_csv(items):
     for item in items:
         row = []
         for key in INVESTMENT_HEADERS:
-            row.append(item[INVESTMENT_EXPORT_COLUMNS[key]])
+            col_data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
+            row.append(col_data)
         data.append(row)
 
     response = HttpResponse(data.csv, content_type="text/csv")
@@ -241,7 +266,10 @@ def output_investment_excel(items):
     ws = wb.add_sheet('Investments')
 
     currency_style = xlwt.XFStyle()
-    currency_style.num_format_str = "[$$-409]#,##0.00;-[$$-409]#,##0.00"
+    currency_style.num_format_str = "###,###,###,##0.00"
+
+    date_style = xlwt.XFStyle()
+    date_style.num_format_str = "YYYY-MM-DD"
 
     for i, header in enumerate(INVESTMENT_HEADERS):
         ws.write(0, i, header)
@@ -249,9 +277,13 @@ def output_investment_excel(items):
     for i, item in enumerate(items):
         row = []
         for j, key in enumerate(INVESTMENT_HEADERS):
-            data = item[INVESTMENT_EXPORT_COLUMNS[key]]
+            data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
             if key == "AMOUNT":
                 ws.write(i+1, j, data, style=currency_style)
+            elif key.startswith("CONTRIBUTED"):
+                ws.write(i+1, j, data, style=date_style)
+            elif key.startswith("COMPLETED"):
+                ws.write(i+1, j, data, style=date_style)
             else:
                 ws.write(i+1, j, data)
 
