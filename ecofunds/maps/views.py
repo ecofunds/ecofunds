@@ -266,7 +266,7 @@ def output_investment_excel(items):
     ws = wb.add_sheet('Investments')
 
     currency_style = xlwt.XFStyle()
-    currency_style.num_format_str = "###,###,###,##0.00"
+    currency_style.num_format_str = "#,##0.00"
 
     date_style = xlwt.XFStyle()
     date_style.num_format_str = "YYYY-MM-DD"
@@ -279,7 +279,7 @@ def output_investment_excel(items):
         for j, key in enumerate(INVESTMENT_HEADERS):
             data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
             if key == "AMOUNT":
-                ws.write(i+1, j, data, style=currency_style)
+                ws.write(i+1, j, int(data), style=currency_style)
             elif key.startswith("CONTRIBUTED"):
                 ws.write(i+1, j, data, style=date_style)
             elif key.startswith("COMPLETED"):
