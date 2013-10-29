@@ -2178,6 +2178,12 @@ table th {
   line-height: 26px;
   margin: 0 0 21px 0;
 }
+.ficha .titulo-ficha-invest {
+  font: 22px "Arial", Helvetica, sans-serif;
+  font-weight: bold;
+  line-height: 26px;
+  margin: 5px 0 21px 25px;
+}
 /* line 1051, src/_elementos-gerais.sass */
 .ficha .autoria-data {
   margin: 5px 0 15px 0;

@@ -27,7 +27,7 @@
     	<div class="ficha investimento" data-index="{{ investment.pk }}">
     		<span class="doador"><strong>{{ investment.funding_organization.name }}</strong>{% if investment.funding_entity %} {% trans "trough the project" %} <strong>{{ investment.funding_entity.title }}</strong>{% endif %}</span>
     		<span class="ico seta-fluxo"></span>
-    		<h2 class="titulo-ficha">{{ investment.recipient_project.name }}</h2>
+    		<h2 class="titulo-ficha-invest">{{ investment.recipient_project.name }}</h2>
             <input type="hidden" value="{{ investment.id }}" name="id" />
 	  		<div class="conteudo-abas-container">
 		        <!-- Informacoes da ficha -->
