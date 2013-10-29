@@ -4,18 +4,18 @@
 {%block head%}
 	{% addtoblock "meta" %}
 		<!-- Facebook Meta Tags -->
-	    <meta property="og:title" content="{{ project.title }}" /> 
-	    <meta property="og:type" content="detail project" /> 
-	    <meta property="og:url" content="" /> 
-	    <meta property="og:image" content="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" /> 
-	    <meta property="og:site_name" content="http://ecofundsdatabase.org"/> 
+	    <meta property="og:title" content="{{ project.title }}" />
+	    <meta property="og:type" content="detail project" />
+	    <meta property="og:url" content="" />
+	    <meta property="og:image" content="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" />
+	    <meta property="og:site_name" content="http://ecofundsdatabase.org"/>
 	    <!--<meta property="og:description" content="{% autoescape off %}{{ project.description }}{% endautoescape %}" />  -->
 		<!-- End of Facebook Meta Tags -->
 	{% endaddtoblock %}
     {% addtoblock "js" %}
         <!-- Funções gerais de cadastro -->
         <script type="text/javascript" src="{% get_static_prefix %}scripts/global/detail.js"></script>
-                        
+
         <!-- Funções específicas dessa página -->
         <script type="text/javascript" src="{% get_static_prefix %}scripts/project/detail.js"></script>
 
@@ -31,7 +31,7 @@
 
 		<!-- Utilizado pelo Twitter -->
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-		<!-- fim Utilizado pelo Twitter -->        
+		<!-- fim Utilizado pelo Twitter -->
     {% endaddtoblock %}
 {% endblock %}
 
@@ -39,7 +39,7 @@
 <!-- area-site -->
 <div class="area-site">
     <div class="container">
-        <h2 class="ico ico-texto projeto-maior-branco">{% trans "Projects" %}</h2>    
+        <h2 class="ico ico-texto projeto-maior-branco">{% trans "Projects" %}</h2>
     </div>
 </div>
 <!-- fim area-site -->
@@ -51,7 +51,7 @@
     <div class="conteudo">
     	<div class="ficha projeto" data-index="{{ project.pk }}">
     		<h2 class="titulo-ficha">{{ project.name }}</h2>
-            
+
     		<div class="opcoes">
 	    		<!-- menu com abas da ficha -->
 	    		<div class="menu-abas">
@@ -73,24 +73,24 @@
 
 			<div class="conteudo-abas-container">
 				<!-- Informacoes da ficha -->
-				<section id="informacoes">	
+				<section id="informacoes">
 					<!-- Informações Básicas -->
 					<div class="info basica">
 						<h2 class="titulo-tabela">{% trans "Basic information" %}</h2>
-						
+
 						<div class="img-profile-container">
-							<img id="picture" src="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/projeto-sem-foto.jpg" width="185" height="130" alt="Image: {{ project.title }}"> 
+							<img id="picture" src="{% if project.image %}{{ project.image.url }}{% else %}{% get_static_prefix %}images/projeto-sem-foto.jpg{% endif %}" data-default="{% get_static_prefix %}images/projeto-sem-foto.jpg" width="185" height="130" alt="Image: {{ project.title }}">
 						</div>
-						
-						
+
+
 						<h3>{% trans "Project Description" %}</h3>
 						<div class="descricao">
 							<p>
 								{% autoescape off %}{{ project.description }}{% endautoescape %}
-							</p>						
+							</p>
 						</div>
-						
-						
+
+
 						<!-- tabela de informacoes basicas -->
 						<table class="tabela horizontal" caption="Basic information" summary="">
 							<tbody>
@@ -123,14 +123,14 @@
 						<!-- fim de tabela de informacoes basicas -->
 					</div>
 					<!-- fim de Informações Básicas -->
-	
-	
+
+
 					<!-- Informações de Contato -->
 					<div class="info contato">
 						<h2 class="titulo-tabela">{% trans "Contact information" %}</h2>
-	
+
 						<!-- tabela de informacoes de contato -->
-						<table class="tabela horizontal" caption="Contact information" summary="">					
+						<table class="tabela horizontal" caption="Contact information" summary="">
 							<tbody>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Email" %}</th>
@@ -159,17 +159,17 @@
 								    <td class="conteudo-registro">
                                         <a href="{{ project.url }}">{{ project.url }}
 									</td>
-	                            </tr>										
+	                            </tr>
 							</tbody>
 						</table>
 						<!-- fim de tabela de informacoes de contato -->
 					</div>
 					<!-- Fim de Informações de Contato -->
-	
+
 					<!-- Informações de escopo geografico -->
 					<div class="info escopo-geo">
 						<h2 class="titulo-tabela">{% trans "Geographical scope" %}</h2>
-						
+
 						<!-- tabela de informacoes de escopo geografico -->
 						<table class="tabela horizontal" caption="Geographical scope" summary="">
 							<tbody>
@@ -190,15 +190,15 @@
 									</td>
 								</tr>
 							</tbody>
-						</table>				
+						</table>
 						<!-- fim de tabela de informacoes de escopo geografico -->
 					</div>
 					<!-- fim de Informações de escopo geografico -->
-	
+
 					<!-- Informacoes de tipo de atividades -->
 					<div class="info tipo-atividades">
 						<h2 class="titulo-tabela">{% trans "Activities type" %}</h2>
-						
+
 						<!-- tabela de informacoes de tipo de atividades -->
 						<table class="tabela horizontal" caption="{%trans "Activities type"%}" summary="">
 							<tbody>
@@ -209,25 +209,71 @@
 	                                            {% for ac in project.activities.all %}
 											        <li class="etiqueta" >{{ ac.name }}</li>
 											    {% endfor %}
-										    </ul>								
+										    </ul>
 									    </td>
 								    </tr>
 	                            {%else%}
 	                                <tr>
 									    <td colspan="2" class="conteudo-registro texto">{%trans "No activity types"%}</td>
-								    </tr>  
+								    </tr>
 	                            {%endif%}
-	                            
+
 	                            <tr>
 								    <th class="titulo-registro" scope="row">{%trans "Activity description" %}</th>
 								    <td class="conteudo-registro">{%if project.activity_description%}{{project.activity_description}}{%else%}-{%endif%}</td>
-							    </tr>	
+							    </tr>
 							</tbody>
-						</table>				
+						</table>
 						<!-- fim de tabela de informacoes de tipo de atividades -->
 					</div>
 					<!-- fim de Informacoes de tipo de atividades -->
-	
+
+                    {%if  project.investment_funding.all %}
+					<div class="info tipo-atividades">
+						<h2 class="titulo-tabela">{% trans "Funded Projects" %}</h2>
+						<table class="tabela horizontal" caption="{%trans "Funded Projects"%}" summary="">
+							<tbody>
+                                {% for ac in project.investment_funding.all %}
+                                  <tr>
+  									<th class="titulo-registro" scope="row">{% trans "Project" %}</th>
+                                      <td class="conteudo-registro">
+  										{% if project.location %}
+  											<a href="{% url investment_detail ac.id %}">
+                                                {{ ac.recipient_project.name }}</a>
+                                            {% else %}
+  											-
+  										{% endif %}
+  									</td>
+  								  </tr>
+                                {% endfor %}
+							</tbody>
+						</table>
+					</div>
+                    {% endif %}
+
+                    {%if  project.investment_recipient.all %}
+					<div class="info tipo-atividades">
+						<h2 class="titulo-tabela">{% trans "Financier of Projects" %}</h2>
+						<table class="tabela horizontal" caption="{%trans "Financier of Projects"%}" summary="">
+							<tbody>
+                                {% for ac in project.investment_recipient.all %}
+                                  <tr>
+  									<th class="titulo-registro" scope="row">{% trans "Project" %}</th>
+                                      <td class="conteudo-registro">
+  										{% if project.location %}
+  											<a href="{% url investment_detail ac.id %}">
+                                                {{ ac.recipient_project.name }}</a>
+                                            {% else %}
+  											-
+  										{% endif %}
+  									</td>
+  								  </tr>
+                                {% endfor %}
+							</tbody>
+						</table>
+					</div>
+                    {% endif %}
+
 				</section>
 				<!-- fim de Informacoes da ficha -->
 			</div>
