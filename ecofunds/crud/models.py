@@ -43,7 +43,8 @@ class Organization2(AbstractPlace, AbstractContact):
         (6, _(u'South-South Cooperation')),
         (7, _(u'Network')),
         (8, _(u'Academic/Research Institute')),
-        (9, _(u'Other')),
+        (9, _(u'Environmental Fund')),
+        (10, _(u'Other')),
     )
 
     name = models.CharField(max_length=255, db_index=True)
