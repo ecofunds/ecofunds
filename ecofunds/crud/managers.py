@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.db.models import Manager, Q
+from aggregate_if import Sum, Count
 from ecofunds.geonames.models import Geoname
 
 
@@ -48,6 +49,14 @@ class OrganizationSearchManager(PlaceSearchManager):
 
         return qs
 
+    def stats(self):
+        return self.aggregate(
+            count_organizations=Count('pk', distinct=True),
+            count_organization_kinds=Count('kind', distinct=True),
+            count_organization_locations=Count('location', distinct=True),
+        )
+
+
 class ProjectSearchManager(PlaceSearchManager):
     def search(self, **fields):
         qs = self.exclude(location=None)
@@ -68,6 +77,14 @@ class ProjectSearchManager(PlaceSearchManager):
         qs = self.filter_place(qs, **fields)
 
         return qs
+
+    def stats(self):
+        return self.aggregate(
+            count_projects=Count('pk', distinct=True),
+            count_project_activities=Count('activities', distinct=True),
+            count_project_organizations=Count('organization', distinct=True),
+            count_project_locations=Count('location', distinct=True),
+        )
 
 
 class InvestmentSearchManager(Manager):
@@ -114,3 +131,10 @@ class InvestmentSearchManager(Manager):
 
         return qs
 
+    def stats(self):
+        return self.aggregate(
+            count_investment_organizations=Count('funding_organization', distinct=True),
+            count_investment_kinds=Count('kind', distinct=True),
+            count_investment_projects=Count('recipient_project', distinct=True),
+            count_investment_locations=Count('recipient_project__location__pk', distinct=True)
+        )

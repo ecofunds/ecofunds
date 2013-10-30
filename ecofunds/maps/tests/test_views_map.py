@@ -22,10 +22,11 @@ class MapViewTest(TestCase):
         self.assertBoundedForm('search_investment_form', InvestmentFilterForm)
 
     def test_context(self):
-        expected = ('count_projects', 'count_project_activity_types', 'count_project_regions',
-                    'count_organizations', 'count_organization_types', 'count_organization_regions',
-                    'count_investments', 'count_organization_investments', 'count_investment_types',
-                    'count_recipient_organization', 'count_recipient_entity_investments')
+        inv = ('count_investment_kinds', 'count_investment_organizations', 'count_investment_projects', 'count_investment_locations')
+        org = ('count_organizations', 'count_organization_kinds', 'count_organization_locations')
+        prj = ('count_projects', 'count_project_activities', 'count_project_organizations', 'count_project_locations')
+
+        expected = inv + org + prj
 
         self.assertContextVariables(expected, self.resp.context)
 

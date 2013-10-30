@@ -15,14 +15,14 @@
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Type" %} <span class="total">({{ count_organization_types }})</span></legend>
+                <legend>{% trans "Type" %} <span class="total">({{ count_organization_kinds }})</span></legend>
                 {{ search_organization_form.kind }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Supported location" %} <span class="total">({{ count_organization_regions }})</span></legend>
+                <legend>{% trans "Supported location" %} <span class="total">({{ count_organization_locations }})</span></legend>
 
                 <label for="id_country">{{ search_organization_form.country.label }}</label>
                 {{ search_organization_form.country }}

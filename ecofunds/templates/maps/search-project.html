@@ -16,21 +16,21 @@
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Activity Type" %} <span class="total">({{ count_project_activity_types }})</span></legend>
+                <legend>{% trans "Activity Type" %} <span class="total">({{ count_project_activities }})</span></legend>
                 {{ search_project_form.activity }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Organization" %} <span class="total">({{ count_organizations }})</span></legend>
+                <legend>{% trans "Organization" %} <span class="total">({{ count_project_organizations }})</span></legend>
                 {{ search_project_form.organization }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Region" %} <span class="total">({{ count_project_regions }})</span></legend>
+                <legend>{% trans "Region" %} <span class="total">({{ count_project_locations }})</span></legend>
                 <label for="id_country">{{ search_project_form.country.label }}</label>
                 {{ search_project_form.country }}
                 <label for="id_state">{{ search_project_form.state.label }}</label>

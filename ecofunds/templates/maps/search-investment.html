@@ -9,28 +9,28 @@
     <form class="form-filtros investimentos" action="#" method="post">
         <div class="borda primeiro">
             <fieldset>
-                <legend>{% trans "Type" %} <span class="total">({{count_investment_types}})</span></legend>
+                <legend>{% trans "Type" %} <span class="total">({{count_investment_kinds}})</span></legend>
                 {{ search_investment_form.kind }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Organization" %} <span class="total">({{count_organizations}})</span></legend>
+                <legend>{% trans "Organization" %} <span class="total">({{count_investment_organizations}})</span></legend>
                 {{ search_investment_form.organization }}
             </fieldset>
         </div>
 
         <div class="borda">
             <fieldset>
-                <legend>{% trans "Project Name" %} <span class="total">({{count_projects}})</span></legend>
+                <legend>{% trans "Project Name" %} <span class="total">({{count_investment_projects}})</span></legend>
                 {{ search_investment_form.project }}
             </fieldset>
         </div>
 
         <div class="borda ultimo">
             <fieldset>
-                <legend>{% trans "Supported Region" %} <span class="total">({{count_recipient_entity_investments}})</span></legend>
+                <legend>{% trans "Supported Region" %} <span class="total">({{count_investment_locations}})</span></legend>
                 <label for="id_country">{{ search_investment_form.country.label }}</label>
                 {{ search_investment_form.country }}
                 <label for="id_state">{{ search_investment_form.state.label }}</label>

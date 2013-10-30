@@ -8,7 +8,6 @@ from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
-from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2, Organization2, Investment2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 
@@ -310,8 +309,8 @@ def map_view(request):
         'search_organization_form': OrganizationFilterForm(request.GET),
         'search_investment_form': InvestmentFilterForm(request.GET),
     }
-    context.update(Project.objects.stats())
-    context.update(Organization.objects.stats())
-    context.update(Investment.objects.stats())
+    context.update(Project2.objects.stats())
+    context.update(Organization2.objects.stats())
+    context.update(Investment2.objects.stats())
 
     return render(request, "maps/map.html", context)
