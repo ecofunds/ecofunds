@@ -187,41 +187,33 @@ def investment_api(request, map_type):
     qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
     points = {}
-
     items = None
     if map_type == "density":
         for obj in qs:
-            project = {
-                'id': obj.pk, # Should be investment ID, but it's not possible
+
+            loc = obj.recipient_project.location
+            # Insert new location into points
+            if not loc.pk in points:
+                points[loc.pk] = {
+                    'location_id': loc.pk,
+                    'lat': loc.latitude,
+                    'lng': loc.longitude,
+                    'total_investment': float(0),
+                    'total_investment_str': format_currency(0),
+                    'investments': []
+                }
+
+            investment = {
+                'id': obj.pk,
                 'amount': float(obj.amount),
-                'amount_str': format_currency(obj.amount)
+                'amount_str': format_currency(obj.amount),
+                'recipient_name': obj.recipient_project.name,
+                'link': obj.get_absolute_url(),
             }
 
-            if not obj.recipient_project:
-                continue
-
-            if obj.recipient_project:
-                project['recipient_project_id'] = obj.recipient_project.pk
-                project['recipient_project'] = project_marker(obj.recipient_project)
-
-            if obj.funding_project:
-                project['funding_project_id'] = obj.funding_project.pk
-                project['funding_project'] = project_marker(obj.funding_project)
-
-            if not obj.recipient_project.location.pk in points:
-                points[obj.recipient_project.location.pk] = {
-                    'location': obj.recipient_project.location.name,
-                    'location_id': obj.recipient_project.location.pk,
-                    'lat': obj.recipient_project.latitude,
-                    'lng': obj.recipient_project.longitude,
-                    'total_investment': float(obj.amount),
-                    'total_investment_str': format_currency(obj.amount),
-                    'projects': [project]
-                }
-            else:
-                points[obj.recipient_project.location.pk]['projects'].append(project)
-                points[obj.recipient_project.location.pk]['total_investment'] += float(obj.amount)
-                points[obj.recipient_project.location.pk]['total_investment_str'] = format_currency(points[obj.recipient_project.location.pk]['total_investment'])
+            points[loc.pk]['investments'].append(investment)
+            points[loc.pk]['total_investment'] += float(obj.amount)
+            points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
 
         items =  points.values()
     else:

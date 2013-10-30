@@ -166,34 +166,6 @@ class OrganizationJsonTest(TestCase):
         self.assertEqual(data['map']['items'], expected)
 
 
-class InvestmentMapTest(MapFixture):
-    def test_get_investments_api(self):
-        response = self.client.get(reverse('investment_api', args=['density']))
-        self.assertEqual(200, response.status_code)
-
-        expected_items = [{
-            u'location': 'Rio de Janeiro',
-            u'location_id': 1,
-            u'lat': -22.5331067902,
-            u'lng': -43.2435698976,
-            u'total_investment': 1000000.0,
-            u'total_investment_str': u"$ 1.000.000,00",
-            u'projects': [
-                {
-                    u'id': 1,
-                    u'acronym': u"Projeto de Teste",
-                    u'url': None,
-                    u'id': 1,
-                    u'amount': 1000000.0,
-                    u'amount_str': u'$ 1.000.000,00',
-                },
-            ],
-        }]
-
-        received_data = loads(response.content)
-        self.assertEqual(received_data['map']['items'], expected_items)
-
-
 class OrganizationCsvTest(TestCase):
     def setUp(self):
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
@@ -235,3 +207,50 @@ class OrganizationXlsTest(TestCase):
 
     def test_header(self):
         self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="organizations.xls"')
+
+
+class InvestmentJsonTest(TestCase):
+    def setUp(self):
+        n1 = m('Geoname', geonameid=1, name=u'Brazil', country='BR', fcode='PCLI', latitude=-27, longitude=-50)
+
+        p1 = m('Project2', name=u'ProjectA', acronym='PA', location=n1)
+        p2 = m('Project2', name=u'ProjectB', acronym='PB', location=n1)
+
+        m('Investment2', kind=1, recipient_project=p1, amount=1000)
+        m('Investment2', kind=1, recipient_project=p2, amount=10000)
+
+        self.resp = self.client.get(reverse('investment_api', args=['density']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_content(self):
+        expected = [
+            {
+                u'location_id': 1,
+                u'lat': -27.0,
+                u'lng': -50.0,
+                u'total_investment': 11000.0,
+                u'total_investment_str': u"$ 11.000,00",
+                u'investments': [
+                    {
+                        u'amount': 1000.0,
+                        u'link': u"/detail/investment/1",
+                        u'id': 1,
+                        u'amount_str': u"$ 1.000,00",
+                        u'recipient_name': u"ProjectA"
+                    },
+                    {
+                        u'amount': 10000.0,
+                        u'link': u"/detail/investment/2",
+                        u'id': 2,
+                        u'amount_str': u"$ 10.000,00",
+                        u'recipient_name': u"ProjectB"
+                    },
+                ],
+
+            },
+        ]
+
+        data = loads(self.resp.content)
+        self.assertEqual(data['map']['items'], expected)
