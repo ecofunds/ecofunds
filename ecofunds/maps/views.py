@@ -166,7 +166,7 @@ INVESTMENT_COLUMNS = {
     'COMPLETED AT': 'completed_at',
 }
 
-def investment_to_csv(items):
+def investments_to_csv(items):
     table = tablib.Dataset(INVESTMENT_HEADERS)
 
     for item in items:
@@ -178,7 +178,7 @@ def investment_to_csv(items):
     return table.csv
 
 
-def investment_to_xls(items):
+def investments_to_xls(items):
     import xlwt
     from StringIO import StringIO
     wb = xlwt.Workbook()
@@ -215,7 +215,7 @@ def investment_to_xls(items):
     return content
 
 
-def investment_to_marker(items):
+def investments_to_marker(items):
     points = {}
 
     for item in items:
@@ -258,11 +258,11 @@ def investment_api(request, map_type):
     qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
     if map_type == "csv":
-        return DownloadResponse(investment_to_csv(qs), content_type="text/csv", filename='investments.csv')
+        return DownloadResponse(investments_to_csv(qs), content_type="text/csv", filename='investments.csv')
     elif map_type == "xls":
-        return DownloadResponse(investment_to_xls(qs), content_type="application/ms-excel", filename='investments.xls')
+        return DownloadResponse(investments_to_xls(qs), content_type="application/ms-excel", filename='investments.xls')
     else:
-        content = dict(map=dict(items=investment_to_marker(qs)))
+        content = dict(map=dict(items=investments_to_marker(qs)))
         return HttpResponse(dumps(content), content_type="application/json")
 
 
