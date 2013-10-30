@@ -1,3 +1,5 @@
+from django.utils.datetime_safe import datetime
+from decimal import Decimal
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.simplejson import dumps
@@ -9,6 +11,14 @@ from ecofunds.core.models import Organization, ProjectLocation, Project, Investm
 from ecofunds.crud.models import Project2, Organization2, Investment2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
 from ecofunds.maps.utils import parse_centroid
+
+
+class DownloadResponse(HttpResponse):
+    def __init__(self, content='', mimetype=None, status=None, content_type=None, filename=None):
+        super(DownloadResponse, self).__init__(content, mimetype, status, content_type)
+
+        if filename:
+            self['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
 
 def format_currency(value):
@@ -131,49 +141,113 @@ def output_project_excel(qs):
     return response
 
 
-INVESTMENT_EXPORT_COLUMNS = {
+INVESTMENT_HEADERS = [
+    'KIND',
+    'AMOUNT',
+    'RECP ORG',
+    'RECP PROJECT',
+    'RECP PROJECT ACRONYM',
+    'RECP PROJECT DESC',
+    'RECP PROJECT ACTIVITIES',
+    'RECP PROJECT GEOFOCUS',
+    'FUND ORG',
+    'FUND PROJ',
+    'FUND PROJ ACRONYM',
+    'CONTRIBUTED AT',
+    'COMPLETED AT',
+]
+
+INVESTMENT_COLUMNS = {
     'KIND': 'get_kind_display',
     'AMOUNT': 'amount',
-    'RECP ORG NAME': 'recipient_organization__name',
+    'RECP ORG': 'recipient_organization__name',
+    'RECP PROJECT': 'recipient_project__name',
     'RECP PROJECT ACRONYM': 'recipient_project__acronym',
-    'RECP PROJECT NAME': 'recipient_project__name',
-    'RECP PROJECT DESC': 'recipient_project__desc',
+    'RECP PROJECT DESC': 'recipient_project__description',
     'RECP PROJECT ACTIVITIES': 'recipient_project__activities_names',
     'RECP PROJECT GEOFOCUS': 'recipient_project__geofocus',
-    'FUNDING ORG NAME': 'funding_organization__name',
-    'FUNDING PROJ NAME': 'funding_project__name',
-    'FUNDING PROJ ACRONYM': 'funding_project__acronym',
+    'FUND ORG': 'funding_organization__name',
+    'FUND PROJ': 'funding_project__name',
+    'FUND PROJ ACRONYM': 'funding_project__acronym',
     'CONTRIBUTED AT': 'contributed_at',
-    'COMPLETED AT': 'completed_at'
-   # 'LOCATION': 'recipient_project__location__name',
-   # 'COUNTRY': 'recipient_project__country',
-   # 'LAT': 'recipient_project__location__latitude',
-   # 'LNG': 'recipient_project__location__longitude',
+    'COMPLETED AT': 'completed_at',
 }
 
-'''
-    kind
-    amount
-#recipient_project.kind
-    recipient_organization.name
-    recipient_project.acronym
-    recipient_project.name
-    recipient_project.description
-    recipient_project.activities
-    recipient_project.geofocus
-    funding_organization.name
-    funding_project.name
-    funding_project.acronym
-    contributed_at
-    completed_at
-'''
+def investment_to_csv(items):
+    table = tablib.Dataset(INVESTMENT_HEADERS)
 
-INVESTMENT_HEADERS = ['KIND', 'AMOUNT', 'RECP ORG NAME' ,'RECP PROJECT NAME',
-                      'RECP PROJECT ACRONYM', 'RECP PROJECT DESC',
-                      'RECP PROJECT ACTIVITIES', 'RECP PROJECT GEOFOCUS',
-                      'FUNDING ORG NAME', 'FUNDING PROJ NAME',
-                      'FUNDING PROJ ACRONYM', 'CONTRIBUTED AT',
-                      'COMPLETED AT']
+    for item in items:
+        row = []
+        for header in INVESTMENT_HEADERS:
+            row.append(lookup_attr(item, INVESTMENT_COLUMNS[header]))
+        table.append(row)
+
+    return table.csv
+
+
+def investment_to_xls(items):
+    import xlwt
+    from StringIO import StringIO
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Investments')
+
+    currency_style = xlwt.XFStyle()
+    currency_style.num_format_str = "#,##0.00"
+
+    date_style = xlwt.XFStyle()
+    date_style.num_format_str = "YYYY-MM-DD"
+
+    for col, header in enumerate(INVESTMENT_HEADERS):
+        ws.write(0, col, header)
+
+    for idx, item in enumerate(items):
+        r = idx + 1 # 1st row is #1
+
+        for c, header in enumerate(INVESTMENT_HEADERS):
+            value = lookup_attr(item, INVESTMENT_COLUMNS[header])
+
+            if isinstance(value, (float, Decimal)):
+                ws.write(r, c, int(value), style=currency_style)
+            elif isinstance(value, datetime):
+                ws.write(r, c, value, style=date_style)
+            else:
+                ws.write(r, c, value)
+
+    content = StringIO()
+    wb.save(content)
+    return content
+
+
+def investment_to_marker(items):
+    points = {}
+
+    for item in items:
+        loc = item.recipient_project.location
+        # Insert new location into points
+        if not loc.pk in points:
+            points[loc.pk] = {
+                'location_id': loc.pk,
+                'lat': loc.latitude,
+                'lng': loc.longitude,
+                'total_investment': float(0),
+                'total_investment_str': format_currency(0),
+                'investments': []
+            }
+
+        investment = {
+            'id': item.pk,
+            'amount': float(item.amount),
+            'amount_str': format_currency(item.amount),
+            'recipient_name': item.recipient_project.name,
+            'link': item.get_absolute_url(),
+        }
+
+        points[loc.pk]['investments'].append(investment)
+        points[loc.pk]['total_investment'] += float(item.amount)
+        points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
+
+    return points.values()
+
 
 def investment_api(request, map_type):
     if map_type not in ("density", "csv", "xls"):
@@ -186,103 +260,13 @@ def investment_api(request, map_type):
     qs = Investment2.objects.search(**form.cleaned_data)
     qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
-    points = {}
-    items = None
-    if map_type == "density":
-        for obj in qs:
-
-            loc = obj.recipient_project.location
-            # Insert new location into points
-            if not loc.pk in points:
-                points[loc.pk] = {
-                    'location_id': loc.pk,
-                    'lat': loc.latitude,
-                    'lng': loc.longitude,
-                    'total_investment': float(0),
-                    'total_investment_str': format_currency(0),
-                    'investments': []
-                }
-
-            investment = {
-                'id': obj.pk,
-                'amount': float(obj.amount),
-                'amount_str': format_currency(obj.amount),
-                'recipient_name': obj.recipient_project.name,
-                'link': obj.get_absolute_url(),
-            }
-
-            points[loc.pk]['investments'].append(investment)
-            points[loc.pk]['total_investment'] += float(obj.amount)
-            points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
-
-        items =  points.values()
-    else:
-        items = []
-        for obj in qs:
-            items.append(obj)
-
     if map_type == "csv":
-        return output_investment_csv(items)
+        return DownloadResponse(investment_to_csv(qs), content_type="text/csv", filename='investments.csv')
     elif map_type == "xls":
-        return output_investment_excel(items)
+        return DownloadResponse(investment_to_xls(qs), content_type="application/ms-excel", filename='investments.xls')
     else:
-        return output_investment_json(items)
-
-
-def output_investment_json(items):
-    gmap = {}
-    gmap['items'] = items
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
-
-
-def output_investment_csv(items):
-    data = tablib.Dataset(INVESTMENT_HEADERS)
-    for item in items:
-        row = []
-        for key in INVESTMENT_HEADERS:
-            col_data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
-            row.append(col_data)
-        data.append(row)
-
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="investment.csv"'
-    return response
-
-
-def output_investment_excel(items):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="investment.xls"'
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Investments')
-
-    currency_style = xlwt.XFStyle()
-    currency_style.num_format_str = "#,##0.00"
-
-    date_style = xlwt.XFStyle()
-    date_style.num_format_str = "YYYY-MM-DD"
-
-    for i, header in enumerate(INVESTMENT_HEADERS):
-        ws.write(0, i, header)
-
-    for i, item in enumerate(items):
-        row = []
-        for j, key in enumerate(INVESTMENT_HEADERS):
-            data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
-            if key == "AMOUNT":
-                ws.write(i+1, j, int(data), style=currency_style)
-            elif key.startswith("CONTRIBUTED"):
-                ws.write(i+1, j, data, style=date_style)
-            elif key.startswith("COMPLETED"):
-                ws.write(i+1, j, data, style=date_style)
-            else:
-                ws.write(i+1, j, data)
-
-    wb.save(response)
-
-    return response
+        content = dict(map=dict(items=investment_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
 
 
 ORGANIZATION_EXPORT_COLUMNS = {

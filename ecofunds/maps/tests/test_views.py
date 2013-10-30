@@ -3,6 +3,7 @@ from decimal import Decimal
 from unittest import skip
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.utils.datetime_safe import datetime
 from django.utils.simplejson import dumps, loads
 
 from model_mommy import mommy
@@ -128,22 +129,6 @@ class InvestmentJSONView(TestCase):
         self.assertEqual(200, response.status_code)
 
 
-class InvestmentCSVTest(MapFixture):
-    def test_get_geoapi_investment_density(self):
-        response = self.client.get(reverse('investment_api', args=['csv']))
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(response.get('Content-Disposition'),
-                         'attachment; filename="investment.csv"')
-
-
-class InvestmentXLSTest(MapFixture):
-    def test_get_geoapi_investment_density(self):
-        response = self.client.get(reverse('investment_api', args=['xls']))
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(response.get('Content-Disposition'),
-                         'attachment; filename="investment.xls"')
-
-
 class OrganizationJsonTest(TestCase):
     def setUp(self):
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
@@ -254,3 +239,77 @@ class InvestmentJsonTest(TestCase):
 
         data = loads(self.resp.content)
         self.assertEqual(data['map']['items'], expected)
+
+
+class InvestmentCsvTest(TestCase):
+    def setUp(self):
+        l1 = m('Geoname', geonameid=1, name=u'Brazil', country='BR', fcode='PCLI', latitude=-27, longitude=-50)
+
+        a1 = m('Activity2', pk=1, name='A1')
+        a2 = m('Activity2', pk=2, name='A2')
+
+        m('Investment2',
+          kind=1,
+          amount=1000,
+          recipient_organization__name='RO',
+          recipient_project__name='RP',
+          recipient_project__acronym='RPA',
+          recipient_project__description='RPD',
+          recipient_project__activities=[a1, a2],
+          recipient_project__geofocus='G',
+          recipient_project__location=l1,
+          funding_organization__name='FO',
+          funding_project__name='FP',
+          funding_project__acronym='FPA',
+          contributed_at=datetime(2013, 01, 01),
+          completed_at=datetime(2013, 12, 01),
+        )
+
+        self.resp = self.client.get(reverse('investment_api', args=['csv']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_header(self):
+        self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="investments.csv"')
+
+    def test_csv_header(self):
+        expected = 'KIND,AMOUNT,RECP ORG,RECP PROJECT,RECP PROJECT ACRONYM,RECP PROJECT DESC,RECP PROJECT ACTIVITIES,RECP PROJECT GEOFOCUS,FUND ORG,FUND PROJ,FUND PROJ ACRONYM,CONTRIBUTED AT,COMPLETED AT'
+        self.assertIn(expected, self.resp.content)
+
+    def test_csv_content(self):
+        l1 = 'Donation,1000,RO,RP,RPA,RPD,"A1, A2",G,FO,FP,FPA,2013-01-01,2013-12-01'
+        self.assertIn(l1, self.resp.content)
+
+
+class InvestmentXlsTest(TestCase):
+    def setUp(self):
+        l1 = m('Geoname', geonameid=1, name=u'Brazil', country='BR', fcode='PCLI', latitude=-27, longitude=-50)
+
+        a1 = m('Activity2', pk=1, name='A1')
+        a2 = m('Activity2', pk=2, name='A2')
+
+        m('Investment2',
+          kind=1,
+          amount=1000,
+          recipient_organization__name='RO',
+          recipient_project__name='RP',
+          recipient_project__acronym='RPA',
+          recipient_project__description='RPD',
+          recipient_project__activities=[a1, a2],
+          recipient_project__geofocus='G',
+          recipient_project__location=l1,
+          funding_organization__name='FO',
+          funding_project__name='FP',
+          funding_project__acronym='FPA',
+          contributed_at=datetime(2013, 01, 01),
+          completed_at=datetime(2013, 12, 01),
+        )
+
+        self.resp = self.client.get(reverse('investment_api', args=['xls']))
+
+    def test_status(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_header(self):
+        self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="investments.xls"')
