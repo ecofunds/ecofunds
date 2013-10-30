@@ -190,19 +190,21 @@ class ProjectLocationFilterTest(BaseTestCase):
 
 class InvestmentFilterTest(BaseTestCase):
     def setUp(self):
-        p1 = m('Project2', name='ProjectA', acronym='PA')
-
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI')
+        s1 = m('Geoname', name=u'Rio de Janeiro', alternates='RJ', country='BR', fcode='ADM1', admin1='21')
 
         o1 = m('Organization2', name=u'Fundo', acronym='Funbio', location=n1)
+        p1 = m('Project2', name='ProjectA', acronym='PA', location=s1)
 
-        m('Investment2', kind=1, funding_project=p1, funding_organization=o1)
-        m('Investment2', kind=2, recipient_project=p1, recipient_organization=o1)
-        m('Investment2', kind=2)
+        i1 = m('Investment2', kind=1, recipient_project=p1, recipient_organization=o1)
+        i2 = m('Investment2', kind=2, recipient_project=p1, recipient_organization=o1) # Parent
+        i3 = m('Investment2', kind=2, recipient_project=p1, recipient_organization=o1, parent=i2)
+        i4 = m('Investment2', kind=2, funding_project=p1, funding_organization=o1) # No recipient_project
+        i5 = m('Investment2', kind=2) # No recipient_project
 
     def test_all(self):
         qs = Investment2.objects.search()
-        self.assertPKs(qs, [1, 2, 3])
+        self.assertPKs(qs, [1, 3])
 
     def test_kind(self):
         '''Filter by investment type'''
@@ -212,18 +214,18 @@ class InvestmentFilterTest(BaseTestCase):
     def test_project(self):
         '''Filter by project name or acronym'''
         qs = Investment2.objects.search(project='ectA')
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 3])
 
         qs = Investment2.objects.search(project='PA')
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 3])
 
     def test_organization(self):
         '''Filter by organization name or acronym'''
         qs = Investment2.objects.search(organization='Fund')
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 3])
 
         qs = Investment2.objects.search(organization='Funb')
-        self.assertPKs(qs, [1, 2])
+        self.assertPKs(qs, [1, 3])
 
 
 class InvestmentLocationFilterTest(BaseTestCase):

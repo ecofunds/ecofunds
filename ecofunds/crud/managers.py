@@ -72,7 +72,8 @@ class ProjectSearchManager(PlaceSearchManager):
 
 class InvestmentSearchManager(Manager):
     def search(self, **fields):
-        qs = self.all()
+        qs = self.exclude(recipient_project=None, recipient_project__location=None)
+        qs = qs.exclude(pk__in=self.exclude(parent=None).values_list('parent'))
 
         kind = fields.get('kind')
         if kind:
