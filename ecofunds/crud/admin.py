@@ -21,7 +21,7 @@ class CountryChoices(AutoModelSelect2Field):
     search_fields = ['name__icontains', 'alternates__icontains']
 
 class OrganizationAdminForm(forms.ModelForm):
-    location = CountryChoices(widget=AutoHeavySelect2Widget)
+    location = CountryChoices(widget=AutoHeavySelect2Widget, help_text=_('Required to show this item on map.'))
     class Meta:
         model = Organization2
 
@@ -52,7 +52,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 # Project Admin
 
 class ProjectForm(forms.ModelForm):
-    location = CountryChoices(widget=AutoHeavySelect2Widget)
+    location = CountryChoices(widget=AutoHeavySelect2Widget, help_text=_('Required to show this item on map.'))
     class Meta:
         model = Project2
         widgets = {
