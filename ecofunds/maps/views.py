@@ -187,7 +187,7 @@ def investments_to_marker(items):
                 'location_id': loc.pk,
                 'lat': loc.latitude,
                 'lng': loc.longitude,
-                'total_investment': float(0),
+                'total_investment': 0,
                 'total_investment_str': format_currency(0),
                 'investments': []
             }
@@ -201,7 +201,7 @@ def investments_to_marker(items):
         }
 
         points[loc.pk]['investments'].append(investment)
-        points[loc.pk]['total_investment'] += float(item.amount)
+        points[loc.pk]['total_investment'] += int(item.amount)
         points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
 
     return points.values()
