@@ -1,16 +1,16 @@
+# coding: utf-8
+import xlwt
 from django.utils.datetime_safe import datetime
+from datetime import date
 from decimal import Decimal
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
-from ecofunds.crud.models import Organization2
-
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2, Organization2, Investment2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
-from ecofunds.maps.utils import parse_centroid
 
 
 class DownloadResponse(HttpResponse):
@@ -54,6 +54,42 @@ def queryset_to_csv(items, headers, column_map):
     return table.csv
 
 
+def queryset_to_xls(items, output, sheet_name, headers, column_map):
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet(sheet_name)
+
+    XLS_MAX_LEN = 3000
+
+    currency_style = xlwt.XFStyle()
+    currency_style.num_format_str = "#,##0.00"
+
+    date_style = xlwt.XFStyle()
+    date_style.num_format_str = "YYYY-MM-DD"
+
+    for col, header in enumerate(headers):
+        ws.write(0, col, header)
+
+    for idx, item in enumerate(items):
+        r = idx + 1 # 1st row is #1
+
+        for c, header in enumerate(headers):
+            value = lookup_attr(item, column_map[header])
+
+            #if header.endswith('AT'):
+            #    import ipdb; ipdb.set_trace()
+
+            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
+                ws.write(r, c, value[:XLS_MAX_LEN])
+            elif isinstance(value, Decimal):
+                ws.write(r, c, int(value), style=currency_style)
+            elif isinstance(value, date):
+                ws.write(r, c, value, style=date_style)
+            else:
+                ws.write(r, c, value)
+
+    wb.save(output)
+
+
 PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
                    'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
 
@@ -86,34 +122,6 @@ def projects_to_marker(items):
     return points.values()
 
 
-def projects_to_xls(items):
-    import xlwt
-    from StringIO import StringIO
-
-    XLS_MAX_LEN = 3000
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Projects')
-
-    for col, header in enumerate(PROJECT_HEADERS):
-        ws.write(0, col, header)
-
-    for idx, item in enumerate(items):
-        r = idx + 1 # 1st row is #1
-
-        for c, header in enumerate(PROJECT_HEADERS):
-            value = lookup_attr(item, PROJECT_COLUMNS[header])
-
-            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
-                value = value[:XLS_MAX_LEN]
-
-            ws.write(r, c, value)
-
-    content = StringIO()
-    wb.save(content)
-    return content
-
-
 def project_api(request, map_type):
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
@@ -128,7 +136,9 @@ def project_api(request, map_type):
         content = queryset_to_csv(qs, PROJECT_HEADERS, PROJECT_COLUMNS)
         return DownloadResponse(content, content_type="text/csv", filename='projects.csv')
     elif map_type == "xls":
-        return DownloadResponse(projects_to_xls(qs), content_type="application/ms-excel", filename='projects.xls')
+        response = DownloadResponse(content_type="application/ms-excel", filename='projects.xls')
+        queryset_to_xls(qs, response, 'Projects', PROJECT_HEADERS, PROJECT_COLUMNS)
+        return response
     else:
         content = dict(map=dict(items=projects_to_marker(qs)))
         return HttpResponse(dumps(content), content_type="application/json")
@@ -166,43 +176,6 @@ INVESTMENT_COLUMNS = {
     'CONTRIBUTED AT': 'contributed_at',
     'COMPLETED AT': 'completed_at',
 }
-
-
-def investments_to_xls(items):
-    import xlwt
-    from StringIO import StringIO
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Investments')
-
-    XLS_MAX_LEN = 3000
-
-    currency_style = xlwt.XFStyle()
-    currency_style.num_format_str = "#,##0.00"
-
-    date_style = xlwt.XFStyle()
-    date_style.num_format_str = "YYYY-MM-DD"
-
-    for col, header in enumerate(INVESTMENT_HEADERS):
-        ws.write(0, col, header)
-
-    for idx, item in enumerate(items):
-        r = idx + 1 # 1st row is #1
-
-        for c, header in enumerate(INVESTMENT_HEADERS):
-            value = lookup_attr(item, INVESTMENT_COLUMNS[header])
-
-            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
-                ws.write(r, c, value[:XLS_MAX_LEN])
-            elif isinstance(value, Decimal):
-                ws.write(r, c, int(value), style=currency_style)
-            elif isinstance(value, datetime):
-                ws.write(r, c, value, style=date_style)
-            else:
-                ws.write(r, c, value)
-
-    content = StringIO()
-    wb.save(content)
-    return content
 
 
 def investments_to_marker(items):
@@ -251,7 +224,9 @@ def investment_api(request, map_type):
         content = queryset_to_csv(qs, INVESTMENT_HEADERS, INVESTMENT_COLUMNS)
         return DownloadResponse(content, content_type="text/csv", filename='investments.csv')
     elif map_type == "xls":
-        return DownloadResponse(investments_to_xls(qs), content_type="application/ms-excel", filename='investments.xls')
+        response = DownloadResponse(content_type="application/ms-excel", filename='investments.xls')
+        queryset_to_xls(qs, response, 'Investments', INVESTMENT_HEADERS, INVESTMENT_COLUMNS)
+        return response
     else:
         content = dict(map=dict(items=investments_to_marker(qs)))
         return HttpResponse(dumps(content), content_type="application/json")
@@ -307,34 +282,6 @@ def organizations_to_marker(items):
     return points.values()
 
 
-def organizations_to_xls(items):
-    import xlwt
-    from StringIO import StringIO
-
-    XLS_MAX_LEN = 3000
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Organizations')
-
-    for col, header in enumerate(ORGANIZATION_HEADERS):
-        ws.write(0, col, header)
-
-    for idx, item in enumerate(items):
-        r = idx + 1 # 1st row is #1
-
-        for c, header in enumerate(ORGANIZATION_HEADERS):
-            value = lookup_attr(item, ORGANIZATION_COLUMNS[header])
-
-            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
-                value = value[:XLS_MAX_LEN]
-
-            ws.write(r, c, value)
-
-    content = StringIO()
-    wb.save(content)
-    return content
-
-
 def organization_api(request, map_type):
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
@@ -349,7 +296,9 @@ def organization_api(request, map_type):
         content = queryset_to_csv(qs, ORGANIZATION_HEADERS, ORGANIZATION_COLUMNS)
         return DownloadResponse(content, content_type="text/csv", filename='organizations.csv')
     elif map_type == "xls":
-        return DownloadResponse(organizations_to_xls(qs), content_type="application/ms-excel", filename='organizations.xls')
+        response = DownloadResponse(content_type="application/ms-excel", filename='organizations.xls')
+        queryset_to_xls(qs, response, 'Organizations', ORGANIZATION_HEADERS, ORGANIZATION_COLUMNS)
+        return response
     else:
         content = dict(map=dict(items=organizations_to_marker(qs)))
         return HttpResponse(dumps(content), content_type="application/json")
