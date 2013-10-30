@@ -230,16 +230,16 @@
 
                     {%if  project.investment_funding.all %}
 					<div class="info tipo-atividades">
-						<h2 class="titulo-tabela">{% trans "Funded Projects" %}</h2>
-						<table class="tabela horizontal" caption="{%trans "Funded Projects"%}" summary="">
+						<h2 class="titulo-tabela">{% trans "Investments to" %}</h2>
+						<table class="tabela horizontal" caption="{%trans "Investments to"%}" summary="">
 							<tbody>
                                 {% for ac in project.investment_funding.all %}
                                   <tr>
-  									<th class="titulo-registro" scope="row">{% trans "Project" %}</th>
+  									<th class="titulo-registro" scope="row">{% trans "Investment" %}</th>
                                       <td class="conteudo-registro">
   										{% if project.location %}
   											<a href="{% url investment_detail ac.id %}">
-                                                {{ ac.recipient_project.name }}</a>
+                                                {{ ac.funding_organization.name }} sent {% currency ac.amount %} {% trans "to" %} {{ organization.recipient_organization.name  }}</a>
                                             {% else %}
   											-
   										{% endif %}
@@ -253,16 +253,16 @@
 
                     {%if  project.investment_recipient.all %}
 					<div class="info tipo-atividades">
-						<h2 class="titulo-tabela">{% trans "Financier of Projects" %}</h2>
-						<table class="tabela horizontal" caption="{%trans "Financier of Projects"%}" summary="">
+						<h2 class="titulo-tabela">{% trans "Investments from" %}</h2>
+						<table class="tabela horizontal" caption="{%trans "Investments from"%}" summary="">
 							<tbody>
                                 {% for ac in project.investment_recipient.all %}
                                   <tr>
-  									<th class="titulo-registro" scope="row">{% trans "Project" %}</th>
+  									<th class="titulo-registro" scope="row">{% trans "Investment" %}</th>
                                       <td class="conteudo-registro">
   										{% if project.location %}
   											<a href="{% url investment_detail ac.id %}">
-                                                {{ ac.recipient_project.name }}</a>
+                                                {{ ac.recipient_organization.name }} {% trans "received from" %} {% currency ac.amount %} {{ ac.funding_organization.name }}</a>
                                             {% else %}
   											-
   										{% endif %}
