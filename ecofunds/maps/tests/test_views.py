@@ -67,37 +67,6 @@ class ProjectXlsTest(TestCase):
         self.assertEqual(self.resp.get('Content-Disposition'), 'attachment; filename="projects.xls"')
 
 
-class InvestmentJSONView(TestCase):
-    def setUp(self):
-        country = m(Country, name="Brasil")
-        location = m(Location, country=country, name="Rio de Janeiro",
-                     centroid="-22.5331067902,-43.2435698976",
-                     polygon=FIXTURE_PLOLYGON)
-        funding_org = m(Organization, name="Funding Ord", country=country,
-                                                          state=location,
-                                                          validated=True)
-        organization = m(Organization, name="Funbio", country=country,
-                                                      state=location,
-                                                      validated=True)
-        project = m(Project, main_organization=organization,
-                             locations=[],
-                             validated=True)
-        funding_proj = m(Project, main_organization=organization,
-                                  locations=[])
-        investment = m(Investment, recipient_organization=organization,
-                                   funding_organization=funding_org,
-                                   funding_entity=funding_proj,
-                                   recipient_entity=project,
-                                   amount_usd=Decimal("2000000"),
-                                   amount=Decimal("2000000"))
-        project_location = m(ProjectLocation, entity=project,
-                                              location=location)
-
-    def test_get_geoapi_investment_density(self):
-        response = self.client.get(reverse('investment_api', args=['density']))
-        self.assertEqual(200, response.status_code)
-
-
 class OrganizationJsonTest(TestCase):
     def setUp(self):
         n1 = m('Geoname', name=u'Federative Republic of Brazil', alternates='Brasil', country='BR', fcode='PCLI', latitude=-27.2221329359, longitude=-50.0092212765)
