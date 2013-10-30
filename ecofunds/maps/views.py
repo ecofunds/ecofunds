@@ -31,7 +31,7 @@ def format_currency(value):
 PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
                    'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
 
-PROJECT_EXPORT_COLUMNS = {
+PROJECT_COLUMNS = {
     'NAME': 'name',
     'ACRONYM': 'acronym',
     'ACTIVITY_TYPE': 'activities_names',
@@ -43,12 +43,60 @@ PROJECT_EXPORT_COLUMNS = {
     'LNG': 'location__longitude'
 }
 
-#TODO missing attributes
-#'ACTIVITIES': 'activities',
-#"start_date",
-#"end_date",
-#"address",
-#"zipcode"
+
+def projects_to_marker(items):
+    points = {}
+    for item in items:
+        points[item.pk] = dict(
+            id=item.pk,
+            lat=item.latitude,
+            lng=item.longitude,
+            name=item.name,
+            acronym=item.acronym,
+            url=item.url,
+            link=item.get_absolute_url(),
+        )
+
+    return points.values()
+
+
+def projects_to_csv(items):
+    table = tablib.Dataset(PROJECT_HEADERS)
+    for item in items:
+        row = []
+        for header in PROJECT_HEADERS:
+            row.append(lookup_attr(item, PROJECT_COLUMNS[header]))
+        table.append(row)
+
+    return table.csv
+
+
+def projects_to_xls(items):
+    import xlwt
+    from StringIO import StringIO
+
+    XLS_MAX_LEN = 3000
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Projects')
+
+    for col, header in enumerate(PROJECT_HEADERS):
+        ws.write(0, col, header)
+
+    for idx, item in enumerate(items):
+        r = idx + 1 # 1st row is #1
+
+        for c, header in enumerate(PROJECT_HEADERS):
+            value = lookup_attr(item, PROJECT_COLUMNS[header])
+
+            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
+                value = value[:XLS_MAX_LEN]
+
+            ws.write(r, c, value)
+
+    content = StringIO()
+    wb.save(content)
+    return content
 
 
 def project_api(request, map_type):
@@ -62,33 +110,13 @@ def project_api(request, map_type):
     qs = Project2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
-        return output_project_csv(qs)
+        return DownloadResponse(projects_to_csv(qs), content_type="text/csv", filename='projects.csv')
     elif map_type == "xls":
-        return output_project_excel(qs)
+        return DownloadResponse(projects_to_xls(qs), content_type="application/ms-excel", filename='projects.xls')
     else:
-        return output_project_json(qs)
+        content = dict(map=dict(items=projects_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
 
-
-def project_marker(obj):
-    return {
-        'id': obj.pk,
-        'lat': obj.latitude,
-        'lng': obj.longitude,
-        'name': obj.name,
-        'acronym': obj.acronym,
-        'url': obj.url,
-        'link': obj.get_absolute_url(),
-    }
-
-def output_project_json(qs):
-    points = {}
-    for obj in qs:
-        points[obj.pk] = project_marker(obj)
-
-    gmap = {}
-    gmap['items'] = points.values()
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 def lookup_attr(obj, lookup):
     (attr, sep, tail_lookup) = lookup.partition('__')
@@ -103,42 +131,6 @@ def lookup_attr(obj, lookup):
             return value
     except Exception as e:
         return ''
-
-def output_project_csv(qs):
-    data = tablib.Dataset(PROJECT_HEADERS)
-    for item in qs:
-        row = []
-        for key in PROJECT_HEADERS:
-            row.append(lookup_attr(item, PROJECT_EXPORT_COLUMNS[key]) or 'None')
-        data.append(row)
-
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="projects.csv"'
-    return response
-
-
-def output_project_excel(qs):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="projects.xls"'
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Projects')
-
-    for i, header in enumerate(PROJECT_HEADERS):
-        ws.write(0, i, header)
-
-    for i, item in enumerate(qs):
-        row = []
-        for j, key in enumerate(PROJECT_HEADERS):
-            data = lookup_attr(item, PROJECT_EXPORT_COLUMNS[key])
-            if data and isinstance(data, unicode) and len(data) > 3000:
-                data = data[:3000]
-            ws.write(i+1, j, data)
-
-    wb.save(response)
-
-    return response
 
 
 INVESTMENT_HEADERS = [

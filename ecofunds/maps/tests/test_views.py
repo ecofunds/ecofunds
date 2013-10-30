@@ -48,7 +48,7 @@ class ProjectCsvTest(TestCase):
         self.assertIn(expected, self.resp.content)
 
     def test_csv_data(self):
-        expected = 'ProjectA,PA,None,None,None,None,None,-27.2221329359,-50.0092212765'
+        expected = 'ProjectA,PA,,,None,None,None,-27.2221329359,-50.0092212765'
         self.assertIn(expected, self.resp.content)
 
 
