@@ -29,6 +29,24 @@ class AbstractPlace(models.Model):
 
     location = models.ForeignKey(Geoname, null=True)
 
+    @property
+    def latitude(self):
+        if self.lat:
+            return self.lat
+        elif self.location:
+            return self.location.latitude
+        else:
+            return None
+
+    @property
+    def longitude(self):
+        if self.lng:
+            return self.lng
+        elif self.location:
+            return self.location.longitude
+        else:
+            return None
+
     class Meta:
         abstract = True
 

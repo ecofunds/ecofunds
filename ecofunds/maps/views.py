@@ -62,8 +62,8 @@ def project_api(request, map_type):
 def project_marker(obj):
     return {
         'entity_id': obj.pk,
-        'lat': obj.location.latitude,
-        'lng': obj.location.longitude,
+        'lat': obj.latitude,
+        'lng': obj.longitude,
         'name': obj.name,
         'acronym': obj.acronym,
         'url': obj.url
@@ -211,8 +211,8 @@ def investment_api(request, map_type):
                 points[obj.recipient_project.location.pk] = {
                     'location': obj.recipient_project.location.name,
                     'location_id': obj.recipient_project.location.pk,
-                    'lat': obj.recipient_project.location.latitude,
-                    'lng': obj.recipient_project.location.longitude,
+                    'lat': obj.recipient_project.latitude,
+                    'lng': obj.recipient_project.longitude,
                     'total_investment': float(obj.amount),
                     'total_investment_str': format_currency(obj.amount),
                     'projects': [project]
@@ -339,8 +339,8 @@ def output_organization_json(qs):
             'entity_id': obj.pk,
             'name': obj.name,
             'acronym': obj.acronym,
-            'lat': obj.location.latitude,
-            'lng': obj.location.longitude,
+            'lat': obj.latitude,
+            'lng': obj.longitude,
         }
 
         points[obj.pk] = marker
