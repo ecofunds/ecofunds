@@ -109,8 +109,8 @@ class OrganizationCsvTest(TestCase):
         self.assertIn(expected, self.resp.content)
 
     def test_csv_content(self):
-        l1 = 'Fundo,None,1,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
-        l2 = 'Associacao,None,1,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
+        l1 = 'Fundo,None,Non-profit,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
+        l2 = 'Associacao,None,Non-profit,None,None,None,None,None,None,None,None,-27.2221329359,-50.0092212765'
 
         self.assertIn(l1, self.resp.content)
         self.assertIn(l2, self.resp.content)

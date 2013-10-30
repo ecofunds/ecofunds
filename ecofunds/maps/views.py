@@ -266,10 +266,27 @@ def investment_api(request, map_type):
         return HttpResponse(dumps(content), content_type="application/json")
 
 
-ORGANIZATION_EXPORT_COLUMNS = {
+ORGANIZATION_HEADERS = [
+    'NAME',
+    'DESCRIPTION',
+    'ORG. TYPE',
+    'ADDRESS',
+    'ZIPCODE',
+    'COUNTRY',
+    'STATE',
+    'CITY',
+    'EMAIL',
+    'URL',
+    'PHONE',
+    'LAT',
+    'LNG',
+]
+
+
+ORGANIZATION_COLUMNS = {
     'NAME': 'name',
     'DESCRIPTION': 'description',
-    'ORG. TYPE': 'kind',
+    'ORG. TYPE': 'get_kind_display',
     'ADDRESS': 'address',
     'ZIPCODE': 'zipcode',
     'COUNTRY': 'country',
@@ -283,8 +300,59 @@ ORGANIZATION_EXPORT_COLUMNS = {
 }
 
 
-ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE', 'COUNTRY', 'STATE', 'CITY',
-                        'EMAIL', 'URL' , 'PHONE', 'LAT', 'LNG']
+def organizations_to_marker(items):
+    points = {}
+
+    for item in items:
+        points[item.pk] = {
+            'id': item.pk,
+            'name': item.name,
+            'acronym': item.acronym,
+            'lat': item.latitude,
+            'lng': item.longitude,
+            'link': item.get_absolute_url(),
+        }
+
+    return points.values()
+
+
+def organizations_to_csv(items):
+    table = tablib.Dataset(ORGANIZATION_HEADERS)
+    for item in items:
+        row = []
+        for header in ORGANIZATION_HEADERS:
+            row.append(lookup_attr(item, ORGANIZATION_COLUMNS[header]))
+        table.append(row)
+
+    return table.csv
+
+
+def organizations_to_xls(items):
+    import xlwt
+    from StringIO import StringIO
+
+    XLS_MAX_LEN = 3000
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Organizations')
+
+    for col, header in enumerate(ORGANIZATION_HEADERS):
+        ws.write(0, col, header)
+
+    for idx, item in enumerate(items):
+        r = idx + 1 # 1st row is #1
+
+        for c, header in enumerate(ORGANIZATION_HEADERS):
+            value = lookup_attr(item, ORGANIZATION_COLUMNS[header])
+
+            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
+                value = value[:XLS_MAX_LEN]
+
+            ws.write(r, c, value)
+
+    content = StringIO()
+    wb.save(content)
+    return content
 
 
 def organization_api(request, map_type):
@@ -298,65 +366,12 @@ def organization_api(request, map_type):
     qs = Organization2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
-        return output_organization_csv(qs)
+        return DownloadResponse(organizations_to_csv(qs), content_type="text/csv", filename='organizations.csv')
     elif map_type == "xls":
-        return output_organization_excel(qs)
+        return DownloadResponse(organizations_to_xls(qs), content_type="application/ms-excel", filename='organizations.xls')
     else:
-        return output_organization_json(qs)
-
-
-def output_organization_json(qs):
-    points = {}
-
-    for obj in qs:
-        marker = {
-            'id': obj.pk,
-            'name': obj.name,
-            'acronym': obj.acronym,
-            'lat': obj.latitude,
-            'lng': obj.longitude,
-            'link': obj.get_absolute_url(),
-        }
-
-        points[obj.pk] = marker
-
-    gmap = {}
-    gmap['items'] = points.values()
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
-
-
-def output_organization_csv(qs):
-    data = tablib.Dataset(ORGANIZATION_HEADERS)
-    for item in qs:
-        row = []
-        for key in ORGANIZATION_HEADERS:
-            row.append(lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]) or 'None')
-        data.append(row)
-
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
-    return response
-
-def output_organization_excel(qs):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="organizations.xls"'
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Organizations')
-
-    for i, header in enumerate(ORGANIZATION_HEADERS):
-        ws.write(0, i, header)
-
-    for i, item in enumerate(qs):
-        row = []
-        for j, key in enumerate(ORGANIZATION_HEADERS):
-            ws.write(i+1, j, lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
-
-    wb.save(response)
-
-    return response
+        content = dict(map=dict(items=organizations_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
 
 
 def map_view(request):
