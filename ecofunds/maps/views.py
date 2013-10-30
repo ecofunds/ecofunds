@@ -43,6 +43,17 @@ def lookup_attr(obj, lookup):
         return ''
 
 
+def queryset_to_csv(items, headers, column_map):
+    table = tablib.Dataset(headers)
+    for item in items:
+        row = []
+        for header in headers:
+            row.append(lookup_attr(item, column_map[header]))
+        table.append(row)
+
+    return table.csv
+
+
 PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
                    'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
 
@@ -73,17 +84,6 @@ def projects_to_marker(items):
         )
 
     return points.values()
-
-
-def projects_to_csv(items):
-    table = tablib.Dataset(PROJECT_HEADERS)
-    for item in items:
-        row = []
-        for header in PROJECT_HEADERS:
-            row.append(lookup_attr(item, PROJECT_COLUMNS[header]))
-        table.append(row)
-
-    return table.csv
 
 
 def projects_to_xls(items):
@@ -125,7 +125,8 @@ def project_api(request, map_type):
     qs = Project2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
-        return DownloadResponse(projects_to_csv(qs), content_type="text/csv", filename='projects.csv')
+        content = queryset_to_csv(qs, PROJECT_HEADERS, PROJECT_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='projects.csv')
     elif map_type == "xls":
         return DownloadResponse(projects_to_xls(qs), content_type="application/ms-excel", filename='projects.xls')
     else:
@@ -165,17 +166,6 @@ INVESTMENT_COLUMNS = {
     'CONTRIBUTED AT': 'contributed_at',
     'COMPLETED AT': 'completed_at',
 }
-
-def investments_to_csv(items):
-    table = tablib.Dataset(INVESTMENT_HEADERS)
-
-    for item in items:
-        row = []
-        for header in INVESTMENT_HEADERS:
-            row.append(lookup_attr(item, INVESTMENT_COLUMNS[header]))
-        table.append(row)
-
-    return table.csv
 
 
 def investments_to_xls(items):
@@ -258,7 +248,8 @@ def investment_api(request, map_type):
     qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
     if map_type == "csv":
-        return DownloadResponse(investments_to_csv(qs), content_type="text/csv", filename='investments.csv')
+        content = queryset_to_csv(qs, INVESTMENT_HEADERS, INVESTMENT_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='investments.csv')
     elif map_type == "xls":
         return DownloadResponse(investments_to_xls(qs), content_type="application/ms-excel", filename='investments.xls')
     else:
@@ -316,17 +307,6 @@ def organizations_to_marker(items):
     return points.values()
 
 
-def organizations_to_csv(items):
-    table = tablib.Dataset(ORGANIZATION_HEADERS)
-    for item in items:
-        row = []
-        for header in ORGANIZATION_HEADERS:
-            row.append(lookup_attr(item, ORGANIZATION_COLUMNS[header]))
-        table.append(row)
-
-    return table.csv
-
-
 def organizations_to_xls(items):
     import xlwt
     from StringIO import StringIO
@@ -366,7 +346,8 @@ def organization_api(request, map_type):
     qs = Organization2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
-        return DownloadResponse(organizations_to_csv(qs), content_type="text/csv", filename='organizations.csv')
+        content = queryset_to_csv(qs, ORGANIZATION_HEADERS, ORGANIZATION_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='organizations.csv')
     elif map_type == "xls":
         return DownloadResponse(organizations_to_xls(qs), content_type="application/ms-excel", filename='organizations.xls')
     else:
