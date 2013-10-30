@@ -239,7 +239,7 @@
                                       <td class="conteudo-registro">
   										{% if project.location %}
   											<a href="{% url investment_detail ac.id %}">
-                                                {{ ac.funding_organization.name }} sent {% currency ac.amount %} {% trans "to" %} {{ organization.recipient_organization.name  }}</a>
+                                                {{ ac.funding_organization.name }} sent {% currency ac.amount %} {% trans "to" %} {{ ac.recipient_organization.name  }}</a>
                                             {% else %}
   											-
   										{% endif %}
