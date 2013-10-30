@@ -1,6 +1,5 @@
 # coding: utf-8
 import xlwt
-from django.utils.datetime_safe import datetime
 from datetime import date
 from decimal import Decimal
 from django.http import HttpResponseBadRequest, HttpResponse
