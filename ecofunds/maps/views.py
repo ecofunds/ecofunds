@@ -1,14 +1,24 @@
+# coding: utf-8
+import xlwt
+from django.utils.datetime_safe import datetime
+from datetime import date
+from decimal import Decimal
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.simplejson import dumps
 import tablib
 from babel import numbers
-from ecofunds.crud.models import Organization2
-
 from ecofunds.core.models import Organization, ProjectLocation, Project, Investment
 from ecofunds.crud.models import Project2, Organization2, Investment2
 from ecofunds.maps.forms import OrganizationFilterForm, ProjectFilterForm, InvestmentFilterForm
-from ecofunds.maps.utils import parse_centroid
+
+
+class DownloadResponse(HttpResponse):
+    def __init__(self, content='', mimetype=None, status=None, content_type=None, filename=None):
+        super(DownloadResponse, self).__init__(content, mimetype, status, content_type)
+
+        if filename:
+            self['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
 
 def format_currency(value):
@@ -17,68 +27,6 @@ def format_currency(value):
             numbers.get_currency_symbol('USD', 'en_US'),
             u'\xa4\xa4 #,##0.00', locale='pt_BR')
 
-
-PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
-                   'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
-
-PROJECT_EXPORT_COLUMNS = {
-    'NAME': 'name',
-    'ACRONYM': 'acronym',
-    'ACTIVITY_TYPE': 'activities_names',
-    'DESCRIPTION': 'description',
-    'URL': 'url',
-    'EMAIL': 'email',
-    'PHONE': 'phone',
-    'LAT': 'location__latitude',
-    'LNG': 'location__longitude'
-}
-
-#TODO missing attributes
-#'ACTIVITIES': 'activities',
-#"start_date",
-#"end_date",
-#"address",
-#"zipcode"
-
-
-def project_api(request, map_type):
-    if map_type not in ("marker", "csv", "xls"):
-        return HttpResponseBadRequest()
-
-    form = ProjectFilterForm(request.GET)
-    if not form.is_valid():
-        return HttpResponseBadRequest()
-
-    qs = Project2.objects.search(**form.cleaned_data)
-
-    if map_type == "csv":
-        return output_project_csv(qs)
-    elif map_type == "xls":
-        return output_project_excel(qs)
-    else:
-        return output_project_json(qs)
-
-
-def project_marker(obj):
-    return {
-        'id': obj.pk,
-        'lat': obj.latitude,
-        'lng': obj.longitude,
-        'name': obj.name,
-        'acronym': obj.acronym,
-        'url': obj.url,
-        'link': obj.get_absolute_url(),
-    }
-
-def output_project_json(qs):
-    points = {}
-    for obj in qs:
-        points[obj.pk] = project_marker(obj)
-
-    gmap = {}
-    gmap['items'] = points.values()
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
 
 def lookup_attr(obj, lookup):
     (attr, sep, tail_lookup) = lookup.partition('__')
@@ -94,86 +42,172 @@ def lookup_attr(obj, lookup):
     except Exception as e:
         return ''
 
-def output_project_csv(qs):
-    data = tablib.Dataset(PROJECT_HEADERS)
-    for item in qs:
+
+def queryset_to_csv(items, headers, column_map):
+    table = tablib.Dataset(headers)
+    for item in items:
         row = []
-        for key in PROJECT_HEADERS:
-            row.append(lookup_attr(item, PROJECT_EXPORT_COLUMNS[key]) or 'None')
-        data.append(row)
+        for header in headers:
+            row.append(lookup_attr(item, column_map[header]))
+        table.append(row)
 
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="projects.csv"'
-    return response
+    return table.csv
 
 
-def output_project_excel(qs):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="projects.xls"'
-
+def queryset_to_xls(items, output, sheet_name, headers, column_map):
     wb = xlwt.Workbook()
-    ws = wb.add_sheet('Projects')
+    ws = wb.add_sheet(sheet_name)
 
-    for i, header in enumerate(PROJECT_HEADERS):
-        ws.write(0, i, header)
+    XLS_MAX_LEN = 3000
 
-    for i, item in enumerate(qs):
-        row = []
-        for j, key in enumerate(PROJECT_HEADERS):
-            data = lookup_attr(item, PROJECT_EXPORT_COLUMNS[key])
-            if data and isinstance(data, unicode) and len(data) > 3000:
-                data = data[:3000]
-            ws.write(i+1, j, data)
+    currency_style = xlwt.XFStyle()
+    currency_style.num_format_str = "#,##0.00"
 
-    wb.save(response)
+    date_style = xlwt.XFStyle()
+    date_style.num_format_str = "YYYY-MM-DD"
 
-    return response
+    for col, header in enumerate(headers):
+        ws.write(0, col, header)
+
+    for idx, item in enumerate(items):
+        r = idx + 1 # 1st row is #1
+
+        for c, header in enumerate(headers):
+            value = lookup_attr(item, column_map[header])
+
+            #if header.endswith('AT'):
+            #    import ipdb; ipdb.set_trace()
+
+            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
+                ws.write(r, c, value[:XLS_MAX_LEN])
+            elif isinstance(value, Decimal):
+                ws.write(r, c, int(value), style=currency_style)
+            elif isinstance(value, date):
+                ws.write(r, c, value, style=date_style)
+            else:
+                ws.write(r, c, value)
+
+    wb.save(output)
 
 
-INVESTMENT_EXPORT_COLUMNS = {
-    'KIND': 'get_kind_display',
-    'AMOUNT': 'amount',
-    'RECP ORG NAME': 'recipient_organization__name',
-    'RECP PROJECT ACRONYM': 'recipient_project__acronym',
-    'RECP PROJECT NAME': 'recipient_project__name',
-    'RECP PROJECT DESC': 'recipient_project__desc',
-    'RECP PROJECT ACTIVITIES': 'recipient_project__activities_names',
-    'RECP PROJECT GEOFOCUS': 'recipient_project__geofocus',
-    'FUNDING ORG NAME': 'funding_organization__name',
-    'FUNDING PROJ NAME': 'funding_project__name',
-    'FUNDING PROJ ACRONYM': 'funding_project__acronym',
-    'CONTRIBUTED AT': 'contributed_at',
-    'COMPLETED AT': 'completed_at'
-   # 'LOCATION': 'recipient_project__location__name',
-   # 'COUNTRY': 'recipient_project__country',
-   # 'LAT': 'recipient_project__location__latitude',
-   # 'LNG': 'recipient_project__location__longitude',
+PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
+                   'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
+
+PROJECT_COLUMNS = {
+    'NAME': 'name',
+    'ACRONYM': 'acronym',
+    'ACTIVITY_TYPE': 'activities_names',
+    'DESCRIPTION': 'description',
+    'URL': 'url',
+    'EMAIL': 'email',
+    'PHONE': 'phone',
+    'LAT': 'location__latitude',
+    'LNG': 'location__longitude'
 }
 
-'''
-    kind
-    amount
-#recipient_project.kind
-    recipient_organization.name
-    recipient_project.acronym
-    recipient_project.name
-    recipient_project.description
-    recipient_project.activities
-    recipient_project.geofocus
-    funding_organization.name
-    funding_project.name
-    funding_project.acronym
-    contributed_at
-    completed_at
-'''
 
-INVESTMENT_HEADERS = ['KIND', 'AMOUNT', 'RECP ORG NAME' ,'RECP PROJECT NAME',
-                      'RECP PROJECT ACRONYM', 'RECP PROJECT DESC',
-                      'RECP PROJECT ACTIVITIES', 'RECP PROJECT GEOFOCUS',
-                      'FUNDING ORG NAME', 'FUNDING PROJ NAME',
-                      'FUNDING PROJ ACRONYM', 'CONTRIBUTED AT',
-                      'COMPLETED AT']
+def projects_to_marker(items):
+    points = {}
+    for item in items:
+        points[item.pk] = dict(
+            id=item.pk,
+            lat=item.latitude,
+            lng=item.longitude,
+            name=item.name,
+            acronym=item.acronym,
+            url=item.url,
+            link=item.get_absolute_url(),
+        )
+
+    return points.values()
+
+
+def project_api(request, map_type):
+    if map_type not in ("marker", "csv", "xls"):
+        return HttpResponseBadRequest()
+
+    form = ProjectFilterForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest()
+
+    qs = Project2.objects.search(**form.cleaned_data)
+
+    if map_type == "csv":
+        content = queryset_to_csv(qs, PROJECT_HEADERS, PROJECT_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='projects.csv')
+    elif map_type == "xls":
+        response = DownloadResponse(content_type="application/ms-excel", filename='projects.xls')
+        queryset_to_xls(qs, response, 'Projects', PROJECT_HEADERS, PROJECT_COLUMNS)
+        return response
+    else:
+        content = dict(map=dict(items=projects_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
+
+
+
+INVESTMENT_HEADERS = [
+    'KIND',
+    'AMOUNT',
+    'RECP ORG',
+    'RECP PROJECT',
+    'RECP PROJECT ACRONYM',
+    'RECP PROJECT DESC',
+    'RECP PROJECT ACTIVITIES',
+    'RECP PROJECT GEOFOCUS',
+    'FUND ORG',
+    'FUND PROJ',
+    'FUND PROJ ACRONYM',
+    'CONTRIBUTED AT',
+    'COMPLETED AT',
+]
+
+INVESTMENT_COLUMNS = {
+    'KIND': 'get_kind_display',
+    'AMOUNT': 'amount',
+    'RECP ORG': 'recipient_organization__name',
+    'RECP PROJECT': 'recipient_project__name',
+    'RECP PROJECT ACRONYM': 'recipient_project__acronym',
+    'RECP PROJECT DESC': 'recipient_project__description',
+    'RECP PROJECT ACTIVITIES': 'recipient_project__activities_names',
+    'RECP PROJECT GEOFOCUS': 'recipient_project__geofocus',
+    'FUND ORG': 'funding_organization__name',
+    'FUND PROJ': 'funding_project__name',
+    'FUND PROJ ACRONYM': 'funding_project__acronym',
+    'CONTRIBUTED AT': 'contributed_at',
+    'COMPLETED AT': 'completed_at',
+}
+
+
+def investments_to_marker(items):
+    points = {}
+
+    for item in items:
+        loc = item.recipient_project.location
+        # Insert new location into points
+        if not loc.pk in points:
+            points[loc.pk] = {
+                'location_id': loc.pk,
+                'lat': loc.latitude,
+                'lng': loc.longitude,
+                'total_investment': float(0),
+                'total_investment_str': format_currency(0),
+                'investments': []
+            }
+
+        investment = {
+            'id': item.pk,
+            'amount': float(item.amount),
+            'amount_str': format_currency(item.amount),
+            'recipient_name': item.recipient_project.name,
+            'link': item.get_absolute_url(),
+        }
+
+        points[loc.pk]['investments'].append(investment)
+        points[loc.pk]['total_investment'] += float(item.amount)
+        points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
+
+    return points.values()
+
 
 def investment_api(request, map_type):
     if map_type not in ("density", "csv", "xls"):
@@ -186,109 +220,39 @@ def investment_api(request, map_type):
     qs = Investment2.objects.search(**form.cleaned_data)
     qs = qs.select_related('funding_organization', 'funding_project', 'recipient_organization', 'recipient_project', 'recipient_project__location')
 
-    points = {}
-    items = None
-    if map_type == "density":
-        for obj in qs:
-
-            loc = obj.recipient_project.location
-            # Insert new location into points
-            if not loc.pk in points:
-                points[loc.pk] = {
-                    'location_id': loc.pk,
-                    'lat': loc.latitude,
-                    'lng': loc.longitude,
-                    'total_investment': float(0),
-                    'total_investment_str': format_currency(0),
-                    'investments': []
-                }
-
-            investment = {
-                'id': obj.pk,
-                'amount': float(obj.amount),
-                'amount_str': format_currency(obj.amount),
-                'recipient_name': obj.recipient_project.name,
-                'link': obj.get_absolute_url(),
-            }
-
-            points[loc.pk]['investments'].append(investment)
-            points[loc.pk]['total_investment'] += float(obj.amount)
-            points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
-
-        items =  points.values()
-    else:
-        items = []
-        for obj in qs:
-            items.append(obj)
-
     if map_type == "csv":
-        return output_investment_csv(items)
+        content = queryset_to_csv(qs, INVESTMENT_HEADERS, INVESTMENT_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='investments.csv')
     elif map_type == "xls":
-        return output_investment_excel(items)
+        response = DownloadResponse(content_type="application/ms-excel", filename='investments.xls')
+        queryset_to_xls(qs, response, 'Investments', INVESTMENT_HEADERS, INVESTMENT_COLUMNS)
+        return response
     else:
-        return output_investment_json(items)
+        content = dict(map=dict(items=investments_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
 
 
-def output_investment_json(items):
-    gmap = {}
-    gmap['items'] = items
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
-
-
-def output_investment_csv(items):
-    data = tablib.Dataset(INVESTMENT_HEADERS)
-    for item in items:
-        row = []
-        for key in INVESTMENT_HEADERS:
-            col_data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
-            row.append(col_data)
-        data.append(row)
-
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="investment.csv"'
-    return response
+ORGANIZATION_HEADERS = [
+    'NAME',
+    'DESCRIPTION',
+    'ORG. TYPE',
+    'ADDRESS',
+    'ZIPCODE',
+    'COUNTRY',
+    'STATE',
+    'CITY',
+    'EMAIL',
+    'URL',
+    'PHONE',
+    'LAT',
+    'LNG',
+]
 
 
-def output_investment_excel(items):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="investment.xls"'
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Investments')
-
-    currency_style = xlwt.XFStyle()
-    currency_style.num_format_str = "#,##0.00"
-
-    date_style = xlwt.XFStyle()
-    date_style.num_format_str = "YYYY-MM-DD"
-
-    for i, header in enumerate(INVESTMENT_HEADERS):
-        ws.write(0, i, header)
-
-    for i, item in enumerate(items):
-        row = []
-        for j, key in enumerate(INVESTMENT_HEADERS):
-            data = lookup_attr(item, INVESTMENT_EXPORT_COLUMNS[key])
-            if key == "AMOUNT":
-                ws.write(i+1, j, int(data), style=currency_style)
-            elif key.startswith("CONTRIBUTED"):
-                ws.write(i+1, j, data, style=date_style)
-            elif key.startswith("COMPLETED"):
-                ws.write(i+1, j, data, style=date_style)
-            else:
-                ws.write(i+1, j, data)
-
-    wb.save(response)
-
-    return response
-
-
-ORGANIZATION_EXPORT_COLUMNS = {
+ORGANIZATION_COLUMNS = {
     'NAME': 'name',
     'DESCRIPTION': 'description',
-    'ORG. TYPE': 'kind',
+    'ORG. TYPE': 'get_kind_display',
     'ADDRESS': 'address',
     'ZIPCODE': 'zipcode',
     'COUNTRY': 'country',
@@ -302,8 +266,20 @@ ORGANIZATION_EXPORT_COLUMNS = {
 }
 
 
-ORGANIZATION_HEADERS = ['NAME', 'DESCRIPTION', 'ORG. TYPE', 'ADDRESS', 'ZIPCODE', 'COUNTRY', 'STATE', 'CITY',
-                        'EMAIL', 'URL' , 'PHONE', 'LAT', 'LNG']
+def organizations_to_marker(items):
+    points = {}
+
+    for item in items:
+        points[item.pk] = {
+            'id': item.pk,
+            'name': item.name,
+            'acronym': item.acronym,
+            'lat': item.latitude,
+            'lng': item.longitude,
+            'link': item.get_absolute_url(),
+        }
+
+    return points.values()
 
 
 def organization_api(request, map_type):
@@ -317,65 +293,15 @@ def organization_api(request, map_type):
     qs = Organization2.objects.search(**form.cleaned_data)
 
     if map_type == "csv":
-        return output_organization_csv(qs)
+        content = queryset_to_csv(qs, ORGANIZATION_HEADERS, ORGANIZATION_COLUMNS)
+        return DownloadResponse(content, content_type="text/csv", filename='organizations.csv')
     elif map_type == "xls":
-        return output_organization_excel(qs)
+        response = DownloadResponse(content_type="application/ms-excel", filename='organizations.xls')
+        queryset_to_xls(qs, response, 'Organizations', ORGANIZATION_HEADERS, ORGANIZATION_COLUMNS)
+        return response
     else:
-        return output_organization_json(qs)
-
-
-def output_organization_json(qs):
-    points = {}
-
-    for obj in qs:
-        marker = {
-            'id': obj.pk,
-            'name': obj.name,
-            'acronym': obj.acronym,
-            'lat': obj.latitude,
-            'lng': obj.longitude,
-            'link': obj.get_absolute_url(),
-        }
-
-        points[obj.pk] = marker
-
-    gmap = {}
-    gmap['items'] = points.values()
-
-    return HttpResponse(dumps(dict(map=gmap)), content_type="application/json")
-
-
-def output_organization_csv(qs):
-    data = tablib.Dataset(ORGANIZATION_HEADERS)
-    for item in qs:
-        row = []
-        for key in ORGANIZATION_HEADERS:
-            row.append(lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]) or 'None')
-        data.append(row)
-
-    response = HttpResponse(data.csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="organizations.csv"'
-    return response
-
-def output_organization_excel(qs):
-    import xlwt
-    response = HttpResponse(mimetype="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="organizations.xls"'
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('Organizations')
-
-    for i, header in enumerate(ORGANIZATION_HEADERS):
-        ws.write(0, i, header)
-
-    for i, item in enumerate(qs):
-        row = []
-        for j, key in enumerate(ORGANIZATION_HEADERS):
-            ws.write(i+1, j, lookup_attr(item, ORGANIZATION_EXPORT_COLUMNS[key]))
-
-    wb.save(response)
-
-    return response
+        content = dict(map=dict(items=organizations_to_marker(qs)))
+        return HttpResponse(dumps(content), content_type="application/json")
 
 
 def map_view(request):
