@@ -82,6 +82,10 @@ class Organization2(AbstractPlace, AbstractContact):
     def __unicode__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return 'organization_detail', (self.pk,), {}
+
 
 class Activity2(models.Model):
     name = models.CharField(max_length=255, db_index=True)
@@ -125,6 +129,10 @@ class Project2(AbstractPlace, AbstractContact):
     def __unicode__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return 'project_detail', (self.pk,), {}
+
     @property
     def activities_names(self):
         return ', '.join([ac.name for ac in self.activities.all()])
@@ -165,3 +173,7 @@ class Investment2(models.Model):
                                                self.recipient_project.name)
         elif self.recipient_project:
             return "Recp Project %s" % (self.recipient_project.name)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return 'investment_detail', (self.pk,), {}

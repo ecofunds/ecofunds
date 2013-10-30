@@ -61,12 +61,13 @@ def project_api(request, map_type):
 
 def project_marker(obj):
     return {
-        'entity_id': obj.pk,
+        'id': obj.pk,
         'lat': obj.latitude,
         'lng': obj.longitude,
         'name': obj.name,
         'acronym': obj.acronym,
-        'url': obj.url
+        'url': obj.url,
+        'link': obj.get_absolute_url(),
     }
 
 def output_project_json(qs):
@@ -336,11 +337,12 @@ def output_organization_json(qs):
 
     for obj in qs:
         marker = {
-            'entity_id': obj.pk,
+            'id': obj.pk,
             'name': obj.name,
             'acronym': obj.acronym,
             'lat': obj.latitude,
             'lng': obj.longitude,
+            'link': obj.get_absolute_url(),
         }
 
         points[obj.pk] = marker

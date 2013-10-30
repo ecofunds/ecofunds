@@ -79,7 +79,7 @@
 
     {% verbatim %}
     <div id="info_project" style="display: none;">
-        <h4><a href="/detail/project/{{ entity_id }}">
+        <h4><a href="{{ link }}">
                 {{#if acronym }}{{ acronym }}{{else}}{{ name }}{{/if}}
             </a></h4>
         {{#if url }}
@@ -89,7 +89,7 @@
         {{/if}}
     </div>
     <div id="info_organization" style="display: none;">
-        <h4><a href="/detail/organization/{{ entity_id }}">{{ name }}</a></h4>
+        <h4><a href="{{ link }}">{{ name }}</a></h4>
         {{#if url }}
         <ul>
             <li>Website: <a href="{{ url }}">{{ url }}</a></li>
@@ -100,7 +100,7 @@
         <h4>Total: {{ total_investment_str }}</h4>
         <ul>
         {{#each projects}}
-            <li>Website: <a href="/detail/investment/{{ id }}">{{ recipient_project.name }}</a> - {{ amount_str }}</li>
+            <li><a href="{{ link }}">{{ amount_str }}</a> - {{ name }}</li>
         {{/each}}
         </ul>
     </div>

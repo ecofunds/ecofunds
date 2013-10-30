@@ -23,7 +23,7 @@ def output_project_json(qs):
     points = {}
     for obj in qs:
         marker = {
-            'entity_id': obj.pk,
+            'id': obj.pk,
             'location_id': obj.location.geonameid,
             'lat': obj.location.latitude,
             'lng': obj.location.longitude,
@@ -44,7 +44,7 @@ def output_organization_json(qs):
     for obj in qs:
         try:
             marker = {
-                'entity_id': obj.pk,
+                'id': obj.pk,
                 'name': obj.name,
                 'acronym': obj.acronym,
                 'lat': obj.location.latitude,

@@ -54,7 +54,7 @@ class ProjectJsonTest(TestCase):
         self.assertEqual(200, self.resp.status_code)
 
     def test_all(self):
-        expected = [dict(entity_id=1, lat=-27.2221329359, lng=-50.0092212765, name="ProjectA", acronym='PA', url=None)]
+        expected = [dict(id=1, lat=-27.2221329359, lng=-50.0092212765, name="ProjectA", acronym='PA', url=None, link=reverse('project_detail', args=[1]))]
         data = loads(self.resp.content)
         self.assertEqual(data['map']['items'], expected)
 
@@ -158,8 +158,8 @@ class OrganizationJsonTest(TestCase):
 
     def test_content(self):
         expected = [
-            dict(entity_id=1, name="Fundo", acronym='Funbio', lat=-27.2221329359, lng=-50.0092212765),
-            dict(entity_id=2, name="Associacao", acronym='Funbar', lat=-27.2221329359, lng=-50.0092212765),
+            dict(id=1, name="Fundo", acronym='Funbio', lat=-27.2221329359, lng=-50.0092212765, link=reverse('organization_detail', args=[1])),
+            dict(id=2, name="Associacao", acronym='Funbar', lat=-27.2221329359, lng=-50.0092212765, link=reverse('organization_detail', args=[2])),
         ]
 
         data = loads(self.resp.content)
@@ -183,7 +183,7 @@ class InvestmentMapTest(MapFixture):
                     u'id': 1,
                     u'acronym': u"Projeto de Teste",
                     u'url': None,
-                    u'entity_id': 1,
+                    u'id': 1,
                     u'amount': 1000000.0,
                     u'amount_str': u'$ 1.000.000,00',
                 },
