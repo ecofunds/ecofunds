@@ -28,6 +28,21 @@ def format_currency(value):
             u'\xa4\xa4 #,##0.00', locale='pt_BR')
 
 
+def lookup_attr(obj, lookup):
+    (attr, sep, tail_lookup) = lookup.partition('__')
+
+    try:
+        value = getattr(obj, attr)
+        if hasattr(value, '__call__'):
+            return value()
+        if tail_lookup:
+            return lookup_attr(value, tail_lookup)
+        else:
+            return value
+    except Exception as e:
+        return ''
+
+
 PROJECT_HEADERS = ['NAME', 'ACRONYM', 'ACTIVITY_TYPE', 'DESCRIPTION',
                    'URL', 'EMAIL', 'PHONE', 'LAT', 'LNG']
 
@@ -118,20 +133,6 @@ def project_api(request, map_type):
         return HttpResponse(dumps(content), content_type="application/json")
 
 
-def lookup_attr(obj, lookup):
-    (attr, sep, tail_lookup) = lookup.partition('__')
-
-    try:
-        value = getattr(obj, attr)
-        if hasattr(value, '__call__'):
-            return value()
-        if tail_lookup:
-            return lookup_attr(value, tail_lookup)
-        else:
-            return value
-    except Exception as e:
-        return ''
-
 
 INVESTMENT_HEADERS = [
     'KIND',
@@ -183,6 +184,8 @@ def investment_to_xls(items):
     wb = xlwt.Workbook()
     ws = wb.add_sheet('Investments')
 
+    XLS_MAX_LEN = 3000
+
     currency_style = xlwt.XFStyle()
     currency_style.num_format_str = "#,##0.00"
 
@@ -198,7 +201,9 @@ def investment_to_xls(items):
         for c, header in enumerate(INVESTMENT_HEADERS):
             value = lookup_attr(item, INVESTMENT_COLUMNS[header])
 
-            if isinstance(value, (float, Decimal)):
+            if isinstance(value, unicode) and len(value) > XLS_MAX_LEN:
+                ws.write(r, c, value[:XLS_MAX_LEN])
+            elif isinstance(value, Decimal):
                 ws.write(r, c, int(value), style=currency_style)
             elif isinstance(value, datetime):
                 ws.write(r, c, value, style=date_style)
