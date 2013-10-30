@@ -54,7 +54,7 @@ class ProjectJsonTest(TestCase):
         self.assertEqual(200, self.resp.status_code)
 
     def test_all(self):
-        expected = [dict(entity_id=1, lat=-27.2221329359, lng=-50.0092212765, acronym="ProjectA", url=None)]
+        expected = [dict(entity_id=1, lat=-27.2221329359, lng=-50.0092212765, name="ProjectA", acronym='PA', url=None)]
         data = loads(self.resp.content)
         self.assertEqual(data['map']['items'], expected)
 
@@ -158,8 +158,8 @@ class OrganizationJsonTest(TestCase):
 
     def test_content(self):
         expected = [
-            dict(entity_id=1, name="Fundo", lat=-27.2221329359, lng=-50.0092212765),
-            dict(entity_id=2, name="Associacao", lat=-27.2221329359, lng=-50.0092212765),
+            dict(entity_id=1, name="Fundo", acronym='Funbio', lat=-27.2221329359, lng=-50.0092212765),
+            dict(entity_id=2, name="Associacao", acronym='Funbar', lat=-27.2221329359, lng=-50.0092212765),
         ]
 
         data = loads(self.resp.content)
