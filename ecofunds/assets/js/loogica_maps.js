@@ -222,7 +222,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var _map = window.map_router.map;
 
             var latlng = new google.maps.LatLng(this.model.get('lat'),
-                                                  this.model.get('lng'));
+                                                this.model.get('lng'));
 
             var circle = new google.maps.Circle({
                 strokeColor: '#FF0000',
@@ -264,7 +264,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.model.set('map_elements', map_elements);
         },
         scaleAmountToRadius: function(value) {
-            var radiusOffset = 150000;
+            var radiusOffset = 10000;
             var radiusMax = 500000;
             var radiusRange = radiusMax - radiusOffset;
             var stepRange = 100;
@@ -275,11 +275,11 @@ define('loogica', ["domReady!", "jquery", "underscore",
             var tens = Number(value).toString().length - 1;
             var ones = Number(Number(value).toString()[0]);
 
-            var stepCount = (tens * 10) + ones;
+            var stepCount = (tens * 7) + (ones);
 
-            var radius = Math.max(stepCount - stepIgnore, stepMin) * stepValue + radiusOffset;
+            var radius = Math.max(stepCount - stepIgnore, stepMin) * (stepValue * 3) + radiusOffset;
 
-            // console.debug(stepValue, tens, ones, stepCount, value, radius);
+            //console.debug(stepValue, tens, ones, stepCount, value, radius);
 
             return radius;
         }
