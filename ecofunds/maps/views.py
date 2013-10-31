@@ -21,9 +21,9 @@ class DownloadResponse(HttpResponse):
 
 def format_currency(value):
     return numbers.format_currency(
-            float(value),
+            value,
             numbers.get_currency_symbol('USD', 'en_US'),
-            u'\xa4\xa4 #,##0.00', locale='pt_BR')
+            u'\xa4\xa4 #,##0.00', locale='en_US')
 
 
 def lookup_attr(obj, lookup):
@@ -201,8 +201,12 @@ def investments_to_marker(items):
         }
 
         points[loc.pk]['investments'].append(investment)
-        points[loc.pk]['total_investment'] += int(item.amount)
+        points[loc.pk]['total_investment'] += item.amount
         points[loc.pk]['total_investment_str'] = format_currency(points[loc.pk]['total_investment'])
+
+    for k, v in points.items():
+        v['total_investment_str'] = format_currency(v['total_investment'])
+        v['total_investment'] = int(v['total_investment'])
 
     return points.values()
 
