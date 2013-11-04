@@ -298,7 +298,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             },
             scaleControl: true,
             scaleControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_TOP
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
             },
             panControl: false,
             streetViewControl: false,

@@ -42,41 +42,33 @@
     </script>
     <!-- area-site -->
     <div class="area-site">
-        <div class="container">
-        </div>
     </div>
     <!-- fim area-site -->
 
     <div class="container">
-
-            <div class="conteudo-abas-container" style="display:none;">
-                    <section id="filtro-projetos">
-                        {% include "maps/search-project.html" %}
-                    </section>
-                    <section id="filtro-organizacoes">
-                        {% include "maps/search-organization.html" %}
-                    </section>
-                    <section id="filtro-investimentos">
-                        {% include "maps/search-investment.html" %}
-                    </section>
-            </div>
+        <div style="float: left;">
+            <section id="filtro-projetos" style="display:none;">
+                {% include "maps/search-project.html" %}
+            </section>
+            <section id="filtro-organizacoes" style="display:none;">
+                {% include "maps/search-organization.html" %}
+            </section>
+            <section id="filtro-investimentos">
+                {% include "maps/search-investment.html" %}
+            </section>
         </div>
+
+        <section id="map-view">
+            <div class="carregando tela-mapa" style=""></div>
+            <div style="" class="gmap mapa" id="id_map">
+            <div class="slider-control-container">
+                <div class="zoom-in"></div>
+                <div class="slider-control"></div>
+                <div class="zoom-out"></div>
+            </div>
+            </div>
+        </section>
     </div>
-
-    <section id="map-view" class="mapa">
-        <div class="carregando tela-mapa" style="position:absolute;width:55%;margin-left:33%;"></div>
-        <div style="position:relative;width:55%;height:400px;margin-left:33%;" class="gmap mapa" id="id_map">
-            <div style="position:absolute;width:55%;height:100%;"></div>
-            <div class="container">
-                <div class="slider-control-container" style="position:relative;margin-left:63%;width:25px;">
-                    <div class="zoom-in"></div>
-                    <div class="slider-control"></div>
-                    <div class="zoom-out"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     {% verbatim %}
     <div id="info_project" style="display: none;">
         <h4><a href="{{ link }}">

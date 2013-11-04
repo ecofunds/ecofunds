@@ -1933,11 +1933,6 @@ table th {
 .mapa .botoes-container .botao.destacado, .graficos .botoes-container .botao.destacado {
   margin: 0 6px 0 0;
 }
-/* line 843, src/_elementos-gerais.sass */
-.mapa .slider-control-container, .graficos .slider-control-container {
-  top: 59px;
-  clear: both;
-}
 /* line 847, src/_elementos-gerais.sass */
 .mapa .slider-control-container .zoom-in, .mapa .slider-control-container .zoom-out, .graficos .slider-control-container .zoom-in, .graficos .slider-control-container .zoom-out {
   width: 26px;
@@ -2150,17 +2145,6 @@ table th {
   /* Estilo */
   background: #bbbbbb;
   border: none;
-}
-
-/* ================================================================ */
-/* filtros-mapa */
-/* ================================================================ */
-/* Especifico para a pagina de mapas. Nao aplicado a pagina de listas */
-/* line 1032, src/_elementos-gerais.sass */
-#map .filtros {
-  position: absolute;
-  top: 0px;
-  z-index: 21;
 }
 
 /* ================================================================ */
