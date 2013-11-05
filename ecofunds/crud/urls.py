@@ -2,7 +2,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('ecofunds.crud.views',
-    url(r'^investment/(?P<investment_id>\d+)', 'investment_detail', name="investment_detail"),
-    url(r'^project/(?P<project_id>\d+)', 'project_detail', name="project_detail"),
-    url(r'^organization/(?P<organization_id>\d+)', 'organization_detail', name="organization_detail"),
+    url(r'^investments/(?P<pk>\d+)', 'investment_detail', name="investment_detail"),
+    url(r'^projects/(?P<pk>\d+)', 'project_detail', name="project_detail"),
+    url(r'^organizations/(?P<pk>\d+)', 'organization_detail', name="organization_detail"),
 )
