@@ -28,7 +28,7 @@
     		<span class="doador"><strong>{{ investment.funding_organization.name }}</strong>{% if investment.funding_entity %} {% trans "trough the project" %} <strong>{{ investment.funding_entity.title }}</strong>{% endif %}</span>
     		<span class="ico seta-fluxo"></span>
     		<h2 class="titulo-ficha-invest">{{ investment.recipient_project.name }}</h2>
-            <input type="hidden" value="{{ investment.id }}" name="id" />
+            <input type="hidden" value="{{ investment.pk }}" name="id" />
 	  		<div class="conteudo-abas-container">
 		        <!-- Informacoes da ficha -->
 		        <section id="informacoes">
@@ -55,19 +55,19 @@
 							<tbody>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investor  organization" %}</th>
-                                    <td class="conteudo-registro">{%if investment.funding_organization %}<a href="{% url organization_detail investment.funding_organization.id %}" title="{{ investment.funding_organization.name }}">{{ investment.funding_organization.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.funding_organization %}<a href="{% url organization_detail investment.funding_organization.pk %}" title="{{ investment.funding_organization.name }}">{{ investment.funding_organization.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investor project" %}</th>
-                                    <td class="conteudo-registro">{%if investment.funding_project %}<a href="{% url project_detail investment.funding_project.id %}" title="{{ investment.funding_project.name }}">{{ investment.funding_project.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.funding_project %}<a href="{% url project_detail investment.funding_project.pk %}" title="{{ investment.funding_project.name }}">{{ investment.funding_project.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
 	                            <tr>
 									<th class="titulo-registro" scope="row">{% trans "Recipient  organization" %}</th>
-                                    <td class="conteudo-registro"><a href="{% url organization_detail investment.recipient_organization.id %}" title="{{ investment.recipient_organization.name }}">{{ investment.recipient_organization.name }}</a></td>
+                                    <td class="conteudo-registro"><a href="{% url organization_detail investment.recipient_organization.pk %}" title="{{ investment.recipient_organization.name }}">{{ investment.recipient_organization.name }}</a></td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Recipient project" %}</th>
-                                    <td class="conteudo-registro">{%if investment.recipient_project %}<a href="{% url project_detail investment.recipient_project.id %}" title="{% trans "Search" %}: {{ investment.recipient_project.name }}">{{ investment.recipient_project.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.recipient_project %}<a href="{% url project_detail investment.recipient_project.pk %}" title="{% trans "Search" %}: {{ investment.recipient_project.name }}">{{ investment.recipient_project.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Investment type" %}</th>
@@ -96,14 +96,14 @@
                                 {% if investment.parent %}
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Parent Investment" %}</th>
-                                    <td class="conteudo-registro">{%if investment.parent %}<a href="{% url investment_detail investment.parent.id %}" title="{{ investment.parent.funding_organization.name }}">{{ investment.parent.funding_organization.name }} ==> {{ investment.parent.recipient_organization.name }}</a>{%else%}-{%endif%}</td>
+                                    <td class="conteudo-registro">{%if investment.parent %}<a href="{% url investment_detail investment.parent.pk %}" title="{{ investment.parent.funding_organization.name }}">{{ investment.parent.funding_organization.name }} ==> {{ investment.parent.recipient_organization.name }}</a>{%else%}-{%endif%}</td>
 								</tr>
                                 {% endif %}
                                 {% if investment.investment2_set.all %}
                                 {% for child in investment.investment2_set.all %}
 								<tr>
 									<th class="titulo-registro" scope="row">{% trans "Children Investment" %}</th>
-                                    <td class="conteudo-registro"><a href="{% url investment_detail child.id %}" title="{{ child.funding_organization.name }}">{{ child.funding_organization.name }} ==> {{ child.recipient_organization.name }}</a></td>
+                                    <td class="conteudo-registro"><a href="{% url investment_detail child.pk %}" title="{{ child.funding_organization.name }}">{{ child.funding_organization.name }} ==> {{ child.recipient_organization.name }}</a></td>
 								</tr>
                                 {% endfor %}
                                 {% endif %}
