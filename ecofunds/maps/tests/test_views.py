@@ -158,14 +158,14 @@ class InvestmentJsonTest(TestCase):
                 u'investments': [
                     {
                         u'amount': 1000.0,
-                        u'link': u"/detail/investment/1",
+                        u'link': u"/investments/1/",
                         u'id': 1,
                         u'amount_str': u"$ 1,000.00",
                         u'recipient_name': u"ProjectA"
                     },
                     {
                         u'amount': 10000.0,
-                        u'link': u"/detail/investment/2",
+                        u'link': u"/investments/2/",
                         u'id': 2,
                         u'amount_str': u"$ 10,000.00",
                         u'recipient_name': u"ProjectB"
