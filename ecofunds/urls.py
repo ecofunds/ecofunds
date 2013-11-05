@@ -8,10 +8,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', Home.as_view(), name='home'),
+    url(r'', include('ecofunds.maps.urls')),
+    url(r'', include('ecofunds.crud.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/geo/', include('ecofunds.maps.urls')),
-    url(r'^map/', include('ecofunds.maps.urls')),
-    url(r'^detail/', include('ecofunds.crud.urls')),
     url(r'^user/',include('ecofunds.user.urls')),
     url(r"^select2/", include("django_select2.urls")),
     url(r'^', include('cms.urls')),
