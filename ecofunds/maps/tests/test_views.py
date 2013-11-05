@@ -18,7 +18,7 @@ class ProjectJsonTest(TestCase):
 
         p1 = m('Project2', name='ProjectA', acronym='PA', location=n1)
 
-        self.resp = self.client.get(reverse('project_api', args=['marker']))
+        self.resp = self.client.get(reverse('project_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -74,7 +74,7 @@ class OrganizationJsonTest(TestCase):
         m('Organization2', name=u'Fundo', acronym='Funbio', kind=1, location=n1)
         m('Organization2', name=u'Associacao', acronym='Funbar', kind=1, location=n1)
 
-        self.resp = self.client.get(reverse('organization_api', args=['marker']))
+        self.resp = self.client.get(reverse('organization_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -142,7 +142,7 @@ class InvestmentJsonTest(TestCase):
         m('Investment2', kind=1, recipient_project=p1, amount=1000)
         m('Investment2', kind=1, recipient_project=p2, amount=10000)
 
-        self.resp = self.client.get(reverse('investment_api', args=['density']))
+        self.resp = self.client.get(reverse('investment_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
