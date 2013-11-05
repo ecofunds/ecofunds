@@ -355,7 +355,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'project' : 'fetch_projects',
             'organization' : 'fetch_organizations',
             'clean_markers': 'clean_markers',
-            'filter/:domain/:id': 'fetch_single'
+            ':domain/:pk': 'fetch_single'
         },
         initialize: function() {
             this.map_view = map_view = new MapView({model: new Map});
@@ -447,12 +447,12 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.cluster = cluster;
 
         },
-        fetch_single: function(domain, id) {
+        fetch_single: function(domain, pk) {
             this.toggleFilter(domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/detail/api/' + domain + '/' + id;
+            this.places.url = '/api/geo/' + domain + '/?pk=' + pk;
             // Workaround
             if(domain == 'investment')
                 map_type = 'density';
