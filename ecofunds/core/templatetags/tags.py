@@ -7,6 +7,8 @@ from django.core.cache import cache
 from cms.models.pagemodel import Page
 from cms.templatetags import cms_tags
 
+from ecofunds.maps.views import format_currency
+
 from babel import numbers
 import decimal
 
@@ -77,14 +79,8 @@ def field_label(form, field_name):
 
 @register.simple_tag(takes_context=True)
 def currency(context, value):
-    #return '${:20,.2f}'.format(float(value))
     if value is not None:
-        request = context.get('request', False)
-        return numbers.format_currency(
-            float(value),
-            numbers.get_currency_symbol('USD', 'en_US'),
-            u'\xa4\xa4 #,##0.00', locale=settings.LANGUAGE_CODE.replace('-', '_')
-        )
+        return format_currency(value)
     return ''
 
 @register.simple_tag(takes_context=True)
