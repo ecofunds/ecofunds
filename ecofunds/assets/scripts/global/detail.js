@@ -1,7 +1,7 @@
 (function ($) {
     $(document).ready(function () { 
     	//Cria as abas.
-        $('.aba', '.menu-abas').tabsControl();
+        //$('.aba', '.menu-abas').tabsControl();
 
 	    //Chama a função de exclusão da ficha.
 	    $('.excluir', '.controles-edicao').each(function(){
