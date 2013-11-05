@@ -44,6 +44,11 @@ class OrganizationFilterTest(BaseTestCase):
         qs = Organization2.objects.search(kind=1)
         self.assertPKs(qs, [1, 2])
 
+    def test_pk(self):
+        '''Special filter by pk'''
+        qs = Organization2.objects.search(pk=1)
+        self.assertPKs(qs, [1])
+
 
 class OrganizationLocationFilterTest(BaseTestCase):
     def setUp(self):
@@ -141,6 +146,11 @@ class ProjectFilterTest(BaseTestCase):
         qs = Project2.objects.search(organization='Fund')
         self.assertPKs(qs, [1])
 
+    def test_pk(self):
+        '''Special filter by pk'''
+        qs = Project2.objects.search(pk=1)
+        self.assertPKs(qs, [1])
+
 
 class ProjectLocationFilterTest(BaseTestCase):
     def setUp(self):
@@ -227,6 +237,10 @@ class InvestmentFilterTest(BaseTestCase):
         qs = Investment2.objects.search(organization='Funb')
         self.assertPKs(qs, [1, 3])
 
+    def test_pk(self):
+        '''Special filter by pk'''
+        qs = Investment2.objects.search(pk=1)
+        self.assertPKs(qs, [1])
 
 class InvestmentLocationFilterTest(BaseTestCase):
     def setUp(self):

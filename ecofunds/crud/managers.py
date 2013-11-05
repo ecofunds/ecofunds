@@ -37,6 +37,10 @@ class OrganizationSearchManager(PlaceSearchManager):
         qs = self.exclude(location=None)
         qs = qs.select_related('location')
 
+        pk = fields.get('pk')
+        if pk:
+            return qs.filter(pk=pk)
+
         name = fields.get('name')
         if name:
             qs = qs.filter(Q(name__icontains=name)|Q(acronym__icontains=name))
@@ -61,6 +65,10 @@ class ProjectSearchManager(PlaceSearchManager):
     def search(self, **fields):
         qs = self.exclude(location=None)
         qs = qs.select_related('location')
+
+        pk = fields.get('pk')
+        if pk:
+            return qs.filter(pk=pk)
 
         name = fields.get('name')
         if name:
@@ -91,6 +99,10 @@ class InvestmentSearchManager(Manager):
     def search(self, **fields):
         qs = self.exclude(recipient_project=None, recipient_project__location=None)
         qs = qs.exclude(pk__in=self.exclude(parent=None).values_list('parent'))
+
+        pk = fields.get('pk')
+        if pk:
+            return qs.filter(pk=pk)
 
         kind = fields.get('kind')
         if kind:

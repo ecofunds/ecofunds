@@ -18,7 +18,7 @@ class ProjectJsonTest(TestCase):
 
         p1 = m('Project2', name='ProjectA', acronym='PA', location=n1)
 
-        self.resp = self.client.get(reverse('project_api', args=['marker']))
+        self.resp = self.client.get(reverse('project_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -74,7 +74,7 @@ class OrganizationJsonTest(TestCase):
         m('Organization2', name=u'Fundo', acronym='Funbio', kind=1, location=n1)
         m('Organization2', name=u'Associacao', acronym='Funbar', kind=1, location=n1)
 
-        self.resp = self.client.get(reverse('organization_api', args=['marker']))
+        self.resp = self.client.get(reverse('organization_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -142,7 +142,7 @@ class InvestmentJsonTest(TestCase):
         m('Investment2', kind=1, recipient_project=p1, amount=1000)
         m('Investment2', kind=1, recipient_project=p2, amount=10000)
 
-        self.resp = self.client.get(reverse('investment_api', args=['density']))
+        self.resp = self.client.get(reverse('investment_api'))
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -154,20 +154,20 @@ class InvestmentJsonTest(TestCase):
                 u'lat': -27.0,
                 u'lng': -50.0,
                 u'total_investment': 11000.0,
-                u'total_investment_str': u"$ 11.000,00",
+                u'total_investment_str': u"$ 11,000.00",
                 u'investments': [
                     {
                         u'amount': 1000.0,
-                        u'link': u"/detail/investment/1",
+                        u'link': u"/investments/1/",
                         u'id': 1,
-                        u'amount_str': u"$ 1.000,00",
+                        u'amount_str': u"$ 1,000.00",
                         u'recipient_name': u"ProjectA"
                     },
                     {
                         u'amount': 10000.0,
-                        u'link': u"/detail/investment/2",
+                        u'link': u"/investments/2/",
                         u'id': 2,
-                        u'amount_str': u"$ 10.000,00",
+                        u'amount_str': u"$ 10,000.00",
                         u'recipient_name': u"ProjectB"
                     },
                 ],

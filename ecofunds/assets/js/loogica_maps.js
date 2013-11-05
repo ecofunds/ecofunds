@@ -180,12 +180,12 @@ define('loogica', ["domReady!", "jquery", "underscore",
         },
         render: function() {
             _.each(this.collection.models, function(place) {
-                var places_view = new PlaceView({model: place});
-                if (default_map_type == "density/")
-                    places_view.render_density();
-                else //if (default_map_type == "marker/")
-                    places_view.render_marker();
-            });
+                var place_view = new PlaceView({model: place, domain: this.options.domain});
+                if (this.options.map_type == 'density')
+                    place_view.render_density();
+                else
+                    place_view.render_marker();
+            }, this);
         }
     });
     PlaceView = Backbone.View.extend({
@@ -204,7 +204,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
                 map: _map
             });
 
-            var source = $('#info_' + default_domain).html();
+            var source = $('#info_' + this.options.domain).html();
             var template = Handlebars.compile(source);
             var info_content = template(this.model.attributes);
 
@@ -248,7 +248,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
 
             circle.bindTo('center', marker, 'position');
 
-            var source = $('#info_' + default_domain + '_density').html();
+            var source = $('#info_' + this.options.domain + '_density').html();
             var template = Handlebars.compile(source);
             var info_content = template(this.model.attributes);
 
@@ -355,7 +355,7 @@ define('loogica', ["domReady!", "jquery", "underscore",
             'project' : 'fetch_projects',
             'organization' : 'fetch_organizations',
             'clean_markers': 'clean_markers',
-            'filter/:domain/:id': 'fetch_single'
+            ':domain/:pk': 'fetch_single'
         },
         initialize: function() {
             this.map_view = map_view = new MapView({model: new Map});
@@ -390,42 +390,45 @@ define('loogica', ["domReady!", "jquery", "underscore",
             }, this);
         },
         fetch_investments: function() {
-            default_map_type = 'density/';
             default_domain = 'investment';
             this.toggleFilter(default_domain);
             $(".opcoes .tipo").show();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/api/geo/investment/' + default_map_type;
+            this.places.url = '/api/geo/investment/';
             this.places_view = new PlacesView({
-                collection: this.places
+                collection: this.places,
+                map_type: 'density',
+                domain: default_domain
             });
             this.fetchPlaces(default_domain, false);
         },
         fetch_projects: function() {
-            default_map_type = 'marker/';
             default_domain = 'project';
             this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/api/geo/project/' + default_map_type;
+            this.places.url = '/api/geo/project/';
             this.places_view = new PlacesView({
-                collection: this.places
+                collection: this.places,
+                map_type: 'marker',
+                domain: default_domain
             });
 
             this.fetchPlaces(default_domain, false);
         },
         fetch_organizations: function() {
-            default_map_type = 'marker/';
             default_domain = 'organization';
             this.toggleFilter(default_domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/api/geo/organization/' + default_map_type;
+            this.places.url = '/api/geo/organization/';
             this.places_view = new PlacesView({
-                collection: this.places
+                collection: this.places,
+                map_type: 'marker',
+                domain: default_domain
             });
 
             this.fetchPlaces(default_domain, false);
@@ -444,14 +447,21 @@ define('loogica', ["domReady!", "jquery", "underscore",
             this.cluster = cluster;
 
         },
-        fetch_single: function(domain, id) {
+        fetch_single: function(domain, pk) {
             this.toggleFilter(domain);
             $(".opcoes .tipo").hide();
             this.clean_markers();
             this.places = new Places();
-            this.places.url = '/detail/api/' + domain + '/' + id;
+            this.places.url = '/api/geo/' + domain + '/?pk=' + pk;
+            // Workaround
+            if(domain == 'investment')
+                map_type = 'density';
+            else
+                map_type = 'marker';
             this.places_view = new PlacesView({
-                collection: this.places
+                collection: this.places,
+                map_type: map_type,
+                domain: domain
             });
 
             this.fetchPlaces(domain, false);

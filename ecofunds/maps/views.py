@@ -121,6 +121,8 @@ def projects_to_marker(items):
 
 
 def project_api(request, map_type):
+    map_type = map_type or "marker" #default
+
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
 
@@ -212,6 +214,8 @@ def investments_to_marker(items):
 
 
 def investment_api(request, map_type):
+    map_type = map_type or "density" #default
+
     if map_type not in ("density", "csv", "xls"):
         return HttpResponseBadRequest()
 
@@ -285,6 +289,8 @@ def organizations_to_marker(items):
 
 
 def organization_api(request, map_type):
+    map_type = map_type or "marker" #default
+
     if map_type not in ("marker", "csv", "xls"):
         return HttpResponseBadRequest()
 
