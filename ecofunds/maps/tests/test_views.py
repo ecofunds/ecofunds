@@ -154,20 +154,20 @@ class InvestmentJsonTest(TestCase):
                 u'lat': -27.0,
                 u'lng': -50.0,
                 u'total_investment': 11000.0,
-                u'total_investment_str': u"$ 11.000,00",
+                u'total_investment_str': u"$ 11,000.00",
                 u'investments': [
                     {
                         u'amount': 1000.0,
                         u'link': u"/detail/investment/1",
                         u'id': 1,
-                        u'amount_str': u"$ 1.000,00",
+                        u'amount_str': u"$ 1,000.00",
                         u'recipient_name': u"ProjectA"
                     },
                     {
                         u'amount': 10000.0,
                         u'link': u"/detail/investment/2",
                         u'id': 2,
-                        u'amount_str': u"$ 10.000,00",
+                        u'amount_str': u"$ 10,000.00",
                         u'recipient_name': u"ProjectB"
                     },
                 ],
