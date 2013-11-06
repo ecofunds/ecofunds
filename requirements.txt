@@ -15,3 +15,5 @@ sqlparse==0.1.8
 django-aggregate-if==0.3.1
 django-suit==0.2.4
 django_select2==4.2.0
+pylibmc==1.2.3
+django-clear-cache==0.3

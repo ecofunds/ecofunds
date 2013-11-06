@@ -106,12 +106,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'ecofunds.urls'
@@ -130,6 +132,7 @@ INSTALLED_APPS = (
     'ecofunds.mysuit',
     'suit',
     'django.contrib.admin',
+    'clear_cache',
     'sekizai',
     'babel',
     'xlwt',
@@ -196,10 +199,17 @@ LOGGING = {
     }
 }
 
-CACHE = {
-    'default': {
-        'BACKEND': 'django.core.cache.backend.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 3000
+
+if config('CACHE_ENABLED', default=True, cast=bool):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
