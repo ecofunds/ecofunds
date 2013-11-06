@@ -1,5 +1,5 @@
-{% extends "base-cms.html" %}
-{% load i18n cms_tags %}
+{% extends "base.html" %}
+{% load i18n %}
 
 {% block base_content %}
 <!-- area-site -->
@@ -14,7 +14,7 @@
 
         <p>
             {% trans "There has been an error during the attempt to attend your request. Please try again or visit the " %}
-            <a href="{% page_url "map" %}" title="{% trans "Ecofunds map" %}">{% trans "Ecofunds map" %}</a>.
+            <a href="{% url "map" %}" title="{% trans "Ecofunds map" %}">{% trans "Ecofunds map" %}</a>.
         </p>
 
         <!-- banner-interno -->
@@ -24,7 +24,7 @@
                 <p>
                    {% trans "Ecofunds is the official RedLAC web platform to map and coordinate conservation investments in the Andes-Amazon region." %}
                 </p>
-                <a class="botao primario" href="{% page_url "map" %}" title="{% trans "Navigate Map" %}">{% trans "Navigate Map" %}</a>
+                <a class="botao primario" href="{% url "map" %}" title="{% trans "Navigate Map" %}">{% trans "Navigate Map" %}</a>
             </div>
         </div>
         <!-- fim de banner-interno -->

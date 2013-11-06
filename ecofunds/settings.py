@@ -1,12 +1,9 @@
 # coding: utf-8
-import os
 from sys import argv
-
 from decouple import Config
 from dj_database_url import parse as db_url
 from unipath import Path
 
-gettext = lambda s: s
 
 PROJECT_ROOT = Path(__file__).parent
 
@@ -16,7 +13,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 TEMPLATE_DEBUG = DEBUG
 
 GOOGLE_KEY = config('GOOGLE_KEY')
-#GEOS_LIBRARY_PATH = 'C:/OSGeo4W/lib/geos_c_i.lib'
 
 ADMINS = (
     ('Administrator', 'administrator@ecofunds.org'),
@@ -41,8 +37,6 @@ if len(argv) > 1 and argv[1] == "test":
     }
 
 # Email Configuration
-
-VALIDATE_EMAIL_URL = "localhost:8000/user/validate/"  # FIXME: ?
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
 EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
@@ -108,7 +102,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.media',
     'sekizai.context_processors.sekizai',
-    'cms.context_processors.media',
     'ecofunds.context_processors.user',
 )
 
@@ -119,10 +112,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    #'cms.middleware.media.PlaceholderMediaMiddleware',
 )
 
 ROOT_URLCONF = 'ecofunds.urls'
@@ -141,49 +130,16 @@ INSTALLED_APPS = (
     'ecofunds.mysuit',
     'suit',
     'django.contrib.admin',
-    #'south',
-    'cms',
-    'cms.plugins.picture',
-    'cms.plugins.text',
-    'cms.plugins.link',
-    'cms.plugins.file',
-    #'cmsplugin_news',
-    'mptt',
-    'menus',
-    'appmedia',
     'sekizai',
-    'tinymce',
     'babel',
     'xlwt',
     'django_select2',
-    #'endless_pagination',
     'ecofunds.geonames',
     'ecofunds.core',
-    'ecofunds.user',
     'ecofunds.maps',
-    'ecofunds.project',
-    'ecofunds.organization',
-    'ecofunds.investment',
     'ecofunds.crud',
 )
 
-CMS_MEDIA_ROOT = STATIC_ROOT.child('cms')
-CMS_MEDIA_URL = '/static/cms'
-
-CMS_TEMPLATES = (
-    ('home-template.html', gettext('Home Template')),
-    ('main-template.html', gettext('Main Template')),
-    ('institutional-template.html', gettext('Institutional Template')),
-    ('default-template.html', gettext('Default Template')),
-    ('form-template.html', gettext('Form Template'))
-)
-
-
-#AUTHENTICATION_BACKENDS = (
-#    'ecofunds.auth_backends.CustomUserModelBackend',
-#)
-AUTH_PROFILE_MODULE = 'user.UserProfile'
-#CUSTOM_USER_MODEL = 'ecofunds.user.models.CustomUser'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -237,26 +193,8 @@ LOGGING = {
             'handlers': ['sqlhandler'],
             'level': 'DEBUG',
         },
-        'maps': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
     }
 }
-
-AJAX_LOOKUP_CHANNELS = {
-    'organization': ('ecofunds.lookups', 'OrganizationLookUp'),
-    'location': ('ecofunds.lookups', 'LocationLookUp'),
-    'activity': ('ecofunds.lookups', 'ActivityLookUp'),
-    'userprofile': ('ecofunds.lookups', 'UserProfileLookUp'),
-    'project': ('ecofunds.lookups', 'ProjectLookUp'),
-    'country': ('ecofunds.lookups', 'CountryLookUp'),
-    'investment': ('ecofunds.lookups', 'InvestmentLookUp'),
-}
-
-AJAX_SELECT_BOOTSTRAP = False
-AJAX_SELECT_INLINES = 'inline'
 
 CACHE = {
     'default': {
