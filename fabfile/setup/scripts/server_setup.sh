@@ -84,6 +84,7 @@ apt-get -y -q install build-essential
 apt-get -y -q install python-dev
 apt-get -y -q install python-setuptools
 apt-get -y -q install python-pip
+apt-get -y -q install python-virtualenv
 
 # Nginx Packages
 apt-get -y -q install libxml2-dev
