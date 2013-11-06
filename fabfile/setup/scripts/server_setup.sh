@@ -112,7 +112,8 @@ source uwsgi.sh
 
 # Memcached
 apt-get -y -q install memcached
-
+apt-get -y -q install libmemcached-dev
+apt-get -y -q install zlib1g-dev
 apt-get -y -q install gfortran
 apt-get -y -q install libopenblas-dev
 apt-get -y -q install liblapack-dev
