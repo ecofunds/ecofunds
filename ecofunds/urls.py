@@ -13,8 +13,3 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r"^select2/", include("django_select2.urls")),
 )
-
-if settings.DEBUG:
-    urlpatterns = patterns('',
-        (r'^' + settings.MEDIA_URL.lstrip('/'), include('appmedia.urls')),
-    ) + urlpatterns
