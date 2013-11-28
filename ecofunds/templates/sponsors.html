@@ -1,0 +1,17 @@
+{% extends base.html %}
+{% load static i18n %}
+
+<div id="sponsors">
+<h3>Sponsors</h3>
+<div class="bg-linha-colorida"></div>
+<ul>
+  <li><a href="http://moore.org" alt="Moore Foudation" target="_blank()"><img 
+ alt="Moore Foudation" src="{% get_static_prefix %}images/logos/logo-moore.png"></a></li>
+  <li><a href="http://skoll.org" alt="Skoll Foundation" target="_blank()"><img
+ alt="Skoll Foundation" src="{% get_static_prefix %}images/logos/logo-skoll.png"></a></li>
+  <li><a href="http://fundacionavina.org" alt="Fundaci&oacute;n Avina" target="_blank()"><img
+ alt="Fundaci&oacute;n Avina" src="{% get_static_prefix %}images/logos/logo-avina.png"></a></li>
+</ul>
+</div>
+
+{% endblock %}
