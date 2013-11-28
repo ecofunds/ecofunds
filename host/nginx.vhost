@@ -9,7 +9,7 @@ server {
 server {
     listen 80;
     charset utf-8;
-    server_name ecofundsdatabase.org stage.ecofundsdatabase.org production.ecofundsdatabase.org;
+    server_name ecofundsdatabase.org stage.ecofundsdatabase.org production.ecofundsdatabase.org ecofunds.redlac.org;
     client_max_body_size 50M;
 
     root %(current)s;
