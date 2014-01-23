@@ -4295,32 +4295,3 @@ textarea {
 }
 
 /**************************************************************** */
-
-/* Sponsor Styles - Manual Entry by romulocollopy (at) gmail.com */
-
-#sponsors{
-z-index: 1;
-position:absolute;
-width: 1000px;
-left: 50%;
-margin-left:-500px;
-}
-#sponsors h3{
-color: rgb(66,66,66);
-font: inherit;
-font-weight: bold;
-background-image: url('../assets/images/bg/bg-linha-colorida.png');
-background-repeat:no-repeat;
-background-position:left bottom;
-height: 30px;
-}
-#sponsors ul, li{
-list-style: none;
-float: left;
-margin: 5px 100px 5px 0px;
-padding: 0px;
-}
-#sponsors img {
-border: 0px solid;
-height: 45px;
-}
